@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو Lucca Caffè Italiano</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>LUCCA</h1>
+                <div class="subtitle">Caffè Italiano</div>
+                <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
+            </div>
+        </div>
+
+        <div class="specialty-intro">
+            <h2>✨ ما هي القهوة المختصة؟</h2>
+            <p>
+                القهوة المختصة هي أجود 3% من إنتاج القهوة العالمي، نختارها بعناية من أفضل المزارع حول العالم.
+                كل حبة قهوة في Lucca تمر بمعايير جودة صارمة لنضمن لك طعماً نقياً ومميزاً يعكس أصل المحصول وطريقة التحميص الاحترافية.
+                تجربة قهوة حقيقية... مش مجرد مشروب! ☕
+            </p>
+        </div>
+
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="ابحث في القائمة...">
+            </div>
+        </div>
+
+        <div class="btn-container">
+            <button type="button" id="toggleAllBtn" class="expand-all-btn">فتح/إغلاق جميع الأقسام</button>
+        </div>
+
+        <div class="menu-content" id="menuContent"></div>
+
+        <div class="qr-section">
+            <h3>امسح QR للوصول للمنيو</h3>
+            <div class="qr-code-container">
+                <div id="qrcode"></div>
+            </div>
+            <p class="qr-instructions">
+                يمكنك مسح هذا الكود للوصول السريع إلى قائمة الطعام من هاتفك المحمول
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>🇮🇹 Lucca Caffè Italiano 🇮🇹</p>
+            <p>📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
+            <p class="contact">للحجز والاستفسار: [01551007413]</p>
+            <p style="margin-top: 15px; font-size: 0.9rem;">Buon Appetito! 🍽️</p>
+        </div>
+    </div>
+
+    <script src="menu-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
