@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 const DB_FILE = process.env.DB_PATH || path.join(__dirname, 'db.json');
 const API_KEY_FILE = path.join(__dirname, '.api_key');
 const SECRET_KEY = process.env.SECRET_KEY || (fs.existsSync(API_KEY_FILE) ? fs.readFileSync(API_KEY_FILE, 'utf8').trim() : crypto.randomBytes(32).toString('hex'));
-const isPublic = process.argv.includes('--tunnel') || process.argv.includes('--public');
+
 
 if (!fs.existsSync(API_KEY_FILE)) {
     fs.writeFileSync(API_KEY_FILE, SECRET_KEY);
@@ -60,14 +60,15 @@ app.use(helmet({
 }));
 
 app.use(cors({
-    origin: isPublic ? ['https://lucca-caffe.loca.lt'] : true,
+    origin: true,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
 
 const apiLimiter = rateLimit({
     windowMs: 1 * 60 * 1000,
-    max: isLocal() ? 200 : 60,
+    max: 60,
     message: { error: 'كثرة الطلبات - حاول بعد دقيقة' },
     standardHeaders: true,
     legacyHeaders: false
@@ -93,9 +94,6 @@ app.use(express.json({ limit: '1mb' }));
 
 app.set('trust proxy', 1);
 
-function isLocal() {
-    return !isPublic;
-}
 
 // ==================== API Key Validation ====================
 function validateApiKey(req, res, next) {
@@ -681,7 +679,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`   ✅ API Key for external writes`);
     console.log(`   ✅ Session-based admin auth`);
     console.log(`   ✅ PBKDF2 password hashing`);
-    if (isPublic) console.log(`   ⚠️  Public mode: API key required for all writes`);
+    console.log(`   ⚠️  API key required for all writes`);
 
     if (process.argv.includes('--tunnel') || process.argv.includes('--public')) {
         try {
