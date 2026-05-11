@@ -9,7 +9,7 @@ const helmet = require('helmet');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DB_FILE = path.join(__dirname, 'db.json');
+const DB_FILE = process.env.DB_PATH || path.join(__dirname, 'db.json');
 const API_KEY_FILE = path.join(__dirname, '.api_key');
 const SECRET_KEY = process.env.SECRET_KEY || (fs.existsSync(API_KEY_FILE) ? fs.readFileSync(API_KEY_FILE, 'utf8').trim() : crypto.randomBytes(32).toString('hex'));
 const isPublic = process.argv.includes('--tunnel') || process.argv.includes('--public');
@@ -51,7 +51,7 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
             imgSrc: ["'self'", "data:", "https://api.qrserver.com", "https:"],
-            connectSrc: ["'self'"],
+            connectSrc: ["'self'", "https:"],
             frameSrc: ["'none'"],
             objectSrc: ["'none'"]
         }

@@ -55,15 +55,50 @@
       "createdBy": "مدير النظام",
       "discount": 0,
       "discountType": "percent"
+    },
+    {
+      "id": 3,
+      "tableId": 1,
+      "items": [
+        {
+          "name": "شاي",
+          "price": 35,
+          "quantity": 3,
+          "category": "مشروبات ساخنة",
+          "selectedOrigin": ""
+        },
+        {
+          "name": "مياه",
+          "price": 10,
+          "quantity": 1,
+          "category": "مشروبات غازية وطاقة",
+          "selectedOrigin": ""
+        }
+      ],
+      "customerName": "شهد",
+      "customerPhone": "01211170364",
+      "paymentMethod": "cash",
+      "customerNotes": "",
+      "invoiceDelivery": "whatsapp",
+      "marketingOptIn": true,
+      "wantsWhatsappInvoice": true,
+      "status": "pending",
+      "subtotal": 115,
+      "tax": 16.1,
+      "total": 131.1,
+      "date": "2026-05-11T16:49:50.005Z",
+      "createdBy": "مدير النظام",
+      "discount": 0,
+      "discountType": "percent"
     }
   ],
   "tables": [
     {
       "id": 1,
       "number": 1,
-      "status": "available",
+      "status": "occupied",
       "capacity": 4,
-      "currentOrder": null
+      "currentOrder": 3
     },
     {
       "id": 2,
@@ -179,6 +214,17 @@
       "marketingOptIn": true,
       "preferredChannel": "whatsapp",
       "createdAt": "2026-05-11T14:44:08.877Z"
+    },
+    {
+      "id": 3,
+      "phone": "01211170364",
+      "name": "شهد",
+      "visits": 1,
+      "lastVisit": "2026-05-11T16:49:50.104Z",
+      "totalSpent": 131.1,
+      "marketingOptIn": true,
+      "preferredChannel": "whatsapp",
+      "createdAt": "2026-05-11T16:49:50.104Z"
     }
   ],
   "inventory": [],
