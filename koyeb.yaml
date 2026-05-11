@@ -11,6 +11,12 @@ service:
       value: "3000"
     - key: DB_PATH
       value: "/data/db.json"
+    - key: SECRET_KEY
+      value: "lucca-secret-key"
+  volumes:
+    - name: data
+      path: /data
+      size_gb: 1
   instance_type: free
   scalings:
     min: 1
