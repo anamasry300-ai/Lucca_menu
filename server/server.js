@@ -306,6 +306,56 @@ app.post('/api/change-password', (req, res) => {
     res.json({ success: true, message: 'تم تغيير كلمة المرور' });
 });
 
+// ==================== PostgreSQL Support (Cloud Deployment) ====================
+let pgPool = null;
+
+async function initPostgres() {
+    const { Pool } = require('pg');
+    pgPool = new Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+    await pgPool.query(`
+        CREATE TABLE IF NOT EXISTS store (
+            collection TEXT NOT NULL,
+            id INTEGER NOT NULL,
+            data JSONB NOT NULL,
+            PRIMARY KEY (collection, id)
+        )
+    `);
+    console.log('✅ PostgreSQL connected');
+    const result = await pgPool.query('SELECT collection, id, data FROM store ORDER BY collection, id');
+    const db = { orders: [], tables: [], customers: [], users: [], inventory: [], purchases: [], employees: [], attendance: [], settings: [] };
+    for (const row of result.rows) {
+        if (!db[row.collection]) db[row.collection] = [];
+        db[row.collection].push({ id: row.id, ...row.data });
+    }
+    writeDB(db);
+    console.log('✅ Data imported from PostgreSQL');
+}
+
+async function pgWriteDB(data) {
+    if (!pgPool) return;
+    const client = await pgPool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query('DELETE FROM store');
+        for (const [collection, items] of Object.entries(data)) {
+            if (!Array.isArray(items)) continue;
+            for (const item of items) {
+                const { id, ...rest } = item;
+                await client.query(
+                    'INSERT INTO store (collection, id, data) VALUES ($1, $2, $3) ON CONFLICT (collection, id) DO UPDATE SET data = $3',
+                    [collection, id, JSON.stringify(rest)]
+                );
+            }
+        }
+        await client.query('COMMIT');
+    } catch (e) {
+        await client.query('ROLLBACK');
+        throw e;
+    } finally {
+        client.release();
+    }
+}
+
 // ==================== Database ====================
 function readDB() {
     try {
@@ -326,6 +376,9 @@ function writeDB(data) {
     const tmp = DB_FILE + '.tmp';
     fs.writeFileSync(tmp, JSON.stringify(data, null, 2));
     fs.renameSync(tmp, DB_FILE);
+    if (pgPool) {
+        pgWriteDB(data).catch(e => console.error('PostgreSQL write error:', e.message));
+    }
 }
 
 function getNextId(collection) {
@@ -545,7 +598,16 @@ function ensureDefaultAdmin() {
     }
 }
 
-ensureDefaultAdmin();
+// ==================== Start Server ====================
+async function startServer() {
+    if (process.env.DATABASE_URL) {
+        try {
+            await initPostgres();
+        } catch (e) {
+            console.error('PostgreSQL init error:', e.message);
+        }
+    }
+    ensureDefaultAdmin();
 
 // ==================== Root Page ====================
 app.get('/', (req, res) => {
@@ -656,3 +718,7 @@ process.on('SIGINT', () => {
     console.log('\n👋 Server shutting down...');
     server.close(() => process.exit(0));
 });
+
+}
+
+startServer();
