@@ -1,0 +1,18 @@
+{
+  "name": "lucca-server",
+  "version": "1.0.0",
+  "description": "Lucca Caffè - API Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "public": "node server.js --tunnel",
+    "tunnel": "node server.js --tunnel"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.5.1",
+    "helmet": "^8.1.0",
+    "localtunnel": "^2.0.2"
+  }
+}

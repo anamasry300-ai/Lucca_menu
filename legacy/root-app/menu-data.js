@@ -175,5 +175,17 @@ const menuData = [
             { name: 'بيريل', price: '50', unit: 'ج.م' },
             { name: 'مياه', price: '10', unit: 'ج.م' }
         ]
+    },
+    {
+        title: 'الإضافات',
+        icon: '',
+        items: [
+            { name: 'شيكولاته', price: '35', unit: 'ج.م' },
+            { name: 'تويست', price: '35', unit: 'ج.م' },
+            { name: 'فيروز', price: '40', unit: 'ج.م' },
+            { name: 'ريدبول', price: '85', unit: 'ج.م' },
+            { name: 'بيريل', price: '50', unit: 'ج.م' },
+            { name: 'مياه', price: '10', unit: 'ج.م' }
+        ]
     }
 ];

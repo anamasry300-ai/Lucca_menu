@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucca Caffè - تسجيل الدخول</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        :root{--terracotta:#C85A3E;--olive:#697259;--cream:#F5F1E8;--warm-white:#FFF9F0;--dark-brown:#3E2723;}
+        body{font-family:'Tajawal',sans-serif;background:var(--cream);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+        .login-card{background:white;border-radius:20px;padding:40px 35px;width:100%;max-width:400px;box-shadow:0 10px 40px rgba(0,0,0,0.1);text-align:center;}
+        .login-card h1{font-family:'Playfair Display',serif;font-size:2.5rem;color:var(--terracotta);margin-bottom:5px;}
+        .login-card .sub{color:var(--olive);font-size:1rem;margin-bottom:30px;}
+        .form-group{text-align:right;margin-bottom:20px;}
+        .form-group label{display:block;color:var(--dark-brown);font-weight:600;margin-bottom:6px;font-size:0.95rem;}
+        .form-group input{width:100%;padding:12px 16px;border:2px solid #e0ddd5;border-radius:10px;font-size:1rem;font-family:'Tajawal',sans-serif;transition:0.3s;}
+        .form-group input:focus{outline:none;border-color:var(--terracotta);box-shadow:0 0 0 3px rgba(200,90,62,0.15);}
+        .btn-login{width:100%;padding:14px;background:var(--terracotta);color:white;border:none;border-radius:10px;font-size:1.1rem;font-weight:600;cursor:pointer;transition:0.3s;font-family:'Tajawal',sans-serif;}
+        .btn-login:hover{background:#A74632;transform:translateY(-1px);}
+        .btn-login:disabled{opacity:0.6;cursor:not-allowed;}
+        .error-msg{color:#e74c3c;font-size:0.9rem;margin-top:10px;display:none;}
+        .error-msg.show{display:block;}
+        .loading{display:none;margin:10px 0;}
+        .loading.show{display:block;}
+        .footer{margin-top:20px;color:#999;font-size:0.85rem;}
+        .password-hint{font-size:0.8rem;color:#999;margin-top:4px;}
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>LUCCA</h1>
+        <p class="sub">Caffè Italiano — لوحة التحكم</p>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>اسم المستخدم</label>
+                <input type="text" id="username" placeholder="admin" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="password" placeholder="••••••" autocomplete="current-password" required>
+                <div class="password-hint">الحساب الافتراضي: admin / 123456</div>
+            </div>
+            <button type="submit" class="btn-login" id="loginBtn">تسجيل الدخول</button>
+            <div class="loading" id="loading">جاري تسجيل الدخول...</div>
+            <div class="error-msg" id="errorMsg"></div>
+        </form>
+        <div class="footer">Lucca Caffè System</div>
+    </div>
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('errorMsg');
+
+            btn.disabled = true;
+            loading.classList.add('show');
+            error.classList.remove('show');
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || 'فشل تسجيل الدخول');
+                }
+                // Store user + token in sessionStorage (cleared when tab closes)
+                sessionStorage.setItem('luccaUser', JSON.stringify(data.user));
+                sessionStorage.setItem('luccaToken', data.token);
+                if (data.apiKey) {
+                    localStorage.setItem('luccaApiKey', data.apiKey);
+                }
+                // Redirect to admin panel
+                window.location.href = '/admin/admin.html';
+            } catch (e) {
+                error.textContent = e.message;
+                error.classList.add('show');
+                btn.disabled = false;
+                loading.classList.remove('show');
+            }
+        }
+
+        // Auto-redirect if already logged in
+        (async function() {
+            const token = sessionStorage.getItem('luccaToken');
+            if (token) {
+                try {
+                    const res = await fetch('/api/me', {
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (res.ok) {
+                        window.location.href = '/admin/admin.html';
+                    }
+                } catch(e) {}
+            }
+        })();
+    </script>
+</body>
+</html>

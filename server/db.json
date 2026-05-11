@@ -1,0 +1,198 @@
+{
+  "orders": [
+    {
+      "id": 1,
+      "tableId": 5,
+      "items": [
+        {
+          "name": "قهوة تركي",
+          "price": 35,
+          "quantity": 1,
+          "category": "قسم القهوة",
+          "selectedOrigin": ""
+        }
+      ],
+      "customerName": "رحمة",
+      "customerPhone": "01289394596",
+      "paymentMethod": "cash",
+      "customerNotes": "",
+      "invoiceDelivery": "whatsapp",
+      "marketingOptIn": true,
+      "wantsWhatsappInvoice": true,
+      "status": "pending",
+      "subtotal": 35,
+      "tax": 4.9,
+      "total": 39.9,
+      "date": "2026-05-11T13:38:55.908Z",
+      "createdBy": "مدير النظام",
+      "discount": 0,
+      "discountType": "percent"
+    },
+    {
+      "id": 2,
+      "tableId": 3,
+      "items": [
+        {
+          "name": "توست ميكس جبن (نصف)",
+          "price": 30,
+          "quantity": 1,
+          "category": "الفطور",
+          "selectedOrigin": ""
+        }
+      ],
+      "customerName": "احمد",
+      "customerPhone": "01551007413",
+      "paymentMethod": "cash",
+      "customerNotes": "",
+      "invoiceDelivery": "whatsapp",
+      "marketingOptIn": true,
+      "wantsWhatsappInvoice": true,
+      "status": "pending",
+      "subtotal": 30,
+      "tax": 4.2,
+      "total": 34.2,
+      "date": "2026-05-11T14:44:08.494Z",
+      "createdBy": "مدير النظام",
+      "discount": 0,
+      "discountType": "percent"
+    }
+  ],
+  "tables": [
+    {
+      "id": 1,
+      "number": 1,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 2,
+      "number": 2,
+      "status": "occupied",
+      "capacity": 4,
+      "currentOrder": 15
+    },
+    {
+      "id": 3,
+      "number": 3,
+      "status": "occupied",
+      "capacity": 4,
+      "currentOrder": 2
+    },
+    {
+      "id": 4,
+      "number": 4,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 5,
+      "number": 5,
+      "status": "occupied",
+      "capacity": 4,
+      "currentOrder": 1
+    },
+    {
+      "id": 6,
+      "number": 6,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 7,
+      "number": 7,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 8,
+      "number": 8,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 9,
+      "number": 9,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 10,
+      "number": 10,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 11,
+      "number": 11,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 12,
+      "number": 12,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 13,
+      "number": 13,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    },
+    {
+      "id": 14,
+      "number": 14,
+      "status": "available",
+      "capacity": 4,
+      "currentOrder": null
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "phone": "01289394596",
+      "name": "رحمة",
+      "visits": 1,
+      "lastVisit": "2026-05-11T13:38:56.069Z",
+      "totalSpent": 39.9,
+      "marketingOptIn": true,
+      "preferredChannel": "whatsapp",
+      "createdAt": "2026-05-11T13:38:56.069Z"
+    },
+    {
+      "id": 2,
+      "phone": "01551007413",
+      "name": "احمد",
+      "visits": 1,
+      "lastVisit": "2026-05-11T14:44:08.876Z",
+      "totalSpent": 34.2,
+      "marketingOptIn": true,
+      "preferredChannel": "whatsapp",
+      "createdAt": "2026-05-11T14:44:08.877Z"
+    }
+  ],
+  "inventory": [],
+  "purchases": [],
+  "employees": [],
+  "attendance": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "pbkdf2:3166883e9fe953f56f00d5ac2e43ada0:c47dab1d54b977959e8e647a3f5c4ab8bff9ae1497bea98ee130c4e89cc9d3ba9da725a7eb5835337e3c77a0846ae0f4a7966c9db78f6e1e86448477f25c5d5e",
+      "name": "مدير النظام",
+      "role": "admin",
+      "createdAt": "2026-05-09T16:41:06.035Z"
+    }
+  ]
+}
