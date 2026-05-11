@@ -1,0 +1,13 @@
+{
+  "name": "lucca-caffe",
+  "version": "1.0.0",
+  "description": "Lucca Caffè - Interactive Menu & Accounting System",
+  "scripts": {
+    "start": "cd server && npm start",
+    "postinstall": "cd server && npm install",
+    "build": "cd server && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
