@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucca Cafe - Interactive Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../admin/database.js"></script>
+    <script src="menu-data.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <h1>LUCCA</h1>
+                <div class="subtitle">Caffe Italiano</div>
+                <div class="location">شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
+            </div>
+        </div>
+
+        <div class="specialty-intro">
+            <h2>ما هي القهوة المختصه؟</h2>
+            <p>
+                في Lucca نهتم بأن تكون تجربة القهوة والطلبات كلها واضحة وسريعة. امسح الكود، اختر طلبك،
+                سجّل رقم الموبايل، وعند طلب الشيك يتم حفظ الطلب داخل النظام المحاسبي مع تجهيز الفاتورة
+                وإرسالها عبر واتساب عند اختيار ذلك.
+            </p>
+        </div>
+
+        <div class="quick-nav">
+            <div class="quick-nav-links" id="quickNavLinks"></div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث في القائمة...">
+                </div>
+            </div>
+        </div>
+
+        <div class="order-panel">
+            <div class="order-top">
+                <div class="order-table">
+                    <label for="tableSelect">رقم الطاولة:</label>
+                    <select id="tableSelect">
+                        <option value="">اختر الطاولة</option>
+                    </select>
+                    <select id="paymentMethod">
+                        <option value="cash">كاش</option>
+                        <option value="visa">فيزا</option>
+                    </select>
+                    <button class="free-table-btn" id="freeTableBtn" title="تحرير الطاولة">تحرير طاولة</button>
+                </div>
+                <div class="order-count-badge" id="orderCountBadge">0 صنف</div>
+                <button class="clear-order-btn" id="clearOrderBtn">تفريغ</button>
+            </div>
+
+            <div class="customer-panel">
+                <div class="customer-grid">
+                    <label class="field-group field-group-wide">
+                        <span>👤 اختر العميل</span>
+                        <div style="display:flex;gap:8px;">
+                            <select id="customerSelect" onchange="onCustomerSelect()" style="flex:1;">
+                                <option value="">➕ عميل جديد</option>
+                            </select>
+                            <button type="button" onclick="loadCustomerSelect()" title="تحديث قائمة العملاء" style="padding:8px 12px;border:2px solid var(--olive-light);border-radius:8px;background:var(--warm-white);cursor:pointer;">🔄</button>
+                        </div>
+                    </label>
+                    <label class="field-group">
+                        <span>اسم العميل</span>
+                        <input type="text" id="customerNameInput" placeholder="اختياري">
+                    </label>
+                    <label class="field-group">
+                        <span>رقم الموبايل</span>
+                        <input type="tel" id="customerPhoneInput" placeholder="01xxxxxxxxx">
+                    </label>
+                    <label class="field-group">
+                        <span>🏷️ الخصم %</span>
+                        <input type="number" id="discountInput" placeholder="0" min="0" max="100" value="0">
+                    </label>
+                    <label class="field-group">
+                        <span>استلام الفاتورة</span>
+                        <select id="invoiceDeliverySelect">
+                            <option value="whatsapp">واتساب</option>
+                            <option value="cashier">من الكاشير</option>
+                        </select>
+                    </label>
+                    <label class="field-group field-group-wide">
+                        <span>ملاحظات الطلب</span>
+                        <input type="text" id="customerNotesInput" placeholder="بدون سكر - حساب منفصل - طلب الشيك">
+                    </label>
+                </div>
+
+                <div class="customer-options">
+                    <label class="check-option">
+                        <input type="checkbox" id="offersOptIn" checked>
+                        <span>أوافق على استقبال العروض عبر واتساب</span>
+                    </label>
+                    <div class="integration-badge" id="integrationBadge">جاري تجهيز الربط مع النظام المحاسبي...</div>
+                </div>
+            </div>
+
+            <div class="order-summary" id="orderSummary">
+                <h3>طلبك</h3>
+                <p class="order-hint">اختر الطاولة وأضف الأصناف من المنيو ثم سجل الطلب</p>
+                <div id="orderItems" class="order-items"></div>
+                <div class="order-total">الإجمالي: <span id="orderTotal">0</span> ج.م</div>
+                <div class="order-actions">
+                    <button type="button" class="submit-order-btn" id="requestCheckBtn">📝 تسجيل الطلب</button>
+                    <button type="button" class="secondary-order-btn" id="requestBillBtn" style="background:var(--terracotta);color:white;" onclick="requestBill()">🧾 طلب الحساب</button>
+                    <button type="button" class="secondary-order-btn" id="copyInvoiceBtn">نسخ الملخص</button>
+                    <button type="button" class="secondary-order-btn" id="exportImageBtn">تصدير صورة</button>
+                    <button type="button" class="secondary-order-btn" id="exportPdfBtn">تصدير PDF</button>
+                    <button type="button" class="secondary-order-btn" id="exportDataBtn">تصدير JSON</button>
+                </div>
+                <div class="order-status" id="orderStatus">سيتم حفظ الطلب على النظام المحاسبي عند تسجيله.</div>
+            </div>
+        </div>
+
+        <div class="menu-content" id="menuContent"></div>
+
+        <div class="qr-section">
+            <h3>امسح QR للوصول للمنيو</h3>
+            <div class="qr-code-container">
+                <div id="qrcode"></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Lucca Caffe Italiano</p>
+            <p>شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
+            <p class="contact">للحجز والاستفسار: 01551007413</p>
+            <p style="margin-top: 15px; font-size: 0.9rem;">Buon Appetito!</p>
+        </div>
+    </div>
+
+    <div class="scroll-top" onclick="scrollToTop()">↑</div>
+
+    <div id="toast" class="toast"></div>
+
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal()">×</div>
+            <div class="modal-image" id="modalImage"></div>
+            <div class="modal-body">
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <div class="modal-price" id="modalPrice"></div>
+                <div class="modal-description" id="modalDescription"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="invoiceExportContainer" style="display:none; position:fixed; left:-9999px; top:0; width:400px; padding:30px; background:white; font-family:'Tajawal',Arial,sans-serif; direction:rtl;">
+        <div style="text-align:center; border-bottom:2px dashed #C85A3E; padding-bottom:20px; margin-bottom:20px;">
+            <h1 style="color:#C85A3E; font-size:2rem; margin:0;">LUCCA</h1>
+            <p style="color:#697259; margin:5px 0;">Caffe Italiano</p>
+            <p style="color:#666; font-size:0.9rem; margin:5px 0;">شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
+        </div>
+        <div id="invoiceExportContent"></div>
+        <div style="text-align:center; margin-top:20px; padding-top:15px; border-top:2px dashed #C85A3E;">
+            <p style="color:#C85A3E; font-weight:bold; margin:0;">Buon Appetito!</p>
+            <p style="color:#999; font-size:0.8rem; margin:5px 0;">للحجز والاستفسار: 01551007413</p>
+        </div>
+    </div>
+
+    <style>
+        .invoice-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .invoice-modal.show { display: flex; }
+        .invoice-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 15px;
+            padding: 25px;
+            direction: rtl;
+        }
+    </style>
+
+    <div class="invoice-modal" id="invoiceModal">
+        <div class="invoice-content">
+            <div id="invoiceContent"></div>
+            <div class="invoice-actions" style="display:flex;gap:10px;margin-top:20px;padding-top:15px;border-top:2px dashed #C85A3E;">
+                <button class="btn-print" style="flex:1;padding:12px;background:var(--terracotta);color:white;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">🧾 تأكيد وطباعة</button>
+                <button class="btn-close-invoice" style="flex:1;padding:12px;background:#eee;color:#333;border:none;border-radius:8px;cursor:pointer;font-size:1rem;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dbReady = false;
+        const currentOrder = [];
+        let lastInvoiceMessage = '';
+        let appMenuData = Array.isArray(menuData) ? menuData : [];
+
+        function generateQuickNav() {
+            const container = document.getElementById('quickNavLinks');
+            container.innerHTML = '';
+            appMenuData.forEach(category => {
+                const link = document.createElement('span');
+                link.className = 'quick-nav-link';
+                link.textContent = `${category.icon} ${category.title}`;
+                link.onclick = () => scrollToCategory(category.id);
+                container.appendChild(link);
+            });
+        }
+
+        function generateMenu() {
+            const container = document.getElementById('menuContent');
+            container.innerHTML = '';
+
+            appMenuData.forEach((category, categoryIndex) => {
+                const categoryHTML = `
+                    <div class="category" id="${category.id}">
+                        <div class="category-header" onclick="toggleCategory(this)">
+                            <h2><span class="category-icon">${category.icon}</span> ${category.title}</h2>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="category-items">
+                            ${category.items.map((item, itemIndex) => generateMenuItem(item, category, categoryIndex, itemIndex)).join('')}
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', categoryHTML);
+            });
+
+            attachMenuEvents();
+            renderOrderSummary();
+        }
+
+        function generateMenuItem(item, category, categoryIndex, itemIndex) {
+            const hasImage = item && item.image;
+            const hasOrigins = item.origins && item.origins.length > 0;
+            const originsHTML = hasOrigins
+                ? item.origins.map(origin => `
+                    <span class="origin-tag" data-category="${categoryIndex}" data-item="${itemIndex}" data-origin="${origin}">${origin}</span>
+                `).join('')
+                : '';
+
+            const badgeHTML = item.badge ? `<span class="badge badge-${item.badge}">${item.badge === 'popular' ? 'مطلوب' : item.badge === 'new' ? 'جديد' : 'مميز'}</span>` : '';
+
+            return `
+                <div class="menu-item" data-category="${categoryIndex}" data-item="${itemIndex}">
+                    <div class="item-image">
+                        ${hasImage ? `<img src="${item.image}" alt="${item.name}" onerror="this.style.display='none';this.parentElement.textContent='${category.icon}'">` : `${category.icon}`}
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <div class="item-name">${item.name} ${badgeHTML}</div>
+                            <div class="item-price-section">
+                                <div class="item-price">${item.price} <span class="price-unit">ج.م</span></div>
+                            </div>
+                        </div>
+                        ${item.description ? `<div class="item-description">${item.description}</div>` : ''}
+                        ${hasOrigins ? `
+                            <div class="origin-selection">
+                                <div class="origin-label">اختر المحصول:</div>
+                                <div class="origin-options">${originsHTML}</div>
+                            </div>
+                        ` : ''}
+                        <div class="item-actions">
+                            <button type="button" class="add-order-btn" data-category="${categoryIndex}" data-item="${itemIndex}">أضف للطلب</button>
+                            <button type="button" class="view-details-btn" data-category="${categoryIndex}" data-item="${itemIndex}">عرض التفاصيل</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function attachMenuEvents() {
+            document.querySelectorAll('.view-details-btn').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const categoryIndex = parseInt(this.dataset.category, 10);
+                    const itemIndex = parseInt(this.dataset.item, 10);
+                    const itemData = appMenuData[categoryIndex].items[itemIndex];
+                    openModal(itemData);
+                });
+            });
+
+            document.querySelectorAll('.origin-tag').forEach(tag => {
+                tag.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const categoryIndex = parseInt(this.dataset.category, 10);
+                    const itemIndex = parseInt(this.dataset.item, 10);
+                    const itemCard = document.querySelector(`.menu-item[data-category="${categoryIndex}"][data-item="${itemIndex}"]`);
+                    const originValue = this.dataset.origin;
+
+                    itemCard.querySelectorAll('.origin-tag').forEach(originTag => originTag.classList.remove('selected'));
+                    this.classList.add('selected');
+
+                    const descriptionEl = itemCard.querySelector('.item-description');
+                    const baseDescription = appMenuData[categoryIndex].items[itemIndex].description || '';
+                    if (descriptionEl) {
+                        descriptionEl.textContent = `المحصول: ${originValue}${baseDescription ? ` - ${baseDescription}` : ''}`;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.add-order-btn').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    const categoryIndex = parseInt(this.dataset.category, 10);
+                    const itemIndex = parseInt(this.dataset.item, 10);
+                    addToOrder(categoryIndex, itemIndex, this);
+                });
+            });
+
+            document.getElementById('clearOrderBtn').addEventListener('click', clearOrder);
+            document.getElementById('requestCheckBtn').addEventListener('click', requestCheck);
+            document.getElementById('copyInvoiceBtn').addEventListener('click', copyInvoiceSummary);
+            document.getElementById('exportImageBtn').addEventListener('click', exportInvoiceAsImage);
+            document.getElementById('exportPdfBtn').addEventListener('click', exportInvoiceAsPDF);
+            document.getElementById('exportDataBtn').addEventListener('click', exportOrderData);
+            document.getElementById('freeTableBtn').addEventListener('click', freeSelectedTable);
+            document.getElementById('tableSelect').addEventListener('change', function() {
+                const title = document.querySelector('.order-summary h3');
+                title.textContent = this.value ? `طلب طاولة ${this.value}` : 'طلبك';
+            });
+        }
+
+        async function loadTables() {
+            const select = document.getElementById('tableSelect');
+            select.innerHTML = '<option value="">اختر الطاولة</option>';
+
+            if (window.LuccaDB && window.LuccaDB.Tables) {
+                try {
+                    const tables = await window.LuccaDB.Tables.getAll();
+                    tables.forEach(table => {
+                        const option = document.createElement('option');
+                        option.value = table.number;
+                        const statusIcon = table.status === 'occupied' ? '🔴 مشغول' : '🟢 متاح';
+                        option.textContent = `طاولة ${table.number} - ${statusIcon}`;
+                        if (table.status === 'occupied') {
+                            option.disabled = true;
+                        }
+                        select.appendChild(option);
+                    });
+                } catch (e) {
+                    fallbackTables(select);
+                }
+            } else {
+                fallbackTables(select);
+            }
+            loadCustomerSelect();
+        }
+
+        function fallbackTables(select) {
+            for (let i = 1; i <= 14; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `طاولة ${i}`;
+                select.appendChild(option);
+            }
+        }
+
+        async function freeSelectedTable() {
+            const tableNum = document.getElementById('tableSelect').value;
+            if (!tableNum) {
+                setOrderStatus('اختر طاولة أولاً لتحريرها', 'error');
+                return;
+            }
+
+            if (window.LuccaDB && window.LuccaDB.Tables) {
+                try {
+                    await window.LuccaDB.Tables.update(parseInt(tableNum), { status: 'available', currentOrder: null });
+                    setOrderStatus(`طاولة ${tableNum} أصبحت متاحة ✓`, 'success');
+                    await loadTables();
+                } catch (e) {
+                    setOrderStatus('حدث خطأ أثناء تحرير الطاولة', 'error');
+                }
+            } else {
+                setOrderStatus('قاعدة البيانات غير متصلة', 'error');
+            }
+        }
+
+        function getSelectedOrigin(categoryIndex, itemIndex) {
+            const selectedTag = document.querySelector(`.menu-item[data-category="${categoryIndex}"][data-item="${itemIndex}"] .origin-tag.selected`);
+            return selectedTag ? selectedTag.dataset.origin : '';
+        }
+
+        function addToOrder(categoryIndex, itemIndex, buttonEl) {
+            const selectedOrigin = getSelectedOrigin(categoryIndex, itemIndex);
+            const existing = currentOrder.find(entry =>
+                entry.categoryIndex === categoryIndex &&
+                entry.itemIndex === itemIndex &&
+                entry.selectedOrigin === selectedOrigin
+            );
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                currentOrder.push({ categoryIndex, itemIndex, quantity: 1, selectedOrigin });
+            }
+
+            if (buttonEl) {
+                buttonEl.classList.add('added');
+                buttonEl.textContent = '✓';
+                setTimeout(() => {
+                    buttonEl.classList.remove('added');
+                    buttonEl.textContent = 'أضف للطلب';
+                }, 800);
+            }
+
+            renderOrderSummary();
+        }
+
+        function changeOrderQuantity(categoryIndex, itemIndex, selectedOrigin, delta) {
+            const entry = currentOrder.find(order =>
+                order.categoryIndex === categoryIndex &&
+                order.itemIndex === itemIndex &&
+                order.selectedOrigin === selectedOrigin
+            );
+
+            if (!entry) return;
+
+            entry.quantity += delta;
+            if (entry.quantity <= 0) {
+                currentOrder.splice(currentOrder.indexOf(entry), 1);
+            }
+            renderOrderSummary();
+        }
+
+        function clearOrder() {
+            currentOrder.length = 0;
+            renderOrderSummary();
+        }
+
+        function renderOrderSummary() {
+            const container = document.getElementById('orderItems');
+            const totalEl = document.getElementById('orderTotal');
+            const countBadge = document.getElementById('orderCountBadge');
+            container.innerHTML = '';
+            let total = 0;
+            let itemCount = 0;
+
+            if (currentOrder.length === 0) {
+                container.innerHTML = '<div class="empty-order">لم يتم اختيار أي صنف حتى الآن.</div>';
+                countBadge.textContent = '0 صنف';
+                countBadge.style.background = 'var(--olive)';
+            } else {
+                currentOrder.forEach(entry => {
+                    const itemData = appMenuData[entry.categoryIndex].items[entry.itemIndex];
+                    const itemLabel = entry.selectedOrigin ? `${itemData.name} - ${entry.selectedOrigin}` : itemData.name;
+                    const itemTotal = itemData.price * entry.quantity;
+                    total += itemTotal;
+                    itemCount += entry.quantity;
+
+                    container.insertAdjacentHTML('beforeend', `
+                        <div class="order-item">
+                            <div class="order-item-details">
+                                <div class="order-item-name">${itemLabel}</div>
+                                <div class="order-item-controls">
+                                    <button type="button" class="qty-btn" data-action="decrease" data-category="${entry.categoryIndex}" data-item="${entry.itemIndex}" data-origin="${entry.selectedOrigin || ''}">−</button>
+                                    <span>${entry.quantity}</span>
+                                    <button type="button" class="qty-btn" data-action="increase" data-category="${entry.categoryIndex}" data-item="${entry.itemIndex}" data-origin="${entry.selectedOrigin || ''}">+</button>
+                                </div>
+                            </div>
+                            <div class="order-item-price">${itemTotal} ج.م</div>
+                        </div>
+                    `);
+                });
+
+                countBadge.textContent = `${itemCount} صنف`;
+                countBadge.style.background = itemCount > 0 ? 'var(--terracotta)' : 'var(--olive)';
+            }
+
+            totalEl.textContent = total.toFixed(2);
+            attachOrderButtons();
+        }
+
+        function attachOrderButtons() {
+            document.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoryIndex = parseInt(this.dataset.category, 10);
+                    const itemIndex = parseInt(this.dataset.item, 10);
+                    const selectedOrigin = this.dataset.origin || '';
+                    const delta = this.dataset.action === 'increase' ? 1 : -1;
+                    changeOrderQuantity(categoryIndex, itemIndex, selectedOrigin, delta);
+                });
+            });
+        }
+
+        function setIntegrationBadge(message, connected) {
+            const badge = document.getElementById('integrationBadge');
+            badge.textContent = message;
+            badge.classList.toggle('connected', Boolean(connected));
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function setOrderStatus(message, state = 'neutral') {
+            const statusEl = document.getElementById('orderStatus');
+            statusEl.textContent = message;
+            statusEl.dataset.state = state;
+            showToast(message);
+        }
+
+        function normalizePhoneNumber(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            if (!digits) return '';
+            if (digits.startsWith('20')) return digits;
+            if (digits.length === 11 && digits.startsWith('0')) return `20${digits.slice(1)}`;
+            return digits;
+        }
+
+        async function loadCustomerSelect() {
+            const select = document.getElementById('customerSelect');
+            if (!select) return;
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- عميل جديد --</option>';
+            try {
+                if (window.LuccaDB && window.LuccaDB.Customers) {
+                    const customers = await window.LuccaDB.Customers.getAll();
+                    customers.sort((a, b) => (b.visits || 0) - (a.visits || 0));
+                    customers.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.phone;
+                        opt.textContent = `${c.name || 'بدون اسم'} (${c.phone}) - ${c.visits || 0} زيارة`;
+                        select.appendChild(opt);
+                    });
+                }
+            } catch(e) { console.log('Customer load:', e.message); }
+            if (currentVal) select.value = currentVal;
+        }
+
+        function onCustomerSelect() {
+            const select = document.getElementById('customerSelect');
+            const phoneInput = document.getElementById('customerPhoneInput');
+            const nameInput = document.getElementById('customerNameInput');
+            const val = select.value;
+            if (!val) { nameInput.value = ''; phoneInput.value = ''; return; }
+            phoneInput.value = val;
+            try {
+                LuccaDB.Customers.getAll().then(customers => {
+                    const c = customers.find(x => x.phone === val);
+                    if (c) nameInput.value = c.name || '';
+                });
+            } catch(e) {}
+        }
+
+        function collectCustomerForm() {
+            return {
+                customerName: document.getElementById('customerNameInput').value.trim(),
+                customerPhone: document.getElementById('customerPhoneInput').value.trim(),
+                customerNotes: document.getElementById('customerNotesInput').value.trim(),
+                invoiceDelivery: document.getElementById('invoiceDeliverySelect').value,
+                offersOptIn: document.getElementById('offersOptIn').checked,
+                discount: parseFloat(document.getElementById('discountInput').value) || 0
+            };
+        }
+
+        function buildOrderPayload() {
+            return currentOrder.map(entry => {
+                const itemData = appMenuData[entry.categoryIndex].items[entry.itemIndex];
+                const label = entry.selectedOrigin ? `${itemData.name} - ${entry.selectedOrigin}` : itemData.name;
+
+                return {
+                    name: label,
+                    price: itemData.price,
+                    quantity: entry.quantity,
+                    category: appMenuData[entry.categoryIndex].title,
+                    selectedOrigin: entry.selectedOrigin || ''
+                };
+            });
+        }
+
+        async function copyInvoiceSummary() {
+            const items = buildOrderPayload();
+            if (items.length === 0) {
+                setOrderStatus('أضف أصنافاً أولاً.', 'error');
+                return;
+            }
+
+            const formData = collectCustomerForm();
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = formData.discount || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const total = subtotal - discountAmount;
+
+            const lines = [
+                '☕ *فاتورة LUCCA* ☕',
+                '━━━━━━━━━━━━━━━━',
+                `الطاولة: ${document.getElementById('tableSelect').value || '-'}, ${new Date().toLocaleDateString('ar-EG')}`,
+                '',
+                '━━━━━━━━━━━━━━━━',
+                '*الطلبات:*',
+                ...items.map(item => `• ${item.name} x${item.quantity} = ${item.price * item.quantity} ج.م`),
+                '━━━━━━━━━━━━━━━━',
+                `✅ *الإجمالي: ${subtotal} ج.م*`,
+                discount > 0 ? `🏷️ الخصم: ${discount}% (-${discountAmount.toFixed(2)} ج.م)` : '',
+                `💰 *المطلوب: ${total.toFixed(2)} ج.م*`,
+                '━━━━━━━━━━━━━━━━',
+                formData.customerNotes ? `📝 ملاحظة: ${formData.customerNotes}` : '',
+                '',
+                'شكراً لزيارتكم! 🙏'
+            ].filter(line => line !== '');
+
+            lastInvoiceMessage = lines.join('\n');
+
+            try {
+                await navigator.clipboard.writeText(lastInvoiceMessage);
+                setOrderStatus('تم✓ نسخ الفاتورة', 'success');
+            } catch (error) {
+                setOrderStatus('حدث خطأ.', 'error');
+            }
+        }
+
+        function exportOrderData() {
+            const items = buildOrderPayload();
+            if (items.length === 0) {
+                setOrderStatus('أضف أصنافاً أولاً.', 'error');
+                return;
+            }
+
+            const formData = collectCustomerForm();
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = formData.discount || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const total = subtotal - discountAmount;
+
+            const exportData = {
+                cafe: { name: 'LUCCA', phone: '01551007413' },
+                order: {
+                    id: Date.now(),
+                    tableId: document.getElementById('tableSelect').value,
+                    date: new Date().toISOString(),
+                    customer: { name: formData.customerName, phone: formData.customerPhone },
+                    items: items.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        total: item.price * item.quantity
+                    })),
+                    subtotal: subtotal,
+                    discount: discount,
+                    discountAmount: discountAmount,
+                    total: total,
+                    currency: 'EGP'
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.download = `LUCCA_Order_${new Date().toISOString().slice(0,10)}.json`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            URL.revokeObjectURL(link.href);
+
+            setOrderStatus('تم✓ تصدير البيانات', 'success');
+        }
+
+        function generateInvoiceHTML(order, formData, subtotal) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            const discount = formData.discount || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const total = subtotal - discountAmount;
+
+            return `
+                <div style="margin-bottom:15px; text-align:center;">
+                    <strong style="color:#3E2723; font-size:1.1rem;">فاتورة رقم #${String(order.id || Date.now()).padStart(4, '0')}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem; color:#666;">
+                    <span>التاريخ: ${dateStr}</span>
+                    <span>الوقت: ${timeStr}</span>
+                </div>
+                <div style="margin-bottom:10px; font-size:0.9rem; color:#666;">
+                    <div>رقم الطاولة: ${order.tableId || '-'}</div>
+                    ${formData.customerName ? `<div>اسم العميل: ${formData.customerName}</div>` : ''}
+                    ${formData.customerPhone ? `<div>رقم الموبايل: ${formData.customerPhone}</div>` : ''}
+                </div>
+                <div style="border-top:1px solid #eee; margin:15px 0;"></div>
+                <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
+                    <thead>
+                        <tr style="background:#F5F1E8;">
+                            <th style="padding:10px 5px; text-align:right;">الصنف</th>
+                            <th style="padding:10px 5px; text-align:center; width:50px;">الكمية</th>
+                            <th style="padding:10px 5px; text-align:left; width:80px;">السعر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${order.items.map(item => `
+                            <tr style="border-bottom:1px solid #f0f0f0;">
+                                <td style="padding:10px 5px;">${item.name}</td>
+                                <td style="padding:10px 5px; text-align:center;">${item.quantity}</td>
+                                <td style="padding:10px 5px; text-align:left;">${(item.price * item.quantity).toFixed(2)} ج.م</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                <div style="border-top:2px solid #C85A3E; margin-top:15px; padding-top:15px;">
+                    <div style="display:flex; justify-content:space-between; margin:8px 0; font-size:1rem; color:#666;">
+                        <span>المجموع:</span>
+                        <span>${subtotal.toFixed(2)} ج.م</span>
+                    </div>
+                    ${discount > 0 ? `
+                    <div style="display:flex; justify-content:space-between; margin:8px 0; font-size:1rem; color:#e67e22;">
+                        <span>الخصم (${discount}%):</span>
+                        <span>-${discountAmount.toFixed(2)} ج.م</span>
+                    </div>` : ''}
+                    <div style="display:flex; justify-content:space-between; margin:8px 0; font-size:1.2rem; font-weight:bold; color:#C85A3E;">
+                        <span>الإجمالي:</span>
+                        <span>${total.toFixed(2)} ج.م</span>
+                    </div>
+                </div>
+                ${formData.customerNotes ? `
+                    <div style="margin-top:15px; padding:10px; background:#FFF9F0; border-radius:8px; font-size:0.9rem;">
+                        <strong>ملاحظات:</strong> ${formData.customerNotes}
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        async function exportInvoiceAsImage() {
+            const items = buildOrderPayload();
+            if (items.length === 0) {
+                setOrderStatus('أضف أصنافاً أولاً.', 'error');
+                return;
+            }
+
+            if (typeof html2canvas === 'undefined') {
+                setOrderStatus('مكتبة التصدير لم يتم تحميلها - تأكد من الاتصال بالإنترنت', 'error');
+                return;
+            }
+
+            const formData = collectCustomerForm();
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tableNum = document.getElementById('tableSelect').value || '-';
+            const orderId = Date.now();
+
+            setOrderStatus('جارٍ تجهيز الصورة...', 'neutral');
+
+            const previewOrder = { id: orderId, tableId: tableNum, items };
+            const content = document.getElementById('invoiceExportContent');
+            content.innerHTML = generateInvoiceHTML(previewOrder, formData, subtotal);
+
+            const exportContainer = document.getElementById('invoiceExportContainer');
+            const origDisplay = exportContainer.style.display;
+            exportContainer.style.display = 'block';
+            exportContainer.style.left = '-10000px';
+
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            try {
+                const canvas = await html2canvas(exportContainer, {
+                    scale: 2,
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                    logging: false,
+                    width: 400,
+                    height: exportContainer.offsetHeight + 20
+                });
+
+                exportContainer.style.display = origDisplay;
+                exportContainer.style.left = '-9999px';
+
+                const imageData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `LUCCA_Invoice_${new Date().toISOString().slice(0,10)}.png`;
+                link.href = imageData;
+                link.click();
+
+                setOrderStatus('تم تحميل صورة الفاتورة ✓', 'success');
+            } catch (error) {
+                exportContainer.style.display = origDisplay;
+                exportContainer.style.left = '-9999px';
+                console.error('Export failed:', error);
+                setOrderStatus('فشل التصدير - ' + error.message, 'error');
+            }
+        }
+
+        async function exportInvoiceAsPDF() {
+            const items = buildOrderPayload();
+            if (items.length === 0) {
+                setOrderStatus('أضف أصنافاً أولاً.', 'error');
+                return;
+            }
+
+            const formData = collectCustomerForm();
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = formData.discount || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const total = subtotal - discountAmount;
+
+            setOrderStatus('جارٍ إنشاء PDF...', 'neutral');
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a5');
+                const pageWidth = doc.internal.pageSize.getWidth();
+
+                doc.setFillColor(245, 241, 232);
+                doc.rect(0, 0, pageWidth, doc.internal.pageSize.getHeight(), 'F');
+
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(28);
+                doc.setTextColor(200, 90, 62);
+                doc.text('LUCCA', pageWidth / 2, 20, { align: 'center' });
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(10);
+                doc.setTextColor(105, 114, 89);
+                doc.text('Caffe Italiano', pageWidth / 2, 26, { align: 'center' });
+
+                doc.setFontSize(8);
+                doc.setTextColor(150);
+                doc.text('شارع محمد علي - بورسعيد', pageWidth / 2, 32, { align: 'center' });
+
+                doc.setDrawColor(200, 90, 62);
+                doc.setLineWidth(0.5);
+                doc.line(15, 36, pageWidth - 15, 36);
+
+                doc.setFontSize(12);
+                doc.setTextColor(62, 39, 35);
+                doc.text(`فاتورة #${String(Date.now()).slice(-6)}`, pageWidth / 2, 44, { align: 'center' });
+
+                doc.setFontSize(9);
+                doc.setTextColor(100);
+                doc.text(new Date().toLocaleDateString('ar-EG'), pageWidth / 2, 50, { align: 'center' });
+                doc.text(`الطاولة: ${document.getElementById('tableSelect').value || '-'}`, pageWidth / 2, 55, { align: 'center' });
+
+                let y = 65;
+                doc.setFontSize(9);
+                doc.setTextColor(62, 39, 35);
+                doc.text('الصنف', 15, y);
+                doc.text('العدد', pageWidth - 35, y);
+                doc.text('السعر', pageWidth - 15, y);
+
+                y += 8;
+                doc.setTextColor(60);
+                items.forEach(item => {
+                    doc.text(item.name.substring(0, 20), 15, y);
+                    doc.text(String(item.quantity), pageWidth - 35, y);
+                    doc.text(`${(item.price * item.quantity)} ج.م`, pageWidth - 15, y);
+                    y += 6;
+                });
+
+                y += 4;
+                doc.setDrawColor(200, 90, 62);
+                doc.line(15, y, pageWidth - 15, y);
+
+                y += 8;
+                doc.setFontSize(11);
+                doc.setTextColor(200, 90, 62);
+                doc.text(`المجموع: ${subtotal} ج.م`, pageWidth - 15, y, { align: 'right' });
+                y += 6;
+                if (discount > 0) {
+                    doc.setTextColor(230, 126, 34);
+                    doc.text(`الخصم (${discount}%): -${discountAmount.toFixed(2)} ج.م`, pageWidth - 15, y, { align: 'right' });
+                    y += 6;
+                }
+                doc.setFontSize(14);
+                doc.setTextColor(200, 90, 62);
+                doc.text(`الإجمالي: ${total.toFixed(2)} ج.م`, pageWidth - 15, y, { align: 'right' });
+
+                y += 12;
+                doc.setFontSize(8);
+                doc.setTextColor(200, 90, 62);
+                doc.text('شكراً لزيارتكم!', pageWidth / 2, y, { align: 'center' });
+                doc.text('01551007413', pageWidth / 2, y + 4, { align: 'center' });
+
+                doc.save(`LUCCA_Invoice_${new Date().toISOString().slice(0,10)}.pdf`);
+                setOrderStatus('تم إنشاء PDF ✓', 'success');
+            } catch (error) {
+                console.error('PDF Error:', error);
+                setOrderStatus('فشل إنشاء PDF', 'error');
+            }
+        }
+
+        // ==================== السلة والطلبات ====================
+        let currentOrderId = null; // Track current pending order for selected table
+
+        async function onTableChange() {
+            const tableNum = document.getElementById('tableSelect').value;
+            currentOrderId = null;
+            if (!tableNum || !window.LuccaDB) return;
+            
+            try {
+                const orders = await LuccaDB.Orders.getAll();
+                const pending = orders.find(o => o.tableId == tableNum && o.status === 'pending');
+                if (pending) {
+                    currentOrderId = pending.id;
+                    document.getElementById('customerNameInput').value = pending.customerName || '';
+                    document.getElementById('customerPhoneInput').value = pending.customerPhone || '';
+                    document.getElementById('discountInput').value = pending.discount || 0;
+                    document.getElementById('customerNotesInput').value = pending.customerNotes || '';
+                    document.getElementById('paymentMethod').value = pending.paymentMethod || 'cash';
+
+                    // Load existing items into currentOrder
+                    currentOrder.length = 0;
+                    const allItems = appMenuData.flatMap((cat, ci) =>
+                        cat.items.map((item, ii) => ({ ci, ii, name: item.name }))
+                    );
+                    (pending.items || []).forEach(pi => {
+                        const match = allItems.find(a => a.name === pi.name);
+                        if (match) {
+                            currentOrder.push({ categoryIndex: match.ci, itemIndex: match.ii, quantity: pi.quantity, selectedOrigin: pi.selectedOrigin || '' });
+                        }
+                    });
+                    renderOrderSummary();
+                    
+                    document.getElementById('orderSummary').querySelector('.order-hint').textContent = 
+                        `🔄 طلب موجود (فاتورة #${pending.id}) - أضف أصناف جديدة`;
+                    document.getElementById('requestCheckBtn').textContent = '➕ إضافة للطلب';
+                } else {
+                    currentOrder.length = 0;
+                    renderOrderSummary();
+                    document.getElementById('orderSummary').querySelector('.order-hint').textContent = 
+                        'أضف الأصناف من المنيو';
+                    document.getElementById('requestCheckBtn').textContent = '📝 تسجيل الطلب';
+                }
+            } catch(e) { console.log('Table change:', e); }
+        }
+
+        // Listen for table change
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableSelect = document.getElementById('tableSelect');
+            if (tableSelect) {
+                tableSelect.addEventListener('change', onTableChange);
+            }
+        });
+
+        async function requestCheck() {
+            const items = buildOrderPayload();
+            if (items.length === 0) {
+                setOrderStatus('أضف أصنافاً أولاً.', 'error');
+                return;
+            }
+
+            const formData = collectCustomerForm();
+            const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = formData.discount || 0;
+            const discountAmount = subtotal * (discount / 100);
+            const afterDiscount = subtotal - discountAmount;
+            const tableNum = document.getElementById('tableSelect').value || null;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+
+            if (!tableNum) {
+                setOrderStatus('اختر رقم الطاولة أولاً.', 'error');
+                return;
+            }
+
+            setOrderStatus('جارٍ حفظ الطلب...', 'neutral');
+
+            try {
+                if (currentOrderId && window.LuccaDB && window.LuccaDB.Orders) {
+                    // Update existing order - add items
+                    const orders = await LuccaDB.Orders.getAll();
+                    const existing = orders.find(o => o.id === currentOrderId);
+                    if (existing) {
+                        // Merge items
+                        const mergedItems = [...(existing.items || [])];
+                        items.forEach(newItem => {
+                            const found = mergedItems.find(mi => mi.name === newItem.name);
+                            if (found) found.quantity += newItem.quantity;
+                            else mergedItems.push(newItem);
+                        });
+                        const newSubtotal = mergedItems.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+                        const newDiscountAmount = newSubtotal * (discount / 100);
+                        const newAfterDiscount = newSubtotal - newDiscountAmount;
+                        const taxRate = parseFloat(await LuccaDB.Settings.get('taxRate')) || 14;
+                        const newTax = newAfterDiscount * (taxRate / 100);
+
+                        await LuccaDB.Orders.updateOrder(currentOrderId, {
+                            items: mergedItems,
+                            customerName: formData.customerName,
+                            customerPhone: formData.customerPhone,
+                            paymentMethod: paymentMethod,
+                            discount: discount,
+                            discountAmount: newDiscountAmount,
+                            subtotal: newSubtotal,
+                            tax: newTax,
+                            total: newAfterDiscount + newTax,
+                            customerNotes: formData.customerNotes
+                        });
+                    }
+                } else if (window.LuccaDB && window.LuccaDB.Orders) {
+                    // Create new pending order
+                    const order = await LuccaDB.Orders.create(
+                        parseInt(tableNum),
+                        items,
+                        formData.customerName,
+                        formData.customerPhone,
+                        {
+                            paymentMethod,
+                            customerNotes: formData.customerNotes,
+                            marketingOptIn: formData.offersOptIn,
+                            invoiceDelivery: formData.invoiceDelivery,
+                            discount: formData.discount,
+                            status: 'pending'
+                        }
+                    );
+                    currentOrderId = order.id;
+                }
+
+                // Push to server if available
+                try {
+                    const serverUrl = localStorage.getItem('luccaServerUrl') || 'http://localhost:3000';
+                    const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+                    const allOrders = await LuccaDB.Orders.getAll();
+                    const allCustomers = await LuccaDB.Customers.getAll();
+                    await fetch(`${serverUrl}/api/sync`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+                        body: JSON.stringify({
+                            orders: allOrders,
+                            customers: allCustomers,
+                            tables: await LuccaDB.Tables.getAll(),
+                            settings: await LuccaDB.Settings.getAll(),
+                            inventory: [],
+                            purchases: [],
+                            employees: [],
+                            attendance: [],
+                            users: []
+                        })
+                    });
+                } catch(e) { console.log('Server push:', e.message); }
+
+                setIntegrationBadge('متصل✓', true);
+                setOrderStatus(`✅ تم تسجيل الطلب - الطاولة ${tableNum}`, 'success');
+                
+                // Don't clear - let captain keep adding
+                // But clear the item selection
+                currentOrder.length = 0;
+                document.getElementById('orderItems').innerHTML = '';
+                document.getElementById('orderTotal').textContent = '0';
+                document.getElementById('requestCheckBtn').textContent = '➕ إضافة للطلب';
+                document.getElementById('orderSummary').querySelector('.order-hint').textContent = 
+                    `🔄 طلب موجود (فاتورة #${currentOrderId}) - أضف أصناف جديدة`;
+                
+                await loadTables();
+                await loadCustomerSelect();
+
+                // Send WhatsApp if requested
+                if (formData.invoiceDelivery === 'whatsapp' && formData.customerPhone) {
+                    const msg = `☕ *Lucca Caffè*\n━━━━━━━━━━━━\n🪑 الطاولة: ${tableNum}\n📅 ${new Date().toLocaleDateString('ar-EG')}\n━━━━━━━━━━━━\n*الطلب:*\n${items.map(i => `• ${i.name} x${i.quantity} = ${i.price * i.quantity} ج.م`).join('\n')}\n━━━━━━━━━━━━\n💵 *الإجمالي: ${afterDiscount.toFixed(2)} ج.م*\n━━━━━━━━━━━━\nجارٍ تجهيز الطلب... 🙏`;
+                    const phone = normalizePhoneNumber(formData.customerPhone);
+                    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+                }
+            } catch (e) {
+                setOrderStatus('❌ فشل حفظ الطلب: ' + e.message, 'error');
+                console.error('Order error:', e);
+            }
+        }
+
+        function requestBill() {
+            const tableNum = document.getElementById('tableSelect').value;
+            if (!tableNum) { setOrderStatus('اختر الطاولة أولاً', 'error'); return; }
+            if (currentOrder.length === 0) { setOrderStatus('لا يوجد أصناف في الطلب', 'error'); return; }
+            if (!currentOrderId) {
+                setOrderStatus('سجل الطلب أولاً ثم اطلب الحساب', 'error');
+                return;
+            }
+            openInvoiceModal();
+        }
+
+        async function openInvoiceModal() {
+            const tableNum = document.getElementById('tableSelect').value;
+            const orders = await LuccaDB.Orders.getAll();
+            const order = orders.find(o => o.id === currentOrderId);
+            if (!order) { setOrderStatus('الطلب غير موجود', 'error'); return; }
+
+            // Complete the order immediately for accounting
+            await LuccaDB.Orders.updateStatus(currentOrderId, 'completed');
+            const completedOrderId = currentOrderId;
+            currentOrderId = null;
+
+            const items = order.items || [];
+            const formData = {
+                customerName: order.customerName || '',
+                customerPhone: order.customerPhone || '',
+                customerNotes: order.customerNotes || '',
+                discount: order.discount || 0
+            };
+
+            const subtotal = items.reduce((s, i) => s + (i.price * i.quantity), 0);
+            const discount = formData.discount || 0;
+            const total = subtotal - (subtotal * discount / 100);
+
+            // Show invoice in modal
+            const modal = document.getElementById('invoiceModal');
+            const content = document.getElementById('invoiceContent');
+            content.innerHTML = generateInvoiceHTML(order, formData, subtotal);
+            modal.classList.add('show');
+
+            // Print
+            document.querySelector('#invoiceModal .btn-print').onclick = () => {
+                printInvoiceContent(content.innerHTML);
+                modal.classList.remove('show');
+                clearOrder();
+                loadTables();
+                setOrderStatus('✅ تمت طباعة الفاتورة والطلب مسجل في المحاسبة', 'success');
+            };
+
+            // Close
+            document.querySelector('#invoiceModal .btn-close-invoice').onclick = () => {
+                modal.classList.remove('show');
+                clearOrder();
+                loadTables();
+                setOrderStatus('✅ الطلب مسجل في المحاسبة', 'success');
+            };
+        }
+
+        function printInvoiceContent(html) {
+            const w = window.open('', '_blank', 'width=400,height=600');
+            w.document.write(`<html><head><meta charset="utf-8"><style>
+                *{margin:0;padding:0;box-sizing:border-box;}
+                body{font-family:Tahoma,sans-serif;font-size:12px;padding:15px;direction:rtl;}
+                table{width:100%;border-collapse:collapse;margin:10px 0;}
+                th,td{padding:6px;text-align:center;border-bottom:1px solid #ddd;}
+                th{background:#f5f1e8;}
+                .total{font-size:16px;font-weight:bold;border-top:2px solid #C85A3E;padding-top:10px;margin-top:10px;}
+                @media print{body{print-color-adjust:exact;}}
+            </style></head><body>${html}</body></html>`);
+            w.document.close();
+            w.print();
+        }
+
+        function toggleCategory(header) {
+            header.parentElement.classList.toggle('expanded');
+        }
+
+        function scrollToCategory(id) {
+            const element = document.getElementById(id);
+            if (!element) return;
+
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                if (!element.classList.contains('expanded')) {
+                    element.querySelector('.category-header').click();
+                }
+            }, 350);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(event) {
+            const searchTerm = event.target.value.toLowerCase();
+            const categories = document.querySelectorAll('.category');
+            let anyVisible = false;
+
+            categories.forEach(category => {
+                const items = category.querySelectorAll('.menu-item');
+                let hasVisible = false;
+
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        hasVisible = true;
+                        anyVisible = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                category.style.display = hasVisible || !searchTerm ? 'block' : 'none';
+                if (hasVisible && searchTerm) {
+                    category.classList.add('expanded');
+                }
+            });
+
+            const noResults = document.getElementById('noResultsMessage');
+            if (!anyVisible && searchTerm) {
+                if (!noResults) {
+                    document.getElementById('menuContent').insertAdjacentHTML('beforeend', '<div id="noResultsMessage" class="no-results">لا توجد نتائج مطابقة للبحث.</div>');
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        });
+
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.querySelector('.scroll-top');
+            if (window.scrollY > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openModal(itemData) {
+            const modal = document.getElementById('itemModal');
+            document.getElementById('modalTitle').textContent = itemData.name;
+            document.getElementById('modalPrice').textContent = `${itemData.price} ج.م`;
+            document.getElementById('modalDescription').textContent = itemData.description || '';
+
+            const imageContainer = document.getElementById('modalImage');
+            if (itemData.image) {
+                imageContainer.innerHTML = `<img src="${itemData.image}" alt="${itemData.name}">`;
+            } else {
+                const category = appMenuData.find(entry => entry.items.includes(itemData));
+                imageContainer.textContent = category ? category.icon : '☕';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').classList.remove('active');
+        }
+
+        document.getElementById('itemModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+
+        try {
+            new QRCode(document.getElementById('qrcode'), {
+                text: window.location.href,
+                width: 200,
+                height: 200,
+                colorDark: '#3E2723',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } catch(e) { console.log('QRCode error:', e.message); }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            generateQuickNav();
+            generateMenu();
+
+            if (window.LuccaDB && window.LuccaDB.initSystem) {
+                try {
+                    await window.LuccaDB.initSystem();
+                    setIntegrationBadge('متصل✓', true);
+                    dbReady = true;
+                    await loadTables();
+                    await loadCustomerSelect();
+
+                    // Sync customers from server
+                    try {
+                        const serverUrl = localStorage.getItem('luccaServerUrl') || 'http://localhost:3000';
+                        const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+                        const res = await fetch(`${serverUrl}/api/customers`, {
+                            headers: { 'x-api-key': apiKey }
+                        });
+                        if (res.ok) {
+                            const serverCustomers = await res.json();
+                            const localCustomers = await LuccaDB.Customers.getAll();
+                            for (const sc of serverCustomers) {
+                                if (!localCustomers.find(lc => lc.phone === sc.phone)) {
+                                    await LuccaDB.Customers.add(sc.phone, sc.name || '', {
+                                        marketingOptIn: sc.marketingOptIn,
+                                        preferredChannel: sc.preferredChannel || 'cashier',
+                                        lastOrderTotal: sc.totalSpent || 0
+                                    });
+                                }
+                            }
+                            await loadCustomerSelect();
+                        }
+                    } catch(e) { console.log('Server sync:', e.message); }
+                } catch (e) {
+                    setIntegrationBadge('غير متصل', false);
+                    fallbackTables(document.getElementById('tableSelect'));
+                    await loadCustomerSelect();
+                }
+            } else {
+                fallbackTables(document.getElementById('tableSelect'));
+                await loadCustomerSelect();
+            }
+
+            const firstCategory = document.querySelector('.category');
+            if (firstCategory) {
+                firstCategory.classList.add('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
