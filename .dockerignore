@@ -1,9 +1,0 @@
-node_modules/
-server/node_modules/
-server/certs/
-.git/
-docs/
-legacy/
-*.md
-.gitignore
-.dockerignore
