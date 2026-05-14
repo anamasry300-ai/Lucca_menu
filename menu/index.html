@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucca Café - Menu | قائمة مقهى لوكا</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lucca Café - Menu</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Tajawal:wght@300;400;500;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
@@ -18,435 +18,348 @@
             --warm-white: #FFFCF5;
             --dark-brown: #3E2723;
             --gold: #D4AF37;
+            --shadow: 0 4px 20px rgba(62, 39, 35, 0.1);
+            --radius: 16px;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tajawal', sans-serif;
-            background: linear-gradient(135deg, var(--cream) 0%, var(--warm-white) 100%);
+            background: var(--cream);
             color: var(--dark-brown);
-            line-height: 1.6;
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
         }
-
         .container {
             max-width: 900px;
             margin: 0 auto;
             background: var(--warm-white);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(62, 39, 35, 0.15);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeIn 0.6s ease-out;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .header {
-            background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
-            padding: 50px 30px;
+            background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark));
+            padding: 40px 20px 30px;
             text-align: center;
             position: relative;
-            overflow: hidden;
         }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-            opacity: 0.3;
-        }
-
-        .logo {
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo h1 {
+        .header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
+            font-size: 3.5rem;
             font-weight: 900;
             color: var(--warm-white);
             letter-spacing: 0.05em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            animation: slideDown 1s ease-out;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.15);
         }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo .subtitle {
+        .header .subtitle {
             font-family: 'Amiri', serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: var(--cream);
-            font-weight: 400;
-            letter-spacing: 0.15em;
-            animation: slideDown 1s ease-out 0.2s backwards;
+            letter-spacing: 0.1em;
+            margin-top: 5px;
         }
-
-        .location {
-            font-size: 0.95rem;
+        .header .location {
+            font-size: 0.9rem;
             color: var(--cream);
-            margin-top: 15px;
-            opacity: 0.9;
-            animation: slideDown 1s ease-out 0.4s backwards;
+            margin-top: 12px;
+            opacity: 0.85;
         }
 
         .specialty-intro {
-            background: linear-gradient(135deg, var(--olive) 0%, var(--olive-light) 100%);
-            padding: 30px;
-            color: var(--warm-white);
+            background: linear-gradient(135deg, var(--olive), var(--olive-light));
+            padding: 24px 20px;
             text-align: center;
             border-bottom: 3px solid var(--gold);
         }
-
         .specialty-intro h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-bottom: 15px;
+            font-size: 1.4rem;
             color: var(--gold);
+            margin-bottom: 10px;
         }
-
         .specialty-intro p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            max-width: 700px;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--warm-white);
+            max-width: 600px;
             margin: 0 auto;
         }
 
         .search-container {
-            padding: 25px 30px;
-            background: var(--cream);
-            border-bottom: 2px solid var(--olive-light);
+            padding: 16px 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--warm-white);
         }
-
         .search-box {
             position: relative;
         }
-
         .search-box input {
             width: 100%;
-            padding: 15px 50px 15px 20px;
-            border: 2px solid var(--olive-light);
+            padding: 14px 44px 14px 16px;
+            border: 2px solid var(--cream);
             border-radius: 12px;
             font-size: 1rem;
             font-family: 'Tajawal', sans-serif;
-            background: var(--warm-white);
+            background: var(--cream);
             color: var(--dark-brown);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
-
         .search-box input:focus {
             outline: none;
             border-color: var(--terracotta);
+            background: var(--warm-white);
             box-shadow: 0 0 0 3px rgba(200, 90, 62, 0.1);
         }
-
         .search-box::after {
             content: '🔍';
             position: absolute;
-            left: 20px;
+            right: 14px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.2rem;
+            font-size: 1.1rem;
         }
 
-        .menu-content {
-            padding: 30px;
+        .controls {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--warm-white);
+            position: sticky;
+            top: 68px;
+            z-index: 10;
         }
+        .controls button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-expand {
+            background: var(--terracotta);
+            color: white;
+            box-shadow: 0 4px 12px rgba(200, 90, 62, 0.3);
+        }
+        .btn-expand:active { transform: scale(0.97); }
+        .btn-contract {
+            background: var(--cream);
+            color: var(--dark-brown);
+        }
+        .btn-contract:active { transform: scale(0.97); }
+
+        .menu-content { padding: 0 16px 20px; }
 
         .category {
-            margin-bottom: 30px;
-            border-radius: 15px;
+            margin: 16px 0;
+            border-radius: var(--radius);
             overflow: hidden;
             background: var(--warm-white);
-            box-shadow: 0 4px 15px rgba(62, 39, 35, 0.08);
-            transition: all 0.3s ease;
-            animation: slideUp 0.6s ease-out backwards;
+            box-shadow: 0 2px 12px rgba(62, 39, 35, 0.06);
+            border: 1px solid rgba(105, 114, 89, 0.1);
+            transition: transform 0.2s;
         }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .category:nth-child(1) { animation-delay: 0.1s; }
-        .category:nth-child(2) { animation-delay: 0.15s; }
-        .category:nth-child(3) { animation-delay: 0.2s; }
-        .category:nth-child(4) { animation-delay: 0.25s; }
-        .category:nth-child(5) { animation-delay: 0.3s; }
-        .category:nth-child(6) { animation-delay: 0.35s; }
-        .category:nth-child(7) { animation-delay: 0.4s; }
-        .category:nth-child(8) { animation-delay: 0.45s; }
-        .category:nth-child(9) { animation-delay: 0.5s; }
-        .category:nth-child(10) { animation-delay: 0.55s; }
-
-        .category:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(62, 39, 35, 0.12);
-        }
+        .category:active { transform: scale(0.99); }
 
         .category-header {
-            background: linear-gradient(135deg, var(--olive) 0%, var(--olive-light) 100%);
-            padding: 20px 25px;
+            background: linear-gradient(135deg, var(--olive), var(--olive-light));
+            padding: 16px 18px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        .category-header:hover {
-            background: linear-gradient(135deg, var(--olive-light) 0%, var(--olive) 100%);
-        }
-
         .category-header h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 1.3rem;
             color: var(--warm-white);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
-
-        .category-icon {
-            font-size: 1.5rem;
-        }
-
+        .category-icon { font-size: 1.2rem; }
         .toggle-icon {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--warm-white);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
-
-        .category.expanded .toggle-icon {
-            transform: rotate(180deg);
-        }
+        .category.expanded .toggle-icon { transform: rotate(180deg); }
 
         .category-items {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+            transition: max-height 0.35s ease;
             background: var(--warm-white);
         }
-
-        .category.expanded .category-items {
-            max-height: 3000px;
-            padding: 20px 25px;
-        }
+        .category.expanded .category-items { max-height: 5000px; }
 
         .menu-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 14px 18px;
             border-bottom: 1px solid var(--cream);
-            transition: all 0.2s ease;
+            gap: 10px;
         }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-item:hover {
-            padding-right: 10px;
-            padding-left: 10px;
-            background: var(--cream);
-            border-radius: 8px;
-        }
+        .menu-item:last-child { border-bottom: none; }
 
         .item-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
             color: var(--dark-brown);
-            flex: 1;
         }
-
         .item-description {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--olive);
-            margin-top: 3px;
+            margin-top: 2px;
             font-style: italic;
         }
-
         .item-price {
             font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--terracotta);
-            margin-right: 10px;
+            white-space: nowrap;
         }
-
         .price-unit {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--olive);
             font-weight: 400;
         }
-
         .dual-price {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
         }
-
-        .dual-price .item-price {
-            font-size: 1.1rem;
-        }
+        .dual-price .item-price { font-size: 1rem; }
 
         .origin-selection {
             background: #FFF9F0;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 8px;
-            margin-top: 8px;
+            margin-top: 6px;
             border-right: 3px solid var(--gold);
         }
-
         .origin-selection .label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--olive);
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
-
         .origin-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 5px;
+            gap: 6px;
+            margin-top: 4px;
         }
-
         .origin-tag {
             background: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
             color: var(--dark-brown);
             border: 1px solid var(--olive-light);
         }
 
+        .category:hover { transform: none; }
+
         .qr-section {
             background: var(--cream);
-            padding: 40px 30px;
+            padding: 30px 20px;
             text-align: center;
             border-top: 3px solid var(--terracotta);
         }
-
         .qr-section h3 {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
+            font-size: 1.3rem;
             color: var(--dark-brown);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
-
         .qr-code-container {
             display: inline-block;
-            padding: 25px;
+            padding: 20px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.15);
-            margin: 20px auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
-
-        #qrcode {
-            display: inline-block;
-        }
-
-        #qrcode canvas {
-            border-radius: 10px;
-        }
-
+        #qrcode canvas { border-radius: 8px; max-width: 100%; height: auto; }
         .qr-instructions {
-            margin-top: 20px;
-            font-size: 1rem;
+            margin-top: 14px;
+            font-size: 0.95rem;
             color: var(--olive);
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .footer {
             background: var(--dark-brown);
-            padding: 30px;
+            padding: 24px 20px;
             text-align: center;
             color: var(--cream);
         }
+        .footer p { margin: 4px 0; opacity: 0.9; font-size: 0.95rem; }
+        .footer .contact { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold); margin-top: 10px; }
+        .footer .small { font-size: 0.85rem; margin-top: 12px; }
 
-        .footer p {
-            margin: 5px 0;
-            opacity: 0.9;
-        }
-
-        .footer .contact {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            margin-top: 15px;
-            color: var(--gold);
-        }
-
-        .expand-all-btn {
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             background: var(--terracotta);
-            color: var(--warm-white);
+            color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.2rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(200, 90, 62, 0.3);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(200, 90, 62, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: all 0.3s;
         }
+        .back-to-top.show { display: flex; }
+        .back-to-top:active { transform: scale(0.9); }
 
-        .expand-all-btn:hover {
-            background: var(--terracotta-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(200, 90, 62, 0.4);
+        @media (max-width: 480px) {
+            body { padding: 8px; }
+            .header { padding: 30px 16px 24px; }
+            .header h1 { font-size: 2.5rem; }
+            .header .subtitle { font-size: 1rem; }
+            .header .location { font-size: 0.8rem; }
+            .specialty-intro { padding: 20px 16px; }
+            .specialty-intro h2 { font-size: 1.2rem; }
+            .specialty-intro p { font-size: 0.9rem; }
+            .category-header h2 { font-size: 1.1rem; }
+            .category-header { padding: 14px 16px; }
+            .menu-item { padding: 12px 16px; }
+            .item-name { font-size: 0.95rem; }
+            .item-price { font-size: 1.05rem; }
+            .search-container { padding: 12px 12px 0; }
+            .controls { padding: 8px 12px; top: 64px; }
+            .menu-content { padding: 0 12px 16px; }
         }
-
-        .btn-container {
-            text-align: center;
-            padding: 0 30px;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .logo h1 { font-size: 3rem; }
-            .logo .subtitle { font-size: 1rem; }
-            .specialty-intro h2 { font-size: 1.5rem; }
-            .specialty-intro p { font-size: 1rem; }
-            .category-header h2 { font-size: 1.4rem; }
-            .menu-content { padding: 20px; }
-            .item-name { font-size: 1rem; }
-            .item-price { font-size: 1.1rem; }
-            .origin-options { flex-direction: column; }
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .header h1 { font-size: 4rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo">
-                <h1>LUCCA</h1>
-                <div class="subtitle">Caffè Italiano</div>
-                <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
-            </div>
+            <h1>LUCCA</h1>
+            <div class="subtitle">Caffè Italiano</div>
+            <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
         </div>
 
         <div class="specialty-intro">
@@ -460,21 +373,276 @@
 
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="ابحث في القائمة...">
+                <input type="text" id="searchInput" placeholder="ابحث في القائمة..." autocomplete="off">
             </div>
         </div>
 
-        <div class="btn-container">
-            <button class="expand-all-btn" onclick="toggleAll()">فتح/إغلاق جميع الأقسام</button>
+        <div class="controls">
+            <button class="btn-expand" onclick="toggleAll()" id="toggleBtn">عرض الكل</button>
         </div>
 
         <div class="menu-content" id="menuContent">
-            <!-- تم نقل باقي المحتوى بالكامل من النسخة السابقة -->
-            <!-- جميع الأقسام متضمنة بالتعديلات المطلوبة -->
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">☕</span> القهوة المختصة</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item">
+                        <div>
+                            <div class="item-name">V60</div>
+                            <div class="origin-selection">
+                                <div class="label">اختر المحصول:</div>
+                                <div class="origin-options">
+                                    <span class="origin-tag">🇪🇹 إثيوبي</span>
+                                    <span class="origin-tag">🇧🇷 برازيلي</span>
+                                    <span class="origin-tag">🇮🇳 هندي</span>
+                                    <span class="origin-tag">🇨🇴 كولومبي</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-price">80 <span class="price-unit">ج.م</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="item-name">آيس دريب</div>
+                            <div class="origin-selection">
+                                <div class="label">اختر المحصول:</div>
+                                <div class="origin-options">
+                                    <span class="origin-tag">🇪🇹 إثيوبي</span>
+                                    <span class="origin-tag">🇧🇷 برازيلي</span>
+                                    <span class="origin-tag">🇮🇳 هندي</span>
+                                    <span class="origin-tag">🇨🇴 كولومبي</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-price">80 <span class="price-unit">ج.م</span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="item-name">قهوة اليوم</div>
+                            <div class="origin-selection">
+                                <div class="label">اختر المحصول:</div>
+                                <div class="origin-options">
+                                    <span class="origin-tag">🇪🇹 إثيوبي</span>
+                                    <span class="origin-tag">🇧🇷 برازيلي</span>
+                                    <span class="origin-tag">🇮🇳 هندي</span>
+                                    <span class="origin-tag">🇨🇴 كولومبي</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-price">50 <span class="price-unit">ج.م</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">☕</span> قسم القهوة</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">إسبريسو</div><div class="item-price">45 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">إسبريسو دبل</div><div class="item-price">70 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">قهوة تركي</div><div class="item-price">35 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكاتو</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكاتو دبل</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">موكا</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">وايت موكا</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فلات وايت</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">كورتادو</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">كابتشينو</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">لاتيه</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">قهوة بندق</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">قهوة فرنساوي</div><div class="item-price">65 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">نسكافيه</div><div class="item-price">70 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">هوت شوكليت</div><div class="item-price">70 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">هوت شوكليت نوتيلا</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🫖</span> مشروبات ساخنة</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">شاي</div><div class="item-price">35 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">شاي كرك</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">شاي أخضر</div><div class="item-price">35 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكس أعشاب</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">شاي بالبن</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">هوت سيدر</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">أعشاب</div><div class="item-price">40 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🧊</span> القهوة المثلجة</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">آيس كوفي</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">آيس لاتيه</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">آيس موكا</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">آيس وايت موكا</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فرابتشينو</div><div class="item-price">95 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item">
+                        <div><div class="item-name">فرابيه</div><div class="item-description">كلاسيك أو فروت</div></div>
+                        <div class="dual-price"><span class="item-price">85 <span class="price-unit">ج.م</span></span><span class="item-price">95 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🥤</span> ميلك شيك</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">شوكولاتة</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فانيليا</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فراولة</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">مانجو</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">نوتيلا</div><div class="item-price">100 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">كراميل</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">أوريو</div><div class="item-price">110 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكس شوكليت</div><div class="item-price">120 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🍹</span> عصائر فريش</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">مانجو</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فراولة</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">جوافة</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">كيوي</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">برتقال</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ليمون</div><div class="item-price">70 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ليمون نعناع</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🍰</span> الحلويات</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item">
+                        <div><div class="item-name">وافل كلاسيك</div><div class="item-description">نص / كامل</div></div>
+                        <div class="dual-price"><span class="item-price">40 <span class="price-unit">ج.م</span></span><span class="item-price">80 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                    <div class="menu-item"><div class="item-name">وافل ميكس شوكليت</div><div class="item-price">140 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">وافل فورسيزون</div><div class="item-price">120 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">وافل بابل</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">وافل فواكه</div><div class="item-price">110 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">سان سيباستيان</div><div class="item-price">70 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">مولتن</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">براونيز</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">كوكيز</div><div class="item-price">40 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">أم علي مكسرات</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">تشيز كيك</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">موس جالاكسي</div><div class="item-price">100 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🥤</span> سموزي</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">من اختيارك</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🍋</span> مشروبات صودا</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">جيلي كولا</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">صن شاين</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">صن رايز</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">موهيتو</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">موهيتو فليفر</div><div class="item-price">100 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">شيري كولا</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكس بيري</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">بلو بيري فراولة</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">بينا كولادا</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">باشون أناناس</div><div class="item-price">75 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ريدبول فليفر</div><div class="item-price">120 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ميكس لوكا</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">❄️</span> الأصناف الشتوية</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">حمص الشام</div><div class="item-price">80 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">بليلة</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">سحلب</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">سحلب نوتيلا</div><div class="item-price">90 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🍞</span> الفطار</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item">
+                        <div class="item-name">توست ميكس جبن</div>
+                        <div class="dual-price"><span class="item-price">30 <span class="price-unit">ج.م</span></span><span class="item-price">60 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="item-name">توست بسطرمة</div>
+                        <div class="dual-price"><span class="item-price">35 <span class="price-unit">ج.م</span></span><span class="item-price">70 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="item-name">توست روزبيف</div>
+                        <div class="dual-price"><span class="item-price">35 <span class="price-unit">ج.م</span></span><span class="item-price">70 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="item-name">توست رومي مدخن</div>
+                        <div class="dual-price"><span class="item-price">35 <span class="price-unit">ج.م</span></span><span class="item-price">70 <span class="price-unit">ج.م</span></span></div>
+                    </div>
+                    <div class="menu-item"><div class="item-name">ساندويتش ميكس جبن</div><div class="item-price">25 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ساندويتش بسطرمة</div><div class="item-price">30 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ساندويتش روزبيف</div><div class="item-price">30 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ساندويتش رومي مدخن</div><div class="item-price">30 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <h2><span class="category-icon">🥤</span> المشروبات الغازية والمياه</h2>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="category-items">
+                    <div class="menu-item"><div class="item-name">بيبسي</div><div class="item-price">35 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">تويست</div><div class="item-price">35 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">فيروز</div><div class="item-price">40 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">ريدبول</div><div class="item-price">85 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">بيريل</div><div class="item-price">50 <span class="price-unit">ج.م</span></div></div>
+                    <div class="menu-item"><div class="item-name">مياه</div><div class="item-price">10 <span class="price-unit">ج.م</span></div></div>
+                </div>
+            </div>
         </div>
 
         <div class="qr-section">
-            <h3>امسح QR للوصول للمنيو</h3>
+            <h3>📱 امسح QR للوصول للمنيو</h3>
             <div class="qr-code-container">
                 <div id="qrcode"></div>
             </div>
@@ -484,94 +652,65 @@
         </div>
 
         <div class="footer">
-            <p>🇮🇹 Lucca Caffè Italiano 🇮🇹</p>
+            <p>🇮🇹 Lucca Caffè Italiano</p>
             <p>📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
-            <p class="contact">للحجز والاستفسار: [رقم التليفون]</p>
-            <p style="margin-top: 15px; font-size: 0.9rem;">Buon Appetito! 🍽️</p>
+            <p class="contact">للحجز والاستفسار: 01551007413</p>
+            <p class="small">Buon Appetito! 🍽️</p>
         </div>
     </div>
 
-    <script>
-        // QR Code Generation
-        new QRCode(document.getElementById("qrcode"), {
-            text: "https://anamasry300-ai.github.io/Lucca_menu/",
-            width: 200,
-            height: 200,
-            colorDark: "#3E2723",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-        // Toggle Category
-        function toggleCategory(header) {
-            const category = header.parentElement;
-            category.classList.toggle('expanded');
+    <script>
+        const qrContainer = document.getElementById("qrcode");
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(qrContainer, {
+                text: window.location.href,
+                width: 180,
+                height: 180,
+                colorDark: "#3E2723",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         }
 
-        // Toggle All Categories
+        function toggleCategory(header) {
+            header.parentElement.classList.toggle('expanded');
+        }
+
         let allExpanded = false;
         function toggleAll() {
-            const categories = document.querySelectorAll('.category');
+            const btn = document.getElementById('toggleBtn');
             allExpanded = !allExpanded;
-            
-            categories.forEach(category => {
-                if (allExpanded) {
-                    category.classList.add('expanded');
-                } else {
-                    category.classList.remove('expanded');
-                }
+            document.querySelectorAll('.category').forEach(c => {
+                c.classList.toggle('expanded', allExpanded);
             });
+            btn.textContent = allExpanded ? 'إغلاق الكل' : 'عرض الكل';
         }
 
-        // Search Functionality
         const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            const categories = document.querySelectorAll('.category');
-            
-            if (searchTerm === '') {
-                categories.forEach(category => {
-                    category.style.display = 'block';
-                    const items = category.querySelectorAll('.menu-item');
-                    items.forEach(item => {
-                        item.style.display = 'flex';
-                    });
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase().trim();
+            document.querySelectorAll('.category').forEach(cat => {
+                let visible = 0;
+                cat.querySelectorAll('.menu-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    const match = !term || text.includes(term);
+                    item.style.display = match ? 'flex' : 'none';
+                    if (match) visible++;
                 });
-                return;
-            }
-
-            categories.forEach(category => {
-                const items = category.querySelectorAll('.menu-item');
-                let hasVisibleItems = false;
-
-                items.forEach(item => {
-                    const itemName = item.querySelector('.item-name').textContent.toLowerCase();
-                    const itemDesc = item.querySelector('.item-description');
-                    const descText = itemDesc ? itemDesc.textContent.toLowerCase() : '';
-                    
-                    if (itemName.includes(searchTerm) || descText.includes(searchTerm)) {
-                        item.style.display = 'flex';
-                        hasVisibleItems = true;
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-
-                if (hasVisibleItems) {
-                    category.style.display = 'block';
-                    category.classList.add('expanded');
-                } else {
-                    category.style.display = 'none';
-                }
+                cat.style.display = visible ? 'block' : 'none';
+                if (term && visible) cat.classList.add('expanded');
             });
         });
 
-        // Auto-expand first category on load
-        document.addEventListener('DOMContentLoaded', function() {
-            const firstCategory = document.querySelector('.category');
-            if (firstCategory) {
-                firstCategory.classList.add('expanded');
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            const first = document.querySelector('.category');
+            if (first) first.classList.add('expanded');
+        });
+
+        window.addEventListener('scroll', () => {
+            document.getElementById('backToTop').classList.toggle('show', window.scrollY > 300);
         });
     </script>
 </body>
