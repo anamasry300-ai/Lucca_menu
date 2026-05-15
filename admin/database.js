@@ -970,6 +970,10 @@ async function initSystem() {
     if (typeof menuData !== 'undefined' && Array.isArray(menuData) && menuData.length) {
         await MenuSync.syncFromMenuData(menuData);
     }
+
+    // Pull data from server (silent fail if server offline)
+    await ServerSync.pullAll().catch(() => {});
+
     console.log('✅ تم تهيئة نظام Lucca Caffè');
 }
 
