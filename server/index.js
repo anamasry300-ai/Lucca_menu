@@ -99,18 +99,36 @@ app.head('/api/tables', requireApiKey, (req, res) => {
     res.status(200).end();
 });
 
+function mergeStore(name, incoming) {
+    if (!Array.isArray(incoming) || incoming.length === 0) return;
+    const existing = loadStore(name);
+    const merged = [...existing];
+    incoming.forEach(item => {
+        if (item.id) {
+            const idx = merged.findIndex(i => i.id === item.id);
+            if (idx >= 0) merged[idx] = { ...merged[idx], ...item };
+            else merged.push(item);
+        } else {
+            item.id = merged.length > 0 ? Math.max(...merged.map(i => i.id || 0)) + 1 : 1;
+            merged.push(item);
+        }
+    });
+    console.log(`mergeStore(${name}): ${existing.length} -> ${merged.length} items`);
+    saveStore(name, merged);
+}
+
 app.post('/api/sync', requireApiKey, (req, res) => {
     const { users, tables, orders, customers, settings, inventory, purchases, employees, attendance, menuItems } = req.body;
-    if (users) saveStore('users', users);
-    if (tables) saveStore('tables', tables);
-    if (orders) saveStore('orders', orders);
-    if (customers) saveStore('customers', customers);
-    if (settings) saveStore('settings', settings);
-    if (inventory) saveStore('inventory', inventory);
-    if (purchases) saveStore('purchases', purchases);
-    if (employees) saveStore('employees', employees);
-    if (attendance) saveStore('attendance', attendance);
-    if (menuItems) saveStore('menuItems', menuItems);
+    mergeStore('users', users);
+    mergeStore('tables', tables);
+    mergeStore('orders', orders);
+    mergeStore('customers', customers);
+    mergeStore('settings', settings);
+    mergeStore('inventory', inventory);
+    mergeStore('purchases', purchases);
+    mergeStore('employees', employees);
+    mergeStore('attendance', attendance);
+    mergeStore('menuItems', menuItems);
     res.json({ success: true, message: 'تم المزامنة بنجاح' });
 });
 

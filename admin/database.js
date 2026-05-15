@@ -971,7 +971,9 @@ async function initSystem() {
         await MenuSync.syncFromMenuData(menuData);
     }
 
-    // Pull data from server (silent fail if server offline)
+    // Push local data to server first (so nothing gets lost)
+    await ServerSync.pushAll().catch(() => {});
+    // Then pull data from other devices
     await ServerSync.pullAll().catch(() => {});
 
     console.log('✅ تم تهيئة نظام Lucca Caffè');
