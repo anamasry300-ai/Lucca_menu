@@ -99,6 +99,19 @@ app.get('/health', (req, res) => {
     res.json({ status: 'ok', uptime: process.uptime() });
 });
 
+app.get('/', (req, res) => {
+    res.json({
+        name: 'Lucca Caffè Server',
+        version: '1.0.0',
+        endpoints: {
+            public_key: '/api/public-key',
+            health: '/health',
+            sync: '/api/sync',
+            stores: '/api/{users,tables,orders,customers,settings,inventory,purchases,employees,attendance}'
+        }
+    });
+});
+
 app.head('/api/tables', requireApiKey, (req, res) => {
     res.status(200).end();
 });
