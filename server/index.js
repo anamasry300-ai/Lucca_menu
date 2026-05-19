@@ -95,6 +95,10 @@ stores.forEach(store => {
     });
 });
 
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok', uptime: process.uptime() });
+});
+
 app.head('/api/tables', requireApiKey, (req, res) => {
     res.status(200).end();
 });

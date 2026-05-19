@@ -425,7 +425,9 @@ const Orders = {
             id = await db.add('orders', order);
         }
         
-        await Tables.update(tableId, { status: 'occupied', currentOrder: id });
+        if (tableId && !isNaN(tableId)) {
+            await Tables.update(parseInt(tableId), { status: 'occupied', currentOrder: id });
+        }
 
         if (customerPhone) {
             await Customers.add(customerPhone, customerName, {
@@ -907,11 +909,15 @@ const ServerSync = {
                 employees: await db.getAll('employees'),
                 attendance: await db.getAll('attendance')
             };
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 3000);
             const res = await fetch(`${url}/api/sync`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                signal: controller.signal
             });
+            clearTimeout(timer);
             if (!res.ok) throw new Error('فشل رفع البيانات');
             return { success: true, message: '✅ تم رفع البيانات للسيرفر' };
         } catch (e) {
@@ -925,9 +931,13 @@ const ServerSync = {
         try {
             const collections = ['users', 'tables', 'orders', 'customers', 'settings', 'inventory', 'purchases', 'employees', 'attendance'];
             for (const col of collections) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 3000);
                 const res = await fetch(`${url}/api/${col}`, {
-                    headers: { 'x-api-key': apiKey }
+                    headers: { 'x-api-key': apiKey },
+                    signal: controller.signal
                 });
+                clearTimeout(timer);
                 if (!res.ok) continue;
                 const items = await res.json();
                 await db.clear(col);
@@ -960,7 +970,10 @@ async function initSystem() {
     // Auto-fetch API key from server for write operations
     try {
         const baseUrl = ServerAPI.getBaseUrl();
-        const resp = await fetch(`${baseUrl}/api/public-key`);
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 2000);
+        const resp = await fetch(`${baseUrl}/api/public-key`, { signal: controller.signal });
+        clearTimeout(timer);
         if (resp.ok) {
             const data = await resp.json();
             if (data.apiKey) localStorage.setItem('luccaApiKey', data.apiKey);
