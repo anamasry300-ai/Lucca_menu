@@ -159,7 +159,10 @@ const ServerAPI = {
             const headers = { 'Content-Type': 'application/json' };
             const token = this.getToken();
             if (token) headers['Authorization'] = 'Bearer ' + token;
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}`, { headers });
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 2000);
+            const res = await fetch(`${this.getBaseUrl()}/api/${store}`, { headers, signal: controller.signal });
+            clearTimeout(timer);
             if (res.ok) return await res.json();
             return null;
         } catch(e) { return null; }
