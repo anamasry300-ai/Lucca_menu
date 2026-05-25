@@ -308,9 +308,11 @@
         }
         .dual-price {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
         }
+        .wa-order-btn { display: inline-block; background: #25D366; color: #fff; padding: 3px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; text-decoration: none; white-space: nowrap; margin-top: 4px; transition: background 0.2s; text-align: center; }
+        .wa-order-btn:hover { background: #1da851; }
         .dual-price .item-price { font-size: 1rem; }
 
         .origin-selection {
@@ -651,6 +653,8 @@
             }
             const desc = item.d ? `<div class="item-description">${item.d}</div>` : '';
             const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
+            const phone = '201010058989';
+            const msg = encodeURIComponent(`مرحباً لو سمحت، عايز أطلب ${item.n}`);
             return `
                 <div class="menu-item">
                     <div class="item-info">
@@ -658,7 +662,10 @@
                         ${desc}
                         ${origins}
                     </div>
-                    <div class="item-price-wrap ${priceClass}">${renderPrice(item.p)}</div>
+                    <div class="item-price-wrap ${priceClass}">
+                        ${renderPrice(item.p)}
+                        <a class="wa-order-btn" href="https://wa.me/${phone}?text=${msg}" target="_blank" rel="noopener">اطلب</a>
+                    </div>
                 </div>`;
         }
 
