@@ -338,6 +338,16 @@
         .cart-send-btn:hover { background:#1da851; }
         .cart-toast { position:fixed; bottom:150px; left:50%; transform:translateX(-50%); z-index:300; background:var(--dark-brown); color:#fff; padding:10px 24px; border-radius:10px; font-size:0.9rem; font-weight:600; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; }
         .cart-toast.show { opacity:1; }
+        .origin-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:400; display:flex; align-items:center; justify-content:center; }
+        .origin-modal { background:#fff; border-radius:16px; padding:24px; width:calc(100% - 40px); max-width:340px; text-align:center; }
+        .origin-modal-header { font-size:1rem; margin-bottom:16px; color:var(--dark-brown); }
+        .origin-modal-body { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+        .origin-option { padding:12px; border:2px solid var(--cream); border-radius:10px; background:#fff; font-size:1rem; cursor:pointer; transition:all 0.2s; }
+        .origin-option:hover { border-color:var(--terracotta); background:#fef6f4; }
+        .origin-cancel { background:none; border:none; color:var(--olive); font-size:0.9rem; cursor:pointer; padding:8px; }
+        .cart-table-input { margin-bottom:10px; }
+        .cart-table-input label { display:block; font-size:0.85rem; color:var(--olive); margin-bottom:4px; }
+        .cart-table-input input { width:100%; padding:10px 12px; border:1px solid var(--cream); border-radius:8px; font-size:1rem; box-sizing:border-box; }
         .dual-price .item-price { font-size: 1rem; }
 
         .origin-selection {
@@ -556,6 +566,10 @@
             <div class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>
         </div>
         <div id="cartFooter" class="cart-footer" style="display:none;">
+            <div class="cart-table-input">
+                <label for="tableNum">رقم الطرابيزة (اختياري):</label>
+                <input type="text" id="tableNum" placeholder="مثال: 5">
+            </div>
             <div class="cart-total">
                 <span>الإجمالي:</span>
                 <span id="cartTotal">0 ج.م</span>
@@ -686,25 +700,50 @@
 
         // Cart
         let cart = [];
-        function addToCart(name, price) {
+        function addToCart(name, price, origin) {
             price = parseInt(price) || 0;
-            const existing = cart.find(i => i.name === name);
+            const key = origin ? `${name}||${origin}` : name;
+            const existing = cart.find(i => i.key === key);
             if (existing) { existing.qty++; }
-            else { cart.push({ name, price, qty: 1 }); }
+            else { cart.push({ key, name, price, qty: 1, origin }); }
             updateCartUI();
-            showCartToast(`➕ ${name}`);
+            showCartToast(`➕ ${name}${origin ? ` (${origin})` : ''}`);
         }
-        function removeFromCart(name) {
-            const idx = cart.findIndex(i => i.name === name);
+        function removeFromCart(key) {
+            const idx = cart.findIndex(i => i.key === key);
             if (idx >= 0) {
                 if (cart[idx].qty > 1) cart[idx].qty--;
                 else cart.splice(idx, 1);
             }
             updateCartUI();
         }
-        function deleteFromCart(name) {
-            cart = cart.filter(i => i.name !== name);
+        function deleteFromCart(key) {
+            cart = cart.filter(i => i.key !== key);
             updateCartUI();
+        }
+        function showOriginPicker(name, price, origins) {
+            const overlay = document.createElement('div');
+            overlay.className = 'origin-overlay';
+            overlay.innerHTML = `
+                <div class="origin-modal">
+                    <div class="origin-modal-header">اختر المحصول لـ <strong>${name}</strong></div>
+                    <div class="origin-modal-body">
+                        ${origins.map(o => `<button class="origin-option" data-origin="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}
+                    </div>
+                    <button class="origin-cancel">إلغاء</button>
+                </div>
+            `;
+            overlay.addEventListener('click', e => {
+                if (e.target === overlay) overlay.remove();
+            });
+            overlay.querySelectorAll('.origin-option').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    addToCart(name, price, btn.dataset.origin);
+                    overlay.remove();
+                });
+            });
+            overlay.querySelector('.origin-cancel').addEventListener('click', () => overlay.remove());
+            document.body.appendChild(overlay);
         }
         function updateCartUI() {
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -728,12 +767,12 @@
             }
             container.innerHTML = cart.map(i => `
                 <div class="cart-item">
-                    <span class="cart-item-name">${i.name}</span>
+                    <span class="cart-item-name">${i.name}${i.origin ? `<br><small style="color:var(--olive);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
                     <span class="cart-item-price">${(i.price * i.qty).toFixed(0)} ج.م</span>
-                    <button class="cart-qty-btn" onclick="removeFromCart('${i.name.replace(/'/g, "\\'")}')">−</button>
+                    <button class="cart-qty-btn" onclick="removeFromCart('${i.key.replace(/'/g, "\\'")}')">−</button>
                     <span class="cart-item-qty">${i.qty}</span>
-                    <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price})">+</button>
-                    <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.name.replace(/'/g, "\\'")}')">✕</button>
+                    <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price}, '${(i.origin||'').replace(/'/g, "\\'")}')">+</button>
+                    <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.key.replace(/'/g, "\\'")}')">✕</button>
                 </div>
             `).join('');
         }
@@ -749,8 +788,14 @@
         function sendCartWhatsApp() {
             if (cart.length === 0) return;
             const lines = ['☕ *طلب من Lucca Caffè*', '━━━━━━━━━━━━', ''];
+            const table = document.getElementById('tableNum').value.trim();
+            if (table) {
+                lines.push(`🪑 *رقم الطرابيزة: ${table}*`);
+                lines.push('');
+            }
             cart.forEach(i => {
-                lines.push(`• ${i.name} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
+                const detail = `${i.name}${i.origin ? ` (${i.origin})` : ''}`;
+                lines.push(`• ${detail} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
             });
             lines.push('', '━━━━━━━━━━━━');
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
@@ -760,6 +805,7 @@
             const phone = '201010058989';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
             toggleCart();
+            document.getElementById('tableNum').value = '';
             cart = [];
             updateCartUI();
         }
@@ -793,6 +839,11 @@
             const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
             const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
             const encodedName = encodeURIComponent(item.n);
+            const hasOrigins = item.origins && item.origins.length > 0;
+            const originAttr = hasOrigins ? ` data-origins='${JSON.stringify(item.origins).replace(/'/g, "&#39;")}'` : '';
+            const onClick = hasOrigins
+                ? `showOriginPicker('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', JSON.parse(this.dataset.origins))`
+                : `addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')`;
             return `
                 <div class="menu-item">
                     <div class="item-info">
@@ -802,7 +853,7 @@
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        <button class="add-cart-btn" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}')">+</button>
+                        <button class="add-cart-btn"${originAttr} onclick="${onClick}">+</button>
                     </div>
                 </div>`;
         }
