@@ -311,8 +311,33 @@
             gap: 8px;
             align-items: center;
         }
-        .wa-order-btn { display: inline-block; background: #25D366; color: #fff; padding: 3px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; text-decoration: none; white-space: nowrap; margin-top: 4px; transition: background 0.2s; text-align: center; }
-        .wa-order-btn:hover { background: #1da851; }
+        .add-cart-btn { width:32px; height:32px; border:none; border-radius:50%; background:var(--terracotta); color:#fff; font-size:1.2rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
+        .add-cart-btn:hover { transform:scale(1.15); }
+        .add-cart-btn:active { transform:scale(0.9); }
+        .cart-fab { position:fixed; bottom:80px; left:16px; z-index:100; width:56px; height:56px; border-radius:50%; background:#25D366; color:#fff; border:none; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,0.2); display:none; align-items:center; justify-content:center; }
+        .cart-fab.show { display:flex; }
+        #cartFabBadge { position:absolute; top:-4px; right:-4px; background:var(--terracotta); color:#fff; font-size:0.7rem; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .cart-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:200; display:none; }
+        .cart-overlay.show { display:block; }
+        .cart-panel { position:fixed; bottom:0; left:0; right:0; z-index:201; background:#fff; border-radius:20px 20px 0 0; max-height:70vh; display:flex; flex-direction:column; transform:translateY(100%); transition:transform 0.3s ease; box-shadow:0 -4px 20px rgba(0,0,0,0.15); }
+        .cart-panel.show { transform:translateY(0); }
+        .cart-header { display:flex; align-items:center; gap:10px; padding:16px 20px; border-bottom:1px solid var(--cream); }
+        .cart-header h3 { margin:0; flex:1; font-size:1.1rem; }
+        #cartCount { background:var(--terracotta); color:#fff; font-size:0.8rem; font-weight:700; padding:2px 10px; border-radius:12px; }
+        .cart-close { background:none; border:none; font-size:1.3rem; cursor:pointer; padding:4px; color:#999; }
+        .cart-items { flex:1; overflow-y:auto; padding:12px 20px; }
+        .cart-empty { text-align:center; color:var(--olive); padding:30px 0; font-size:0.9rem; }
+        .cart-item { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--cream); }
+        .cart-item-name { flex:1; font-size:0.95rem; }
+        .cart-item-price { font-weight:700; color:var(--terracotta); font-size:0.9rem; white-space:nowrap; }
+        .cart-qty-btn { width:28px; height:28px; border:1px solid var(--cream); border-radius:50%; background:#fff; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; }
+        .cart-item-qty { min-width:24px; text-align:center; font-weight:700; }
+        .cart-footer { padding:12px 20px 20px; border-top:1px solid var(--cream); }
+        .cart-total { display:flex; justify-content:space-between; font-size:1.1rem; font-weight:700; margin-bottom:12px; color:var(--dark-brown); }
+        .cart-send-btn { width:100%; padding:14px; background:#25D366; color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+        .cart-send-btn:hover { background:#1da851; }
+        .cart-toast { position:fixed; bottom:150px; left:50%; transform:translateX(-50%); z-index:300; background:var(--dark-brown); color:#fff; padding:10px 24px; border-radius:10px; font-size:0.9rem; font-weight:600; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; }
+        .cart-toast.show { opacity:1; }
         .dual-price .item-price { font-size: 1rem; }
 
         .origin-selection {
@@ -517,9 +542,35 @@
         </div>
     </div>
 
-    <a class="wa-btn" id="waBtn" href="https://wa.me/201010058989?text=مرحباً%20لو%20سمحت،%20عايز%20أطلب%20من%20قائمة%20Lucca" target="_blank" rel="noopener" aria-label="اطلب عبر واتساب">💬</a>
-
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
+
+    <!-- Cart -->
+    <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+    <div id="cartPanel" class="cart-panel">
+        <div class="cart-header">
+            <h3>🛒 طلبي</h3>
+            <span id="cartCount">0</span>
+            <button class="cart-close" onclick="toggleCart()">✕</button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <div class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>
+        </div>
+        <div id="cartFooter" class="cart-footer" style="display:none;">
+            <div class="cart-total">
+                <span>الإجمالي:</span>
+                <span id="cartTotal">0 ج.م</span>
+            </div>
+            <button class="cart-send-btn" onclick="sendCartWhatsApp()">📱 إرسال الطلب عبر واتساب</button>
+        </div>
+    </div>
+
+    <!-- Floating cart button -->
+    <button class="cart-fab" id="cartFab" onclick="toggleCart()">
+        🛒 <span id="cartFabBadge">0</span>
+    </button>
+
+    <!-- Toast -->
+    <div id="cartToast" class="cart-toast"></div>
 
     <script>
         const CATEGORIES = [
@@ -633,6 +684,93 @@
             ]
         };
 
+        // Cart
+        let cart = [];
+        function addToCart(name, price) {
+            price = parseInt(price) || 0;
+            const existing = cart.find(i => i.name === name);
+            if (existing) { existing.qty++; }
+            else { cart.push({ name, price, qty: 1 }); }
+            updateCartUI();
+            showCartToast(`➕ ${name}`);
+        }
+        function removeFromCart(name) {
+            const idx = cart.findIndex(i => i.name === name);
+            if (idx >= 0) {
+                if (cart[idx].qty > 1) cart[idx].qty--;
+                else cart.splice(idx, 1);
+            }
+            updateCartUI();
+        }
+        function deleteFromCart(name) {
+            cart = cart.filter(i => i.name !== name);
+            updateCartUI();
+        }
+        function updateCartUI() {
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            const fab = document.getElementById('cartFab');
+            const badge = document.getElementById('cartFabBadge');
+            const panel = document.getElementById('cartPanel');
+            if (count > 0) {
+                fab.classList.add('show');
+                badge.textContent = count;
+            } else {
+                fab.classList.remove('show');
+            }
+            document.getElementById('cartCount').textContent = count || '0';
+            document.getElementById('cartTotal').textContent = `${total.toFixed(0)} ج.م`;
+            document.getElementById('cartFooter').style.display = count > 0 ? 'block' : 'none';
+            const container = document.getElementById('cartItems');
+            if (count === 0) {
+                container.innerHTML = '<div class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>';
+                return;
+            }
+            container.innerHTML = cart.map(i => `
+                <div class="cart-item">
+                    <span class="cart-item-name">${i.name}</span>
+                    <span class="cart-item-price">${(i.price * i.qty).toFixed(0)} ج.م</span>
+                    <button class="cart-qty-btn" onclick="removeFromCart('${i.name.replace(/'/g, "\\'")}')">−</button>
+                    <span class="cart-item-qty">${i.qty}</span>
+                    <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price})">+</button>
+                    <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.name.replace(/'/g, "\\'")}')">✕</button>
+                </div>
+            `).join('');
+        }
+        function toggleCart() {
+            const panel = document.getElementById('cartPanel');
+            const overlay = document.getElementById('cartOverlay');
+            const isOpen = panel.classList.contains('show');
+            panel.classList.toggle('show');
+            overlay.classList.toggle('show');
+            if (isOpen) document.body.style.overflow = '';
+            else document.body.style.overflow = 'hidden';
+        }
+        function sendCartWhatsApp() {
+            if (cart.length === 0) return;
+            const lines = ['☕ *طلب من Lucca Caffè*', '━━━━━━━━━━━━', ''];
+            cart.forEach(i => {
+                lines.push(`• ${i.name} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
+            });
+            lines.push('', '━━━━━━━━━━━━');
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            lines.push(`💵 *الإجمالي: ${total.toFixed(0)} ج.م*`);
+            lines.push('', '🙏 من فضلكم جهزوا الطلب');
+            const msg = lines.join('\n');
+            const phone = '201010058989';
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            toggleCart();
+            cart = [];
+            updateCartUI();
+        }
+        function showCartToast(msg) {
+            const el = document.getElementById('cartToast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._hide);
+            el._hide = setTimeout(() => el.classList.remove('show'), 1200);
+        }
+
         function renderPrice(p) {
             if (Array.isArray(p)) {
                 return p.map(v => `<span class="item-price">${v} <span class="price-unit">ج.م</span></span>`).join('');
@@ -653,8 +791,8 @@
             }
             const desc = item.d ? `<div class="item-description">${item.d}</div>` : '';
             const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
-            const phone = '201010058989';
-            const msg = encodeURIComponent(`مرحباً لو سمحت، عايز أطلب ${item.n}`);
+            const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
+            const encodedName = encodeURIComponent(item.n);
             return `
                 <div class="menu-item">
                     <div class="item-info">
@@ -664,7 +802,7 @@
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        <a class="wa-order-btn" href="https://wa.me/${phone}?text=${msg}" target="_blank" rel="noopener">اطلب</a>
+                        <button class="add-cart-btn" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}')">+</button>
                     </div>
                 </div>`;
         }
