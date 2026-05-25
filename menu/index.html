@@ -338,6 +338,8 @@
         .cart-send-btn:hover { background:#1da851; }
         .cart-toast { position:fixed; bottom:150px; left:50%; transform:translateX(-50%); z-index:300; background:var(--dark-brown); color:#fff; padding:10px 24px; border-radius:10px; font-size:0.9rem; font-weight:600; opacity:0; transition:opacity 0.3s; pointer-events:none; white-space:nowrap; }
         .cart-toast.show { opacity:1; }
+        .lang-toggle { position:fixed; bottom:16px; right:16px; z-index:100; width:44px; height:44px; border-radius:50%; background:var(--terracotta); color:#fff; border:none; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 12px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; }
+        @media (min-width:768px) { .lang-toggle { left:auto; right:24px; bottom:80px; } }
         .origin-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:400; display:flex; align-items:center; justify-content:center; }
         .origin-modal { background:#fff; border-radius:16px; padding:24px; width:calc(100% - 40px); max-width:340px; text-align:center; }
         .origin-modal-header { font-size:1rem; margin-bottom:16px; color:var(--dark-brown); }
@@ -485,7 +487,7 @@
             .tabs-container { padding: 6px 12px 10px; }
             .tab { padding: 7px 12px; font-size: 0.78rem; }
             .menu-content { padding: 6px 12px 90px; }
-            .wa-btn { width: 50px; height: 50px; font-size: 1.4rem; bottom: 16px; left: 12px; }
+            .lang-toggle { width: 40px; height: 40px; font-size: 1rem; bottom: 80px; left: 12px; }
             .back-to-top { bottom: 74px; left: 12px; width: 38px; height: 38px; font-size: 1rem; }
         }
         @media (min-width: 768px) {
@@ -494,7 +496,7 @@
             .header { padding: 56px 32px 40px; }
             .header h1 { font-size: 4.5rem; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
-            .wa-btn { left: auto; right: 80px; bottom: 24px; }
+            .lang-toggle { left: auto; right: 80px; bottom: 24px; }
         }
     </style>
 </head>
@@ -513,8 +515,8 @@
         </div>
 
         <div class="specialty-intro">
-            <h2>✨ القهوة المختصة</h2>
-            <p>
+            <h2 id="specTitleEl">✨ القهوة المختصة</h2>
+            <p id="specDescEl">
                 القهوة المختصة هي أجود 3% من إنتاج القهوة العالمي، نختارها بعناية من أفضل المزارع حول العالم.
                 كل حبة قهوة في Lucca تمر بمعايير جودة صارمة لنضمن لك طعماً نقياً ومميزاً.
             </p>
@@ -534,11 +536,11 @@
         <div class="menu-content" id="menuContent"></div>
 
         <div class="qr-section">
-            <h3>📱 امسح QR للوصول للمنيو</h3>
+            <h3 id="qrTitleEl">📱 امسح QR للوصول للمنيو</h3>
             <div class="qr-code-container">
                 <div id="qrcode"></div>
             </div>
-            <p class="qr-instructions">
+            <p id="qrDescEl" class="qr-instructions">
                 يمكنك مسح هذا الكود للوصول السريع إلى قائمة الطعام من هاتفك المحمول
             </p>
         </div>
@@ -552,29 +554,30 @@
         </div>
     </div>
 
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🌐</button>
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
     <!-- Cart -->
     <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
     <div id="cartPanel" class="cart-panel">
         <div class="cart-header">
-            <h3>🛒 طلبي</h3>
+            <h3 id="cartTitleLabel">🛒 طلبي</h3>
             <span id="cartCount">0</span>
             <button class="cart-close" onclick="toggleCart()">✕</button>
         </div>
         <div id="cartItems" class="cart-items">
-            <div class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>
+            <div id="cartEmptyMsg" class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>
         </div>
         <div id="cartFooter" class="cart-footer" style="display:none;">
             <div class="cart-table-input">
-                <label for="tableNum">رقم الطرابيزة (اختياري):</label>
+                <label for="tableNum" id="tableNumLabel">رقم الطرابيزة (اختياري):</label>
                 <input type="text" id="tableNum" placeholder="مثال: 5">
             </div>
             <div class="cart-total">
-                <span>الإجمالي:</span>
+                <span id="totalLabel">الإجمالي:</span>
                 <span id="cartTotal">0 ج.م</span>
             </div>
-            <button class="cart-send-btn" onclick="sendCartWhatsApp()">📱 إرسال الطلب عبر واتساب</button>
+            <button id="sendBtnLabel" class="cart-send-btn" onclick="sendCartWhatsApp()">📱 إرسال الطلب عبر واتساب</button>
         </div>
     </div>
 
@@ -587,20 +590,85 @@
     <div id="cartToast" class="cart-toast"></div>
 
     <script>
+        const _LANG = {
+            search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
+            cartTitle: { ar: '🛒 طلبي', en: '🛒 My Order' },
+            cartEmpty: { ar: 'السلة فارغة — اختر أصناف من المنيو', en: 'Cart is empty — choose items from the menu' },
+            tableLabel: { ar: 'رقم الطرابيزة (اختياري):', en: 'Table number (optional):' },
+            tablePlace: { ar: 'مثال: 5', en: 'e.g. 5' },
+            total: { ar: 'الإجمالي:', en: 'Total:' },
+            sendBtn: { ar: '📱 إرسال الطلب عبر واتساب', en: '📱 Send order via WhatsApp' },
+            toastAdd: { ar: '➕', en: '➕' },
+            specTitle: { ar: '✨ القهوة المختصة', en: '✨ Specialty Coffee' },
+            specDesc: { ar: 'القهوة المختصة هي أجود 3% من إنتاج القهوة العالمي، نختارها بعناية من أفضل المزارع حول العالم. كل حبة قهوة في Lucca تمر بمعايير جودة صارمة لنضمن لك طعماً نقياً ومميزاً.', en: 'Specialty coffee is the top 3% of global coffee production, carefully sourced from the best farms worldwide. Every Lucca bean meets strict quality standards for a pure, distinctive taste.' },
+            qrTitle: { ar: '📱 امسح QR للوصول للمنيو', en: '📱 Scan QR to access the menu' },
+            qrDesc: { ar: 'يمكنك مسح هذا الكود للوصول السريع إلى قائمة الطعام من هاتفك المحمول', en: 'Scan this code to quickly access the menu from your phone' },
+            footerApp: { ar: 'Buon Appetito! 🍽️', en: 'Buon Appetito! 🍽️' },
+            backTop: { ar: 'العودة للأعلى', en: 'Back to top' },
+            originTitle: { ar: 'اختر المحصول لـ', en: 'Choose origin for' },
+            originCancel: { ar: 'إلغاء', en: 'Cancel' },
+            waTitle: { ar: '☕ *طلب من Lucca Caffè*', en: '☕ *Order from Lucca Caffè*' },
+            waTable: { ar: '🪑 *رقم الطرابيزة:', en: '🪑 *Table number:' },
+            waTotal: { ar: '💵 *الإجمالي:', en: '💵 *Total:' },
+            waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
+            originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
+            catNames: {
+                ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية' },
+                en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks' }
+            }
+        };
+        let lang = localStorage.getItem('lang') || 'ar';
+        function t(key) { const o = _LANG[key]; return o ? o[lang] || o.ar : key; }
+        function toggleLang() {
+            lang = lang === 'ar' ? 'en' : 'ar';
+            localStorage.setItem('lang', lang);
+            document.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('langToggle').textContent = lang === 'ar' ? '🇬🇧' : '🇪🇬';
+            applyLang();
+        }
+        function applyLang() {
+            // static elements
+            const byId = {
+                searchInput: 'search',
+                cartTitleLabel: 'cartTitle',
+                cartEmptyMsg: 'cartEmpty',
+                tableNumLabel: 'tableLabel',
+                tableNum: 'tablePlace',
+                totalLabel: 'total',
+                sendBtnLabel: 'sendBtn',
+                specTitleEl: 'specTitle',
+                specDescEl: 'specDesc',
+                qrTitleEl: 'qrTitle',
+                qrDescEl: 'qrDesc',
+                footerAppEl: 'footerApp',
+                backToTop: 'backTop'
+            };
+            for (const [id, key] of Object.entries(byId)) {
+                const el = document.getElementById(id);
+                if (!el) continue;
+                if (el.tagName === 'INPUT') el.placeholder = t(key);
+                else if (el.tagName === 'LABEL') el.textContent = t(key);
+                else el.textContent = t(key);
+            }
+            // re-render dynamic parts
+            renderTabs();
+            renderMenu();
+            updateCartUI();
+        }
         const CATEGORIES = [
-            { icon: '☕', name: 'القهوة المختصة', id: 'specialty' },
-            { icon: '☕', name: 'قسم القهوة', id: 'coffee' },
-            { icon: '🫖', name: 'مشروبات ساخنة', id: 'hot-drinks' },
-            { icon: '🧊', name: 'قهوة مثلجة', id: 'iced-coffee' },
-            { icon: '🥤', name: 'ميلك شيك', id: 'milkshake' },
-            { icon: '🍹', name: 'عصائر فريش', id: 'juice' },
-            { icon: '🍰', name: 'حلويات', id: 'desserts' },
-            { icon: '🥤', name: 'سموزي', id: 'smoothie' },
-            { icon: '🍋', name: 'صودا', id: 'soda' },
-            { icon: '❄️', name: 'أصناف شتوية', id: 'winter' },
-            { icon: '🍞', name: 'فطار', id: 'breakfast' },
-            { icon: '🍕', name: 'بيتزا', id: 'pizza' },
-            { icon: '🥤', name: 'مشروبات غازية', id: 'soft-drinks' }
+            { icon: '☕', name: () => t('catNames')[lang].specialty, id: 'specialty' },
+            { icon: '☕', name: () => t('catNames')[lang].coffee, id: 'coffee' },
+            { icon: '🫖', name: () => t('catNames')[lang]['hot-drinks'], id: 'hot-drinks' },
+            { icon: '🧊', name: () => t('catNames')[lang]['iced-coffee'], id: 'iced-coffee' },
+            { icon: '🥤', name: () => t('catNames')[lang].milkshake, id: 'milkshake' },
+            { icon: '🍹', name: () => t('catNames')[lang].juice, id: 'juice' },
+            { icon: '🍰', name: () => t('catNames')[lang].desserts, id: 'desserts' },
+            { icon: '🥤', name: () => t('catNames')[lang].smoothie, id: 'smoothie' },
+            { icon: '🍋', name: () => t('catNames')[lang].soda, id: 'soda' },
+            { icon: '❄️', name: () => t('catNames')[lang].winter, id: 'winter' },
+            { icon: '🍞', name: () => t('catNames')[lang].breakfast, id: 'breakfast' },
+            { icon: '🍕', name: () => t('catNames')[lang].pizza, id: 'pizza' },
+            { icon: '🥤', name: () => t('catNames')[lang]['soft-drinks'], id: 'soft-drinks' }
         ];
 
         const DATA = {
@@ -707,7 +775,7 @@
             if (existing) { existing.qty++; }
             else { cart.push({ key, name, price, qty: 1, origin }); }
             updateCartUI();
-            showCartToast(`➕ ${name}${origin ? ` (${origin})` : ''}`);
+            showCartToast(`${t('toastAdd')} ${name}${origin ? ` (${origin})` : ''}`);
         }
         function removeFromCart(key) {
             const idx = cart.findIndex(i => i.key === key);
@@ -726,11 +794,11 @@
             overlay.className = 'origin-overlay';
             overlay.innerHTML = `
                 <div class="origin-modal">
-                    <div class="origin-modal-header">اختر المحصول لـ <strong>${name}</strong></div>
+                    <div class="origin-modal-header">${t('originTitle')} <strong>${name}</strong></div>
                     <div class="origin-modal-body">
                         ${origins.map(o => `<button class="origin-option" data-origin="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}
                     </div>
-                    <button class="origin-cancel">إلغاء</button>
+                    <button class="origin-cancel">${t('originCancel')}</button>
                 </div>
             `;
             overlay.addEventListener('click', e => {
@@ -762,7 +830,7 @@
             document.getElementById('cartFooter').style.display = count > 0 ? 'block' : 'none';
             const container = document.getElementById('cartItems');
             if (count === 0) {
-                container.innerHTML = '<div class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>';
+                container.innerHTML = `<div class="cart-empty">${t('cartEmpty')}</div>`;
                 return;
             }
             container.innerHTML = cart.map(i => `
@@ -787,10 +855,10 @@
         }
         function sendCartWhatsApp() {
             if (cart.length === 0) return;
-            const lines = ['☕ *طلب من Lucca Caffè*', '━━━━━━━━━━━━', ''];
+            const lines = [t('waTitle'), '━━━━━━━━━━━━', ''];
             const table = document.getElementById('tableNum').value.trim();
             if (table) {
-                lines.push(`🪑 *رقم الطرابيزة: ${table}*`);
+                lines.push(`${t('waTable')} ${table}*`);
                 lines.push('');
             }
             cart.forEach(i => {
@@ -799,8 +867,8 @@
             });
             lines.push('', '━━━━━━━━━━━━');
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-            lines.push(`💵 *الإجمالي: ${total.toFixed(0)} ج.م*`);
-            lines.push('', '🙏 من فضلكم جهزوا الطلب');
+            lines.push(`${t('waTotal')} ${total.toFixed(0)} ج.م*`);
+            lines.push('', t('waFooter'));
             const msg = lines.join('\n');
             const phone = '201010058989';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -829,7 +897,7 @@
             if (item.origins) {
                 origins = `
                     <div class="origin-selection">
-                        <div class="label">اختر المحصول:</div>
+                        <div class="label">${t('originLabel')}</div>
                         <div class="origin-options">
                             ${item.origins.map(o => `<span class="origin-tag">${o}</span>`).join('')}
                         </div>
@@ -864,7 +932,7 @@
             return `
                 <div class="category" id="cat-${cat.id}" data-cat-id="${cat.id}">
                     <div class="category-header" onclick="toggleCategory(this)">
-                        <h2><span class="category-icon">${cat.icon}</span> ${cat.name}</h2>
+                        <h2><span class="category-icon">${cat.icon}</span> ${cat.name()}</h2>
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="category-items">
@@ -877,7 +945,7 @@
             const tabsEl = document.getElementById('tabsList');
             tabsEl.innerHTML = CATEGORIES.map(c =>
                 `<button class="tab" data-target="${c.id}" onclick="scrollToCategory('${c.id}')">
-                    <span class="tab-icon">${c.icon}</span> ${c.name}
+                    <span class="tab-icon">${c.icon}</span> ${c.name()}
                 </button>`
             ).join('');
         }
@@ -936,10 +1004,9 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            renderTabs();
-            renderMenu();
-            const first = document.querySelector('.category');
-            if (first) first.classList.add('expanded');
+            document.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.getElementById('langToggle').textContent = lang === 'ar' ? '🇬🇧' : '🇪🇬';
+            applyLang();
             if (typeof QRCode !== 'undefined') {
                 new QRCode(document.getElementById('qrcode'), {
                     text: window.location.href,
