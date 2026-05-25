@@ -7,10 +7,6 @@ const menuData = [
         items: [
             { name: 'توست ميكس جبن (نصف)', price: 30, description: 'توست محمص بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
             { name: 'توست ميكس جبن (كامل)', price: 60, description: 'توست محمص بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
-            { name: 'توست روزبيف (نصف)', price: 35, description: 'توست محمص بالروزبيف', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
-            { name: 'توست روزبيف (كامل)', price: 70, description: 'توست محمص بالروزبيف', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
-            { name: 'توست تركي مدخن (نصف)', price: 35, description: 'توست محمص بالتركي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
-            { name: 'توست تركي مدخن (كامل)', price: 70, description: 'توست محمص بالتركي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'توست بسطرمة (نصف)', price: 35, description: 'توست محمص بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
             { name: 'توست بسطرمة (كامل)', price: 70, description: 'توست محمص بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' }
         ]
@@ -25,8 +21,9 @@ const menuData = [
             { name: 'بيتزا رانش', price: 200, description: 'بيتزا بصوص الرانش', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80' },
             { name: 'بيتزا دجاج', price: 200, description: 'بيتزا بقطع الدجاج', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'بيتزا مارجريتا', price: 150, description: 'بيتزا كلاسيك بجبن الموزاريلا', image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80' },
-            { name: 'بيتزا روزبيف', price: 170, description: 'بيتزا بالروزبيف', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80' },
-            { name: 'بيتزا رومي مدخن', price: 170, description: 'بيتزا بالرومي المدخن', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80' }
+            { name: 'بيتزا تشيكن باربكيو', price: 180, description: 'بيتزا بقطع الدجاج وصوص الباربكيو', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80' },
+            { name: 'بيتزا اسبايسي رانش', price: 190, description: 'بيتزا حارة بصوص الرانش', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80' },
+            { name: 'بيتزا سوبر سوبريم', price: 220, description: 'بيتزا الخلطة الفاخرة باللحم والدجاج', image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80', badge: 'popular' }
         ]
     },
     {
