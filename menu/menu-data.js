@@ -8,7 +8,13 @@ const menuData = [
             { name: 'توست ميكس جبن (نصف)', price: 30, description: 'توست محمص بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
             { name: 'توست ميكس جبن (كامل)', price: 60, description: 'توست محمص بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'توست بسطرمة (نصف)', price: 35, description: 'توست محمص بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
-            { name: 'توست بسطرمة (كامل)', price: 70, description: 'توست محمص بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' }
+            { name: 'توست بسطرمة (كامل)', price: 70, description: 'توست محمص بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'توست روزبيف (نصف)', price: 35, description: 'توست محمص بالروزبيف', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
+            { name: 'توست روزبيف (كامل)', price: 70, description: 'توست محمص بالروزبيف', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'توست رومي مدخن (نصف)', price: 35, description: 'توست محمص بالرومي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
+            { name: 'توست رومي مدخن (كامل)', price: 70, description: 'توست محمص بالرومي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'ساندويتش ميكس جبن', price: 25, description: 'ساندويتش بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
+            { name: 'ساندويتش بسطرمة', price: 30, description: 'ساندويتش بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' }
         ]
     },
     {
@@ -102,7 +108,8 @@ const menuData = [
             { name: 'شاي أخضر', price: 35, description: 'شاي أخضر طازج', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80' },
             { name: 'ميكس أعشاب', price: 50, description: 'خلطة أعشاب متنوعة', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=400&q=80' },
             { name: 'شاي بالبن', price: 50, description: 'شاي مع لبن', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' },
-            { name: 'أعشاب', price: 35, description: 'مشروب أعشاب دافئ', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=400&q=80' }
+            { name: 'أعشاب', price: 35, description: 'مشروب أعشاب دافئ', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=400&q=80' },
+            { name: 'هوت سيدر', price: 50, description: 'مشروب تفاح ساخن بالقرفة', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80', badge: 'new' }
         ]
     },
     {
@@ -114,7 +121,9 @@ const menuData = [
             { name: 'آيس لاتيه', price: 85, description: 'لاتيه مثلج', image: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'آيس موكا', price: 90, description: 'موكا مثلج', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=400&q=80' },
             { name: 'آيس وايت موكا', price: 90, description: 'وايت موكا مثلج', image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=400&q=80' },
-            { name: 'فرابتشينو', price: 95, description: 'فرابيه مثلج', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80', badge: 'specialty' }
+            { name: 'فرابتشينو', price: 95, description: 'فرابيه مثلج', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
+            { name: 'فرابيه كلاسيك', price: 85, description: 'فرابيه كلاسيك', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80' },
+            { name: 'فرابيه فروت', price: 95, description: 'فرابيه بالفواكه', image: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=400&q=80' }
         ]
     },
     {
@@ -127,7 +136,9 @@ const menuData = [
             { name: 'فراولة', price: 90, description: 'ميلك شيك فراولة', image: 'https://images.unsplash.com/photo-1579954115545-a95591f28bfc?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'مانجو', price: 90, description: 'ميلك شيك مانجو', image: 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=400&q=80' },
             { name: 'نوتيلا', price: 100, description: 'ميلك شيك نوتيلا', image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
-            { name: 'أوريو', price: 110, description: 'ميلك شيك أوريو', image: 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=400&q=80', badge: 'new' }
+            { name: 'أوريو', price: 110, description: 'ميلك شيك أوريو', image: 'https://images.unsplash.com/photo-1626200419199-391ae4be7a41?auto=format&fit=crop&w=400&q=80', badge: 'new' },
+            { name: 'كراميل', price: 90, description: 'ميلك شيك كراميل', image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80' },
+            { name: 'ميكس شوكليت', price: 120, description: 'ميلك شيك شوكليت ميكس', image: 'https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=400&q=80', badge: 'specialty' }
         ]
     },
     {
@@ -137,10 +148,11 @@ const menuData = [
         items: [
             { name: 'مانجو', price: 90, description: 'عصير مانجو طازج', image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'فراولة', price: 80, description: 'عصير فراولة طازج', image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80' },
-            { name: 'جوافة', price: 80, description: 'عصير جوافة طازج', image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80', badge: 'new' },
+            { name: 'جوافة', price: 75, description: 'عصير جوافة طازج', image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80', badge: 'new' },
             { name: 'برتقال', price: 75, description: 'عصير برتقال طازج', image: 'https://images.unsplash.com/photo-1603569283847-aa295f0d016a?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
-            { name: 'ليمون', price: 65, description: 'ليمون طازج', image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80' },
-            { name: 'ليمون بالنعناع', price: 75, description: 'ليمون طازج مع نعناع', image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80', badge: 'new' }
+            { name: 'ليمون', price: 70, description: 'ليمون طازج', image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80' },
+            { name: 'ليمون بالنعناع', price: 75, description: 'ليمون طازج مع نعناع', image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=400&q=80', badge: 'new' },
+            { name: 'كيوي', price: 90, description: 'عصير كيوي طازج', image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80', badge: 'new' }
         ]
     },
     {
@@ -153,7 +165,20 @@ const menuData = [
             { name: 'سان سيباستيان', price: 70, description: 'تشيز كيك فطري', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=400&q=80', badge: 'new' },
             { name: 'مولتن', price: 80, description: 'كيك الشوكولاتة الذائبة', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'براونيز', price: 80, description: 'براونيز شوكولاتة', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80' },
-            { name: 'كوكيز', price: 40, description: 'كوكيز طازج', image: 'https://images.unsplash.com/photo-1499636136210-6f4e915e7177?auto=format&fit=crop&w=400&q=80' }
+            { name: 'كوكيز', price: 40, description: 'كوكيز طازج', image: 'https://images.unsplash.com/photo-1499636136210-6f4e915e7177?auto=format&fit=crop&w=400&q=80' },
+            { name: 'وافل فورسيزون', price: 120, description: 'وافل بأربع نكهات', image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
+            { name: 'وافل بابل', price: 85, description: 'وافل بابل', image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=400&q=80' },
+            { name: 'وافل فواكه', price: 110, description: 'وافل بالفواكه الطازجة', image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?auto=format&fit=crop&w=400&q=80' },
+            { name: 'تشيز كيك', price: 90, description: 'تشيز كيك كلاسيك', image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'موس جالاكسي', price: 100, description: 'موس جالاكسي بالشوكولاتة', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=400&q=80', badge: 'specialty' }
+        ]
+    },
+    {
+        title: 'سموزي',
+        icon: '🥭',
+        id: 'smoothie',
+        items: [
+            { name: 'من اختيارك', price: 75, description: 'سموزي طازج من اختيارك', image: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=400&q=80', badge: 'popular' }
         ]
     },
     {
@@ -164,7 +189,15 @@ const menuData = [
             { name: 'موهيتو', price: 75, description: 'موهيتو كلاسيك', image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'موهيتو فليفر', price: 100, description: 'موهيتو بالنكهة', image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80', badge: 'new' },
             { name: 'بينا كولادا', price: 75, description: 'كوكتيل أناناس', image: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
-            { name: 'ميكس لوكا', price: 80, description: 'مشروب لوكا الخاص', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80', badge: 'specialty' }
+            { name: 'ميكس لوكا', price: 80, description: 'مشروب لوكا الخاص', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
+            { name: 'جيلي كولا', price: 75, description: 'جيلي كولا', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'صن شاين', price: 75, description: 'صن شاين', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'صن رايز', price: 75, description: 'صن رايز', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'شيري كولا', price: 75, description: 'شيري كولا', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'ميكس بيري', price: 80, description: 'ميكس بيري', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80', badge: 'new' },
+            { name: 'بلو بيري فراولة', price: 75, description: 'بلو بيري فراولة', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'باشون أناناس', price: 75, description: 'باشون أناناس', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80' },
+            { name: 'ريدبول فليفر', price: 120, description: 'ريدبول فليفر', image: 'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=400&q=80', badge: 'specialty' }
         ]
     },
     {
@@ -172,7 +205,10 @@ const menuData = [
         icon: '🍂',
         id: 'winter',
         items: [
-            { name: 'سحلب', price: 70, description: 'سحلب ساخن كريمي مع قرفة وجوز هند', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'سحلب', price: 85, description: 'سحلب ساخن كريمي مع قرفة وجوز هند', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'سحلب نوتيلا', price: 90, description: 'سحلب بنوتيلا', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
+            { name: 'حمص الشام', price: 80, description: 'حمص الشام', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80' },
+            { name: 'بليلة', price: 85, description: 'بليلة', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80' },
             { name: 'شاي كرك', price: 50, description: 'شاي هندي محمص بالتوابل', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' },
             { name: 'قرفة', price: 50, description: 'مشروب قرفة دافئ', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' },
             { name: 'ينسون', price: 40, description: 'مشروب ينسون دافئ', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' },
@@ -189,7 +225,9 @@ const menuData = [
             { name: 'سفن أب', price: 35, description: 'سفن أب ليمون لايم', image: 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=400&q=80' },
             { name: 'ميرندا', price: 35, description: 'ميرندا برتقال منعش', image: 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=400&q=80' },
             { name: 'ريد بول', price: 85, description: 'مشروب طاقة ريد بول', image: 'https://images.unsplash.com/photo-1613476437042-451c247e15d1?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
-            { name: 'تويست', price: 40, description: 'مشروب طاقة تويست', image: 'https://images.unsplash.com/photo-1613476437042-451c247e15d1?auto=format&fit=crop&w=400&q=80' },
+            { name: 'تويست', price: 35, description: 'مشروب طاقة تويست', image: 'https://images.unsplash.com/photo-1613476437042-451c247e15d1?auto=format&fit=crop&w=400&q=80' },
+            { name: 'فيروز', price: 40, description: 'فيروز', image: 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=400&q=80' },
+            { name: 'بيريل', price: 50, description: 'بيريل', image: 'https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=400&q=80' },
             { name: 'مياه', price: 10, description: 'مياه معدنية باردة', image: 'https://images.unsplash.com/photo-1548839140-2f2a87f8b30f?auto=format&fit=crop&w=400&q=80' }
         ]
     },
