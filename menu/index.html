@@ -235,8 +235,18 @@
             align-items: center;
             transition: background 0.3s;
             border-bottom: 2px solid var(--coffee-500);
+            position: relative;
+            overflow: hidden;
         }
-        .category-header:active { background: #EBE5DE; }
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: -20px; left: -20px;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, rgba(166,123,91,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .category-header:active { background: #E5D8CC; }
         .category-header h2 {
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
@@ -244,15 +254,22 @@
             color: var(--coffee-900);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .category-icon {
-            font-size: 1.4rem;
-            width: 36px; height: 36px;
+            font-size: 1.3rem;
+            width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
-            background: var(--cream);
-            border-radius: 10px;
+            background: var(--foam);
+            border-radius: 12px;
             flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(26,15,10,0.06);
+            position: relative;
+            z-index: 1;
+        }
+        .category-header:hover .category-icon {
+            background: var(--coffee-300);
+            color: var(--foam);
         }
         .toggle-icon {
             font-size: 1rem;
@@ -617,19 +634,19 @@
             updateCartUI();
         }
         const CATEGORIES = [
-            { icon: '☕', name: () => t('catNames').specialty, id: 'specialty' },
+            { icon: '🫘', name: () => t('catNames').specialty, id: 'specialty' },
             { icon: '☕', name: () => t('catNames').coffee, id: 'coffee' },
             { icon: '🫖', name: () => t('catNames')['hot-drinks'], id: 'hot-drinks' },
-            { icon: '🧊', name: () => t('catNames')['iced-coffee'], id: 'iced-coffee' },
-            { icon: '🥤', name: () => t('catNames').milkshake, id: 'milkshake' },
-            { icon: '🍹', name: () => t('catNames').juice, id: 'juice' },
+            { icon: '🧋', name: () => t('catNames')['iced-coffee'], id: 'iced-coffee' },
+            { icon: '🥛', name: () => t('catNames').milkshake, id: 'milkshake' },
+            { icon: '🍊', name: () => t('catNames').juice, id: 'juice' },
             { icon: '🍰', name: () => t('catNames').desserts, id: 'desserts' },
-            { icon: '🥤', name: () => t('catNames').smoothie, id: 'smoothie' },
-            { icon: '🍋', name: () => t('catNames').soda, id: 'soda' },
-            { icon: '❄️', name: () => t('catNames').winter, id: 'winter' },
-            { icon: '🍞', name: () => t('catNames').breakfast, id: 'breakfast' },
+            { icon: '🥭', name: () => t('catNames').smoothie, id: 'smoothie' },
+            { icon: '🥤', name: () => t('catNames').soda, id: 'soda' },
+            { icon: '☕', name: () => t('catNames').winter, id: 'winter' },
+            { icon: '🍳', name: () => t('catNames').breakfast, id: 'breakfast' },
             { icon: '🍕', name: () => t('catNames').pizza, id: 'pizza' },
-            { icon: '🥤', name: () => t('catNames')['soft-drinks'], id: 'soft-drinks' }
+            { icon: '🥫', name: () => t('catNames')['soft-drinks'], id: 'soft-drinks' }
         ];
 
         const DATA = {
