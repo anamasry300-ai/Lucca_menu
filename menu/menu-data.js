@@ -101,7 +101,8 @@ const menuData = [
             { name: 'شاي كرك', price: 50, description: 'شاي هندي محمص', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
             { name: 'شاي أخضر', price: 35, description: 'شاي أخضر طازج', image: 'https://images.unsplash.com/photo-1556881286-fc691516e071?auto=format&fit=crop&w=400&q=80' },
             { name: 'ميكس أعشاب', price: 50, description: 'خلطة أعشاب متنوعة', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=400&q=80' },
-            { name: 'شاي بالبن', price: 50, description: 'شاي مع لبن', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' }
+            { name: 'شاي بالبن', price: 50, description: 'شاي مع لبن', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b28505?auto=format&fit=crop&w=400&q=80' },
+            { name: 'أعشاب', price: 35, description: 'مشروب أعشاب دافئ', image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=400&q=80' }
         ]
     },
     {
