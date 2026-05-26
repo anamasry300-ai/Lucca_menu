@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        html { scroll-behavior: smooth; }
         :root {
             --coffee-900: #1A0F0A;
             --coffee-700: #3E2312;
@@ -105,21 +106,46 @@
         }
 
         .specialty-intro {
-            background: linear-gradient(160deg, var(--coffee-900) 0%, var(--coffee-700) 60%, var(--coffee-500) 100%);
-            padding: 28px 20px;
+            background:
+                radial-gradient(ellipse 120px 100px at 20% 30%, rgba(212,168,90,0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 150px 120px at 80% 20%, rgba(107,76,65,0.12) 0%, transparent 70%),
+                radial-gradient(circle 3px at 15% 45%, rgba(212,168,90,0.3) 0%, transparent 100%),
+                radial-gradient(circle 2px at 75% 55%, rgba(212,168,90,0.2) 0%, transparent 100%),
+                radial-gradient(circle 4px at 85% 75%, rgba(212,168,90,0.15) 0%, transparent 100%),
+                radial-gradient(circle 2px at 25% 70%, rgba(212,168,90,0.25) 0%, transparent 100%),
+                radial-gradient(circle 3px at 50% 25%, rgba(212,168,90,0.2) 0%, transparent 100%),
+                radial-gradient(circle 2px at 60% 85%, rgba(212,168,90,0.15) 0%, transparent 100%),
+                radial-gradient(circle 3px at 35% 10%, rgba(212,168,90,0.2) 0%, transparent 100%),
+                radial-gradient(ellipse 200px 60px at 50% 110%, rgba(166,123,91,0.15) 0%, transparent 70%),
+                linear-gradient(160deg, var(--coffee-900) 0%, var(--coffee-700) 60%, var(--coffee-500) 100%);
+            padding: 32px 20px 36px;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
         .specialty-intro::before {
-            content: '"';
+            content: '\201C';
             font-family: 'Cairo', sans-serif;
-            font-size: 5rem;
+            font-size: 8rem;
             color: var(--gold);
-            opacity: 0.25;
+            opacity: 0.12;
             position: absolute;
-            top: -10px;
-            right: 24px;
+            top: -18px;
+            right: 16px;
             line-height: 1;
+            pointer-events: none;
+        }
+        .specialty-intro::after {
+            content: '\201D';
+            font-family: 'Cairo', sans-serif;
+            font-size: 6rem;
+            color: var(--gold);
+            opacity: 0.1;
+            position: absolute;
+            bottom: -24px;
+            left: 20px;
+            line-height: 1;
+            pointer-events: none;
         }
         .specialty-intro h2 {
             font-family: 'Cairo', sans-serif;
@@ -127,6 +153,8 @@
             font-size: 1.25rem;
             color: var(--gold);
             margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
         }
         .specialty-intro p {
             font-size: 0.92rem;
@@ -135,6 +163,8 @@
             max-width: 600px;
             margin: 0 auto;
             opacity: 0.92;
+            position: relative;
+            z-index: 1;
         }
 
         .sticky-bar {
@@ -341,8 +371,10 @@
         .add-cart-btn { width:32px; height:32px; border:none; border-radius:50%; background:var(--coffee-500); color:var(--foam); font-size:1.2rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s; }
         .add-cart-btn:hover { transform:scale(1.15); }
         .add-cart-btn:active { transform:scale(0.9); }
-        .cart-fab { position:fixed; bottom:80px; left:16px; z-index:100; width:56px; height:56px; border-radius:50%; background:var(--coffee-500); color:var(--foam); border:none; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,0.2); display:none; align-items:center; justify-content:center; }
-        .cart-fab.show { display:flex; }
+        .cart-fab { position:fixed; bottom:80px; left:16px; z-index:100; width:56px; height:56px; border-radius:50%; background:var(--coffee-500); color:var(--foam); border:none; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,0.2); display:none; align-items:center; justify-content:center; transition:transform 0.2s; }
+        .cart-fab.show { display:flex; animation:fabPop 0.35s ease; }
+        .cart-fab:active { transform:scale(0.9); }
+        @keyframes fabPop { 0% { transform:scale(0); opacity:0; } 60% { transform:scale(1.1); } 100% { transform:scale(1); opacity:1; } }
         #cartFabBadge { position:absolute; top:-4px; right:-4px; background:var(--coffee-700); color:#fff; font-size:0.7rem; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
         .cart-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:200; display:none; }
         .cart-overlay.show { display:block; }
@@ -408,6 +440,21 @@
         }
         .origin-tag:hover { background: var(--coffee-300); color: var(--foam); border-color: var(--coffee-500); }
         .origin-tag:active { transform: scale(0.95); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .menu-item {
+            animation: fadeInUp 0.35s ease both;
+        }
+        .category:hover { box-shadow: var(--shadow-md); }
+        .menu-item:hover { background: var(--cream); transform: translateX(-2px); }
+        html[dir="ltr"] .menu-item:hover { transform: translateX(2px); }
+        .tab:not(.active):hover { background: #E5D8CC; transform: translateY(-1px); }
+        .category-header:hover { background: #E5D8CC; }
+        .category-header:hover .category-icon { transform: scale(1.08); }
+        .category-icon { transition: transform 0.25s ease, background 0.3s, color 0.3s; }
 
         .qr-section {
             background: var(--cream);
@@ -591,8 +638,8 @@
             waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
             originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
             catNames: {
-                ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية' },
-                en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks' }
+                ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
+                en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
             }
         };
         let lang = localStorage.getItem('lang') || 'ar';
@@ -634,7 +681,7 @@
             updateCartUI();
         }
         const CATEGORIES = [
-            { icon: '🫘', name: () => t('catNames').specialty, id: 'specialty' },
+            { icon: '<svg viewBox="0 0 24 24" style="width:1em;height:1em;display:block;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 21 12 3 20 21"/><path d="M20 10q3.5 0 3.5 4q0 4-3.5 4"/><path d="M7 15q2.5-2 5 0q2.5 2 5 0" stroke-width="1" opacity=".5"/><path d="M6.5 18q2.5-2 5.5 0q3 2 5.5 0" stroke-width="1" opacity=".5"/><ellipse cx="12" cy="22.2" rx="1.2" ry=".7" fill="currentColor" stroke="none"/></svg>', name: () => t('catNames').specialty, id: 'specialty' },
             { icon: '☕', name: () => t('catNames').coffee, id: 'coffee' },
             { icon: '🫖', name: () => t('catNames')['hot-drinks'], id: 'hot-drinks' },
             { icon: '🧋', name: () => t('catNames')['iced-coffee'], id: 'iced-coffee' },
@@ -646,7 +693,8 @@
             { icon: '☕', name: () => t('catNames').winter, id: 'winter' },
             { icon: '🍳', name: () => t('catNames').breakfast, id: 'breakfast' },
             { icon: '🍕', name: () => t('catNames').pizza, id: 'pizza' },
-            { icon: '🥫', name: () => t('catNames')['soft-drinks'], id: 'soft-drinks' }
+            { icon: '🥫', name: () => t('catNames')['soft-drinks'], id: 'soft-drinks' },
+            { icon: '➕', name: () => t('catNames').addons, id: 'addons' }
         ];
 
         const DATA = {
@@ -661,7 +709,7 @@
                 { n: 'ميكاتو دبل', p: '80' }, { n: 'موكا', p: '75' },
                 { n: 'وايت موكا', p: '75' }, { n: 'فلات وايت', p: '80' },
                 { n: 'كورتادو', p: '75' }, { n: 'كابتشينو', p: '85' },
-                { n: 'لاتيه', p: '85' }, { n: 'قهوة بندق', p: '75' },
+                { n: 'لاتيه', p: '85' },                 { n: 'قهوة بندق', p: '70' },
                 { n: 'قهوة فرنساوي', p: '65' }, { n: 'نسكافيه', p: '70' },
                 { n: 'هوت شوكليت', p: '70' }, { n: 'هوت شوكليت نوتيلا', p: '80' }
             ],
@@ -724,6 +772,8 @@
             breakfast: [
                 { n: 'توست ميكس جبن', p: ['30', '60'] },
                 { n: 'توست بسطرمة', p: ['35', '70'] },
+                { n: 'توست روزبيف', p: ['35', '70'] },
+                { n: 'توست رومي مدخن', p: ['35', '70'] },
                 { n: 'ساندويتش ميكس جبن', p: '25' },
                 { n: 'ساندويتش بسطرمة', p: '30' }
             ],
@@ -741,6 +791,14 @@
                 { n: 'بيبسي', p: '35' }, { n: 'تويست', p: '35' },
                 { n: 'فيروز', p: '40' }, { n: 'ريدبول', p: '85' },
                 { n: 'بيريل', p: '50' }, { n: 'مياه', p: '10' }
+            ],
+            addons: [
+                { n: 'جبن', p: '15', d: 'جبن مقدون' },
+                { n: 'شيكولاتة', p: '15' },
+                { n: 'مكسرات', p: '20' },
+                { n: 'نوتيلا', p: '25' },
+                { n: 'كارت', p: '5', d: 'كارد' },
+                { n: 'طاولة', p: '20' }
             ]
         };
 
@@ -846,7 +904,7 @@
             return `<span class="item-price">${p} <span class="price-unit">ج.م</span></span>`;
         }
 
-        function renderItem(item) {
+        function renderItem(item, idx) {
             let origins = '';
             if (item.origins) {
                 origins = `
@@ -862,7 +920,7 @@
             const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
             const hasOrigins = item.origins && item.origins.length > 0;
             return `
-                <div class="menu-item">
+                <div class="menu-item" style="animation-delay:${(idx||0)*0.035}s">
                     <div class="item-info">
                         <div class="item-name">${item.n}</div>
                         ${desc}
@@ -885,7 +943,7 @@
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="category-items">
-                        ${items.map(renderItem).join('')}
+                        ${items.map((item, idx) => renderItem(item, idx)).join('')}
                     </div>
                 </div>`;
         }

@@ -77,6 +77,8 @@ const menuData = [
             { name: 'إسبريسو', price: 45, description: 'جرعة إسبريسو مركزة بنكهة شوكولاتة وكراميل.', image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'إسبريسو دبل', price: 70, description: 'جرعة مزدوجة من الإسبريسو الغني والمكثف.', image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=400&q=80' },
             { name: 'قهوة تركي', price: 35, description: 'قهوة تركية تقليدية مع رغوة خفيفة ونكهة قوية.', image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=400&q=80' },
+            { name: 'قهوة فرنساوي', price: 65, description: 'قهوة فرنسي برس بطيئة التحضير غنية بالنكهة.', image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=400&q=80' },
+            { name: 'قهوة بندق', price: 70, description: 'قهوة بنكهة البندق المحمص.', image: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'ميكاتو', price: 50, description: 'قطرة حليب على جرعة إسبريسو.', image: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=400&q=80' },
             { name: 'ميكاتو دبل', price: 80, description: 'إسبريسو دبل مع لمسة حليب خفيفة.', image: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=400&q=80' },
             { name: 'موكا', price: 75, description: 'إسبريسو مع شوكولاتة داكنة وحليب ساخن.', image: 'https://images.unsplash.com/photo-1578314675249-a6910f80cc39?auto=format&fit=crop&w=400&q=80' },
