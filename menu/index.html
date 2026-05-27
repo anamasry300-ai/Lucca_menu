@@ -34,6 +34,7 @@
             --radius-lg: 24px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        button { touch-action: manipulation; }
         body {
             font-family: 'Tajawal', sans-serif;
             background: 
@@ -207,9 +208,10 @@
         .search-box {
             position: relative;
         }
+        .search-box { position: relative; }
         .search-box input {
             width: 100%;
-            padding: 12px 44px 12px 16px;
+            padding: 12px 44px 12px 44px;
             border: 2px solid var(--cream);
             border-radius: 12px;
             font-size: 0.95rem;
@@ -224,14 +226,32 @@
             background: var(--foam);
             box-shadow: 0 0 0 3px rgba(62,35,18,0.12);
         }
-        .search-box::after {
-            content: '🔍';
+        .search-icon {
             position: absolute;
             right: 14px;
             top: 50%;
             transform: translateY(-50%);
             font-size: 1rem;
+            pointer-events: none;
         }
+        .search-clear {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px; height: 28px;
+            border: none; border-radius: 50%;
+            background: var(--cream);
+            color: var(--coffee-500);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .search-clear:hover { background: #D5C8BC; }
+        .search-clear.show { display: flex; }
 
         .tabs-container {
             padding: 8px 16px 12px;
@@ -261,6 +281,7 @@
             cursor: pointer;
             transition: all 0.25s;
             flex-shrink: 0;
+            touch-action: manipulation;
         }
         .tab:active { transform: scale(0.95); }
         .tab.active {
@@ -410,9 +431,10 @@
         #cartFabBadge { position:absolute; top:-4px; right:-4px; background:var(--coffee-700); color:#fff; font-size:0.7rem; font-weight:700; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
         .cart-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(26,15,10,0.5); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); z-index:200; display:none; }
         .cart-overlay.show { display:block; }
-        .cart-panel { position:fixed; bottom:0; left:0; right:0; z-index:201; background:#fff; border-radius:20px 20px 0 0; max-height:70vh; display:flex; flex-direction:column; transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); box-shadow:0 -4px 30px rgba(26,15,10,0.2); }
+        .cart-panel { position:fixed; bottom:0; left:0; right:0; z-index:201; background:#fff; border-radius:20px 20px 0 0; max-height:75vh; display:flex; flex-direction:column; transform:translateY(100%); transition:transform 0.35s cubic-bezier(0.32,0.72,0,1); box-shadow:0 -4px 30px rgba(26,15,10,0.2); }
         .cart-panel.show { transform:translateY(0); }
-        .cart-header { display:flex; align-items:center; gap:10px; padding:16px 20px; border-bottom:1px solid var(--cream); background:var(--foam); border-radius:20px 20px 0 0; }
+        .cart-drag-handle { width:40px; height:4px; border-radius:2px; background:var(--cream); margin:8px auto 0; flex-shrink:0; cursor:grab; }
+        .cart-header { display:flex; align-items:center; gap:10px; padding:12px 20px; border-bottom:1px solid var(--cream); background:var(--foam); border-radius:20px 20px 0 0; }
         .cart-header h3 { margin:0; flex:1; font-size:1.1rem; color:var(--coffee-900); }
         .cart-header h3 { margin:0; flex:1; font-size:1.1rem; }
         #cartCount { background:var(--coffee-700); color:#fff; font-size:0.8rem; font-weight:700; padding:2px 10px; border-radius:12px; }
@@ -435,6 +457,9 @@
         .lang-toggle { position:fixed; bottom:16px; right:16px; z-index:100; width:44px; height:44px; border-radius:50%; background:var(--gold); color:var(--coffee-900); border:none; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 12px rgba(212,168,90,0.3); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; }
         .lang-toggle:active { transform:scale(0.9); }
         @media (min-width:768px) { .lang-toggle { left:auto; right:24px; bottom:80px; } }
+        .share-btn { position:fixed; bottom:16px; right:66px; z-index:100; width:44px; height:44px; border-radius:50%; background:var(--coffee-700); color:var(--foam); border:none; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 12px rgba(62,35,18,0.25); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; }
+        .share-btn:active { transform:scale(0.9); }
+        @media (min-width:768px) { .share-btn { left:auto; right:74px; bottom:80px; } }
         .origin-option { padding:12px; border:2px solid var(--cream); border-radius:10px; background:#fff; font-size:1rem; cursor:pointer; transition:all 0.2s; }
         .origin-option:hover { border-color:var(--coffee-700); background:#F5F0EB; }
         .origin-cancel { background:none; border:none; color:var(--coffee-500); font-size:0.9rem; cursor:pointer; padding:8px; }
@@ -583,7 +608,9 @@
         <div class="sticky-bar" id="stickyBar">
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="ابحث في القائمة..." autocomplete="off">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" placeholder="ابحث في القائمة..." autocomplete="off" aria-label="بحث">
+                    <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="مسح البحث">✕</button>
                 </div>
             </div>
             <div class="tabs-container" id="tabsContainer">
@@ -612,16 +639,18 @@
         </div>
     </div>
 
-    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🌐</button>
+    <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
     <!-- Cart -->
     <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
     <div id="cartPanel" class="cart-panel">
+        <div class="cart-drag-handle"></div>
         <div class="cart-header">
             <h3 id="cartTitleLabel">🛒 طلبي</h3>
             <span id="cartCount">0</span>
-            <button class="cart-close" onclick="toggleCart()">✕</button>
+            <button class="cart-close" onclick="toggleCart()" aria-label="إغلاق">✕</button>
         </div>
         <div id="cartItems" class="cart-items">
             <div id="cartEmptyMsg" class="cart-empty">السلة فارغة — اختر أصناف من المنيو</div>
@@ -629,7 +658,11 @@
         <div id="cartFooter" class="cart-footer" style="display:none;">
             <div class="cart-table-input">
                 <label for="tableNum" id="tableNumLabel">رقم الطرابيزة (اختياري):</label>
-                <input type="text" id="tableNum" placeholder="مثال: 5">
+                <input type="number" id="tableNum" placeholder="مثال: 5" min="1" max="99" inputmode="numeric">
+            </div>
+            <div class="cart-table-input">
+                <label for="orderNotes" id="notesLabel">ملاحظات (اختياري):</label>
+                <input type="text" id="orderNotes" placeholder="مثال: بدون سكر، حليب لوز..." maxlength="200">
             </div>
             <div class="cart-total">
                 <span id="totalLabel">الإجمالي:</span>
@@ -654,7 +687,10 @@
             cartEmpty: { ar: 'السلة فارغة — اختر أصناف من المنيو', en: 'Cart is empty — choose items from the menu' },
             tableLabel: { ar: 'رقم الطرابيزة (اختياري):', en: 'Table number (optional):' },
             tablePlace: { ar: 'مثال: 5', en: 'e.g. 5' },
+            notesLabel: { ar: 'ملاحظات (اختياري):', en: 'Notes (optional):' },
+            notesPlace: { ar: 'مثال: بدون سكر، حليب لوز...', en: 'e.g. No sugar, almond milk...' },
             total: { ar: 'الإجمالي:', en: 'Total:' },
+            shareLabel: { ar: 'مشاركة المنيو', en: 'Share menu' },
             sendBtn: { ar: '📱 إرسال الطلب عبر واتساب', en: '📱 Send order via WhatsApp' },
             toastAdd: { ar: '➕', en: '➕' },
             specTitle: { ar: '✨ القهوة المختصة', en: '✨ Specialty Coffee' },
@@ -692,8 +728,11 @@
                 cartEmptyMsg: 'cartEmpty',
                 tableNumLabel: 'tableLabel',
                 tableNum: 'tablePlace',
+                orderNotes: 'notesPlace',
+                notesLabelEl: 'notesLabel',
                 totalLabel: 'total',
                 sendBtnLabel: 'sendBtn',
+                shareBtn: 'shareLabel',
                 specTitleEl: 'specTitle',
                 specDescEl: 'specDesc',
                 qrTitleEl: 'qrTitle',
@@ -706,6 +745,7 @@
                 if (!el) continue;
                 if (el.tagName === 'INPUT') el.placeholder = t(key);
                 else if (el.tagName === 'LABEL') el.textContent = t(key);
+                else if (id === 'shareBtn') el.setAttribute('aria-label', t(key));
                 else el.textContent = t(key);
             }
             // re-render dynamic parts
@@ -907,10 +947,14 @@
                 lines.push(`${t('waTable')} ${table}*`);
                 lines.push('');
             }
+            const notes = document.getElementById('orderNotes').value.trim();
             cart.forEach(i => {
                 const detail = `${i.name}${i.origin ? ` (${i.origin})` : ''}`;
                 lines.push(`• ${detail} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
             });
+            if (notes) {
+                lines.push('', `📝 *ملاحظات: ${notes}*`);
+            }
             lines.push('', '━━━━━━━━━━━━');
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             lines.push(`${t('waTotal')} ${total.toFixed(0)} ج.م*`);
@@ -920,6 +964,7 @@
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
             toggleCart();
             document.getElementById('tableNum').value = '';
+            document.getElementById('orderNotes').value = '';
             cart = [];
             updateCartUI();
         }
@@ -929,6 +974,23 @@
             el.classList.add('show');
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
+        }
+        function shareMenu() {
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: 'Lucca Café Menu', text: '☕ قائمة طعام لوكا', url }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    showCartToast('✅ تم نسخ الرابط');
+                }).catch(() => {});
+            }
+        }
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            document.getElementById('searchClear').classList.remove('show');
+            input.dispatchEvent(new Event('input'));
+            input.focus();
         }
 
         function renderPrice(p) {
@@ -945,7 +1007,7 @@
                     <div class="origin-selection">
                         <div class="label">${t('originLabel')}</div>
                         <div class="origin-options">
-                            ${item.origins.map(o => `<button class="origin-tag" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}')">${o}</button>`).join('')}
+                            ${item.origins.map(o => `<button class="origin-tag" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}')" aria-label="إضافة ${item.n} ${o}">${o}</button>`).join('')}
                         </div>
                     </div>`;
             }
@@ -962,7 +1024,7 @@
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')">+</button>`}
+                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')" aria-label="إضافة ${item.n}">+</button>`}
                     </div>
                 </div>`;
         }
@@ -985,8 +1047,8 @@
         function renderTabs() {
             const tabsEl = document.getElementById('tabsList');
             tabsEl.innerHTML = CATEGORIES.map(c =>
-                `<button class="tab" data-target="${c.id}" onclick="scrollToCategory('${c.id}')">
-                    <span class="tab-icon">${c.icon}</span> ${c.name()}
+                `<button class="tab" data-target="${c.id}" onclick="scrollToCategory('${c.id}')" role="tab" aria-selected="false" aria-label="${c.name()}">
+                    <span class="tab-icon" aria-hidden="true">${c.icon}</span> ${c.name()}
                 </button>`
             ).join('');
         }
@@ -1014,6 +1076,7 @@
 
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
+            document.getElementById('searchClear').classList.toggle('show', this.value.length > 0);
             const term = this.value.toLowerCase().trim();
             document.querySelectorAll('.category').forEach(cat => {
                 let visible = 0;
@@ -1040,7 +1103,9 @@
                 }
             });
             document.querySelectorAll('.tab').forEach(t => {
-                t.classList.toggle('active', t.dataset.target === activeId);
+                const isActive = t.dataset.target === activeId;
+                t.classList.toggle('active', isActive);
+                t.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
         });
 
