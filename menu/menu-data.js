@@ -13,6 +13,8 @@ const menuData = [
             { name: 'توست روزبيف (كامل)', price: 70, description: 'توست محمص بالروزبيف', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
             { name: 'توست رومي مدخن (نصف)', price: 35, description: 'توست محمص بالرومي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
             { name: 'توست رومي مدخن (كامل)', price: 70, description: 'توست محمص بالرومي المدخن', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'popular' },
+            { name: 'توست كفيار (نصف)', price: 50, description: 'توست محمص بالكفيار', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
+            { name: 'توست كفيار (كامل)', price: 100, description: 'توست محمص بالكفيار', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80', badge: 'specialty' },
             { name: 'ساندويتش ميكس جبن', price: 25, description: 'ساندويتش بميكس الجبنة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' },
             { name: 'ساندويتش بسطرمة', price: 30, description: 'ساندويتش بالبسطرمة', image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80' }
         ]
