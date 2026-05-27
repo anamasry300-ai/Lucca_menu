@@ -1,0 +1,24 @@
+{
+  "name": "Lucca Café - Menu",
+  "short_name": "Lucca Menu",
+  "description": "قائمة طعام مقهى لوكا - Lucca Café Menu",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F7F2EB",
+  "theme_color": "#1A0F0A",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "lifestyle"],
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "scope": "."
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3E2312"/>
+      <stop offset="100%" stop-color="#1A0F0A"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8CC8A"/>
+      <stop offset="100%" stop-color="#D4A85A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" fill="url(#bg)"/>
+  <!-- Coffee cup -->
+  <rect x="156" y="200" width="200" height="170" rx="24" fill="url(#goldGrad)" opacity="0.95"/>
+  <rect x="356" y="240" width="50" height="80" rx="20" fill="none" stroke="url(#goldGrad)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Steam -->
+  <path d="M206 180 Q216 150 206 120" fill="none" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+  <path d="M256 160 Q266 130 256 100" fill="none" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+  <path d="M306 180 Q316 150 306 120" fill="none" stroke="url(#goldGrad)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+  <!-- Coffee surface -->
+  <rect x="166" y="200" width="180" height="30" rx="12" fill="#1A0F0A" opacity="0.6"/>
+  <!-- Plate -->
+  <ellipse cx="256" cy="380" rx="140" ry="16" fill="url(#goldGrad)" opacity="0.3"/>
+  <!-- LUCCA text -->
+  <text x="256" y="460" font-family="Georgia,serif" font-size="48" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="8">LUCCA</text>
+</svg>
