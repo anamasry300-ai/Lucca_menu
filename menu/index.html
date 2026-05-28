@@ -57,7 +57,7 @@
 
         .header {
             background: linear-gradient(160deg, var(--coffee-900) 0%, var(--coffee-700) 40%, var(--coffee-500) 100%);
-            padding: 40px 24px 32px;
+            padding: 30px 24px 24px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -90,10 +90,21 @@
             margin-bottom: 2px;
         }
         .brand-logo {
-            width: 260px;
-            max-width: 82vw;
+            width: 200px;
+            max-width: 70vw;
             height: auto;
             display: block;
+            filter: drop-shadow(3px 3px 12px rgba(0,0,0,0.3));
+        }
+        .brand-inline {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .brand-inline svg {
+            width: 200px;
+            max-width: 70vw;
+            height: auto;
             filter: drop-shadow(3px 3px 12px rgba(0,0,0,0.3));
         }
         .header .subtitle {
@@ -563,7 +574,7 @@
         @media (min-width: 768px) {
             body { padding: 0; background: #E8E4DA; }
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
-            .header { padding: 56px 32px 40px; }
+            .header { padding: 44px 32px 32px; }
             .header h1 { font-size: 4.5rem; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
@@ -575,7 +586,48 @@
         <div class="header">
             <div class="header-content">
                 <div class="brand">
-                    <img src="logo.svg?v=2" alt="Lucca Caffè" class="brand-logo" width="280" height="90">
+                    <div class="brand-inline">
+                        <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stop-color="#E8CC8A"/>
+                              <stop offset="100%" stop-color="#D4A85A"/>
+                            </linearGradient>
+                          </defs>
+
+                          <!-- Icon mark: minimalist steam + ellipse -->
+                          <g transform="translate(200, 70)">
+                            <circle cx="0" cy="0" r="54" fill="none" stroke="#3E2312" stroke-width="3.5"/>
+                            <circle cx="0" cy="0" r="48" fill="none" stroke="#D4A85A" stroke-width="0.8" opacity="0.4"/>
+                            <!-- Steam arc -->
+                            <path d="M-6,-12 Q-2,-28 -8,-38" fill="none" stroke="#3E2312" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M6,-12 Q10,-28 4,-38" fill="none" stroke="#3E2312" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M0,-14 Q4,-30 0,-42" fill="none" stroke="#D4A85A" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+                            <!-- Coffee bean shape -->
+                            <ellipse cx="0" cy="8" rx="16" ry="22" fill="#3E2312" transform="rotate(15)"/>
+                            <ellipse cx="0" cy="8" rx="12" ry="18" fill="#5C3A24" opacity="0.5" transform="rotate(15)"/>
+                            <path d="M-4,-14 Q0,-8 4,-14" fill="none" stroke="#D4A85A" stroke-width="1" opacity="0.4" transform="rotate(15)"/>
+                          </g>
+
+                          <!-- Divider -->
+                          <line x1="80" y1="168" x2="320" y2="168" stroke="#D4A85A" stroke-width="0.8" opacity="0.3"/>
+                          <circle cx="200" cy="168" r="2.5" fill="#D4A85A" opacity="0.5"/>
+
+                          <!-- Brand name -->
+                          <text x="200" y="230" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="52" fill="#3E2312" text-anchor="middle" letter-spacing="7">LUCCA</text>
+
+                          <!-- Subtitle -->
+                          <text x="200" y="268" font-family="'Playfair Display', Georgia, serif" font-weight="400" font-style="italic" font-size="15" fill="#6D4C41" text-anchor="middle" letter-spacing="10">Caffè Italiano</text>
+
+                          <!-- Decor dots -->
+                          <circle cx="100" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                          <circle cx="120" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                          <circle cx="140" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                          <circle cx="260" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                          <circle cx="280" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                          <circle cx="300" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
+                        </svg>
+                    </div>
                 </div>
                 <div class="subtitle">Caffè Italiano</div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
