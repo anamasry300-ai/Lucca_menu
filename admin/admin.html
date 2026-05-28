@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucca Caffè - لوحة التحكم</title>
+    <title>Lucca Specialty Coffee - لوحة التحكم</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -862,8 +862,8 @@
     <!-- شاشة تسجيل الدخول -->
     <div class="login-screen" id="loginScreen">
         <div class="login-box">
-            <h1>LUCCA</h1>
-            <p class="subtitle">Caffè Italiano</p>
+            <h1>Lucca</h1>
+            <p class="subtitle">SPECIALTY COFFEE</p>
             <p>لوحة التحكم</p>
             <br>
             <input type="text" id="username" placeholder="اسم المستخدم">
@@ -879,7 +879,7 @@
     <!-- لوحة التحكم -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
-            <h2>🍕 Lucca Caffè - لوحة التحكم</h2>
+            <h2>☕ Lucca - لوحة التحكم</h2>
             <div class="user-info">
                 <span id="currentUserName">مدير النظام</span>
                 <button class="logout-btn" onclick="toggleDarkMode()" id="darkModeBtn" title="الوضع الليلي">🌙</button>
@@ -1040,7 +1040,7 @@
                 <h3>إعدادات النظام</h3>
                 <div class="form-group">
                     <label>اسم المقهى</label>
-                    <input type="text" id="cafeName" value="Lucca Caffè Italiano">
+                    <input type="text" id="cafeName" value="Lucca Specialty Coffee">
                 </div>
                 <div class="form-group">
                     <label>عنوان المقهى</label>
@@ -1329,8 +1329,8 @@
     <div class="invoice-modal" id="invoiceModal">
         <div class="invoice-content">
             <div class="invoice-header-print">
-                <h2>LUCCA</h2>
-                <p>Caffè Italiano</p>
+                <h2>Lucca</h2>
+                <p>SPECIALTY COFFEE</p>
                 <p class="invoice-address">شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
                 <p class="invoice-phone">01551007413</p>
             </div>
@@ -1371,7 +1371,7 @@
             
             <div class="invoice-footer">
                 <p>شكراً لزيارتكم!</p>
-                <p>Buon Appetito! 🍕</p>
+                <p>استمتع بقهوتك! ☕</p>
             </div>
             
             <div class="invoice-actions">
@@ -1566,7 +1566,7 @@
 
         function shareViaWhatsapp() {
             const url = document.getElementById('localUrl').textContent;
-            const msg = encodeURIComponent(`☕ Lucca Caffè - المنيو التفاعلي\n\nاطلب من المنيو مباشرة واستلم الفاتورة واتساب!\n\n${url}`);
+            const msg = encodeURIComponent(`☕ Lucca Specialty Coffee - المنيو التفاعلي\n\nاطلب من المنيو مباشرة واستلم الفاتورة واتساب!\n\n${url}`);
             window.open(`https://wa.me/?text=${msg}`, '_blank');
         }
 
@@ -2188,7 +2188,7 @@
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>فاتورة - Lucca Caffè</title>
+                    <title>فاتورة - Lucca Specialty Coffee</title>
                     <style>
                         * { margin: 0; padding: 0; box-sizing: border-box; }
                         body { font-family: Tahoma, sans-serif; font-size: 12px; padding: 10px; }
@@ -2205,8 +2205,8 @@
                 </head>
                 <body>
                     <div class="header">
-                        <h1>LUCCA</h1>
-                        <p>Caffè Italiano</p>
+<h1>Lucca</h1>
+                        <p>SPECIALTY COFFEE</p>
                         <p>شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
                         <p>01551007413</p>
                     </div>
@@ -2238,7 +2238,6 @@
                     </div>
                     <div class="footer">
                         <p>شكراً لزيارتكم!</p>
-                        <p>Buon Appetito!</p>
                     </div>
                 </body>
                 </html>
@@ -2254,7 +2253,7 @@
             
             // إنشاء محتوى للطباعة كـ PDF
             const content = `
-                LUCCA Caffè Italiano
+                Lucca Specialty Coffee
                 ====================
                 فاتورة #: ${String(currentInvoiceOrder.id).padStart(3, '0')}
                 التاريخ: ${new Date(currentInvoiceOrder.date).toLocaleDateString('ar-EG')}
@@ -2270,7 +2269,6 @@
                 الإجمالي: ${currentInvoiceOrder.total?.toFixed(2) || 0} ج.م
                 
                 شكراً لزيارتكم!
-                Buon Appetito!
             `;
             
             // إنشاء ملف نصي للطباعة
@@ -2290,7 +2288,7 @@
             const paymentMap = { 'cash': 'كاش', 'visa': 'فيزا' };
             const lines = [
                 '',
-                '      LUCCA Caffe Italiano',
+                '      Lucca Specialty Coffee',
                 '      ====================',
                 `      فاتورة #${String(o.id).padStart(3, '0')}`,
                 `      ${new Date(o.date).toLocaleDateString('ar-EG')}`,
@@ -2313,7 +2311,6 @@
                 `      الإجمالي:       ${o.total?.toFixed(2) || 0}`,
                 '',
                 '      شكراً لزيارتكم!',
-                '      Buon Appetito!',
                 '      01551007413',
                 '',
                 '',

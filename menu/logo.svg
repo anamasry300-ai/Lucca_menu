@@ -1,52 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 260" width="500" height="260">
   <defs>
-    <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#F5E6C8"/>
+    <linearGradient id="creamGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFCF5"/>
+      <stop offset="100%" stop-color="#F7F2EB"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B8923E"/>
       <stop offset="50%" stop-color="#D4A85A"/>
-      <stop offset="100%" stop-color="#B8923E"/>
+      <stop offset="100%" stop-color="#E8CC8A"/>
     </linearGradient>
     <linearGradient id="steamGrad" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#E8CC8A" stop-opacity="0.9"/>
-      <stop offset="60%" stop-color="#D4A85A" stop-opacity="0.4"/>
+      <stop offset="0%" stop-color="#E8CC8A" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#D4A85A" stop-opacity="0.2"/>
       <stop offset="100%" stop-color="#C4A050" stop-opacity="0"/>
     </linearGradient>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
 
-  <!-- === STEAM (above U position) === -->
-  <g transform="translate(189, 28)" filter="url(#glow)">
-    <path d="M0,30 Q-8,14 2,0" fill="none" stroke="url(#steamGrad)" stroke-width="4" stroke-linecap="round"/>
-    <path d="M16,36 Q8,18 18,0" fill="none" stroke="url(#steamGrad)" stroke-width="4" stroke-linecap="round"/>
-    <path d="M32,30 Q24,14 34,0" fill="none" stroke="url(#steamGrad)" stroke-width="4" stroke-linecap="round"/>
-    <!-- Extra wisps -->
-    <path d="M-8,24 Q-2,12 -6,4" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M40,24 Q34,12 38,4" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Subtle gold crest ring -->
+  <ellipse cx="250" cy="128" rx="195" ry="92" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.1"/>
+
+  <!-- Steam glow behind -->
+  <ellipse cx="186" cy="55" rx="32" ry="18" fill="#D4A85A" opacity="0.08"/>
+
+  <!-- Steam wisps above 'u' at x=185 -->
+  <g opacity="0.8">
+    <path d="M186,78 Q180,58 188,40 Q194,22 186,8" fill="none" stroke="url(#steamGrad)" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M170,72 Q160,52 172,34 Q180,16 168,4" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M202,74 Q212,56 200,38 Q192,20 204,4" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M156,68 Q148,52 158,36 Q166,20 154,8" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M216,70 Q226,54 214,36 Q206,20 218,4" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
   </g>
 
-  <!-- === GLOW behind steam === -->
-  <ellipse cx="205" cy="48" rx="50" ry="28" fill="#D4A85A" opacity="0.08"/>
-
-  <!-- === L E T T E R S === -->
-  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" fill="#F7F2EB">
-    <!-- L -->
-    <text x="68" y="168" font-size="130" text-anchor="middle">L</text>
-    <!-- u -->
-    <text x="195" y="168" font-size="130" text-anchor="middle">u</text>
-    <!-- c -->
-    <text x="300" y="168" font-size="130" text-anchor="middle">c</text>
-    <!-- c -->
-    <text x="380" y="168" font-size="130" text-anchor="middle">c</text>
-    <!-- a -->
-    <text x="452" y="168" font-size="130" text-anchor="middle">a</text>
+  <!-- === "Lucca" wordmark — balanced spacing === -->
+  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" fill="url(#creamGrad)">
+    <text x="105" y="155" font-size="130" text-anchor="middle">L</text>
+    <text x="185" y="155" font-size="130" text-anchor="middle">u</text>
+    <text x="260" y="155" font-size="130" text-anchor="middle">c</text>
+    <text x="330" y="155" font-size="130" text-anchor="middle">c</text>
+    <text x="395" y="155" font-size="130" text-anchor="middle">a</text>
   </g>
+
+  <!-- Gold underline bar -->
+  <line x1="155" y1="185" x2="345" y2="185" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Decorative dots -->
+  <circle cx="155" cy="185" r="2.5" fill="url(#goldGrad)" opacity="0.55"/>
+  <circle cx="345" cy="185" r="2.5" fill="url(#goldGrad)" opacity="0.55"/>
 
   <!-- === SUBTITLE === -->
-  <text x="250" y="218" font-family="'Arial Black', Arial, sans-serif" font-weight="900" font-size="14" fill="#D4A85A" text-anchor="middle" letter-spacing="6">SPECIALTY COFFEE</text>
-
+  <text x="250" y="222" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="700" font-size="15" fill="#D4A85A" text-anchor="middle" letter-spacing="9" opacity="0.85">SPECIALTY COFFEE</text>
 </svg>
