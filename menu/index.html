@@ -87,27 +87,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
-        .brand-icon { font-size: 2rem; }
-        .header h1 {
-            font-family: 'Cairo', sans-serif;
-            font-size: 4.2rem;
-            font-weight: 900;
-            color: var(--foam);
-            letter-spacing: 0.04em;
-            text-shadow: 3px 3px 12px rgba(0,0,0,0.3);
-            line-height: 1;
-        }
-        .header h1::after {
-            content: '';
+        .brand-logo {
+            width: 280px;
+            max-width: 85vw;
+            height: auto;
             display: block;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light), transparent);
-            margin: 10px auto 0;
-            border-radius: 2px;
+            filter: drop-shadow(3px 3px 12px rgba(0,0,0,0.3));
         }
         .header .subtitle {
             font-family: 'Tajawal', sans-serif;
@@ -115,7 +102,7 @@
             font-size: 1.1rem;
             color: var(--gold);
             letter-spacing: 0.15em;
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .header .location {
             font-size: 0.88rem;
@@ -588,8 +575,7 @@
         <div class="header">
             <div class="header-content">
                 <div class="brand">
-                    <span class="brand-icon">☕</span>
-                    <h1>LUCCA</h1>
+                    <img src="logo.svg" alt="Lucca Caffè" class="brand-logo" width="280" height="90">
                 </div>
                 <div class="subtitle">Caffè Italiano</div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
