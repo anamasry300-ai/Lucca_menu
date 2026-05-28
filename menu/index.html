@@ -57,7 +57,7 @@
 
         .header {
             background: linear-gradient(160deg, var(--coffee-900) 0%, var(--coffee-700) 40%, var(--coffee-500) 100%);
-            padding: 30px 24px 24px;
+            padding: 36px 24px 40px;
             text-align: center;
             position: relative;
             overflow: hidden;
@@ -85,35 +85,60 @@
         .header-content { position: relative; z-index: 1; }
         .brand {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 2px;
-        }
-        .brand-logo {
-            width: 200px;
-            max-width: 70vw;
-            height: auto;
-            display: block;
-            filter: drop-shadow(3px 3px 12px rgba(0,0,0,0.3));
-        }
-        .brand-inline {
-            display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 0;
         }
-        .brand-inline svg {
-            width: 200px;
-            max-width: 70vw;
-            height: auto;
-            filter: drop-shadow(3px 3px 12px rgba(0,0,0,0.3));
+        .brand-crest {
+            width: 64px; height: 64px;
+            border: 2.5px solid rgba(212,168,90,0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            position: relative;
+        }
+        .brand-crest::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px solid rgba(212,168,90,0.2);
+            border-radius: 50%;
+        }
+        .brand-crest span {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.02em;
+        }
+        .brand-name {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 3.8rem;
+            font-weight: 700;
+            color: var(--foam);
+            letter-spacing: 0.12em;
+            line-height: 1;
+            margin-top: 2px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.25);
+        }
+        .brand-name-decor {
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 6px auto 4px;
+            border-radius: 1px;
         }
         .header .subtitle {
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 300;
-            font-size: 1.1rem;
-            color: var(--gold);
-            letter-spacing: 0.15em;
-            margin-top: 2px;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-weight: 400;
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--gold-light);
+            letter-spacing: 0.25em;
+            opacity: 0.85;
         }
         .header .location {
             font-size: 0.88rem;
@@ -575,7 +600,7 @@
             body { padding: 0; background: #E8E4DA; }
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
             .header { padding: 44px 32px 32px; }
-            .header h1 { font-size: 4.5rem; }
+            .brand-name { font-size: 5rem; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
         }
@@ -586,50 +611,11 @@
         <div class="header">
             <div class="header-content">
                 <div class="brand">
-                    <div class="brand-inline">
-                        <svg viewBox="0 0 400 340" xmlns="http://www.w3.org/2000/svg">
-                          <defs>
-                            <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stop-color="#E8CC8A"/>
-                              <stop offset="100%" stop-color="#D4A85A"/>
-                            </linearGradient>
-                          </defs>
-
-                          <!-- Icon mark: minimalist steam + ellipse -->
-                          <g transform="translate(200, 70)">
-                            <circle cx="0" cy="0" r="54" fill="none" stroke="#3E2312" stroke-width="3.5"/>
-                            <circle cx="0" cy="0" r="48" fill="none" stroke="#D4A85A" stroke-width="0.8" opacity="0.4"/>
-                            <!-- Steam arc -->
-                            <path d="M-6,-12 Q-2,-28 -8,-38" fill="none" stroke="#3E2312" stroke-width="2.5" stroke-linecap="round"/>
-                            <path d="M6,-12 Q10,-28 4,-38" fill="none" stroke="#3E2312" stroke-width="2.5" stroke-linecap="round"/>
-                            <path d="M0,-14 Q4,-30 0,-42" fill="none" stroke="#D4A85A" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-                            <!-- Coffee bean shape -->
-                            <ellipse cx="0" cy="8" rx="16" ry="22" fill="#3E2312" transform="rotate(15)"/>
-                            <ellipse cx="0" cy="8" rx="12" ry="18" fill="#5C3A24" opacity="0.5" transform="rotate(15)"/>
-                            <path d="M-4,-14 Q0,-8 4,-14" fill="none" stroke="#D4A85A" stroke-width="1" opacity="0.4" transform="rotate(15)"/>
-                          </g>
-
-                          <!-- Divider -->
-                          <line x1="80" y1="168" x2="320" y2="168" stroke="#D4A85A" stroke-width="0.8" opacity="0.3"/>
-                          <circle cx="200" cy="168" r="2.5" fill="#D4A85A" opacity="0.5"/>
-
-                          <!-- Brand name -->
-                          <text x="200" y="230" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="52" fill="#3E2312" text-anchor="middle" letter-spacing="7">LUCCA</text>
-
-                          <!-- Subtitle -->
-                          <text x="200" y="268" font-family="'Playfair Display', Georgia, serif" font-weight="400" font-style="italic" font-size="15" fill="#6D4C41" text-anchor="middle" letter-spacing="10">Caffè Italiano</text>
-
-                          <!-- Decor dots -->
-                          <circle cx="100" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                          <circle cx="120" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                          <circle cx="140" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                          <circle cx="260" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                          <circle cx="280" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                          <circle cx="300" cy="290" r="1.5" fill="#D4A85A" opacity="0.3"/>
-                        </svg>
-                    </div>
+                    <div class="brand-crest"><span>L</span></div>
+                    <div class="brand-name">LUCCA</div>
+                    <span class="brand-name-decor"></span>
+                    <div class="subtitle">Caffè Italiano</div>
                 </div>
-                <div class="subtitle">Caffè Italiano</div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
                 <div class="contact-phone">📞 +20 10 10058989</div>
             </div>
