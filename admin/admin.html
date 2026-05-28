@@ -842,6 +842,116 @@
         }
 
         /* Responsive */
+        .kitchen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .kitchen-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 18px;
+            box-shadow: var(--shadow);
+            border-right: 5px solid var(--terracotta);
+            animation: fadeSlideIn 0.3s ease;
+            transition: all var(--transition);
+        }
+        .kitchen-card.new-order {
+            border-right-color: var(--warning);
+            animation: pulseBorder 1.5s ease infinite;
+        }
+        .kitchen-card.completed {
+            border-right-color: var(--success);
+            opacity: 0.7;
+        }
+        @keyframes pulseBorder {
+            0%, 100% { border-right-color: var(--warning); }
+            50% { border-right-color: var(--terracotta); }
+        }
+        .kitchen-card .k-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .kitchen-card .k-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--terracotta);
+        }
+        .kitchen-card .k-table {
+            background: var(--cream);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .kitchen-card .k-time {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .kitchen-card .k-items {
+            margin-bottom: 12px;
+        }
+        .kitchen-card .k-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.95rem;
+        }
+        .kitchen-card .k-item .qty {
+            background: var(--cream);
+            padding: 0 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--terracotta);
+            min-width: 30px;
+            text-align: center;
+        }
+        .kitchen-card .k-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .kitchen-card .k-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .kitchen-card .k-actions button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .kitchen-card .k-actions .btn-prep {
+            background: var(--warning);
+            color: white;
+        }
+        .kitchen-card .k-actions .btn-ready {
+            background: var(--success);
+            color: white;
+        }
+        .kitchen-card .k-actions .btn-serve {
+            background: var(--olive);
+            color: white;
+        }
+        .kitchen-card .k-note {
+            background: var(--cream);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            color: var(--text-light);
+        }
+
         @media (max-width: 768px) {
             .admin-header {
                 flex-direction: column;
@@ -854,6 +964,9 @@
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            .kitchen-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -897,6 +1010,7 @@
             <button class="tab-btn" onclick="showTab('employees',this)">👨‍💼 الموظفين</button>
             <button class="tab-btn" onclick="showTab('attendance',this)">📋 الحضور</button>
             <button class="tab-btn" onclick="showTab('reports',this)">📊 التقارير</button>
+            <button class="tab-btn" onclick="showTab('kitchen',this)">🍳 المطبخ</button>
         </div>
         </div>
 
@@ -1309,6 +1423,28 @@
 
     </div>
 
+        <!-- المطبخ -->
+        <div class="tab-content" id="kitchen">
+            <div class="order-form" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <div>
+                    <h3>🍳 المطبخ — الطلبات الواردة</h3>
+                    <p style="color:var(--olive);font-size:0.9rem;">طلبات جديدة تظهر مباشرة مع تنبيه صوتي</p>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <span id="kitchenOrderCount" style="background:var(--terracotta);color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:1.1rem;">0</span>
+                    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.9rem;">
+                        <input type="checkbox" id="kitchenSoundToggle" checked onchange="toggleKitchenSound()"> 🔔 صوت
+                    </label>
+                    <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.9rem;">
+                        <input type="checkbox" id="kitchenAllOrders" onchange="loadKitchen()"> عرض الكل
+                    </label>
+                </div>
+            </div>
+            <div id="kitchenOrders" class="kitchen-grid" style="min-height:200px;">
+                <p style="color:var(--olive);padding:30px;text-align:center;">جاري تحميل الطلبات...</p>
+            </div>
+        </div>
+
     <!-- نافذة تفاصيل الطاولة -->
     <div class="invoice-modal" id="tableModal">
         <div class="invoice-content" style="max-width:500px;">
@@ -1501,6 +1637,7 @@
             if (tabId === 'attendance') { loadAttendanceEmployees(); loadAttendanceRecords(); }
             if (tabId === 'reports') { setDefaultDates(); loadReport(); }
             if (tabId === 'settings') { setTimeout(() => testServerConnection(), 500); loadApiKey(); }
+            if (tabId === 'kitchen') { loadKitchen(); startKitchenPolling(); } else { stopKitchenPolling(); }
         }
 
         // ==================== تحميل البيانات ====================
@@ -2541,6 +2678,120 @@
                         }
                     }
                 });
+            }
+        }
+
+        // ==================== شاشة المطبخ ====================
+        let kitchenSoundEnabled = true;
+        let kitchenPrevCount = 0;
+        let kitchenPollInterval = null;
+
+        function toggleKitchenSound() {
+            kitchenSoundEnabled = document.getElementById('kitchenSoundToggle').checked;
+        }
+
+        function playOrderNotification() {
+            if (!kitchenSoundEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = 660;
+                osc.type = 'sine';
+                gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.4);
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.frequency.value = 990;
+                osc2.type = 'sine';
+                gain2.gain.setValueAtTime(0.25, ctx.currentTime + 0.12);
+                gain2.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.52);
+                osc2.start(ctx.currentTime + 0.12);
+                osc2.stop(ctx.currentTime + 0.52);
+            } catch(e) {}
+        }
+
+        async function loadKitchen() {
+            const showAll = document.getElementById('kitchenAllOrders')?.checked || false;
+            const orders = await LuccaDB.Orders.getAll();
+            const pending = orders.filter(o => o.status === 'pending' || o.status === 'preparing' || (showAll && o.status === 'completed'));
+            const sorted = showAll
+                ? pending.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+                : pending.sort((a, b) => ((a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1)) || (b.date || '').localeCompare(a.date || ''));
+
+            // Detect new orders for sound
+            if (kitchenPrevCount > 0 && sorted.length > kitchenPrevCount) {
+                playOrderNotification();
+            }
+            kitchenPrevCount = sorted.length;
+
+            const container = document.getElementById('kitchenOrders');
+            const countEl = document.getElementById('kitchenOrderCount');
+            if (countEl) countEl.textContent = sorted.filter(o => o.status === 'pending').length;
+
+            if (!sorted.length) {
+                container.innerHTML = '<p style="color:var(--olive);padding:40px;text-align:center;grid-column:1/-1;">✅ لا توجد طلبات قيد التنفيذ</p>';
+                return;
+            }
+
+            const statusMap = { 'pending': '⏳ جديد', 'preparing': '👨‍🍳 تحت التجهيز', 'completed': '✅ مكتمل' };
+            container.innerHTML = sorted.map(order => {
+                const isNew = order.status === 'pending';
+                const isDone = order.status === 'completed';
+                const elapsed = order.date ? Math.floor((Date.now() - new Date(order.date).getTime()) / 60000) : 0;
+                const timeStr = elapsed < 1 ? 'الآن' : elapsed < 60 ? `منذ ${elapsed} د` : `منذ ${Math.floor(elapsed/60)} س`;
+                return `
+                    <div class="kitchen-card ${isNew ? 'new-order' : ''} ${isDone ? 'completed' : ''}">
+                        <div class="k-header">
+                            <span class="k-number">#${order.id}</span>
+                            <span class="k-table">🍽️ طاولة ${order.tableId || '?'}</span>
+                        </div>
+                        <div class="k-time">🕐 ${timeStr} · ${new Date(order.date).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
+                        <div class="k-items">
+                            ${(order.items || []).map(item => `
+                                <div class="k-item">
+                                    <span>${item.name}${item.origin ? ' ('.concat(item.origin, ')') : ''}</span>
+                                    <span class="qty">×${item.quantity}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${order.customerNotes ? `<div class="k-note">📝 ${order.customerNotes}</div>` : ''}
+                        ${!isDone ? `
+                        <div class="k-actions">
+                            ${order.status === 'pending' ? `
+                                <button class="btn-prep" onclick="kitchenUpdateStatus(${order.id}, 'preparing')">👨‍🍳 تحت التجهيز</button>
+                            ` : `
+                                <button class="btn-ready" onclick="kitchenUpdateStatus(${order.id}, 'completed')">✅ جاهز</button>
+                            `}
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function kitchenUpdateStatus(orderId, status) {
+            await LuccaDB.Orders.updateStatus(orderId, status);
+            loadKitchen();
+            loadOrders();
+            loadDashboard();
+        }
+
+        function startKitchenPolling() {
+            stopKitchenPolling();
+            kitchenPollInterval = setInterval(() => loadKitchen(), 5000);
+        }
+
+        function stopKitchenPolling() {
+            if (kitchenPollInterval) {
+                clearInterval(kitchenPollInterval);
+                kitchenPollInterval = null;
             }
         }
 
