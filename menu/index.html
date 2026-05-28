@@ -115,26 +115,32 @@
             bottom: 100%;
             left: 50%;
             transform: translateX(-50%);
-            width: 44px;
-            height: 36px;
-            margin-bottom: 2px;
+            width: 60px;
+            height: 50px;
+            margin-bottom: 0;
             z-index: 10;
             pointer-events: none;
             overflow: visible;
+            filter: drop-shadow(0 0 6px rgba(212,168,90,0.3));
         }
         .steam-svg path {
-            animation: steamWave 2.5s ease-in-out infinite;
+            animation: steamWave 2s ease-in-out infinite;
         }
-        .steam-svg path:nth-child(2) { animation-delay: 0.4s; }
-        .steam-svg path:nth-child(3) { animation-delay: 0.8s; }
-        .steam-svg path:nth-child(4) { animation-delay: 1.2s; }
-        .steam-svg path:nth-child(5) { animation-delay: 1.6s; }
+        .steam-svg path:nth-child(2) { animation-delay: 0.3s; }
+        .steam-svg path:nth-child(3) { animation-delay: 0.6s; }
+        .steam-svg path:nth-child(4) { animation-delay: 0.9s; }
+        .steam-svg path:nth-child(5) { animation-delay: 1.2s; }
         @keyframes steamWave {
-            0% { opacity: 0.1; transform: translateY(0) scaleY(1); }
-            40% { opacity: 0.9; }
-            70% { opacity: 0.4; transform: translateY(-8px) scaleY(1.4); }
-            100% { opacity: 0; transform: translateY(-16px) scaleY(0.6); }
+            0% { opacity: 0; transform: translateY(0); }
+            30% { opacity: 0.95; }
+            60% { opacity: 0.5; transform: translateY(-12px); }
+            100% { opacity: 0; transform: translateY(-22px); }
         }
+        .steam-svg path:nth-child(1) { stroke: #F5E6C8; stroke-width: 3; }
+        .steam-svg path:nth-child(2) { stroke: #E8CC8A; stroke-width: 3; }
+        .steam-svg path:nth-child(3) { stroke: #D4A85A; stroke-width: 3; }
+        .steam-svg path:nth-child(4) { stroke: #E8CC8A; stroke-width: 2.5; }
+        .steam-svg path:nth-child(5) { stroke: #F5E6C8; stroke-width: 2.5; }
         .header .subtitle {
             font-family: 'Cairo', sans-serif;
             font-weight: 700;
@@ -605,7 +611,7 @@
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
             .header { padding: 44px 32px 32px; }
             .brand-letter { font-size: 6rem; letter-spacing: 2px; }
-            .steam-svg { width: 52px; height: 42px; }
+            .steam-svg { width: 70px; height: 56px; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
         }
@@ -620,12 +626,12 @@
                         <span class="brand-letter">L</span>
                         <span class="brand-letter brand-letter-u">
                             u
-                            <svg class="steam-svg" viewBox="0 0 40 30" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8,28 Q4,16 10,8 Q14,2 12,0" fill="none" stroke="#E8CC8A" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
-                                <path d="M16,28 Q14,14 20,6 Q24,0 22,-2" fill="none" stroke="#D4A85A" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
-                                <path d="M24,28 Q22,16 28,8 Q32,2 30,0" fill="none" stroke="#E8CC8A" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/>
-                                <path d="M30,28 Q34,18 26,10" fill="none" stroke="#D4A85A" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
-                                <path d="M12,28 Q8,20 14,12" fill="none" stroke="#E8CC8A" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+                            <svg class="steam-svg" viewBox="0 0 50 40" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10,36 Q4,22 12,10 Q16,4 14,0" fill="none" stroke-linecap="round"/>
+                                <path d="M20,38 Q14,24 22,12 Q26,4 24,0" fill="none" stroke-linecap="round"/>
+                                <path d="M30,36 Q26,22 32,10 Q36,4 34,0" fill="none" stroke-linecap="round"/>
+                                <path d="M38,32 Q42,20 34,12" fill="none" stroke-linecap="round"/>
+                                <path d="M16,34 Q10,24 18,14" fill="none" stroke-linecap="round"/>
                             </svg>
                         </span>
                         <span class="brand-letter">c</span>
