@@ -90,55 +90,69 @@
             gap: 0;
         }
         .brand-crest {
-            width: 64px; height: 64px;
-            border: 2.5px solid rgba(212,168,90,0.5);
+            width: 60px; height: 60px;
+            border: 2px solid rgba(212,168,90,0.4);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             position: relative;
         }
         .brand-crest::after {
-            content: '';
+            content: '☕';
             position: absolute;
-            inset: 4px;
-            border: 1px solid rgba(212,168,90,0.2);
-            border-radius: 50%;
+            font-size: 0.95rem;
+            top: -8px;
+            right: -8px;
+            opacity: 0.25;
+            transform: rotate(15deg);
         }
         .brand-crest span {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: var(--gold);
             letter-spacing: 0.02em;
         }
         .brand-name {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 700;
             color: var(--foam);
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             line-height: 1;
             margin-top: 2px;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.25);
         }
         .brand-name-decor {
-            display: block;
-            width: 40px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            margin: 6px auto 4px;
-            border-radius: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px auto 3px;
+        }
+        .brand-name-decor::before,
+        .brand-name-decor::after {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.4;
+        }
+        .brand-name-decor .dot {
+            width: 3px; height: 3px;
+            border-radius: 50%;
+            background: var(--gold);
+            opacity: 0.6;
         }
         .header .subtitle {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-weight: 400;
-            font-style: italic;
-            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
             color: var(--gold-light);
-            letter-spacing: 0.25em;
-            opacity: 0.85;
+            letter-spacing: 0.35em;
+            opacity: 0.9;
+            text-transform: uppercase;
         }
         .header .location {
             font-size: 0.88rem;
@@ -600,7 +614,7 @@
             body { padding: 0; background: #E8E4DA; }
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
             .header { padding: 44px 32px 32px; }
-            .brand-name { font-size: 5rem; }
+            .brand-name { font-size: 4.5rem; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
         }
@@ -613,8 +627,8 @@
                 <div class="brand">
                     <div class="brand-crest"><span>L</span></div>
                     <div class="brand-name">LUCCA</div>
-                    <span class="brand-name-decor"></span>
-                    <div class="subtitle">Caffè Italiano</div>
+                    <div class="brand-name-decor"><span class="dot"></span></div>
+                    <div class="subtitle">SPECIALTY COFFEE</div>
                 </div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
                 <div class="contact-phone">📞 +20 10 10058989</div>
@@ -656,7 +670,7 @@
 
         <div class="footer">
             <p class="brand-footer">LUCCA</p>
-            <p style="font-size: 0.9rem; opacity: 0.7;">Caffè Italiano</p>
+            <p style="font-size: 0.9rem; opacity: 0.7;">SPECIALTY COFFEE</p>
             <p>📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
             <p class="contact">📞 +20 10 10058989</p>
             <p style="margin-top: 14px; font-size: 0.82rem; opacity: 0.5;">Buon Appetito! 🍽️</p>
