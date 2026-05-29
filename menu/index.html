@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="../admin/database.js"></script>
     <style>
         html { scroll-behavior: smooth; }
         :root {
@@ -559,21 +560,129 @@
             transition: transform 0.2s;
         }
         .admin-float:active { transform: scale(0.9); }
-        .admin-float-menu {
-            display: none; position: fixed; left: 16px; bottom: 136px; z-index: 999;
-            background: var(--card-bg); border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden;
-            min-width: 180px; border: 1px solid var(--gold);
+        .admin-float.logged-in { background: var(--gold); color: var(--coffee-900); }
+
+        /* Staff Login Modal */
+        .staff-overlay {
+            position: fixed; inset:0; background:rgba(26,15,10,0.7);
+            backdrop-filter:blur(4px); z-index:9999;
         }
-        .admin-float-menu.show { display: block; }
-        .admin-float-menu a {
-            display: flex; align-items: center; gap: 10px;
-            padding: 14px 18px; text-decoration: none;
-            color: var(--text); font-size: 0.95rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05); transition: background 0.15s;
+        .staff-modal {
+            position:fixed; inset:0; display:flex; align-items:center;
+            justify-content:center; z-index:10000;
         }
-        .admin-float-menu a:last-child { border-bottom: none; }
-        .admin-float-menu a:hover { background: var(--cream); }
+        .staff-modal-inner {
+            background:var(--foam); padding:28px 24px; border-radius:var(--radius-lg);
+            width:88%; max-width:340px; text-align:center;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+        }
+        .staff-modal-inner h3 {
+            font-family:'Cairo',sans-serif; color:var(--coffee-900);
+            margin:10px 0 6px; font-size:1.2rem;
+        }
+        .staff-modal-inner p.sub {
+            color:var(--coffee-300); font-size:0.85rem; margin-bottom:18px;
+        }
+        .staff-modal-inner input {
+            width:100%; padding:14px; border:2px solid var(--cream);
+            border-radius:var(--radius-sm); font-size:1rem;
+            font-family:'Tajawal',sans-serif; text-align:center;
+            margin-bottom:10px; outline:none; transition:border-color 0.2s;
+            box-sizing:border-box;
+        }
+        .staff-modal-inner input:focus { border-color:var(--gold); }
+        .staff-modal-inner .staff-btn {
+            width:100%; padding:14px; background:var(--coffee-700); color:var(--gold);
+            border:none; border-radius:var(--radius-sm); font-size:1rem;
+            font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer;
+            transition:background 0.2s;
+        }
+        .staff-modal-inner .staff-btn:active { background:var(--coffee-900); }
+        .staff-modal-inner .staff-btn.secondary { background:var(--cream); color:var(--coffee-700); margin-top:8px; }
+        .staff-error { color:#e74c3c; font-size:0.85rem; margin-bottom:10px; }
+
+        /* Management Panel */
+        .staff-panel {
+            position:fixed; bottom:0; left:0; right:0; z-index:9997;
+            background:var(--coffee-900); border-top:2px solid var(--gold);
+            box-shadow:0 -4px 24px rgba(0,0,0,0.3);
+            transition:transform 0.3s ease; max-height:65vh;
+            display:flex; flex-direction:column;
+        }
+        .staff-panel.hidden { transform:translateY(100%); }
+        .staff-bar {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 16px;
+        }
+        .staff-bar-title { font-family:'Cairo',sans-serif; color:var(--gold); font-size:1rem; }
+        .staff-bar-actions { display:flex; gap:8px; }
+        .staff-bar-actions button {
+            background:none; border:1px solid var(--gold); color:var(--gold);
+            padding:4px 12px; border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-size:0.8rem; cursor:pointer; transition:0.15s;
+        }
+        .staff-bar-actions button:active { background:var(--gold); color:var(--coffee-900); }
+        .staff-tabs {
+            display:flex; gap:4px; padding:0 16px;
+        }
+        .staff-tab {
+            flex:1; padding:10px; background:transparent; color:var(--coffee-300);
+            border:none; border-bottom:2px solid transparent;
+            font-family:'Tajawal',sans-serif; font-size:0.9rem; cursor:pointer;
+            transition:0.15s;
+        }
+        .staff-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+        .staff-tab:active { opacity:0.7; }
+        .staff-content {
+            padding:12px 16px; overflow-y:auto; flex:1;
+            min-height:100px;
+        }
+        .staff-content .stat-row {
+            display:flex; justify-content:space-between; gap:8px; margin-bottom:8px;
+        }
+        .staff-content .stat-card {
+            flex:1; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm);
+            padding:12px 8px; text-align:center;
+        }
+        .staff-content .stat-card .num { font-size:1.2rem; font-weight:700; color:var(--gold); }
+        .staff-content .stat-card .lbl { font-size:0.75rem; color:var(--coffee-300); margin-top:4px; }
+        .staff-content .form-group { margin-bottom:10px; }
+        .staff-content .form-group label { display:block; color:var(--coffee-300); font-size:0.85rem; margin-bottom:4px; }
+        .staff-content .form-group input, .staff-content .form-group select {
+            width:100%; padding:10px; border:1px solid rgba(255,255,255,0.15);
+            border-radius:6px; background:rgba(255,255,255,0.08); color:var(--foam);
+            font-family:'Tajawal',sans-serif; font-size:0.9rem; outline:none;
+            box-sizing:border-box;
+        }
+        .staff-content .form-group select option { background:var(--coffee-900); color:var(--foam); }
+        .staff-content .form-group input:focus { border-color:var(--gold); }
+        .staff-submit {
+            width:100%; padding:12px; background:var(--gold); color:var(--coffee-900);
+            border:none; border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-weight:700; font-size:0.95rem; cursor:pointer; transition:0.15s;
+        }
+        .staff-submit:active { opacity:0.8; }
+        .staff-toast {
+            position:fixed; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%);
+            background:var(--gold); color:var(--coffee-900); padding:8px 20px;
+            border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:500;
+            font-size:0.9rem; z-index:99999; opacity:0; transition:opacity 0.3s;
+            pointer-events:none; white-space:nowrap;
+        }
+        .staff-toast.show { opacity:1; }
+        .staff-close-panel {
+            position:absolute; top:8px; left:8px; background:none; border:none;
+            color:var(--coffee-300); font-size:1.2rem; cursor:pointer;
+        }
+        .staff-toggle-btn {
+            position:fixed; left:16px; bottom:136px; z-index:9998;
+            width:44px; height:44px; border-radius:50%;
+            background:var(--gold); color:var(--coffee-900);
+            border:2px solid var(--gold); cursor:pointer;
+            display:none; align-items:center; justify-content:center;
+            font-size:1.1rem; box-shadow:0 4px 16px rgba(0,0,0,0.4);
+        }
+        .staff-toggle-btn.show { display:flex; }
 
         @media (min-width: 768px) {
             body { padding: 0; background: #E8E4DA; }
@@ -583,7 +692,8 @@
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
             .admin-float { left: 24px; bottom: 80px; }
-            .admin-float-menu { left: 24px; bottom: 136px; }
+            .staff-toggle-btn { left:24px; bottom:136px; }
+            .staff-panel { left:auto; right:24px; bottom:24px; width:360px; border-radius:var(--radius-md); border:1px solid var(--gold); max-height:70vh; }
         }
     </style>
 </head>
@@ -643,14 +753,42 @@
 
     <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
-    <button class="admin-float" id="adminFloat" onclick="toggleAdminMenu()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
-    <div class="admin-float-menu" id="adminFloatMenu">
-        <a href="../admin/admin.html#dashboard" target="_blank">📊 لوحة التحكم</a>
-        <a href="../admin/admin.html#cashier" target="_blank">💰 صندوق اليومية</a>
-        <a href="../admin/admin.html#purchases" target="_blank">🛒 المشتريات</a>
-        <a href="../admin/admin.html#employees" target="_blank">👨‍💼 الموظفين</a>
-        <a href="../admin/admin.html#settings" target="_blank">⚙️ الإعدادات</a>
+    <button class="admin-float" id="adminFloat" onclick="openStaffLogin()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
+    <button class="staff-toggle-btn" id="staffToggleBtn" onclick="toggleStaffPanel()" aria-label="لوحة المحاسبة">📊</button>
+
+    <!-- Staff Login Modal -->
+    <div id="staffLoginOverlay" class="staff-overlay" style="display:none;" onclick="closeStaffLogin()"></div>
+    <div id="staffLoginModal" class="staff-modal" style="display:none;">
+        <div class="staff-modal-inner" onclick="event.stopPropagation()">
+            <img src="logo.svg?v=6" alt="Lucca" style="height:50px;margin-bottom:4px;">
+            <h3>لوحة المحاسبة</h3>
+            <p class="sub">تسجيل الدخول لإدارة المشتريات والمصروفات</p>
+            <input type="password" id="staffPassInput" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')staffLogin()">
+            <div id="staffLoginError" class="staff-error" style="display:none;">❌ كلمة المرور خطأ</div>
+            <button class="staff-btn" onclick="staffLogin()">تسجيل الدخول</button>
+            <button class="staff-btn secondary" onclick="closeStaffLogin()">إلغاء</button>
+        </div>
     </div>
+
+    <!-- Management Panel -->
+    <div id="staffPanel" class="staff-panel hidden">
+        <button class="staff-close-panel" onclick="closeStaffPanel()" aria-label="إغلاق">✕</button>
+        <div class="staff-bar">
+            <span class="staff-bar-title">📊 لوحة المحاسبة</span>
+            <div class="staff-bar-actions">
+                <button onclick="staffLogout()">تسجيل خروج</button>
+            </div>
+        </div>
+        <div class="staff-tabs" id="staffTabs">
+            <button class="staff-tab active" onclick="switchStaffTab('summary')">📋 ملخص اليوم</button>
+            <button class="staff-tab" onclick="switchStaffTab('purchase')">🛒 مشتريات</button>
+            <button class="staff-tab" onclick="switchStaffTab('expense')">💰 مصروفات</button>
+        </div>
+        <div class="staff-content" id="staffContent"></div>
+    </div>
+
+    <div id="staffToast" class="staff-toast"></div>
+
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
     <!-- Cart -->
@@ -985,17 +1123,199 @@
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
         }
-        function toggleAdminMenu() {
-            const menu = document.getElementById('adminFloatMenu');
-            menu.classList.toggle('show');
+        // ==================== Staff / Accounting Integration ====================
+        let _staffUser = null;
+
+        async function openStaffLogin() {
+            document.getElementById('staffLoginOverlay').style.display = 'block';
+            document.getElementById('staffLoginModal').style.display = 'flex';
+            document.getElementById('staffPassInput').value = '';
+            document.getElementById('staffLoginError').style.display = 'none';
+            setTimeout(() => document.getElementById('staffPassInput').focus(), 200);
         }
-        document.addEventListener('click', function(e) {
-            const menu = document.getElementById('adminFloatMenu');
-            const btn = document.getElementById('adminFloat');
-            if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
-                menu.classList.remove('show');
+
+        function closeStaffLogin() {
+            document.getElementById('staffLoginOverlay').style.display = 'none';
+            document.getElementById('staffLoginModal').style.display = 'none';
+        }
+
+        async function staffLogin() {
+            const pass = document.getElementById('staffPassInput').value;
+            if (!pass) return;
+            const errEl = document.getElementById('staffLoginError');
+            try {
+                await LuccaDB.initSystem();
+                _staffUser = await LuccaDB.Users.login('admin', pass);
+                closeStaffLogin();
+                document.getElementById('adminFloat').classList.add('logged-in');
+                document.getElementById('staffToggleBtn').classList.add('show');
+                openStaffPanel();
+            } catch (e) {
+                errEl.style.display = 'block';
             }
-        });
+        }
+
+        function staffLogout() {
+            _staffUser = null;
+            LuccaDB.Users.logout();
+            document.getElementById('adminFloat').classList.remove('logged-in');
+            document.getElementById('staffToggleBtn').classList.remove('show');
+            closeStaffPanel();
+            showStaffToast('🚪 تم تسجيل الخروج');
+        }
+
+        function toggleStaffPanel() {
+            const panel = document.getElementById('staffPanel');
+            if (panel.classList.contains('hidden')) {
+                openStaffPanel();
+            } else {
+                closeStaffPanel();
+            }
+        }
+
+        function openStaffPanel() {
+            document.getElementById('staffPanel').classList.remove('hidden');
+            document.getElementById('staffToggleBtn').style.display = 'none';
+            switchStaffTab('summary');
+        }
+
+        function closeStaffPanel() {
+            document.getElementById('staffPanel').classList.add('hidden');
+            document.getElementById('staffToggleBtn').style.display = '';
+        }
+
+        function showStaffToast(msg) {
+            const el = document.getElementById('staffToast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._hide);
+            el._hide = setTimeout(() => el.classList.remove('show'), 2000);
+        }
+
+        function switchStaffTab(tab) {
+            document.querySelectorAll('.staff-tab').forEach(t => t.classList.remove('active'));
+            const btn = document.querySelector(`.staff-tab[onclick*="'${tab}'"]`);
+            if (btn) btn.classList.add('active');
+            renderStaffTab(tab);
+        }
+
+        function renderStaffTab(tab) {
+            const el = document.getElementById('staffContent');
+            if (tab === 'summary') renderStaffSummary(el);
+            else if (tab === 'purchase') renderStaffPurchaseForm(el);
+            else if (tab === 'expense') renderStaffExpenseForm(el);
+        }
+
+        function renderStaffSummary(el) {
+            el.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:20px;">جاري التحميل...</div>';
+            (async () => {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+                    const orders = await LuccaDB.Orders.getByDate(today) || [];
+                    const purchases = await LuccaDB.Purchases.getByDate(today) || [];
+                    const expenses = await LuccaDB.Expenses.getByDate(today) || [];
+                    const totalSales = orders.reduce((s, o) => s + (o.total || 0), 0);
+                    const totalPurchases = purchases.reduce((s, p) => s + (p.total || p.price || 0), 0);
+                    const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+                    const net = totalSales - totalPurchases - totalExpenses;
+                    el.innerHTML = `
+                        <div class="stat-row">
+                            <div class="stat-card"><div class="num">${orders.length}</div><div class="lbl">طلبات اليوم</div></div>
+                            <div class="stat-card"><div class="num">${totalSales.toFixed(0)} ج.م</div><div class="lbl">مبيعات</div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-card"><div class="num">${totalPurchases.toFixed(0)} ج.م</div><div class="lbl">مشتريات</div></div>
+                            <div class="stat-card"><div class="num">${totalExpenses.toFixed(0)} ج.م</div><div class="lbl">مصروفات</div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-card" style="background:rgba(212,168,90,0.15);border:1px solid var(--gold);">
+                                <div class="num" style="color:${net>=0?'var(--gold)':'#e74c3c'}">${net.toFixed(0)} ج.م</div>
+                                <div class="lbl">صافي الربح</div>
+                            </div>
+                        </div>
+                        <button class="staff-submit" onclick="switchStaffTab('purchase')" style="margin-top:8px;">➕ إضافة مشتريات</button>
+                        <button class="staff-submit" onclick="switchStaffTab('expense')" style="margin-top:6px;background:var(--coffee-300);">💰 إضافة مصروف</button>
+                    `;
+                } catch(e) {
+                    el.innerHTML = '<div style="text-align:center;color:#e74c3c;padding:20px;">❌ خطأ في تحميل البيانات</div>';
+                }
+            })();
+        }
+
+        function renderStaffPurchaseForm(el) {
+            el.innerHTML = `
+                <div class="form-group">
+                    <label>اسم الصنف</label>
+                    <input type="text" id="pName" placeholder="مثال: سكر">
+                </div>
+                <div class="form-group">
+                    <label>الكمية</label>
+                    <input type="number" id="pQty" placeholder="1" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>السعر (ج.م)</label>
+                    <input type="number" id="pPrice" placeholder="مثال: 150" min="0" step="0.5">
+                </div>
+                <button class="staff-submit" onclick="submitPurchase()">💾 حفظ المشتريات</button>
+            `;
+        }
+
+        async function submitPurchase() {
+            const name = document.getElementById('pName').value.trim();
+            const qty = parseFloat(document.getElementById('pQty').value) || 1;
+            const price = parseFloat(document.getElementById('pPrice').value);
+            if (!name || !price) { showStaffToast('❌ أكمل البيانات'); return; }
+            try {
+                await LuccaDB.Purchases.add({
+                    name, quantity: qty, total: price,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: new Date().toISOString(),
+                    createdBy: _staffUser?.name || 'admin'
+                });
+                showStaffToast('✅ تم حفظ المشتريات');
+                switchStaffTab('summary');
+            } catch(e) {
+                showStaffToast('❌ فشل الحفظ');
+            }
+        }
+
+        function renderStaffExpenseForm(el) {
+            const cats = ['إيجار','رواتب','مشتريات','صيانة','كهرباء','مياه','إنترنت','تسويق','نقل','أخرى'];
+            el.innerHTML = `
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="eCat">${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ (ج.م)</label>
+                    <input type="number" id="eAmt" placeholder="مثال: 500" min="0" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <input type="text" id="eNote" placeholder="اختياري">
+                </div>
+                <button class="staff-submit" onclick="submitExpense()">💾 حفظ المصروف</button>
+            `;
+        }
+
+        async function submitExpense() {
+            const cat = document.getElementById('eCat').value;
+            const amt = parseFloat(document.getElementById('eAmt').value);
+            const note = document.getElementById('eNote').value.trim();
+            if (!amt) { showStaffToast('❌ أدخل المبلغ'); return; }
+            try {
+                await LuccaDB.Expenses.add({
+                    category: cat, amount: amt, notes: note,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: new Date().toISOString(),
+                    createdBy: _staffUser?.name || 'admin'
+                });
+                showStaffToast('✅ تم حفظ المصروف');
+                switchStaffTab('summary');
+            } catch(e) {
+                showStaffToast('❌ فشل الحفظ');
+            }
+        }
         function shareMenu() {
             const url = window.location.href;
             if (navigator.share) {
