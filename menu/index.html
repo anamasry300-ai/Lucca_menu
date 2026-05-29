@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../admin/database.js"></script>
+    <link rel="stylesheet" href="admin-styles.css">
     <style>
         html { scroll-behavior: smooth; }
         :root {
@@ -776,6 +777,7 @@
         <div class="staff-bar">
             <span class="staff-bar-title">📊 لوحة المحاسبة</span>
             <div class="staff-bar-actions">
+                <button onclick="openAdminPanel()">🖥️ فتح اللوحة الكاملة</button>
                 <button onclick="staffLogout()">تسجيل خروج</button>
             </div>
         </div>
@@ -788,6 +790,293 @@
     </div>
 
     <div id="staffToast" class="staff-toast"></div>
+
+    <div id="adminToast" class="admin-toast"></div>
+
+    <!-- Admin Overlay for modals -->
+    <div id="closeShiftOverlay" class="admin-overlay" onclick="document.getElementById('closeShiftModal').style.display='none';this.style.display='none';"></div>
+
+    <!-- Close Shift Modal -->
+    <div id="closeShiftModal" class="admin-modal">
+        <div class="admin-modal-inner" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="document.getElementById('closeShiftModal').style.display='none';document.getElementById('closeShiftOverlay').style.display='none';">✕</button>
+            <h3>🔒 إقفال الوردية</h3>
+            <div class="row">
+                <label>المبلغ الفعلي في الصندوق (ج.م)</label>
+                <input type="number" id="cs-actual" class="admin-input full" placeholder="مثال: 1500" min="0" step="0.5">
+            </div>
+            <div class="row">
+                <button class="admin-btn admin-btn-primary" onclick="crConfirmClose()" style="width:100%;">🔒 تأكيد الإقفال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== Full Admin Panel ========== -->
+    <div id="adminWrapper" class="admin-wrapper">
+        <div style="position:fixed;inset:0;background:var(--coffee-900);z-index:9996;display:flex;flex-direction:column;overflow:hidden;">
+            <!-- Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--coffee-900);border-bottom:1px solid rgba(212,168,90,0.3);z-index:2;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="logo.svg?v=6" alt="Lucca" style="height:36px;">
+                    <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;">Lucca</span>
+                    <span style="color:var(--coffee-300);font-size:0.8rem;">SPECIALTY COFFEE</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="color:var(--coffee-300);font-size:0.85rem;" id="adminUserName">مدير النظام</span>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="closeAdminPanel()">✕ إغلاق</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="staffLogout()">تسجيل خروج</button>
+                </div>
+            </div>
+            <!-- Body: Sidebar + Content -->
+            <div style="display:flex;flex:1;overflow:hidden;">
+                <!-- Sidebar -->
+                <div class="admin-sidebar" style="border-left:1px solid rgba(255,255,255,0.06);padding:12px 8px;overflow-y:auto;">
+                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">📊</span> لوحة التحكم</button>
+                    <button class="admin-sidebar-btn" data-tab="cashier" onclick="showAdminTab('cashier')"><span class="icon">💰</span> صندوق اليومية</button>
+                    <button class="admin-sidebar-btn" data-tab="purchases" onclick="showAdminTab('purchases')"><span class="icon">🛒</span> المشتريات</button>
+                    <button class="admin-sidebar-btn" data-tab="employees" onclick="showAdminTab('employees')"><span class="icon">👨‍💼</span> الموظفين</button>
+                    <button class="admin-sidebar-btn" data-tab="reports" onclick="showAdminTab('reports')"><span class="icon">📋</span> التقارير</button>
+                    <button class="admin-sidebar-btn" data-tab="kitchen" onclick="showAdminTab('kitchen')"><span class="icon">🍳</span> المطبخ</button>
+                    <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><span class="icon">⚙️</span> الإعدادات</button>
+                </div>
+                <!-- Main Content -->
+                <div class="admin-main" style="overflow-y:auto;padding:16px 20px;">
+
+                    <!-- Dashboard Tab -->
+                    <div class="admin-tab active" id="at-dashboard">
+                        <h3>📊 لوحة التحكم</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="icon-big">🧾</div><div class="val" id="dash-orders">0</div><div class="lbl">طلبات اليوم</div></div>
+                            <div class="stat-card"><div class="icon-big">💰</div><div class="val" id="dash-sales">0</div><div class="lbl">مبيعات (ج.م)</div></div>
+                            <div class="stat-card"><div class="icon-big">💵</div><div class="val" id="dash-cash">0</div><div class="lbl">نقدي</div></div>
+                            <div class="stat-card"><div class="icon-big">💳</div><div class="val" id="dash-card">0</div><div class="lbl">فيزا</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>🔗 روابط سريعة</h4>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('cashier')">💰 صندوق اليومية</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('purchases')">🛒 إضافة مشتريات</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('employees')">👨‍💼 تسجيل حضور</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('reports')">📋 التقارير</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📱 رابط المنيو</h4>
+                            <div class="row">
+                                <input type="text" class="admin-input full" id="dash-menu-url" readonly style="font-size:0.8rem;" onclick="this.select()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cashier Tab -->
+                    <div class="admin-tab" id="at-cashier">
+                        <h3>💰 صندوق اليومية</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <label>التاريخ</label>
+                                <input type="date" id="crDate" class="admin-input sm" onchange="crLoadDay()">
+                                <span id="crShiftStatus" style="color:var(--coffee-300);font-size:0.85rem;"></span>
+                            </div>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" id="crOpenBtn" onclick="crOpenShift()">🔓 فتح الوردية</button>
+                                <button class="admin-btn admin-btn-danger admin-btn-sm" id="crCloseBtn" style="display:none;" onclick="crCloseShiftDialog()">🔒 إقفال الوردية</button>
+                            </div>
+                        </div>
+                        <div class="section-card" id="crOpeningSection" style="display:none;">
+                            <h4>رصيد الافتتاح</h4>
+                            <div class="row">
+                                <input type="number" id="crOpeningAmount" class="admin-input sm" placeholder="المبلغ" min="0">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crSaveOpening()">💾 حفظ</button>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="val" id="cr-cash">0</div><div class="lbl">مبيعات نقدي</div></div>
+                            <div class="stat-card"><div class="val" id="cr-card">0</div><div class="lbl">مبيعات فيزا</div></div>
+                            <div class="stat-card"><div class="val" id="cr-total">0</div><div class="lbl">إجمالي المبيعات</div></div>
+                            <div class="stat-card"><div class="val" id="cr-exp">0</div><div class="lbl">إجمالي المصروفات</div></div>
+                            <div class="stat-card highlight"><div class="val" id="cr-expected">0</div><div class="lbl">المتوقع بالصندوق</div></div>
+                            <div class="stat-card" id="cr-actual-row" style="display:none;"><div class="val" id="cr-actual">0</div><div class="lbl">الفعلي</div></div>
+                            <div class="stat-card" id="cr-diff-row" style="display:none;"><div class="val" id="cr-diff">0</div><div class="lbl">الفارق</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>➕ إضافة مصروف</h4>
+                            <div class="row">
+                                <select id="crExpCat" class="admin-select sm">
+                                    <option value="إيجار">إيجار</option><option value="رواتب">رواتب</option>
+                                    <option value="مشتريات">مشتريات</option><option value="صيانة">صيانة</option>
+                                    <option value="كهرباء">كهرباء</option><option value="مياه">مياه</option>
+                                    <option value="إنترنت">إنترنت</option><option value="تسويق">تسويق</option>
+                                    <option value="نقل">نقل</option><option value="أخرى">أخرى</option>
+                                </select>
+                                <input type="number" id="crExpAmt" class="admin-input sm" placeholder="المبلغ" min="0">
+                                <input type="text" id="crExpNote" class="admin-input sm" placeholder="ملاحظات">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crAddExpense()">➕ إضافة</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📋 سجل المصروفات</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>التصنيف</th><th>المبلغ</th><th>ملاحظات</th><th></th></tr></thead>
+                                    <tbody id="cr-expenses-body"><tr class="empty"><td colspan="4">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchases Tab -->
+                    <div class="admin-tab" id="at-purchases">
+                        <h3>🛒 المشتريات</h3>
+                        <div class="section-card">
+                            <h4>➕ إضافة مشتريات</h4>
+                            <div class="row">
+                                <input type="text" id="pur-item" class="admin-input md" placeholder="اسم الصنف">
+                                <input type="number" id="pur-qty" class="admin-input sm" placeholder="الكمية" value="1" min="1" style="width:80px;">
+                                <input type="number" id="pur-cost" class="admin-input sm" placeholder="التكلفة" min="0" step="0.5">
+                                <button class="admin-btn admin-btn-primary" onclick="addPurchase()">💾 حفظ</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                <h4 style="margin:0;">📋 سجل المشتريات</h4>
+                                <span style="color:var(--gold);font-size:0.9rem;">الإجمالي: <strong id="pur-total-cost">0</strong> ج.م</span>
+                            </div>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>الصنف</th><th>الكمية</th><th>التكلفة</th><th>التاريخ</th><th></th></tr></thead>
+                                    <tbody id="purchases-body"><tr class="empty"><td colspan="5">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employees Tab -->
+                    <div class="admin-tab" id="at-employees">
+                        <h3>👨‍💼 الموظفين</h3>
+                        <div class="section-card">
+                            <h4>➕ إضافة موظف</h4>
+                            <div class="row">
+                                <input type="text" id="emp-name" class="admin-input md" placeholder="الاسم">
+                                <input type="text" id="emp-phone" class="admin-input sm" placeholder="الهاتف">
+                                <select id="emp-role" class="admin-select sm">
+                                    <option value="موظف">موظف</option><option value="كاشير">كاشير</option>
+                                    <option value="باريستا">باريستا</option><option value="مشرف">مشرف</option>
+                                    <option value="مدير">مدير</option>
+                                </select>
+                                <button class="admin-btn admin-btn-primary" onclick="addEmployee()">➕ إضافة</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📋 قائمة الموظفين</h4>
+                            <div id="employees-list" style="color:var(--coffee-300);">جاري التحميل...</div>
+                        </div>
+
+                        <h3 style="margin-top:20px;">📋 الحضور والانصراف</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <select id="att-emp" class="admin-select sm"><option value="">— اختر موظفاً —</option></select>
+                                <input type="number" id="att-late" class="admin-input sm" placeholder="تأخير (دقائق)" value="0" min="0" style="width:100px;">
+                                <input type="text" id="att-notes" class="admin-input sm" placeholder="ملاحظات">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="checkInEmployee()">✅ تسجيل حضور</button>
+                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="checkOutEmployee()">🔴 انصراف</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>سجل اليوم</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>الموظف</th><th>الحضور</th><th>الانصراف</th><th>تأخير</th><th>مكافأة/خصم</th><th></th></tr></thead>
+                                    <tbody id="att-body"><tr class="empty"><td colspan="6">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Tab -->
+                    <div class="admin-tab" id="at-reports">
+                        <h3>📋 التقارير</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <label>من</label>
+                                <input type="date" id="rpt-from" class="admin-input sm" onchange="loadReport()">
+                                <label>إلى</label>
+                                <input type="date" id="rpt-to" class="admin-input sm" onchange="loadReport()">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="setDefaultReportDates();loadReport();">📅 هذا الشهر</button>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="val" id="rpt-orders">0</div><div class="lbl">عدد الطلبات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-sales">0</div><div class="lbl">إجمالي المبيعات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-cash">0</div><div class="lbl">نقدي</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-visa">0</div><div class="lbl">فيزا</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-avg">0</div><div class="lbl">متوسط الطلب</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-expenses">0</div><div class="lbl">مصروفات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-cogs">0</div><div class="lbl">تكلفة المشتريات</div></div>
+                            <div class="stat-card highlight"><div class="val" id="rpt-profit">0</div><div class="lbl">صافي الربح</div></div>
+                            <div class="stat-card highlight"><div class="val" id="rpt-margin">0%</div><div class="lbl">هامش الربح</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>تفاصيل الطلبات</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>#</th><th>طاولة</th><th>المبلغ</th><th>الدفع</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+                                    <tbody id="rpt-body"><tr class="empty"><td colspan="6">اختر الفترة</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kitchen Tab -->
+                    <div class="admin-tab" id="at-kitchen">
+                        <h3>🍳 المطبخ</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <span style="color:var(--gold);font-size:1.1rem;" id="kitchen-count">0</span>
+                                <span style="color:var(--coffee-300);">طلبات معلقة</span>
+                                <label style="margin-right:20px;color:var(--coffee-300);font-size:0.85rem;">
+                                    <input type="checkbox" id="kitchen-sound" checked onchange="toggleKitchenSound()"> 🔔 صوت
+                                </label>
+                                <label style="color:var(--coffee-300);font-size:0.85rem;">
+                                    <input type="checkbox" id="kitchen-all" onchange="loadKitchen()"> عرض الكل
+                                </label>
+                            </div>
+                        </div>
+                        <div id="kitchen-grid" class="kitchen-grid">
+                            <div style="text-align:center;color:var(--coffee-300);padding:30px;">جاري التحميل...</div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="admin-tab" id="at-settings">
+                        <h3>⚙️ الإعدادات</h3>
+                        <div class="section-card">
+                            <h4>إعدادات النظام</h4>
+                            <div class="row">
+                                <label>رقم واتساب</label>
+                                <input type="text" id="set-whatsapp" class="admin-input md" placeholder="مثال: 201010058989">
+                            </div>
+                            <div class="row">
+                                <label>بداية الدوام</label>
+                                <input type="time" id="set-workstart" class="admin-input sm" value="09:00">
+                            </div>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>💾 إدارة البيانات</h4>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="exportAllData()">📤 تصدير البيانات</button>
+                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="triggerImport()">📥 استيراد البيانات</button>
+                                <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /admin-main -->
+            </div><!-- /flex body -->
+        </div><!-- /fixed overlay -->
+    </div><!-- /adminWrapper -->
 
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
@@ -828,6 +1117,7 @@
     <!-- Toast -->
     <div id="cartToast" class="cart-toast"></div>
 
+    <script src="admin-integration.js"></script>
     <script>
         const _LANG = {
             search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
@@ -1161,6 +1451,7 @@
             document.getElementById('adminFloat').classList.remove('logged-in');
             document.getElementById('staffToggleBtn').classList.remove('show');
             closeStaffPanel();
+            if (typeof closeAdminPanel === 'function') closeAdminPanel();
             showStaffToast('🚪 تم تسجيل الخروج');
         }
 
@@ -1210,9 +1501,10 @@
             el.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:20px;">جاري التحميل...</div>';
             (async () => {
                 try {
+                    const orders = await LuccaDB.Orders.getDailySales() || [];
                     const today = new Date().toISOString().split('T')[0];
-                    const orders = await LuccaDB.Orders.getByDate(today) || [];
-                    const purchases = await LuccaDB.Purchases.getByDate(today) || [];
+                    const allPurchases = await LuccaDB.Purchases.getAll() || [];
+                    const purchases = allPurchases.filter(p => p.date === today);
                     const expenses = await LuccaDB.Expenses.getByDate(today) || [];
                     const totalSales = orders.reduce((s, o) => s + (o.total || 0), 0);
                     const totalPurchases = purchases.reduce((s, p) => s + (p.total || p.price || 0), 0);
