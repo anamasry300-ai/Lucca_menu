@@ -88,7 +88,7 @@
             align-items: center;
         }
         .brand-logo {
-            width: 300px;
+            width: 200px;
             max-width: 80vw;
             height: auto;
             display: block;
@@ -549,14 +549,41 @@
         .back-to-top.show { display: flex; }
         .back-to-top:active { transform: scale(0.9); }
         .back-to-top:hover { box-shadow: 0 6px 24px rgba(62,35,18,0.5); }
+        .admin-float {
+            position: fixed; left: 16px; bottom: 80px; z-index: 999;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--coffee-700); color: var(--foam);
+            border: 2px solid var(--gold); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .admin-float:active { transform: scale(0.9); }
+        .admin-float-menu {
+            display: none; position: fixed; left: 16px; bottom: 136px; z-index: 999;
+            background: var(--card-bg); border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden;
+            min-width: 180px; border: 1px solid var(--gold);
+        }
+        .admin-float-menu.show { display: block; }
+        .admin-float-menu a {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 18px; text-decoration: none;
+            color: var(--text); font-size: 0.95rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05); transition: background 0.15s;
+        }
+        .admin-float-menu a:last-child { border-bottom: none; }
+        .admin-float-menu a:hover { background: var(--cream); }
 
         @media (min-width: 768px) {
             body { padding: 0; background: #E8E4DA; }
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
             .header { padding: 44px 32px 32px; }
-            .brand-logo { width: 360px; }
+            .brand-logo { width: 240px; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
+            .admin-float { left: 24px; bottom: 80px; }
+            .admin-float-menu { left: 24px; bottom: 136px; }
         }
     </style>
 </head>
@@ -565,7 +592,7 @@
         <div class="header">
             <div class="header-content">
                     <div class="brand">
-                        <img src="logo.svg?v=5" alt="Lucca" class="brand-logo" width="300" height="156">
+                        <img src="logo.svg?v=6" alt="Lucca" class="brand-logo" width="230" height="200">
                     </div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
                 <div class="contact-phone">📞 +20 10 10058989</div>
@@ -616,6 +643,14 @@
 
     <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
+    <button class="admin-float" id="adminFloat" onclick="toggleAdminMenu()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
+    <div class="admin-float-menu" id="adminFloatMenu">
+        <a href="../admin/admin.html#dashboard" target="_blank">📊 لوحة التحكم</a>
+        <a href="../admin/admin.html#cashier" target="_blank">💰 صندوق اليومية</a>
+        <a href="../admin/admin.html#purchases" target="_blank">🛒 المشتريات</a>
+        <a href="../admin/admin.html#employees" target="_blank">👨‍💼 الموظفين</a>
+        <a href="../admin/admin.html#settings" target="_blank">⚙️ الإعدادات</a>
+    </div>
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
     <!-- Cart -->
@@ -950,6 +985,17 @@
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
         }
+        function toggleAdminMenu() {
+            const menu = document.getElementById('adminFloatMenu');
+            menu.classList.toggle('show');
+        }
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('adminFloatMenu');
+            const btn = document.getElementById('adminFloat');
+            if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
         function shareMenu() {
             const url = window.location.href;
             if (navigator.share) {

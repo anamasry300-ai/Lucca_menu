@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 260" width="500" height="260">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 400" width="460" height="400">
   <defs>
     <linearGradient id="creamGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#FFFCF5"/>
@@ -10,43 +10,46 @@
       <stop offset="100%" stop-color="#E8CC8A"/>
     </linearGradient>
     <linearGradient id="steamGrad" x1="0" y1="1" x2="0" y2="0">
-      <stop offset="0%" stop-color="#E8CC8A" stop-opacity="0.8"/>
-      <stop offset="50%" stop-color="#D4A85A" stop-opacity="0.2"/>
+      <stop offset="0%" stop-color="#E8CC8A" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#D4A85A" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#C4A050" stop-opacity="0"/>
     </linearGradient>
   </defs>
 
-  <!-- Subtle gold crest ring -->
-  <ellipse cx="250" cy="128" rx="195" ry="92" fill="none" stroke="url(#goldGrad)" stroke-width="1" opacity="0.1"/>
+  <!-- Rounded square crest border -->
+  <rect x="25" y="20" width="410" height="360" rx="50" ry="50" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.35"/>
 
-  <!-- Steam glow behind -->
-  <ellipse cx="186" cy="55" rx="32" ry="18" fill="#D4A85A" opacity="0.08"/>
+  <!-- Inner subtle ring -->
+  <rect x="33" y="28" width="394" height="344" rx="44" ry="44" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.15"/>
 
-  <!-- Steam wisps above 'u' at x=185 -->
-  <g opacity="0.8">
-    <path d="M186,78 Q180,58 188,40 Q194,22 186,8" fill="none" stroke="url(#steamGrad)" stroke-width="4.5" stroke-linecap="round"/>
-    <path d="M170,72 Q160,52 172,34 Q180,16 168,4" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M202,74 Q212,56 200,38 Q192,20 204,4" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
-    <path d="M156,68 Q148,52 158,36 Q166,20 154,8" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="M216,70 Q226,54 214,36 Q206,20 218,4" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Steam wisps above 'u' at x=230 -->
+  <g opacity="0.7">
+    <path d="M230,170 Q224,150 232,132 Q238,114 230,98" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M214,164 Q204,144 216,126 Q224,108 212,94" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M246,166 Q256,148 244,130 Q236,112 248,96" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M200,160 Q192,144 202,128 Q210,112 198,100" fill="none" stroke="url(#steamGrad)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M260,162 Q270,146 258,128 Q250,112 262,98" fill="none" stroke="url(#steamGrad)" stroke-width="2" stroke-linecap="round"/>
   </g>
 
-  <!-- === "Lucca" wordmark — balanced spacing === -->
-  <g font-family="Georgia, 'Times New Roman', serif" font-weight="700" fill="url(#creamGrad)">
-    <text x="105" y="155" font-size="130" text-anchor="middle">L</text>
-    <text x="185" y="155" font-size="130" text-anchor="middle">u</text>
-    <text x="260" y="155" font-size="130" text-anchor="middle">c</text>
-    <text x="330" y="155" font-size="130" text-anchor="middle">c</text>
-    <text x="395" y="155" font-size="130" text-anchor="middle">a</text>
+  <!-- Saucer under 'u' -->
+  <ellipse cx="230" cy="245" rx="28" ry="5" fill="url(#goldGrad)" opacity="0.12"/>
+
+  <!-- === "Lucca" wordmark — thin serif === -->
+  <g font-family="Georgia, 'Times New Roman', serif" font-weight="400" fill="url(#creamGrad)">
+    <text x="120" y="258" font-size="115" text-anchor="middle">L</text>
+    <text x="200" y="258" font-size="115" text-anchor="middle">u</text>
+    <text x="268" y="258" font-size="115" text-anchor="middle">c</text>
+    <text x="328" y="258" font-size="115" text-anchor="middle">c</text>
+    <text x="380" y="258" font-size="115" text-anchor="middle">a</text>
   </g>
 
   <!-- Gold underline bar -->
-  <line x1="155" y1="185" x2="345" y2="185" stroke="url(#goldGrad)" stroke-width="1.5" stroke-linecap="round" opacity="0.45"/>
+  <line x1="175" y1="295" x2="285" y2="295" stroke="url(#goldGrad)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
 
   <!-- Decorative dots -->
-  <circle cx="155" cy="185" r="2.5" fill="url(#goldGrad)" opacity="0.55"/>
-  <circle cx="345" cy="185" r="2.5" fill="url(#goldGrad)" opacity="0.55"/>
+  <circle cx="175" cy="295" r="2.5" fill="url(#goldGrad)" opacity="0.5"/>
+  <circle cx="285" cy="295" r="2.5" fill="url(#goldGrad)" opacity="0.5"/>
 
   <!-- === SUBTITLE === -->
-  <text x="250" y="222" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="700" font-size="15" fill="#D4A85A" text-anchor="middle" letter-spacing="9" opacity="0.85">SPECIALTY COFFEE</text>
+  <text x="230" y="332" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="700" font-size="13" fill="#D4A85A" text-anchor="middle" letter-spacing="7" opacity="0.75">SPECIALTY COFFEE</text>
 </svg>

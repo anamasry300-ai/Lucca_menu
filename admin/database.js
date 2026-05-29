@@ -7,7 +7,7 @@
 
 // ==================== قاعدة البيانات المحلية ====================
 const DB_NAME = 'lucca_caffe_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 class LuccaDatabase {
     constructor() {
@@ -78,6 +78,18 @@ class LuccaDatabase {
                     const attStore = db.createObjectStore('attendance', { keyPath: 'id', autoIncrement: true });
                     attStore.createIndex('employeeId', 'employeeId', { unique: false });
                     attStore.createIndex('date', 'date', { unique: false });
+                }
+
+                // جدول المصروفات
+                if (!db.objectStoreNames.contains('expenses')) {
+                    const expStore = db.createObjectStore('expenses', { keyPath: 'id', autoIncrement: true });
+                    expStore.createIndex('date', 'date', { unique: false });
+                    expStore.createIndex('category', 'category', { unique: false });
+                }
+
+                // جدول ورديات الخزينة
+                if (!db.objectStoreNames.contains('shifts')) {
+                    db.createObjectStore('shifts', { keyPath: 'date' });
                 }
             };
         });
@@ -377,7 +389,7 @@ const Orders = {
         if (tableId && !isNaN(tableId)) {
             await Tables.update(parseInt(tableId), { status: 'occupied', currentOrder: id });
         }
-        }
+
         if (customerPhone) {
             await Customers.add(customerPhone, customerName, {
                 marketingOptIn: Boolean(options.marketingOptIn),
@@ -385,6 +397,8 @@ const Orders = {
                 lastOrderTotal: order.total
             });
         }
+
+        this.backup();
         return { ...order, id };
     },
 
@@ -440,6 +454,7 @@ const Orders = {
             });
         }
 
+        this.backup();
         return { ...order, id };
     },
 
@@ -479,6 +494,7 @@ const Orders = {
             }
             ServerAPI.put('orders', orderId, order).catch(() => {});
         }
+        this.backup();
         return order;
     },
 
@@ -497,6 +513,7 @@ const Orders = {
         }
         await db.put('orders', item);
         ServerAPI.put('orders', orderId, item).catch(() => {});
+        this.backup();
         return item;
     },
 
@@ -522,6 +539,14 @@ const Orders = {
             const d = o.date.split('T')[0];
             return d >= startDate && d <= endDate;
         });
+    },
+
+    // Backup orders to localStorage (survives IndexedDB clear)
+    async backup() {
+        try {
+            const orders = await db.getAll('orders');
+            localStorage.setItem('lucca_orders_backup', JSON.stringify(orders.slice(-200)));
+        } catch(e) {}
     }
 };
 
@@ -746,11 +771,23 @@ const Attendance = {
         if (existing) {
             throw new Error('تم تسجيل الحضور مسبقاً اليوم');
         }
+        // Calculate late minutes based on expected start time (configurable, default 9:00 AM)
+        const expectedStart = await Settings.get('workStartTime') || '09:00';
+        const now = new Date();
+        const expected = new Date();
+        const parts = expectedStart.split(':');
+        expected.setHours(parseInt(parts[0]), parseInt(parts[1]), 0);
+        const lateMs = now - expected;
+        const lateMinutes = lateMs > 0 ? Math.round(lateMs / 60000) : 0;
+
         const record = {
             employeeId,
             date: today,
             checkIn: new Date().toISOString(),
             checkOut: null,
+            lateMinutes,
+            bonus: 0,
+            deduction: 0,
             notes: notes || ''
         };
         const serverResult = await ServerAPI.add('attendance', record);
@@ -778,6 +815,16 @@ const Attendance = {
         return existing;
     },
 
+    async updateRecord(id, data) {
+        const item = await db.get('attendance', id);
+        if (item) {
+            Object.assign(item, data);
+            await db.put('attendance', item);
+            ServerAPI.put('attendance', id, item).catch(() => {});
+        }
+        return item;
+    },
+
     async getByEmployeeAndDate(employeeId, date) {
         const all = await this.getAll();
         return all.find(a => a.employeeId === employeeId && a.date === date) || null;
@@ -797,6 +844,145 @@ const Attendance = {
     async getByEmployee(employeeId) {
         const all = await this.getAll();
         return all.filter(a => a.employeeId === employeeId);
+    }
+};
+
+// ==================== إدارة المصروفات ====================
+const Expenses = {
+    async getAll() {
+        const serverData = await ServerAPI.getAll('expenses');
+        if (Array.isArray(serverData)) {
+            try { await db.clear('expenses'); for (const item of serverData) await db.add('expenses', item); } catch(e) {}
+            return serverData;
+        }
+        return db.getAll('expenses');
+    },
+
+    async add(expense) {
+        expense.date = expense.date || new Date().toISOString().split('T')[0];
+        expense.createdAt = new Date().toISOString();
+        const serverResult = await ServerAPI.add('expenses', expense);
+        if (serverResult && serverResult.id) {
+            await db.put('expenses', { ...expense, id: serverResult.id });
+            return serverResult.id;
+        }
+        return db.add('expenses', expense);
+    },
+
+    async update(id, data) {
+        const item = await db.get('expenses', id);
+        if (item) {
+            Object.assign(item, data);
+            await db.put('expenses', item);
+            ServerAPI.put('expenses', id, item).catch(() => {});
+        }
+        return item;
+    },
+
+    async delete(id) {
+        await db.delete('expenses', id);
+        ServerAPI.remove('expenses', id).catch(() => {});
+    },
+
+    async getByDate(date) {
+        const all = await this.getAll();
+        return all.filter(e => e.date === date);
+    },
+
+    async getByDateRange(startDate, endDate) {
+        const all = await this.getAll();
+        return all.filter(e => e.date >= startDate && e.date <= endDate);
+    },
+
+    async getTotalByDate(date) {
+        const items = await this.getByDate(date);
+        return items.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    },
+
+    async getTotalByDateRange(startDate, endDate) {
+        const items = await this.getByDateRange(startDate, endDate);
+        return items.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+    },
+
+    categories: ['إيجار', 'رواتب', 'مشتريات', 'صيانة', 'كهرباء', 'مياه', 'إنترنت', 'تسويق', 'نقل', 'أخرى']
+};
+
+// ==================== إدارة الخزينة والورديات ====================
+const Shifts = {
+    async get(date) {
+        date = date || new Date().toISOString().split('T')[0];
+        const shift = await db.get('shifts', date);
+        if (shift) return shift;
+        const serverData = await ServerAPI.get('shifts', date);
+        if (serverData) {
+            await db.put('shifts', serverData);
+            return serverData;
+        }
+        return null;
+    },
+
+    async open(date, openingBalance, notes) {
+        date = date || new Date().toISOString().split('T')[0];
+        const shift = {
+            date,
+            openingBalance: parseFloat(openingBalance) || 0,
+            status: 'open',
+            openedAt: new Date().toISOString(),
+            closedAt: null,
+            actualCash: null,
+            expectedCash: null,
+            difference: null,
+            notes: notes || ''
+        };
+        await db.put('shifts', shift);
+        ServerAPI.add('shifts', shift).catch(() => {});
+        return shift;
+    },
+
+    async close(date, actualCash, notes) {
+        date = date || new Date().toISOString().split('T')[0];
+        const orders = await Orders.getByDateRange(date, date);
+        const expenses = await Expenses.getByDate(date);
+        const cashSales = orders.filter(o => o.paymentMethod === 'cash').reduce((s, o) => s + (o.total || 0), 0);
+        const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+        const existing = await this.get(date);
+        const openingBalance = existing ? (parseFloat(existing.openingBalance) || 0) : 0;
+        const expectedCash = openingBalance + cashSales - totalExpenses;
+        const diff = parseFloat(actualCash || 0) - expectedCash;
+
+        const shift = {
+            date,
+            openingBalance,
+            status: 'closed',
+            closedAt: new Date().toISOString(),
+            actualCash: parseFloat(actualCash) || 0,
+            expectedCash: Math.round(expectedCash * 100) / 100,
+            difference: Math.round(diff * 100) / 100,
+            cashSales: Math.round(cashSales * 100) / 100,
+            cardSales: Math.round((orders.filter(o => o.paymentMethod === 'visa').reduce((s, o) => s + (o.total || 0), 0)) * 100) / 100,
+            totalSales: Math.round(orders.reduce((s, o) => s + (o.total || 0), 0) * 100) / 100,
+            totalExpenses: Math.round(totalExpenses * 100) / 100,
+            orderCount: orders.length,
+            notes: notes || existing?.notes || ''
+        };
+        if (existing) Object.assign(shift, { openedAt: existing.openedAt });
+        await db.put('shifts', shift);
+        ServerAPI.add('shifts', shift).catch(() => {});
+        return shift;
+    },
+
+    async getAll() {
+        const serverData = await ServerAPI.getAll('shifts');
+        if (Array.isArray(serverData)) {
+            try { await db.clear('shifts'); for (const item of serverData) await db.add('shifts', item); } catch(e) {}
+            return serverData;
+        }
+        return db.getAll('shifts');
+    },
+
+    async getByDateRange(startDate, endDate) {
+        const all = await this.getAll();
+        return all.filter(s => s.date >= startDate && s.date <= endDate);
     }
 };
 
@@ -854,6 +1040,8 @@ const DataSync = {
             purchases: await db.getAll('purchases'),
             employees: await db.getAll('employees'),
             attendance: await db.getAll('attendance'),
+            expenses: await db.getAll('expenses'),
+            shifts: await db.getAll('shifts'),
             exportDate: new Date().toISOString()
         };
         return JSON.stringify(data, null, 2);
@@ -861,7 +1049,7 @@ const DataSync = {
 
     async importAll(jsonString) {
         const data = JSON.parse(jsonString);
-        const stores = ['users', 'tables', 'customers', 'orders', 'inventory', 'purchases', 'employees', 'attendance'];
+        const stores = ['users', 'tables', 'customers', 'orders', 'inventory', 'purchases', 'employees', 'attendance', 'expenses', 'shifts'];
         for (const store of stores) {
             if (data[store]) {
                 await db.clear(store);
@@ -910,7 +1098,9 @@ const ServerSync = {
                 inventory: await db.getAll('inventory'),
                 purchases: await db.getAll('purchases'),
                 employees: await db.getAll('employees'),
-                attendance: await db.getAll('attendance')
+                attendance: await db.getAll('attendance'),
+                expenses: await db.getAll('expenses'),
+                shifts: await db.getAll('shifts')
             };
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), 3000);
@@ -932,7 +1122,7 @@ const ServerSync = {
         const url = this.getServerUrl();
         const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
         try {
-            const collections = ['users', 'tables', 'orders', 'customers', 'settings', 'inventory', 'purchases', 'employees', 'attendance'];
+            const collections = ['users', 'tables', 'orders', 'customers', 'settings', 'inventory', 'purchases', 'employees', 'attendance', 'expenses', 'shifts'];
             for (const col of collections) {
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), 3000);
@@ -989,13 +1179,28 @@ async function initSystem() {
         await MenuSync.syncFromMenuData(menuData);
     }
 
-    // Push local data to server first (so nothing gets lost)
-    await ServerSync.pushAll().catch(() => {});
-    // Then pull data from other devices
-    await ServerSync.pullAll().catch(() => {});
+    // Auto-sync removed: pushAll + pullAll could wipe local data if server returns empty.
+    // Use manual sync from Settings tab for safe data exchange between devices.
+
+    // Recover orders from localStorage backup if IndexedDB is empty
+    try {
+        const orders = await db.getAll('orders');
+        if (!orders.length) {
+            const backup = localStorage.getItem('lucca_orders_backup');
+            if (backup) {
+                const parsed = JSON.parse(backup);
+                if (Array.isArray(parsed) && parsed.length) {
+                    for (const order of parsed) {
+                        try { await db.add('orders', order); } catch(e) {}
+                    }
+                    console.log(`🔄 تم استعادة ${parsed.length} طلب من النسخ الاحتياطي`);
+                }
+            }
+        }
+    } catch(e) {}
 
     console.log('✅ تم تهيئة نظام Lucca Caffè');
 }
 
 // تصدير للاستخدام
-window.LuccaDB = { db, Users, Tables, Orders, Customers, Settings, Inventory, Purchases, Employees, Attendance, MenuSync, DataSync, ServerSync, initSystem };
+window.LuccaDB = { db, Users, Tables, Orders, Customers, Settings, Inventory, Purchases, Employees, Attendance, Expenses, Shifts, MenuSync, DataSync, ServerSync, initSystem };

@@ -1011,6 +1011,7 @@
             <button class="tab-btn" onclick="showTab('attendance',this)">📋 الحضور</button>
             <button class="tab-btn" onclick="showTab('reports',this)">📊 التقارير</button>
             <button class="tab-btn" onclick="showTab('kitchen',this)">🍳 المطبخ</button>
+            <button class="tab-btn" onclick="showTab('cashier',this)">💰 صندوق اليومية</button>
         </div>
         </div>
 
@@ -1036,6 +1037,29 @@
                     <div class="icon">👥</div>
                     <div class="value" id="statCustomers">0</div>
                     <div class="label">عملاء مسجلين</div>
+                </div>
+            </div>
+
+            <!-- الإجراءات السريعة -->
+            <div class="order-form" style="margin-top:15px;">
+                <h3>⚡ إجراءات سريعة</h3>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button onclick="showTab('purchases',document.querySelector('.tab-btn[onclick*=\"purchases\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <div style="font-size:1.6rem;margin-bottom:5px;">🛒</div>
+                        <div style="font-weight:700;">إضافة مشتريات</div>
+                    </button>
+                    <button onclick="showTab('cashier',document.querySelector('.tab-btn[onclick*=\"cashier\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <div style="font-size:1.6rem;margin-bottom:5px;">💰</div>
+                        <div style="font-weight:700;">تسجيل مصروف</div>
+                    </button>
+                    <button onclick="showTab('employees',document.querySelector('.tab-btn[onclick*=\"employees\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <div style="font-size:1.6rem;margin-bottom:5px;">👨‍💼</div>
+                        <div style="font-weight:700;">إضافة موظف</div>
+                    </button>
+                    <button onclick="showTab('cashier',document.querySelector('.tab-btn[onclick*=\"cashier\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <div style="font-size:1.6rem;margin-bottom:5px;">🔒</div>
+                        <div style="font-weight:700;">إقفال الوردية</div>
+                    </button>
                 </div>
             </div>
 
@@ -1168,6 +1192,14 @@
                     <label>نسبة الضريبة (%)</label>
                     <input type="number" id="taxRate" value="14">
                 </div>
+                <div class="form-group">
+                    <label>رقم واتساب (لإرسال الطلبات)</label>
+                    <input type="tel" id="whatsappNumber" placeholder="201010058989" style="direction:ltr;">
+                </div>
+                <div class="form-group">
+                    <label>بداية الدوام (لحساب التأخير)</label>
+                    <input type="time" id="workStartTime" value="09:00">
+                </div>
                 <button class="btn-submit" onclick="saveSettings()">حفظ الإعدادات</button>
             </div>
 
@@ -1293,7 +1325,11 @@
                 </div>
                 <div class="summary-row">
                     <span>تكلفة البضاعة المباعة:</span>
-                    <span id="summaryCOGS">0 ج.م</span>
+                    <span id="summaryCOGS" style="color:var(--terracotta);">0 ج.م</span>
+                </div>
+                <div class="summary-row">
+                    <span>إجمالي المصروفات:</span>
+                    <span id="summaryExpenses" style="color:#e65100;">0 ج.م</span>
                 </div>
                 <div class="summary-row highlight">
                     <span>صافي الربح:</span>
@@ -1342,6 +1378,14 @@
                             <option value="">اختر...</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>دقائق تأخير</label>
+                        <input type="number" id="attendanceLate" value="0" min="0" style="width:100px;">
+                    </div>
+                    <div class="form-group">
+                        <label>ملاحظات</label>
+                        <input type="text" id="attendanceNotes" placeholder="تأخير / إذن / إجازة" style="width:180px;">
+                    </div>
                 </div>
                 <div class="form-row" style="gap:10px;">
                     <button class="btn-submit" onclick="checkInEmployee()" style="background:var(--success)">🔵 تسجيل حضور</button>
@@ -1378,7 +1422,7 @@
                 <div class="stat-card">
                     <div class="icon">💰</div>
                     <div class="value" id="reportTotalSales">0</div>
-                    <div class="label">إجمالي المبيعات (ج.م)</div>
+                    <div class="label">إجمالي المبيعات</div>
                 </div>
                 <div class="stat-card">
                     <div class="icon">💵</div>
@@ -1394,6 +1438,26 @@
                     <div class="icon">📊</div>
                     <div class="value" id="reportAvgOrder">0</div>
                     <div class="label">متوسط الطلب</div>
+                </div>
+                <div class="stat-card" style="background:#fff3e0;">
+                    <div class="icon">📤</div>
+                    <div class="value" id="reportExpenses" style="color:#e65100;">0</div>
+                    <div class="label">المصروفات</div>
+                </div>
+                <div class="stat-card" style="background:#fce4ec;">
+                    <div class="icon">🛒</div>
+                    <div class="value" id="reportCOGS" style="color:#c62828;">0</div>
+                    <div class="label">تكلفة المشتريات</div>
+                </div>
+                <div class="stat-card" style="background:#e8f5e9;">
+                    <div class="icon">📈</div>
+                    <div class="value" id="reportNetProfit" style="color:#2e7d32;font-weight:800;">0</div>
+                    <div class="label">صافي الربح</div>
+                </div>
+                <div class="stat-card" style="background:#e8f5e9;">
+                    <div class="icon">💯</div>
+                    <div class="value" id="reportProfitMargin" style="color:#2e7d32;">0%</div>
+                    <div class="label">هامش الربح</div>
                 </div>
             </div>
 
@@ -1444,6 +1508,134 @@
                 <p style="color:var(--olive);padding:30px;text-align:center;">جاري تحميل الطلبات...</p>
             </div>
         </div>
+
+        <!-- صندوق اليومية -->
+        <div class="tab-content" id="cashier">
+            <!-- Shift header -->
+            <div class="order-form">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
+                    <h3 style="margin:0;">💰 صندوق اليومية</h3>
+                    <span id="crShiftStatus" style="padding:4px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;display:inline-block;"></span>
+                </div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
+                    <div class="form-group">
+                        <label>التاريخ</label>
+                        <input type="date" id="crDate" onchange="crLoadDay()">
+                    </div>
+                    <button onclick="crOpenShift()" id="crOpenBtn">🔓 فتح الوردية</button>
+                    <button onclick="crCloseShiftDialog()" id="crCloseBtn" class="btn-close-invoice">🔒 إقفال الوردية</button>
+                </div>
+            </div>
+
+            <!-- Opening balance -->
+            <div class="order-form" id="crOpeningSection" style="margin-top:15px;">
+                <h4>💰 الرصيد الافتتاحي</h4>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
+                    <div class="form-group">
+                        <label>المبلغ الافتتاحي</label>
+                        <input type="number" id="crOpeningAmount" step="0.01" placeholder="0.00">
+                    </div>
+                    <button onclick="crSaveOpening()" class="btn-submit">💾 حفظ</button>
+                </div>
+            </div>
+
+            <!-- Summary cards -->
+            <div class="stats-grid" id="crStats" style="margin-top:15px;">
+                <div class="stat-card">
+                    <div class="icon">💵</div>
+                    <div class="value" id="crCashSales">0</div>
+                    <div class="label">مبيعات نقدي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">💳</div>
+                    <div class="value" id="crCardSales">0</div>
+                    <div class="label">مبيعات فيزا</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">📊</div>
+                    <div class="value" id="crTotalSales">0</div>
+                    <div class="label">إجمالي المبيعات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">📤</div>
+                    <div class="value" id="crExpensesTotal">0</div>
+                    <div class="label">إجمالي المصروفات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">💰</div>
+                    <div class="value" id="crExpectedCash">0</div>
+                    <div class="label">المتوقع بالصندوق</div>
+                </div>
+                <div class="stat-card" id="crActualCard" style="display:none;">
+                    <div class="icon">✅</div>
+                    <div class="value" id="crActualCash">0</div>
+                    <div class="label">الفعلي بالصندوق</div>
+                </div>
+                <div class="stat-card" id="crDiffCard" style="display:none;">
+                    <div class="icon">⚖️</div>
+                    <div class="value" id="crDifference">0</div>
+                    <div class="label">الفارق</div>
+                </div>
+            </div>
+
+            <!-- Add expense -->
+            <div class="order-form" style="margin-top:15px;">
+                <h4>➕ إضافة مصروف</h4>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
+                    <div class="form-group">
+                        <label>البيان</label>
+                        <input type="text" id="crExpDesc" placeholder="وصف المصروف">
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ</label>
+                        <input type="number" id="crExpAmount" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>التصنيف</label>
+                        <select id="crExpCategory"></select>
+                    </div>
+                    <button onclick="crAddExpense()" class="btn-submit">➕ إضافة</button>
+                </div>
+            </div>
+
+            <!-- Expenses table -->
+            <div class="order-form" style="margin-top:15px;">
+                <h4>📋 مصروفات اليوم</h4>
+                <table class="sales-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>البيان</th>
+                            <th>التصنيف</th>
+                            <th>المبلغ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="crExpensesBody">
+                        <tr><td colspan="5" style="text-align:center;color:var(--olive);">لا توجد مصروفات</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    <!-- نافذة اختيار الدفع (تظهر عند إنشاء الطلب) -->
+    <div class="invoice-modal" id="paymentModal">
+        <div class="invoice-content" style="max-width:360px;text-align:center;">
+            <h3 style="margin-bottom:8px;font-size:1.4rem;">💰 اختر طريقة الدفع</h3>
+            <p style="color:var(--olive);margin-bottom:20px;font-size:0.95rem;">اختر طريقة الدفع لإتمام الطلب</p>
+            <div style="display:flex;gap:15px;justify-content:center;">
+                <button onclick="confirmPayment('cash')" style="flex:1;padding:22px 10px;font-size:1.2rem;border-radius:15px;border:2px solid var(--gold);background:var(--cream, #EDE0D4);cursor:pointer;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:2rem;margin-bottom:8px;">💵</div>
+                    <div style="font-weight:700;">كاش</div>
+                </button>
+                <button onclick="confirmPayment('visa')" style="flex:1;padding:22px 10px;font-size:1.2rem;border-radius:15px;border:2px solid var(--gold);background:var(--cream, #EDE0D4);cursor:pointer;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size:2rem;margin-bottom:8px;">💳</div>
+                    <div style="font-weight:700;">فيزا</div>
+                </button>
+            </div>
+            <button onclick="document.getElementById('paymentModal').classList.remove('show')" style="margin-top:18px;background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.9rem;">❌ إلغاء</button>
+        </div>
+    </div>
 
     <!-- نافذة تفاصيل الطاولة -->
     <div class="invoice-modal" id="tableModal">
@@ -1638,11 +1830,29 @@
             if (tabId === 'reports') { setDefaultDates(); loadReport(); }
             if (tabId === 'settings') { setTimeout(() => testServerConnection(), 500); loadApiKey(); }
             if (tabId === 'kitchen') { loadKitchen(); startKitchenPolling(); } else { stopKitchenPolling(); }
+            if (tabId === 'cashier') { crLoadDay(); }
         }
 
         // ==================== تحميل البيانات ====================
         async function loadAllData() {
             await LuccaDB.initSystem();
+
+            // Load saved settings into form fields
+            try {
+                const allSettings = await LuccaDB.Settings.getAll();
+                if (allSettings.cafeName) document.getElementById('cafeName').value = allSettings.cafeName;
+                if (allSettings.cafeAddress) document.getElementById('cafeAddress').value = allSettings.cafeAddress;
+                if (allSettings.cafePhone) document.getElementById('cafePhone').value = allSettings.cafePhone;
+                if (allSettings.taxRate) document.getElementById('taxRate').value = allSettings.taxRate;
+                if (allSettings.whatsappNumber) {
+                    document.getElementById('whatsappNumber').value = allSettings.whatsappNumber;
+                    localStorage.setItem('luccaWhatsApp', allSettings.whatsappNumber);
+                }
+                if (allSettings.workStartTime) {
+                    document.getElementById('workStartTime').value = allSettings.workStartTime;
+                }
+            } catch(e) {}
+
             if (LuccaDB.MenuSync) {
                 const storedCatalog = await LuccaDB.MenuSync.syncFromMenuData(sharedMenuCatalog);
                 if (Array.isArray(storedCatalog) && storedCatalog.length) {
@@ -1909,28 +2119,37 @@
 
         async function submitOrder() {
             if (!selectedTable) {
-                alert('اختر رقم الطاولة أولاً!');
+                alert('❌ اختر رقم الطاولة أولاً!');
                 return;
             }
 
             if (cartItems.length === 0) {
-                alert('اختر أصناف من المنيو!');
+                alert('❌ اختر أصناف من المنيو!');
                 return;
             }
+
+            document.getElementById('paymentModal').classList.add('show');
+        }
+
+        async function confirmPayment(method) {
+            document.getElementById('paymentModal').classList.remove('show');
 
             const customerName = document.getElementById('customerName').value;
             const customerPhone = document.getElementById('customerPhone').value;
             const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-            const paymentMethod = document.getElementById('paymentMethodSelect').value;
+            const table = selectedTable;
+            const items = [...cartItems];
 
-            await LuccaDB.Orders.create(selectedTable, cartItems, customerName, customerPhone, {
-                paymentMethod,
+            await LuccaDB.Orders.create(table, items, customerName, customerPhone, {
+                paymentMethod: method,
                 discount,
                 discountType: 'percent'
             });
-            
-            alert('تم إنشاء الطلب بنجاح!');
-            
+
+            // فتح واتساب فوراً بالطلب
+            sendWhatsAppOrder(table, items, method);
+
+            // مسح السلة
             cartItems = [];
             selectedTable = null;
             document.querySelectorAll('.table-num-btn').forEach(btn => btn.classList.remove('selected'));
@@ -1941,6 +2160,31 @@
             loadTables();
             loadOrders();
             loadDashboard();
+        }
+
+        function sendWhatsAppOrder(table, items, paymentMethod) {
+            const phone = localStorage.getItem('luccaWhatsApp') || '201010058989';
+            const lines = ['☕ *Lucca Café*', '━━━━━━━━━━━━', ''];
+            lines.push('🚩 طاولة رقم: ' + table);
+            lines.push('');
+            items.forEach(i => {
+                const qty = i.quantity || 1;
+                const price = i.price || 0;
+                lines.push('• ' + i.name + (i.origin ? ' (' + i.origin + ')' : '') + ' x' + qty + ' = ' + (price * qty).toFixed(0) + ' ج.م');
+            });
+            lines.push('');
+            const total = items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+            const discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
+            const afterDiscount = discount > 0 ? total * (1 - discount / 100) : total;
+            lines.push('━━━━━━━━━━━━');
+            lines.push('💰 *الإجمالي: ' + afterDiscount.toFixed(0) + ' ج.م*');
+            if (discount > 0) lines.push('🏷️ خصم: ' + discount + '%');
+            lines.push('💳 الدفع: ' + (paymentMethod === 'visa' ? 'فيزا' : 'كاش'));
+            lines.push('');
+            lines.push('شكراً لزيارتكم 📍');
+
+            const msg = lines.join('\n');
+            window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
         }
 
         async function addPurchase() {
@@ -1983,12 +2227,26 @@
             const totalCost = purchases.reduce((s, p) => s + (p.costPrice || 0) * (p.quantity || 1), 0);
             const totalSelling = purchases.reduce((s, p) => s + (p.sellingPrice || 0) * (p.quantity || 1), 0);
             const netProfit = totalSelling - totalCost;
+
+            // Include expenses in profit calculation
+            let totalExpenses = 0;
+            try {
+                const allExpenses = await LuccaDB.Expenses.getAll();
+                totalExpenses = allExpenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+            } catch(e) {}
+
             const revenueEl = document.getElementById('summaryRevenue');
             const cogsEl = document.getElementById('summaryCOGS');
+            const expensesEl = document.getElementById('summaryExpenses');
             const profitEl = document.getElementById('summaryNetProfit');
             if (revenueEl) revenueEl.textContent = totalSelling.toFixed(2) + ' ج.م';
             if (cogsEl) cogsEl.textContent = totalCost.toFixed(2) + ' ج.م';
-            if (profitEl) profitEl.textContent = netProfit.toFixed(2) + ' ج.م';
+            if (expensesEl) expensesEl.textContent = totalExpenses.toFixed(2) + ' ج.م';
+            if (profitEl) {
+                const realProfit = totalSelling - totalCost - totalExpenses;
+                profitEl.textContent = realProfit.toFixed(2) + ' ج.م';
+                profitEl.style.color = realProfit >= 0 ? 'var(--success)' : 'var(--terracotta)';
+            }
         }
 
         async function loadOrders() {
@@ -2167,14 +2425,17 @@
                 cafeName: document.getElementById('cafeName').value,
                 cafeAddress: document.getElementById('cafeAddress').value,
                 cafePhone: document.getElementById('cafePhone').value,
-                taxRate: parseFloat(document.getElementById('taxRate').value)
+                taxRate: parseFloat(document.getElementById('taxRate').value),
+                whatsappNumber: document.getElementById('whatsappNumber').value.replace(/[^\d]/g, ''),
+                workStartTime: document.getElementById('workStartTime').value
             };
 
             for (const [key, value] of Object.entries(settings)) {
                 await LuccaDB.Settings.set(key, value);
             }
+            localStorage.setItem('luccaWhatsApp', settings.whatsappNumber);
 
-            alert('تم حفظ الإعدادات!');
+            alert('✅ تم حفظ الإعدادات!' + (settings.whatsappNumber ? ' رقم واتساب: ' + settings.whatsappNumber : ''));
         }
 
         // ==================== النسخ الاحتياطي ====================
@@ -2577,12 +2838,20 @@
         async function checkInEmployee() {
             const id = parseInt(document.getElementById('attendanceEmployee').value);
             if (!id) { alert('اختر موظف أولاً'); return; }
+            const late = parseInt(document.getElementById('attendanceLate').value) || 0;
+            const notes = document.getElementById('attendanceNotes').value.trim() || ('تأخير ' + late + ' دقيقة');
             try {
-                await LuccaDB.Attendance.checkIn(id);
-                alert('تم تسجيل الحضور');
+                const recordId = await LuccaDB.Attendance.checkIn(id, notes);
+                // Override late minutes with user's input
+                if (recordId && late > 0) {
+                    await LuccaDB.Attendance.updateRecord(recordId, { lateMinutes: late });
+                }
+                alert('✅ تم تسجيل الحضور' + (late > 0 ? ' (تأخير ' + late + ' د)' : ''));
+                document.getElementById('attendanceLate').value = '0';
+                document.getElementById('attendanceNotes').value = '';
                 loadAttendanceRecords();
             } catch (e) {
-                alert(e.message);
+                alert('❌ ' + e.message);
             }
         }
 
@@ -2609,16 +2878,35 @@
             const empMap = {};
             employees.forEach(e => empMap[e.id] = e.name);
 
-            list.innerHTML = '<table class="sales-table"><thead><tr><th>الموظف</th><th>التاريخ</th><th>الحضور</th><th>الانصراف</th><th>ساعات</th></tr></thead><tbody>' +
-                records.sort((a, b) => b.date.localeCompare(a.date) || (b.checkIn || '').localeCompare(a.checkIn || '')).slice(0, 50).map(r => `
-                    <tr>
-                        <td>${empMap[r.employeeId] || 'موظف'}</td>
-                        <td>${r.date}</td>
-                        <td>${r.checkIn ? new Date(r.checkIn).toLocaleTimeString('ar-EG') : '-'}</td>
-                        <td>${r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG') : '🟡 لم ينصرف'}</td>
-                        <td>${r.hoursWorked ? r.hoursWorked + ' س' : '-'}</td>
-                    </tr>
-                `).join('') + '</tbody></table>';
+            list.innerHTML = '<table class="sales-table"><thead><tr><th>الموظف</th><th>التاريخ</th><th>الحضور</th><th>الانصراف</th><th>ساعات</th><th>تأخير</th><th>مكافأة</th><th>خصم</th><th>ملاحظات</th><th></th></tr></thead><tbody>' +
+                records.sort((a, b) => b.date.localeCompare(a.date) || (b.checkIn || '').localeCompare(a.checkIn || '')).slice(0, 100).map(r => {
+                    const lateColor = (r.lateMinutes || 0) > 30 ? 'var(--terracotta)' : (r.lateMinutes || 0) > 15 ? 'var(--gold)' : 'var(--olive)';
+                    return '<tr>' +
+                        '<td>' + (empMap[r.employeeId] || 'موظف') + '</td>' +
+                        '<td>' + r.date + '</td>' +
+                        '<td>' + (r.checkIn ? new Date(r.checkIn).toLocaleTimeString('ar-EG') : '-') + '</td>' +
+                        '<td>' + (r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG') : '🟡 لم ينصرف') + '</td>' +
+                        '<td>' + (r.hoursWorked ? r.hoursWorked + ' س' : '-') + '</td>' +
+                        '<td style="color:' + lateColor + ';font-weight:600;">' + (r.lateMinutes ? r.lateMinutes + '\'' : '—') + '</td>' +
+                        '<td style="color:var(--success);">' + (r.bonus ? '+' + r.bonus : '—') + '</td>' +
+                        '<td style="color:var(--terracotta);">' + (r.deduction ? '-' + r.deduction : '—') + '</td>' +
+                        '<td style="font-size:0.8rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;">' + (r.notes || '') + '</td>' +
+                        '<td><button onclick="editAttendanceBonus(' + r.id + ',' + (r.bonus || 0) + ',' + (r.deduction || 0) + ')" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1rem;" title="تعديل المكافأة والخصم">⚡</button></td>' +
+                    '</tr>';
+                }).join('') + '</tbody></table>';
+        }
+
+        function editAttendanceBonus(id, currentBonus, currentDeduction) {
+            const bonus = prompt('💰 المكافأة (إضافي):', currentBonus || '0');
+            if (bonus === null) return;
+            const deduction = prompt('❌ الخصم (خصم):', currentDeduction || '0');
+            if (deduction === null) return;
+            LuccaDB.Attendance.updateRecord(id, {
+                bonus: parseFloat(bonus) || 0,
+                deduction: parseFloat(deduction) || 0
+            }).then(() => {
+                loadAttendanceRecords();
+            });
         }
 
         // ==================== الوضع الليلي ====================
@@ -2830,15 +3118,39 @@
                 return d >= from && d <= to && (o.status === 'completed' || o.status === 'pending');
             });
 
-            // إحصائيات
-            document.getElementById('reportOrdersCount').textContent = filtered.length;
+            // إحصائيات المبيعات
             const totalSales = filtered.reduce((s, o) => s + (o.total || 0), 0);
-            document.getElementById('reportTotalSales').textContent = totalSales.toFixed(2);
             const cashTotal = filtered.filter(o => o.paymentMethod === 'cash').reduce((s, o) => s + (o.total || 0), 0);
-            document.getElementById('reportCashTotal').textContent = cashTotal.toFixed(2);
             const visaTotal = filtered.filter(o => o.paymentMethod === 'visa').reduce((s, o) => s + (o.total || 0), 0);
+            document.getElementById('reportOrdersCount').textContent = filtered.length;
+            document.getElementById('reportTotalSales').textContent = totalSales.toFixed(2);
+            document.getElementById('reportCashTotal').textContent = cashTotal.toFixed(2);
             document.getElementById('reportVisaTotal').textContent = visaTotal.toFixed(2);
             document.getElementById('reportAvgOrder').textContent = filtered.length ? (totalSales / filtered.length).toFixed(2) : '0';
+
+            // المصروفات + المشتريات لنفس الفترة
+            const expenses = await LuccaDB.Expenses.getByDateRange(from, to);
+            const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+            document.getElementById('reportExpenses').textContent = totalExpenses.toFixed(2);
+
+            const purchases = await LuccaDB.Purchases.getAll();
+            const periodPurchases = purchases.filter(p => {
+                const d = (p.date || '').split('T')[0];
+                return d >= from && d <= to;
+            });
+            const totalCOGS = periodPurchases.reduce((s, p) => s + ((p.costPrice || 0) * (p.quantity || 1)), 0);
+            document.getElementById('reportCOGS').textContent = totalCOGS.toFixed(2);
+
+            // صافي الربح
+            const netProfit = totalSales - totalCOGS - totalExpenses;
+            const profitEl = document.getElementById('reportNetProfit');
+            profitEl.textContent = netProfit.toFixed(2);
+            profitEl.style.color = netProfit >= 0 ? '#2e7d32' : '#c62828';
+
+            const margin = totalSales > 0 ? (netProfit / totalSales * 100) : 0;
+            const marginEl = document.getElementById('reportProfitMargin');
+            marginEl.textContent = margin.toFixed(1) + '%';
+            marginEl.style.color = margin >= 15 ? '#2e7d32' : margin >= 5 ? '#e65100' : '#c62828';
 
             // جدول التقرير
             const tbody = document.getElementById('reportBody');
@@ -2924,6 +3236,198 @@
             alert('✅ تم تصدير التقرير');
         }
 
+        // ==================== Cash Register (صندوق اليومية) ====================
+        async function crLoadDay() {
+            const date = document.getElementById('crDate').value || new Date().toISOString().split('T')[0];
+            if (!document.getElementById('crDate').value) document.getElementById('crDate').value = date;
+
+            const shift = await LuccaDB.Shifts.get(date);
+            const statusEl = document.getElementById('crShiftStatus');
+            const openBtn = document.getElementById('crOpenBtn');
+            const closeBtn = document.getElementById('crCloseBtn');
+            const openingSection = document.getElementById('crOpeningSection');
+
+            if (shift && shift.status === 'closed') {
+                statusEl.textContent = '🔒 مقفلة';
+                statusEl.style.background = '#e8f5e9';
+                statusEl.style.color = '#2e7d32';
+                openBtn.disabled = true;
+                openBtn.style.opacity = '0.5';
+                closeBtn.disabled = true;
+                closeBtn.style.opacity = '0.5';
+                openingSection.style.display = 'none';
+            } else if (shift && shift.status === 'open') {
+                statusEl.textContent = '🔓 مفتوحة';
+                statusEl.style.background = '#fff3e0';
+                statusEl.style.color = '#e65100';
+                openBtn.disabled = true;
+                openBtn.style.opacity = '0.5';
+                closeBtn.disabled = false;
+                closeBtn.style.opacity = '1';
+                openingSection.style.display = shift.openingBalance > 0 ? 'none' : '';
+            } else {
+                statusEl.textContent = '⏳ غير مفتوحة';
+                statusEl.style.background = '#f5f5f5';
+                statusEl.style.color = '#666';
+                openBtn.disabled = false;
+                openBtn.style.opacity = '1';
+                closeBtn.disabled = true;
+                closeBtn.style.opacity = '0.5';
+                openingSection.style.display = '';
+            }
+
+            if (shift) {
+                document.getElementById('crOpeningAmount').value = shift.openingBalance || 0;
+            }
+
+            await crRefreshStats(date);
+            await crLoadExpenses(date);
+        }
+
+        async function crOpenShift() {
+            const date = document.getElementById('crDate').value;
+            if (!confirm('🔓 هل تريد فتح وردية اليوم ' + date + '؟')) return;
+            await LuccaDB.Shifts.open(date, 0, '');
+            await crLoadDay();
+        }
+
+        async function crSaveOpening() {
+            const date = document.getElementById('crDate').value;
+            const amount = parseFloat(document.getElementById('crOpeningAmount').value) || 0;
+            if (amount < 0) { alert('❌ الرصيد الافتتاحي لا يمكن أن يكون سالباً'); return; }
+            const shift = await LuccaDB.Shifts.get(date);
+            if (shift && shift.status === 'closed') { alert('❌ الوردية مقفلة'); return; }
+            await LuccaDB.Shifts.open(date, amount, shift?.notes || '');
+            alert('✅ تم حفظ الرصيد الافتتاحي');
+            await crLoadDay();
+        }
+
+        async function crCloseShiftDialog() {
+            const date = document.getElementById('crDate').value;
+            const shift = await LuccaDB.Shifts.get(date);
+            if (!shift || shift.status !== 'open') { alert('❌ الوردية غير مفتوحة'); return; }
+
+            const expected = document.getElementById('crExpectedCash').textContent;
+            const actual = prompt('💰 أدخل العدد الفعلي بالصندوق\n(المتوقع: ' + expected + ')', expected);
+            if (actual === null) return;
+
+            const notes = prompt('📝 ملاحظات الإقفال (اختياري):', '');
+            if (notes === null) return;
+
+            const result = await LuccaDB.Shifts.close(date, parseFloat(actual), notes || '');
+            if (result) {
+                const diff = result.difference;
+                const diffColor = Math.abs(diff) < 1 ? '#2e7d32' : Math.abs(diff) < 10 ? '#d4a85a' : '#c0392b';
+                const diffCard = document.getElementById('crDiffCard');
+                if (diffCard) {
+                    diffCard.style.display = '';
+                    diffCard.querySelector('.value').textContent = diff.toFixed(2);
+                    diffCard.querySelector('.value').style.color = diffColor;
+                }
+                const actualCard = document.getElementById('crActualCard');
+                if (actualCard) {
+                    actualCard.style.display = '';
+                    actualCard.querySelector('.value').textContent = result.actualCash.toFixed(2);
+                }
+
+                if (Math.abs(diff) > 5) {
+                    alert('⚠️ يوجد فارق ' + diff.toFixed(2) + ' في الصندوق!\nالمتوقع: ' + result.expectedCash.toFixed(2) + '\nالفعلي: ' + result.actualCash.toFixed(2));
+                } else {
+                    alert('✅ تم إقفال الوردية بنجاح\nالفارق: ' + diff.toFixed(2));
+                }
+            }
+            await crLoadDay();
+        }
+
+        async function crRefreshStats(date) {
+            const orders = await LuccaDB.Orders.getByDateRange(date, date);
+            const cashSales = orders.filter(o => o.paymentMethod === 'cash' && (o.status === 'completed' || o.status === 'pending')).reduce((s, o) => s + (o.total || 0), 0);
+            const cardSales = orders.filter(o => o.paymentMethod === 'visa' && (o.status === 'completed' || o.status === 'pending')).reduce((s, o) => s + (o.total || 0), 0);
+            const totalSales = cashSales + cardSales;
+            const totalExpenses = await LuccaDB.Expenses.getTotalByDate(date);
+            const shift = await LuccaDB.Shifts.get(date);
+            const opening = shift ? (parseFloat(shift.openingBalance) || 0) : 0;
+            const expectedCash = opening + cashSales - totalExpenses;
+
+            document.getElementById('crCashSales').textContent = cashSales.toFixed(2);
+            document.getElementById('crCardSales').textContent = cardSales.toFixed(2);
+            document.getElementById('crTotalSales').textContent = totalSales.toFixed(2);
+            document.getElementById('crExpensesTotal').textContent = totalExpenses.toFixed(2);
+            document.getElementById('crExpectedCash').textContent = expectedCash.toFixed(2);
+
+            if (shift && shift.status === 'closed') {
+                const diffCard = document.getElementById('crDiffCard');
+                if (diffCard) { diffCard.style.display = ''; diffCard.querySelector('.value').textContent = (shift.difference || 0).toFixed(2); }
+                const actualCard = document.getElementById('crActualCard');
+                if (actualCard) { actualCard.style.display = ''; actualCard.querySelector('.value').textContent = (shift.actualCash || 0).toFixed(2); }
+            } else {
+                const diffCard = document.getElementById('crDiffCard');
+                if (diffCard) diffCard.style.display = 'none';
+                const actualCard = document.getElementById('crActualCard');
+                if (actualCard) actualCard.style.display = 'none';
+            }
+        }
+
+        async function crLoadExpenses(date) {
+            const tbody = document.getElementById('crExpensesBody');
+            const expenses = await LuccaDB.Expenses.getByDate(date);
+            if (!expenses.length) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--olive);">لا توجد مصروفات</td></tr>';
+                return;
+            }
+            tbody.innerHTML = expenses.map((e, i) =>
+                '<tr>' +
+                    '<td>' + (i + 1) + '</td>' +
+                    '<td>' + (e.description || '-') + '</td>' +
+                    '<td><span style="background:#f5f5f5;padding:2px 10px;border-radius:10px;font-size:0.85rem;">' + (e.category || 'أخرى') + '</span></td>' +
+                    '<td style="font-weight:600;color:var(--terracotta);">' + (parseFloat(e.amount) || 0).toFixed(2) + '</td>' +
+                    '<td><button onclick="crDeleteExpense(' + e.id + ')" style="background:none;border:none;color:var(--terracotta);cursor:pointer;font-size:1.1rem;">✕</button></td>' +
+                '</tr>'
+            ).join('');
+        }
+
+        async function crAddExpense() {
+            const date = document.getElementById('crDate').value;
+            const description = document.getElementById('crExpDesc').value.trim();
+            const amount = parseFloat(document.getElementById('crExpAmount').value);
+            const category = document.getElementById('crExpCategory').value;
+
+            if (!description) { alert('❌ أدخل بيان المصروف'); return; }
+            if (!amount || amount <= 0) { alert('❌ أدخل مبلغ صحيح'); return; }
+
+            await LuccaDB.Expenses.add({ date: date, description: description, amount: amount, category: category });
+            document.getElementById('crExpDesc').value = '';
+            document.getElementById('crExpAmount').value = '';
+            await crLoadExpenses(date);
+            await crRefreshStats(date);
+        }
+
+        async function crDeleteExpense(id) {
+            if (!confirm('⚠️ هل تريد حذف هذا المصروف؟')) return;
+            await LuccaDB.Expenses.delete(id);
+            const date = document.getElementById('crDate').value;
+            await crLoadExpenses(date);
+            await crRefreshStats(date);
+        }
+
+        // Populate expense categories and set date on init
+        setTimeout(function() {
+            const sel = document.getElementById('crExpCategory');
+            if (sel) {
+                const cats = ['إيجار', 'رواتب', 'مشتريات', 'صيانة', 'كهرباء', 'مياه', 'إنترنت', 'تسويق', 'نقل', 'أخرى'];
+                cats.forEach(function(c) {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    sel.appendChild(opt);
+                });
+            }
+            const dateInput = document.getElementById('crDate');
+            if (dateInput && !dateInput.value) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+        }, 500);
+
         // ==================== البحث في الطلبات ====================
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('orderSearch');
@@ -2954,10 +3458,15 @@
                         document.getElementById('adminPanel').style.display = 'block';
                         document.getElementById('currentUserName').textContent = data.user.name;
                         loadAllData();
-                        setTimeout(() => { updateSalesChart(); startAutoRefresh(); }, 1000);
-                        return;
-                    }
-                } catch(e) { /* server not available, fallback to local */ }
+                setTimeout(() => { updateSalesChart(); startAutoRefresh(); }, 1000);
+                // Activate tab from URL hash
+                if (window.location.hash) {
+                    const tabId = window.location.hash.slice(1);
+                    const btn = document.querySelector('.tab-btn[onclick*="' + tabId + '"]');
+                    if (btn) { setTimeout(() => { showTab(tabId, btn); }, 100); }
+                }
+                return;
+            } catch(e) { /* server not available, fallback to local */ }
                 // Token invalid, clear it
                 sessionStorage.removeItem('luccaToken');
                 sessionStorage.removeItem('luccaUser');
@@ -2972,6 +3481,12 @@
                 document.getElementById('currentUserName').textContent = user.name;
                 loadAllData();
                 setTimeout(() => { updateSalesChart(); startAutoRefresh(); }, 1000);
+                // Activate tab from URL hash
+                if (window.location.hash) {
+                    const tabId = window.location.hash.slice(1);
+                    const btn = document.querySelector('.tab-btn[onclick*="' + tabId + '"]');
+                    if (btn) { setTimeout(() => { showTab(tabId, btn); }, 100); }
+                }
             }
         };
     </script>
