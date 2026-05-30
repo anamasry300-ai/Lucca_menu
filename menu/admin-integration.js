@@ -51,6 +51,7 @@ async function loadDashboardStats() {
         document.getElementById('dash-cash').textContent = cash.toFixed(0);
         document.getElementById('dash-card').textContent = card.toFixed(0);
         document.getElementById('dash-menu-url').textContent = window.location.href;
+        checkServerStatus();
     } catch(e) { console.error('Dashboard:', e); }
 }
 
@@ -414,18 +415,77 @@ function stopKitchenPolling() { if (kitchenPollInterval) { clearInterval(kitchen
 function loadSettings() {
     document.getElementById('set-whatsapp').value = localStorage.getItem('luccaWhatsApp') || '';
     document.getElementById('set-workstart').value = localStorage.getItem('luccaWorkStart') || '09:00';
+    document.getElementById('set-server-url').value = localStorage.getItem('luccaServerUrl') || 'http://localhost:3000';
+    checkServerStatus();
 }
 
 function saveSettings() {
+    const url = document.getElementById('set-server-url').value.trim();
+    if (url) localStorage.setItem('luccaServerUrl', url);
     localStorage.setItem('luccaWhatsApp', document.getElementById('set-whatsapp').value.trim());
     localStorage.setItem('luccaWorkStart', document.getElementById('set-workstart').value);
     showAdminToast('✅ تم حفظ الإعدادات');
 }
 
+async function checkServerStatus() {
+    const els = ['server-status', 'dash-server-status'].map(id => document.getElementById(id)).filter(Boolean);
+    els.forEach(el => { el.textContent = '⏳...'; el.style.color = 'var(--coffee-300)'; });
+    try {
+        const ok = await LuccaDB.ServerSync.testConnection();
+        els.forEach(el => {
+            if (ok) { el.textContent = '✅ متصل'; el.style.color = '#2ecc71'; }
+            else { el.textContent = '❌ غير متصل'; el.style.color = '#e74c3c'; }
+        });
+    } catch {
+        els.forEach(el => { el.textContent = '❌ غير متصل'; el.style.color = '#e74c3c'; });
+    }
+}
+
+async function testServerConnection() {
+    const el = document.getElementById('server-status');
+    const url = document.getElementById('set-server-url').value.trim();
+    if (url) localStorage.setItem('luccaServerUrl', url);
+    el.textContent = '⏳ جاري الفحص...';
+    el.style.color = 'var(--coffee-300)';
+    try {
+        const res = await fetch(url + '/api/public-key');
+        if (res.ok) {
+            const data = await res.json();
+            if (data.apiKey) localStorage.setItem('luccaApiKey', data.apiKey);
+            el.textContent = '✅ متصل';
+            el.style.color = '#2ecc71';
+            showAdminToast('✅ تم الاتصال بالسيرفر');
+        } else {
+            el.textContent = '❌ فشل الاتصال';
+            el.style.color = '#e74c3c';
+            showAdminToast('❌ فشل الاتصال');
+        }
+    } catch {
+        el.textContent = '❌ غير متصل';
+        el.style.color = '#e74c3c';
+        showAdminToast('❌ السيرفر غير متاح');
+    }
+}
+
+async function syncNow() {
+    showAdminToast('⏳ جاري المزامنة...');
+    try {
+        const result = await LuccaDB.ServerSync.pushAll();
+        if (result.success) {
+            showAdminToast('✅ تم رفع البيانات للسيرفر');
+            checkServerStatus();
+        } else {
+            showAdminToast('❌ ' + (result.message || 'فشلت المزامنة'));
+        }
+    } catch(e) {
+        showAdminToast('❌ فشلت المزامنة');
+    }
+}
+
 async function exportAllData() {
     try {
         const data = await LuccaDB.DataSync.exportAll();
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const blob = new Blob([data], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url; a.download = `lucca-backup-${new Date().toISOString().split('T')[0]}.json`;
