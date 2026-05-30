@@ -1377,15 +1377,30 @@
             if (isOpen) document.body.style.overflow = '';
             else document.body.style.overflow = 'hidden';
         }
-        function sendCartWhatsApp() {
+        async function sendCartWhatsApp() {
             if (cart.length === 0) return;
+            try {
+                await LuccaDB.initSystem();
+            } catch(e) { /* already initialized */ }
+            const items = cart.map(i => ({
+                name: i.origin ? `${i.name} (${i.origin})` : i.name,
+                price: i.price,
+                quantity: i.qty
+            }));
+            const tableId = document.getElementById('tableNum').value.trim() || null;
+            const notes = document.getElementById('orderNotes').value.trim();
+            try {
+                await LuccaDB.Orders.create(tableId, items, '', '', {
+                    status: 'pending',
+                    customerNotes: notes,
+                    paymentMethod: 'cash'
+                });
+            } catch(e) { console.error('Failed to save order:', e); }
             const lines = [t('waTitle'), '━━━━━━━━━━━━', ''];
-            const table = document.getElementById('tableNum').value.trim();
-            if (table) {
-                lines.push(`${t('waTable')} ${table}*`);
+            if (tableId) {
+                lines.push(`${t('waTable')} ${tableId}*`);
                 lines.push('');
             }
-            const notes = document.getElementById('orderNotes').value.trim();
             cart.forEach(i => {
                 const detail = `${i.name}${i.origin ? ` (${i.origin})` : ''}`;
                 lines.push(`• ${detail} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
@@ -1398,8 +1413,9 @@
             lines.push(`${t('waTotal')} ${total.toFixed(0)} ج.م*`);
             lines.push('', t('waFooter'));
             const msg = lines.join('\n');
-            const phone = '201010058989';
+            const phone = localStorage.getItem('luccaWhatsApp') || '201010058989';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            showCartToast('✅ تم إرسال الطلب');
             toggleCart();
             document.getElementById('tableNum').value = '';
             document.getElementById('orderNotes').value = '';
@@ -1746,6 +1762,7 @@
             document.dir = lang === 'ar' ? 'rtl' : 'ltr';
             document.getElementById('langToggle').textContent = lang === 'ar' ? '🇬🇧' : '🇪🇬';
             applyLang();
+            LuccaDB.initSystem().catch(() => {});
             if (typeof QRCode !== 'undefined') {
                 new QRCode(document.getElementById('qrcode'), {
                     text: window.location.href,
