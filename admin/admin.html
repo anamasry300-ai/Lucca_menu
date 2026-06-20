@@ -1004,6 +1004,7 @@
             <button class="tab-btn active" onclick="showTab('dashboard',this)">📊 لوحة التحكم</button>
             <button class="tab-btn" onclick="showTab('tables',this)">🍽️ الطابيزات</button>
             <button class="tab-btn" onclick="showTab('orders',this)">🧾 الطلبات</button>
+            <button class="tab-btn" onclick="showTab('returns',this)">↩️ المرتجعات</button>
             <button class="tab-btn" onclick="showTab('customers',this)">👥 العملاء</button>
             <button class="tab-btn" onclick="showTab('settings',this)">⚙️ الإعدادات</button>
             <button class="tab-btn" onclick="showTab('purchases',this)">🛒 المشتريات</button>
@@ -1164,6 +1165,56 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            </div>
+        </div>
+
+        <!-- المرتجعات -->
+        <div class="tab-content" id="returns">
+            <div class="settings-form">
+                <h3 style="margin-bottom:15px;">↩️ تسجيل مرتجع</h3>
+                <div class="form-group">
+                    <label>رقم الفاتورة (أو اتركه فارغاً)</label>
+                    <input type="number" id="ret-order-id" placeholder="رقم الفاتورة" min="1">
+                </div>
+                <div class="form-group">
+                    <label>الأصناف المرتجعة (وصف)</label>
+                    <textarea id="ret-items" rows="2" placeholder="مثال: لاتيه ×1، كابتشينو ×1" style="width:100%;padding:10px;border:2px solid #ddd;border-radius:10px;font-family:'Tajawal',sans-serif;font-size:0.9rem;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ المسترجع (ج.م)</label>
+                    <input type="number" id="ret-amount" placeholder="0" min="0" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>طريقة الدفع الأصلية</label>
+                    <select id="ret-payment" style="width:100%;padding:10px;border:2px solid #ddd;border-radius:10px;font-family:'Tajawal',sans-serif;">
+                        <option value="cash">💵 كاش</option>
+                        <option value="visa">💳 فيزا</option>
+                        <option value="instapay">📱 انستا باي</option>
+                        <option value="bank">🏦 تحويل بنكي</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>سبب الإرجاع</label>
+                    <input type="text" id="ret-reason" placeholder="مثال: خطأ في الطلب، عميل غير راض..." style="width:100%;padding:10px;border:2px solid #ddd;border-radius:10px;font-family:'Tajawal',sans-serif;">
+                </div>
+                <button class="tab-btn" onclick="addReturn()" style="margin-top:5px;">➕ تسجيل المرتجع</button>
+            </div>
+
+            <div class="settings-form" style="margin-top:20px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                    <h3>📋 سجل المرتجعات</h3>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <label style="font-size:0.85rem;">من</label>
+                        <input type="date" id="ret-from" style="padding:6px;border:1px solid #ddd;border-radius:6px;font-family:'Tajawal',sans-serif;" onchange="loadReturns()">
+                        <label style="font-size:0.85rem;">إلى</label>
+                        <input type="date" id="ret-to" style="padding:6px;border:1px solid #ddd;border-radius:6px;font-family:'Tajawal',sans-serif;" onchange="loadReturns()">
+                        <span style="font-size:0.9rem;font-weight:700;" id="ret-total-refund">0 ج.م</span>
+                    </div>
+                </div>
+                <table class="sales-table" style="margin-top:10px;">
+                    <thead><tr><th>#</th><th>التاريخ</th><th>الفاتورة</th><th>الأصناف</th><th>المبلغ</th><th>السبب</th><th>بواسطة</th><th></th></tr></thead>
+                    <tbody id="returns-body"><tr><td colspan="8" style="text-align:center;color:#999;">جاري التحميل...</td></tr></tbody>
+                </table>
             </div>
         </div>
 
@@ -1449,6 +1500,11 @@
                     <div class="value" id="reportCOGS" style="color:#c62828;">0</div>
                     <div class="label">تكلفة المشتريات</div>
                 </div>
+                <div class="stat-card" style="background:#fff3e0;">
+                    <div class="icon">↩️</div>
+                    <div class="value" id="reportReturns" style="color:#e65100;">0</div>
+                    <div class="label">المرتجعات</div>
+                </div>
                 <div class="stat-card" style="background:#e8f5e9;">
                     <div class="icon">📈</div>
                     <div class="value" id="reportNetProfit" style="color:#2e7d32;font-weight:800;">0</div>
@@ -1555,6 +1611,11 @@
                     <div class="icon">📊</div>
                     <div class="value" id="crTotalSales">0</div>
                     <div class="label">إجمالي المبيعات</div>
+                </div>
+                <div class="stat-card" style="background:#fff3e0;">
+                    <div class="icon">↩️</div>
+                    <div class="value" id="crReturnsTotal" style="color:#e65100;">0</div>
+                    <div class="label">المرتجعات</div>
                 </div>
                 <div class="stat-card">
                     <div class="icon">📤</div>
@@ -1828,6 +1889,7 @@
             if (tabId === 'employees') { loadEmployees(); }
             if (tabId === 'attendance') { loadAttendanceEmployees(); loadAttendanceRecords(); }
             if (tabId === 'reports') { setDefaultDates(); loadReport(); }
+            if (tabId === 'returns') { loadReturns(); }
             if (tabId === 'settings') { setTimeout(() => testServerConnection(), 500); loadApiKey(); }
             if (tabId === 'kitchen') { loadKitchen(); startKitchenPolling(); } else { stopKitchenPolling(); }
             if (tabId === 'cashier') { crLoadDay(); }
@@ -3141,13 +3203,19 @@
             const totalCOGS = periodPurchases.reduce((s, p) => s + ((p.costPrice || 0) * (p.quantity || 1)), 0);
             document.getElementById('reportCOGS').textContent = totalCOGS.toFixed(2);
 
-            // صافي الربح
-            const netProfit = totalSales - totalCOGS - totalExpenses;
+            // المرتجعات (تخصم من المبيعات)
+            const returns = await LuccaDB.Returns.getByDateRange(from, to);
+            const totalReturns = returns.reduce((s, r) => s + (r.refundAmount || 0), 0);
+            document.getElementById('reportReturns').textContent = totalReturns.toFixed(2);
+
+            // صافي الربح (بعد خصم المرتجعات)
+            const netSales = totalSales - totalReturns;
+            const netProfit = netSales - totalCOGS - totalExpenses;
             const profitEl = document.getElementById('reportNetProfit');
             profitEl.textContent = netProfit.toFixed(2);
             profitEl.style.color = netProfit >= 0 ? '#2e7d32' : '#c62828';
 
-            const margin = totalSales > 0 ? (netProfit / totalSales * 100) : 0;
+            const margin = netSales > 0 ? (netProfit / netSales * 100) : 0;
             const marginEl = document.getElementById('reportProfitMargin');
             marginEl.textContent = margin.toFixed(1) + '%';
             marginEl.style.color = margin >= 15 ? '#2e7d32' : margin >= 5 ? '#e65100' : '#c62828';
@@ -3168,6 +3236,67 @@
                     <td style="font-size:0.8rem;">${itemsSummary}</td>
                 </tr>`;
             }).join('');
+        }
+
+        // ==================== المرتجعات ====================
+        async function loadReturns() {
+            const from = document.getElementById('ret-from').value || new Date().toISOString().split('T')[0];
+            const to = document.getElementById('ret-to').value || new Date().toISOString().split('T')[0];
+            document.getElementById('ret-from').value = from;
+            document.getElementById('ret-to').value = to;
+            try {
+                const returns = await LuccaDB.Returns.getByDateRange(from, to);
+                const totalRefund = returns.reduce((s, r) => s + (r.refundAmount || 0), 0);
+                document.getElementById('ret-total-refund').textContent = totalRefund.toFixed(0) + ' ج.م';
+                const tbody = document.getElementById('returns-body');
+                tbody.innerHTML = returns.length
+                    ? returns.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).map(r => `
+                        <tr>
+                            <td>#${r.id}</td>
+                            <td>${r.date || '—'}</td>
+                            <td>${r.orderId ? '#' + r.orderId : '—'}</td>
+                            <td>${(r.items || []).join(', ') || '—'}</td>
+                            <td style="color:#c62828;font-weight:700;">-${(r.refundAmount || 0).toFixed(0)}</td>
+                            <td style="font-size:0.85rem;">${r.reason || '—'}</td>
+                            <td style="font-size:0.85rem;">${r.createdBy || '—'}</td>
+                            <td><button onclick="deleteReturn(${r.id})" style="background:none;border:none;cursor:pointer;color:#c62828;font-size:1rem;" title="حذف">🗑️</button></td>
+                        </tr>`).join('')
+                    : '<tr><td colspan="8" style="text-align:center;color:#999;">لا توجد مرتجعات</td></tr>';
+            } catch(e) { console.error('loadReturns:', e); }
+        }
+
+        async function addReturn() {
+            const orderId = document.getElementById('ret-order-id').value.trim() || null;
+            const items = document.getElementById('ret-items').value.trim().split('\n').filter(s => s.trim());
+            const amount = parseFloat(document.getElementById('ret-amount').value);
+            const payment = document.getElementById('ret-payment').value;
+            const reason = document.getElementById('ret-reason').value.trim();
+            if (!amount || amount <= 0) { alert('❌ أدخل المبلغ المسترجع'); return; }
+            if (!reason) { alert('❌ أدخل سبب الإرجاع'); return; }
+            try {
+                await LuccaDB.Returns.add({
+                    orderId: orderId ? parseInt(orderId) : null,
+                    items,
+                    refundAmount: amount,
+                    paymentMethod: payment,
+                    reason,
+                    createdBy: currentUser?.name || 'admin'
+                });
+                document.getElementById('ret-order-id').value = '';
+                document.getElementById('ret-items').value = '';
+                document.getElementById('ret-amount').value = '';
+                document.getElementById('ret-reason').value = '';
+                alert('✅ تم تسجيل المرتجع');
+                loadReturns();
+            } catch(e) { alert('❌ فشل تسجيل المرتجع: ' + e.message); }
+        }
+
+        async function deleteReturn(id) {
+            if (!confirm('حذف هذا المرتجع؟')) return;
+            try {
+                await LuccaDB.Returns.delete(id);
+                loadReturns();
+            } catch(e) { alert('❌ فشل الحذف'); }
         }
 
         function getReportData() {
@@ -3349,10 +3478,12 @@
             const opening = shift ? (parseFloat(shift.openingBalance) || 0) : 0;
             const expectedCash = opening + cashSales - totalExpenses;
 
+            const totalReturns = await LuccaDB.Returns.getTotalByDate(date);
             document.getElementById('crCashSales').textContent = cashSales.toFixed(2);
             document.getElementById('crCardSales').textContent = cardSales.toFixed(2);
             document.getElementById('crTotalSales').textContent = totalSales.toFixed(2);
             document.getElementById('crExpensesTotal').textContent = totalExpenses.toFixed(2);
+            document.getElementById('crReturnsTotal').textContent = totalReturns.toFixed(2);
             document.getElementById('crExpectedCash').textContent = expectedCash.toFixed(2);
 
             if (shift && shift.status === 'closed') {

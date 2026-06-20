@@ -7,7 +7,7 @@
 
 // ==================== قاعدة البيانات المحلية ====================
 const DB_NAME = 'lucca_caffe_db';
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 class LuccaDatabase {
     constructor() {
@@ -91,6 +91,13 @@ class LuccaDatabase {
                 if (!db.objectStoreNames.contains('shifts')) {
                     db.createObjectStore('shifts', { keyPath: 'date' });
                 }
+
+                // جدول المرتجعات
+                if (!db.objectStoreNames.contains('returns')) {
+                    const retStore = db.createObjectStore('returns', { keyPath: 'id', autoIncrement: true });
+                    retStore.createIndex('date', 'date', { unique: false });
+                    retStore.createIndex('orderId', 'orderId', { unique: false });
+                }
             };
         });
     }
@@ -155,73 +162,35 @@ class LuccaDatabase {
             request.onerror = () => reject(request.error);
         });
     }
+
+    // جلب سجل واحد عن طريق Index (أسرع بكثير من getAll + filter)
+    async getByIndex(storeName, indexName, value) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            const index = store.index(indexName);
+            const request = index.getAll(value);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+
+    // جلب سجلات بنطاق تاريخ أو رقم (أسرع من filter)
+    async getByIndexRange(storeName, indexName, lowerValue, upperValue) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            const index = store.index(indexName);
+            const range = IDBKeyRange.bound(lowerValue, upperValue);
+            const request = index.getAll(range);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
 }
 
 // إنشاء مثيل واحد
 const db = new LuccaDatabase();
-
-// ==================== مزامنة مباشرة مع السيرفر ====================
-const ServerAPI = {
-    getBaseUrl() { return localStorage.getItem('luccaServerUrl') || 'http://localhost:3000'; },
-    getApiKey() { return localStorage.getItem('luccaApiKey') || ''; },
-    getToken() { return sessionStorage.getItem('luccaToken') || ''; },
-
-    async getAll(store) {
-        try {
-            const headers = { 'Content-Type': 'application/json' };
-            const token = this.getToken();
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), 2000);
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}`, { headers, signal: controller.signal });
-            clearTimeout(timer);
-            if (res.ok) return await res.json();
-            return null;
-        } catch(e) { return null; }
-    },
-
-    async add(store, item) {
-        try {
-            const headers = { 'Content-Type': 'application/json', 'x-api-key': this.getApiKey() };
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}`, {
-                method: 'POST', headers, body: JSON.stringify(item)
-            });
-            if (res.ok) return await res.json();
-            return null;
-        } catch(e) { return null; }
-    },
-
-    async put(store, id, item) {
-        try {
-            const headers = { 'Content-Type': 'application/json', 'x-api-key': this.getApiKey() };
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}/${id}`, {
-                method: 'PUT', headers, body: JSON.stringify(item)
-            });
-            return res.ok;
-        } catch(e) { return false; }
-    },
-
-    async remove(store, id) {
-        try {
-            const headers = { 'x-api-key': this.getApiKey() };
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}/${id}`, {
-                method: 'DELETE', headers
-            });
-            return res.ok;
-        } catch(e) { return false; }
-    },
-
-    async get(store, id) {
-        try {
-            const headers = { 'Content-Type': 'application/json' };
-            const token = this.getToken();
-            if (token) headers['Authorization'] = 'Bearer ' + token;
-            const res = await fetch(`${this.getBaseUrl()}/api/${store}/${id}`, { headers });
-            if (res.ok) return await res.json();
-            return null;
-        } catch(e) { return null; }
-    }
-};
 
 // ==================== إدارة المستخدمين ====================
 const Users = {
@@ -270,7 +239,7 @@ const Users = {
         userData.createdAt = new Date().toISOString();
         userData.role = userData.role || 'cashier';
         const id = await db.add('users', userData);
-        ServerAPI.add('users', userData).catch(() => {});
+        bgSync(() => quickServerPost('users', { ...userData, id }));
         return { ...userData, id };
     },
 
@@ -284,12 +253,15 @@ const Users = {
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('users');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('users'); for (const item of serverData) await db.add('users', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('users');
+        const local = await db.getAll('users');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('users');
+            if (Array.isArray(serverData)) {
+                await db.clear('users');
+                for (const item of serverData) await db.add('users', item);
+            }
+        });
+        return local;
     },
 
     async createDefaultAdmin() {
@@ -313,33 +285,37 @@ const Tables = {
         const tables = await db.getAll('tables');
         if (tables.length === 0) {
             for (let i = 1; i <= 14; i++) {
-                const t = { id: i, number: i, status: 'available', capacity: 4, currentOrder: null };
-                await db.add('tables', t);
-                ServerAPI.add('tables', t).catch(() => {});
+                await db.add('tables', { id: i, number: i, status: 'available', capacity: 4, currentOrder: null });
             }
         }
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('tables');
-        if (serverData && serverData.length) {
-            return serverData;
-        }
-        return db.getAll('tables');
+        const local = await db.getAll('tables');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('tables');
+            if (serverData && serverData.length) {
+                await db.clear('tables');
+                for (const item of serverData) await db.add('tables', item);
+            }
+        });
+        return local;
     },
 
     async update(id, data) {
-        const table = await db.get('tables', id);
+        const numId = parseInt(id);
+        const table = await db.get('tables', isNaN(numId) ? id : numId);
         if (table) {
             Object.assign(table, data);
             await db.put('tables', table);
-            ServerAPI.put('tables', id, table).catch(() => {});
+            bgSync(() => quickServerPut('tables', table.id, table));
         }
         return table;
     },
 
     async getById(id) {
-        return db.get('tables', id);
+        const numId = parseInt(id);
+        return db.get('tables', isNaN(numId) ? id : numId);
     }
 };
 
@@ -351,7 +327,8 @@ const Orders = {
         customerPhone = customerPhone || '';
         const subtotal = (items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
         const discount = parseFloat(options.discount) || 0;
-        const discountAmount = subtotal * (discount / 100);
+        const discountPercent = options.discountType !== 'fixed';
+        const discountAmount = discountPercent ? subtotal * (discount / 100) : discount;
         const afterDiscount = subtotal - discountAmount;
         const taxRate = parseFloat(await Settings.get('taxRate')) || 0;
         const tax = options.applyTax !== false ? afterDiscount * (taxRate / 100) : 0;
@@ -365,29 +342,25 @@ const Orders = {
             invoiceDelivery: options.invoiceDelivery || 'cashier',
             marketingOptIn: Boolean(options.marketingOptIn),
             wantsWhatsappInvoice: options.invoiceDelivery === 'whatsapp',
-            status: options.status || 'completed',
+            status: 'completed',
             subtotal,
-            discount,
+            discount: discountPercent ? discount : 0,
             discountAmount,
-            discountType: 'percent',
+            discountType: options.discountType || 'percent',
             tax,
             total: afterDiscount + tax,
+            paid: options.paid || afterDiscount + tax,
+            change: (options.paid || afterDiscount + tax) - (afterDiscount + tax),
             date: new Date().toISOString(),
             createdBy: Users.getCurrentUser()?.name || 'menu'
         };
 
-        let id;
-        const serverResult = await ServerAPI.add('orders', order);
-        if (serverResult && serverResult.id) {
-            id = serverResult.id;
-            await db.put('orders', { ...order, id });
-        } else {
-            id = await db.add('orders', order);
-        }
+        const id = await db.add('orders', order);
+        bgSync(() => quickServerPost('orders', order));
 
-        if (tableId) {
+        // Paid order → free table
         if (tableId && !isNaN(tableId)) {
-            await Tables.update(parseInt(tableId), { status: 'occupied', currentOrder: id });
+            await Tables.update(parseInt(tableId), { status: 'available', currentOrder: null });
         }
 
         if (customerPhone) {
@@ -403,44 +376,36 @@ const Orders = {
     },
 
     async create(tableId, items, customerName = '', customerPhone = '', options = {}) {
+        const subtotal = (items || []).reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
+        const discount = parseFloat(options.discount) || 0;
+        const discountType = options.discountType || 'percent';
+        const discountAmount = discountType === 'percent' ? subtotal * (discount / 100) : discount;
+        const afterDiscount = subtotal - discountAmount;
+        const taxRate = parseFloat(await Settings.get('taxRate')) || 14;
+        const tax = afterDiscount * (taxRate / 100);
         const order = {
             tableId,
             items,
-            customerName,
-            customerPhone,
+            customerName: customerName || '',
+            customerPhone: customerPhone || '',
             paymentMethod: options.paymentMethod || 'cash',
             customerNotes: options.customerNotes || '',
             invoiceDelivery: options.invoiceDelivery || 'cashier',
             marketingOptIn: Boolean(options.marketingOptIn),
             wantsWhatsappInvoice: options.invoiceDelivery === 'whatsapp',
             status: options.status || 'pending',
-            subtotal: 0,
-            tax: 0,
-            total: 0,
+            subtotal,
+            discount,
+            discountAmount,
+            discountType,
+            tax,
+            total: afterDiscount + tax,
             date: new Date().toISOString(),
             createdBy: Users.getCurrentUser()?.name || 'unknown'
         };
 
-        order.items.forEach(item => {
-            order.subtotal += (item.price || 0) * (item.quantity || 1);
-        });
-        const discount = parseFloat(options.discount) || 0;
-        order.discount = discount;
-        order.discountType = options.discountType || 'percent';
-        const discountAmount = order.discountType === 'percent' ? order.subtotal * (discount / 100) : discount;
-        const afterDiscount = order.subtotal - discountAmount;
-        const taxRate = parseFloat(await Settings.get('taxRate')) || 14;
-        order.tax = afterDiscount * (taxRate / 100);
-        order.total = afterDiscount + order.tax;
-
-        let id;
-        const serverResult = await ServerAPI.add('orders', order);
-        if (serverResult && serverResult.id) {
-            id = serverResult.id;
-            await db.put('orders', { ...order, id });
-        } else {
-            id = await db.add('orders', order);
-        }
+        const id = await db.add('orders', order);
+        bgSync(() => quickServerPost('orders', order));
         
         if (tableId && !isNaN(tableId)) {
             await Tables.update(parseInt(tableId), { status: 'occupied', currentOrder: id });
@@ -459,42 +424,37 @@ const Orders = {
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('orders');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('orders'); for (const item of serverData) await db.add('orders', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('orders');
+        const local = await db.getAll('orders');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('orders');
+            if (Array.isArray(serverData)) {
+                await db.clear('orders');
+                for (const item of serverData) await db.add('orders', item);
+            }
+        });
+        return local;
     },
 
     async getByTable(tableId) {
-        const orders = await this.getAll();
-        return orders.filter(o => o.tableId === tableId && o.status !== 'completed');
+        const orders = await db.getByIndex('orders', 'tableId', tableId);
+        return (orders || []).filter(o => o.status !== 'completed' && o.status !== 'cancelled');
+    },
+
+    async getById(orderId) {
+        return db.get('orders', orderId);
     },
 
     async updateStatus(orderId, status) {
-        const serverOk = await ServerAPI.put('orders', orderId, { status });
-        if (serverOk) {
-            const order = await ServerAPI.get('orders', orderId);
-            if (order) {
-                await db.put('orders', order);
-                if (status === 'completed' || status === 'cancelled') {
-                    await Tables.update(order.tableId, { status: 'available', currentOrder: null });
-                }
-                return order;
-            }
-        }
-        const orders = await db.getAll('orders');
-        const order = orders.find(o => o.id === orderId);
+        const order = await db.get('orders', orderId);
         if (order) {
             order.status = status;
             await db.put('orders', order);
             if (status === 'completed' || status === 'cancelled') {
                 await Tables.update(order.tableId, { status: 'available', currentOrder: null });
             }
-            ServerAPI.put('orders', orderId, order).catch(() => {});
+            bgSync(() => quickServerPut('orders', orderId, order));
+            this.backup();
         }
-        this.backup();
         return order;
     },
 
@@ -512,40 +472,43 @@ const Orders = {
             item.total = afterDiscount + item.tax;
         }
         await db.put('orders', item);
-        ServerAPI.put('orders', orderId, item).catch(() => {});
+        bgSync(() => quickServerPut('orders', orderId, item));
         this.backup();
         return item;
     },
 
     async delete(orderId) {
-        const orders = await db.getAll('orders');
-        const order = orders.find(o => o.id === orderId);
+        const order = await db.get('orders', orderId);
         if (order) {
             await Tables.update(order.tableId, { status: 'available', currentOrder: null });
             await db.delete('orders', orderId);
-            ServerAPI.remove('orders', orderId).catch(() => {});
+            bgSync(() => quickServerDelete('orders', orderId));
         }
     },
 
     async getDailySales() {
-        const orders = await this.getAll();
         const today = new Date().toISOString().split('T')[0];
-        return orders.filter(o => o.date.startsWith(today) && (o.status === 'completed' || o.status === 'pending'));
+        const start = today + 'T00:00:00';
+        const end = today + 'T23:59:59.999Z';
+        const orders = await db.getByIndexRange('orders', 'date', start, end);
+        return (orders || []).filter(o => o.status === 'completed' || o.status === 'pending');
     },
 
     async getByDateRange(startDate, endDate) {
-        const orders = await this.getAll();
-        return orders.filter(o => {
-            const d = o.date.split('T')[0];
-            return d >= startDate && d <= endDate;
-        });
+        const start = startDate + 'T00:00:00';
+        const end = endDate + 'T23:59:59.999Z';
+        const orders = await db.getByIndexRange('orders', 'date', start, end);
+        return orders || [];
     },
 
-    // Backup orders to localStorage (survives IndexedDB clear)
     async backup() {
         try {
-            const orders = await db.getAll('orders');
-            localStorage.setItem('lucca_orders_backup', JSON.stringify(orders.slice(-200)));
+            const d = new Date();
+            d.setDate(d.getDate() - 30);
+            const start = d.toISOString().split('T')[0] + 'T00:00:00';
+            const end = new Date().toISOString().split('T')[0] + 'T23:59:59.999Z';
+            const orders = await db.getByIndexRange('orders', 'date', start, end);
+            localStorage.setItem('lucca_orders_backup', JSON.stringify((orders || []).slice(-200)));
         } catch(e) {}
     }
 };
@@ -567,12 +530,8 @@ const Customers = {
                 preferredChannel: options.preferredChannel || 'cashier',
                 createdAt: new Date().toISOString()
             };
-            const serverResult = await ServerAPI.add('customers', customer);
-            if (serverResult && serverResult.id) {
-                await db.put('customers', { ...customer, id: serverResult.id });
-            } else {
-                await db.add('customers', customer);
-            }
+            const id = await db.add('customers', customer);
+            bgSync(() => quickServerPost('customers', { ...customer, id }));
         } else {
             exists.name = name || exists.name;
             exists.visits++;
@@ -581,17 +540,20 @@ const Customers = {
             exists.marketingOptIn = Boolean(options.marketingOptIn);
             exists.preferredChannel = options.preferredChannel || exists.preferredChannel || 'cashier';
             await db.put('customers', exists);
-            ServerAPI.put('customers', exists.id, exists).catch(() => {});
+            bgSync(() => quickServerPut('customers', exists.id, exists));
         }
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('customers');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('customers'); for (const item of serverData) await db.add('customers', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('customers');
+        const local = await db.getAll('customers');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('customers');
+            if (Array.isArray(serverData)) {
+                await db.clear('customers');
+                for (const item of serverData) await db.add('customers', item);
+            }
+        });
+        return local;
     },
 
     async search(phone) {
@@ -603,29 +565,16 @@ const Customers = {
 // ==================== إدارة الإعدادات ====================
 const Settings = {
     async get(key) {
-        const serverData = await ServerAPI.getAll('settings');
-        if (Array.isArray(serverData)) {
-            const found = serverData.find(s => s.key === key);
-            if (found) {
-                try { await db.put('settings', found); } catch(e) {}
-                return found.value;
-            }
-        }
         const setting = await db.get('settings', key);
         return setting?.value;
     },
 
     async set(key, value) {
         await db.put('settings', { key, value });
-        ServerAPI.add('settings', { key, value }).catch(() => {});
+        bgSync(() => quickServerPost('settings', { key, value }));
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('settings');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('settings'); for (const item of serverData) await db.add('settings', item); } catch(e) {}
-            return serverData.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {});
-        }
         const settings = await db.getAll('settings');
         return settings.reduce((acc, s) => ({ ...acc, [s.key]: s.value }), {});
     }
@@ -634,22 +583,22 @@ const Settings = {
 // ==================== إدارة المخزون ====================
 const Inventory = {
     async getAll() {
-        const serverData = await ServerAPI.getAll('inventory');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('inventory'); for (const item of serverData) await db.add('inventory', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('inventory');
+        const local = await db.getAll('inventory');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('inventory');
+            if (Array.isArray(serverData)) {
+                await db.clear('inventory');
+                for (const item of serverData) await db.add('inventory', item);
+            }
+        });
+        return local;
     },
 
     async add(item) {
         item.createdAt = new Date().toISOString();
-        const serverResult = await ServerAPI.add('inventory', item);
-        if (serverResult && serverResult.id) {
-            await db.put('inventory', { ...item, id: serverResult.id });
-            return serverResult.id;
-        }
-        return db.add('inventory', item);
+        const id = await db.add('inventory', item);
+        bgSync(() => quickServerPost('inventory', { ...item, id }));
+        return id;
     },
 
     async update(id, data) {
@@ -657,14 +606,14 @@ const Inventory = {
         if (item) {
             Object.assign(item, data);
             await db.put('inventory', item);
-            ServerAPI.put('inventory', id, item).catch(() => {});
+            bgSync(() => quickServerPut('inventory', id, item));
         }
         return item;
     },
 
     async delete(id) {
         await db.delete('inventory', id);
-        ServerAPI.remove('inventory', id).catch(() => {});
+        bgSync(() => quickServerDelete('inventory', id));
     },
 
     async adjustStock(id, quantity) {
@@ -673,7 +622,7 @@ const Inventory = {
             item.quantity = (item.quantity || 0) + quantity;
             item.lastUpdated = new Date().toISOString();
             await db.put('inventory', item);
-            ServerAPI.put('inventory', id, item).catch(() => {});
+            bgSync(() => quickServerPut('inventory', id, item));
         }
         return item;
     }
@@ -682,55 +631,56 @@ const Inventory = {
 // ==================== إدارة المشتريات ====================
 const Purchases = {
     async getAll() {
-        const serverData = await ServerAPI.getAll('purchases');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('purchases'); for (const item of serverData) await db.add('purchases', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('purchases');
+        const local = await db.getAll('purchases');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('purchases');
+            if (Array.isArray(serverData)) {
+                await db.clear('purchases');
+                for (const item of serverData) await db.add('purchases', item);
+            }
+        });
+        return local;
     },
 
     async add(purchase) {
         purchase.date = purchase.date || new Date().toISOString();
-        const serverResult = await ServerAPI.add('purchases', purchase);
-        if (serverResult && serverResult.id) {
-            await db.put('purchases', { ...purchase, id: serverResult.id });
-            return serverResult.id;
-        }
-        return db.add('purchases', purchase);
+        purchase.createdAt = new Date().toISOString();
+        const id = await db.add('purchases', purchase);
+        bgSync(() => quickServerPost('purchases', { ...purchase, id }));
+        return id;
     },
 
     async delete(id) {
         await db.delete('purchases', id);
-        ServerAPI.remove('purchases', id).catch(() => {});
+        bgSync(() => quickServerDelete('purchases', id));
     },
 
     async getTotalCost() {
         const purchases = await this.getAll();
-        return purchases.reduce((sum, p) => sum + ((p.costPrice || 0) * (p.quantity || 1)), 0);
+        return purchases.reduce((sum, p) => sum + ((p.costPrice || p.price || 0) * (p.quantity || 1)), 0);
     }
 };
 
 // ==================== إدارة الموظفين ====================
 const Employees = {
     async getAll() {
-        const serverData = await ServerAPI.getAll('employees');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('employees'); for (const item of serverData) await db.add('employees', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('employees');
+        const local = await db.getAll('employees');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('employees');
+            if (Array.isArray(serverData)) {
+                await db.clear('employees');
+                for (const item of serverData) await db.add('employees', item);
+            }
+        });
+        return local;
     },
 
     async add(employee) {
         employee.createdAt = new Date().toISOString();
         employee.active = true;
-        const serverResult = await ServerAPI.add('employees', employee);
-        if (serverResult && serverResult.id) {
-            await db.put('employees', { ...employee, id: serverResult.id });
-            return serverResult.id;
-        }
-        return db.add('employees', employee);
+        const id = await db.add('employees', employee);
+        bgSync(() => quickServerPost('employees', { ...employee, id }));
+        return id;
     },
 
     async update(id, data) {
@@ -738,14 +688,14 @@ const Employees = {
         if (emp) {
             Object.assign(emp, data);
             await db.put('employees', emp);
-            ServerAPI.put('employees', id, emp).catch(() => {});
+            bgSync(() => quickServerPut('employees', id, emp));
         }
         return emp;
     },
 
     async delete(id) {
         await db.delete('employees', id);
-        ServerAPI.remove('employees', id).catch(() => {});
+        bgSync(() => quickServerDelete('employees', id));
     },
 
     async getActive() {
@@ -757,12 +707,15 @@ const Employees = {
 // ==================== الحضور والانصراف ====================
 const Attendance = {
     async getAll() {
-        const serverData = await ServerAPI.getAll('attendance');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('attendance'); for (const item of serverData) await db.add('attendance', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('attendance');
+        const local = await db.getAll('attendance');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('attendance');
+            if (Array.isArray(serverData)) {
+                await db.clear('attendance');
+                for (const item of serverData) await db.add('attendance', item);
+            }
+        });
+        return local;
     },
 
     async checkIn(employeeId, notes) {
@@ -771,7 +724,6 @@ const Attendance = {
         if (existing) {
             throw new Error('تم تسجيل الحضور مسبقاً اليوم');
         }
-        // Calculate late minutes based on expected start time (configurable, default 9:00 AM)
         const expectedStart = await Settings.get('workStartTime') || '09:00';
         const now = new Date();
         const expected = new Date();
@@ -790,12 +742,9 @@ const Attendance = {
             deduction: 0,
             notes: notes || ''
         };
-        const serverResult = await ServerAPI.add('attendance', record);
-        if (serverResult && serverResult.id) {
-            await db.put('attendance', { ...record, id: serverResult.id });
-            return serverResult.id;
-        }
-        return db.add('attendance', record);
+        const id = await db.add('attendance', record);
+        bgSync(() => quickServerPost('attendance', { ...record, id }));
+        return id;
     },
 
     async checkOut(employeeId) {
@@ -811,7 +760,7 @@ const Attendance = {
         const diff = new Date(existing.checkOut) - new Date(existing.checkIn);
         existing.hoursWorked = Math.round(diff / 3600000 * 10) / 10;
         await db.put('attendance', existing);
-        ServerAPI.put('attendance', existing.id, existing).catch(() => {});
+        bgSync(() => quickServerPut('attendance', existing.id, existing));
         return existing;
     },
 
@@ -820,53 +769,53 @@ const Attendance = {
         if (item) {
             Object.assign(item, data);
             await db.put('attendance', item);
-            ServerAPI.put('attendance', id, item).catch(() => {});
+            bgSync(() => quickServerPut('attendance', id, item));
         }
         return item;
     },
 
     async getByEmployeeAndDate(employeeId, date) {
-        const all = await this.getAll();
-        return all.find(a => a.employeeId === employeeId && a.date === date) || null;
+        const records = await db.getByIndex('attendance', 'employeeId', employeeId);
+        return (records || []).find(a => a.date === date) || null;
     },
 
     async getToday() {
-        const all = await this.getAll();
         const today = new Date().toISOString().split('T')[0];
-        return all.filter(a => a.date === today);
+        const records = await db.getByIndex('attendance', 'date', today);
+        return records || [];
     },
 
     async getByDateRange(startDate, endDate) {
-        const all = await this.getAll();
-        return all.filter(a => a.date >= startDate && a.date <= endDate);
+        const records = await db.getByIndexRange('attendance', 'date', startDate, endDate);
+        return records || [];
     },
 
     async getByEmployee(employeeId) {
-        const all = await this.getAll();
-        return all.filter(a => a.employeeId === employeeId);
+        const records = await db.getByIndex('attendance', 'employeeId', employeeId);
+        return records || [];
     }
 };
 
 // ==================== إدارة المصروفات ====================
 const Expenses = {
     async getAll() {
-        const serverData = await ServerAPI.getAll('expenses');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('expenses'); for (const item of serverData) await db.add('expenses', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('expenses');
+        const local = await db.getAll('expenses');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('expenses');
+            if (Array.isArray(serverData)) {
+                await db.clear('expenses');
+                for (const item of serverData) await db.add('expenses', item);
+            }
+        });
+        return local;
     },
 
     async add(expense) {
         expense.date = expense.date || new Date().toISOString().split('T')[0];
         expense.createdAt = new Date().toISOString();
-        const serverResult = await ServerAPI.add('expenses', expense);
-        if (serverResult && serverResult.id) {
-            await db.put('expenses', { ...expense, id: serverResult.id });
-            return serverResult.id;
-        }
-        return db.add('expenses', expense);
+        const id = await db.add('expenses', expense);
+        bgSync(() => quickServerPost('expenses', { ...expense, id }));
+        return id;
     },
 
     async update(id, data) {
@@ -874,24 +823,24 @@ const Expenses = {
         if (item) {
             Object.assign(item, data);
             await db.put('expenses', item);
-            ServerAPI.put('expenses', id, item).catch(() => {});
+            bgSync(() => quickServerPut('expenses', id, item));
         }
         return item;
     },
 
     async delete(id) {
         await db.delete('expenses', id);
-        ServerAPI.remove('expenses', id).catch(() => {});
+        bgSync(() => quickServerDelete('expenses', id));
     },
 
     async getByDate(date) {
-        const all = await this.getAll();
-        return all.filter(e => e.date === date);
+        const items = await db.getByIndex('expenses', 'date', date);
+        return items || [];
     },
 
     async getByDateRange(startDate, endDate) {
-        const all = await this.getAll();
-        return all.filter(e => e.date >= startDate && e.date <= endDate);
+        const items = await db.getByIndexRange('expenses', 'date', startDate, endDate);
+        return items || [];
     },
 
     async getTotalByDate(date) {
@@ -912,13 +861,7 @@ const Shifts = {
     async get(date) {
         date = date || new Date().toISOString().split('T')[0];
         const shift = await db.get('shifts', date);
-        if (shift) return shift;
-        const serverData = await ServerAPI.get('shifts', date);
-        if (serverData) {
-            await db.put('shifts', serverData);
-            return serverData;
-        }
-        return null;
+        return shift || null;
     },
 
     async open(date, openingBalance, notes) {
@@ -935,7 +878,7 @@ const Shifts = {
             notes: notes || ''
         };
         await db.put('shifts', shift);
-        ServerAPI.add('shifts', shift).catch(() => {});
+        bgSync(() => quickServerPost('shifts', shift));
         return shift;
     },
 
@@ -967,22 +910,81 @@ const Shifts = {
         };
         if (existing) Object.assign(shift, { openedAt: existing.openedAt });
         await db.put('shifts', shift);
-        ServerAPI.add('shifts', shift).catch(() => {});
+        bgSync(() => quickServerPost('shifts', shift));
         return shift;
     },
 
     async getAll() {
-        const serverData = await ServerAPI.getAll('shifts');
-        if (Array.isArray(serverData)) {
-            try { await db.clear('shifts'); for (const item of serverData) await db.add('shifts', item); } catch(e) {}
-            return serverData;
-        }
-        return db.getAll('shifts');
+        const local = await db.getAll('shifts');
+        bgSync(async () => {
+            const serverData = await quickServerFetch('shifts');
+            if (Array.isArray(serverData)) {
+                await db.clear('shifts');
+                for (const item of serverData) await db.add('shifts', item);
+            }
+        });
+        return local;
     },
 
     async getByDateRange(startDate, endDate) {
+        // Shifts use date as keyPath, so we need to iterate keys
         const all = await this.getAll();
-        return all.filter(s => s.date >= startDate && s.date <= endDate);
+        return (all || []).filter(s => s.date >= startDate && s.date <= endDate);
+    }
+};
+
+// ==================== إدارة المرتجعات ====================
+const Returns = {
+    async getAll() {
+        return db.getAll('returns');
+    },
+
+    async getById(id) {
+        return db.get('returns', id);
+    },
+
+    async getByDate(date) {
+        const items = await db.getByIndex('returns', 'date', date);
+        return items || [];
+    },
+
+    async getByDateRange(startDate, endDate) {
+        const items = await db.getByIndexRange('returns', 'date', startDate, endDate);
+        return items || [];
+    },
+
+    async getByOrder(orderId) {
+        const items = await db.getByIndex('returns', 'orderId', orderId);
+        return items || [];
+    },
+
+    async add(returnData) {
+        const record = {
+            orderId: returnData.orderId || null,
+            items: returnData.items || [],
+            reason: returnData.reason || '',
+            paymentMethod: returnData.paymentMethod || 'cash',
+            refundAmount: parseFloat(returnData.refundAmount) || 0,
+            date: returnData.date || new Date().toISOString().split('T')[0],
+            createdAt: new Date().toISOString(),
+            createdBy: returnData.createdBy || Users.getCurrentUser()?.name || 'unknown'
+        };
+        const id = await db.add('returns', record);
+        return { ...record, id };
+    },
+
+    async delete(id) {
+        await db.delete('returns', id);
+    },
+
+    async getTotalByDate(date) {
+        const items = await this.getByDate(date);
+        return items.reduce((sum, r) => sum + (r.refundAmount || 0), 0);
+    },
+
+    async getTotalByDateRange(startDate, endDate) {
+        const items = await this.getByDateRange(startDate, endDate);
+        return items.reduce((sum, r) => sum + (r.refundAmount || 0), 0);
     }
 };
 
@@ -1075,6 +1077,77 @@ const DataSync = {
 // ==================== المزامنة مع السيرفر ====================
 let SERVER_URL = localStorage.getItem('luccaServerUrl') || 'http://localhost:3000';
 
+// Quick sync — background, no blocking
+async function quickServerFetch(storeName) {
+    const url = SERVER_URL;
+    const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+    try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch(`${url}/api/${storeName}`, {
+            headers: { 'x-api-key': apiKey },
+            signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (res.ok) return await res.json();
+    } catch(e) {}
+    return null;
+}
+
+async function quickServerPost(storeName, data) {
+    const url = SERVER_URL;
+    const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+    try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch(`${url}/api/${storeName}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+            body: JSON.stringify(data),
+            signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (res.ok) return await res.json();
+    } catch(e) {}
+    return null;
+}
+
+async function quickServerPut(storeName, id, data) {
+    const url = SERVER_URL;
+    const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+    try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch(`${url}/api/${storeName}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
+            body: JSON.stringify(data),
+            signal: controller.signal
+        });
+        clearTimeout(timer);
+        return res.ok;
+    } catch(e) { return false; }
+}
+
+async function quickServerDelete(storeName, id) {
+    const url = SERVER_URL;
+    const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
+    try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 1500);
+        const res = await fetch(`${url}/api/${storeName}/${id}`, {
+            method: 'DELETE',
+            headers: { 'x-api-key': apiKey },
+            signal: controller.signal
+        });
+        clearTimeout(timer);
+        return res.ok;
+    } catch(e) { return false; }
+}
+
+// Try to sync a single item in background (fire & forget)
+function bgSync(fn) { fn().catch(() => {}); }
+
 const ServerSync = {
     setServerUrl(url) {
         localStorage.setItem('luccaServerUrl', url);
@@ -1103,7 +1176,7 @@ const ServerSync = {
                 shifts: await db.getAll('shifts')
             };
             const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), 3000);
+            const timer = setTimeout(() => controller.abort(), 5000);
             const res = await fetch(`${url}/api/sync`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey },
@@ -1148,7 +1221,10 @@ const ServerSync = {
         const url = this.getServerUrl();
         const apiKey = localStorage.getItem('luccaApiKey') || 'lucca-secret-key';
         try {
-            const res = await fetch(`${url}/api/tables`, { method: 'HEAD', cache: 'no-store', headers: { 'x-api-key': apiKey } });
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 2000);
+            const res = await fetch(`${url}/api/tables`, { method: 'HEAD', cache: 'no-store', headers: { 'x-api-key': apiKey }, signal: controller.signal });
+            clearTimeout(timer);
             return res.ok;
         } catch {
             return false;
@@ -1160,18 +1236,17 @@ const ServerSync = {
 async function initSystem() {
     await db.init();
 
-    // Auto-fetch API key from server for write operations
-    try {
-        const baseUrl = ServerAPI.getBaseUrl();
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 2000);
-        const resp = await fetch(`${baseUrl}/api/public-key`, { signal: controller.signal });
-        clearTimeout(timer);
-        if (resp.ok) {
-            const data = await resp.json();
-            if (data.apiKey) localStorage.setItem('luccaApiKey', data.apiKey);
-        }
-    } catch(e) {}
+    // Auto-fetch API key from server (background, no blocking)
+    bgSync(async () => {
+        try {
+            const baseUrl = ServerSync.getServerUrl();
+            const resp = await fetch(`${baseUrl}/api/public-key`, { signal: AbortSignal.timeout(2000) });
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.apiKey) localStorage.setItem('luccaApiKey', data.apiKey);
+            }
+        } catch(e) {}
+    });
 
     await Tables.init();
     await Users.createDefaultAdmin();
@@ -1203,4 +1278,4 @@ async function initSystem() {
 }
 
 // تصدير للاستخدام
-window.LuccaDB = { db, Users, Tables, Orders, Customers, Settings, Inventory, Purchases, Employees, Attendance, Expenses, Shifts, MenuSync, DataSync, ServerSync, initSystem };
+window.LuccaDB = { db, Users, Tables, Orders, Customers, Settings, Inventory, Purchases, Employees, Attendance, Expenses, Shifts, Returns, MenuSync, DataSync, ServerSync, initSystem };

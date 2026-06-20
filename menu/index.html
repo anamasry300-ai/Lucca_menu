@@ -10,12 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lucca Menu">
     <link rel="apple-touch-icon" href="icon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../admin/database.js"></script>
-    <link rel="stylesheet" href="admin-styles.css">
     <style>
         html { scroll-behavior: smooth; }
         :root {
@@ -38,7 +33,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         button { touch-action: manipulation; }
         body {
-            font-family: 'Tajawal', sans-serif;
+            font-family: 'Segoe UI', 'Tajawal', 'Cairo', 'Arabic Typesetting', sans-serif;
             background: 
                 radial-gradient(ellipse 120% 80% at 50% -20%, rgba(212,168,90,0.06) 0%, transparent 70%),
                 radial-gradient(ellipse 80% 120% at 80% 50%, rgba(166,123,91,0.05) 0%, transparent 60%),
@@ -551,7 +546,8 @@
         .back-to-top.show { display: flex; }
         .back-to-top:active { transform: scale(0.9); }
         .back-to-top:hover { box-shadow: 0 6px 24px rgba(62,35,18,0.5); }
-        .admin-float {
+        /* ========== POS MODE ========== */
+        .pos-toggle-btn {
             position: fixed; left: 16px; bottom: 80px; z-index: 999;
             width: 48px; height: 48px; border-radius: 50%;
             background: var(--coffee-700); color: var(--foam);
@@ -560,130 +556,178 @@
             font-size: 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
             transition: transform 0.2s;
         }
-        .admin-float:active { transform: scale(0.9); }
-        .admin-float.logged-in { background: var(--gold); color: var(--coffee-900); }
+        .pos-toggle-btn:active { transform: scale(0.9); }
+        .pos-toggle-btn.active { background: var(--gold); color: var(--coffee-900); }
 
-        /* Staff Login Modal */
-        .staff-overlay {
-            position: fixed; inset:0; background:rgba(26,15,10,0.7);
-            backdrop-filter:blur(4px); z-index:9999;
+        /* POS Overlay */
+        .pos-overlay {
+            position: fixed; inset:0; background:rgba(26,15,10,0.85);
+            backdrop-filter:blur(4px); z-index:9995;
+            display:none; flex-direction:column;
         }
-        .staff-modal {
-            position:fixed; inset:0; display:flex; align-items:center;
-            justify-content:center; z-index:10000;
-        }
-        .staff-modal-inner {
-            background:var(--foam); padding:28px 24px; border-radius:var(--radius-lg);
-            width:88%; max-width:340px; text-align:center;
-            box-shadow:0 20px 60px rgba(0,0,0,0.4);
-        }
-        .staff-modal-inner h3 {
-            font-family:'Cairo',sans-serif; color:var(--coffee-900);
-            margin:10px 0 6px; font-size:1.2rem;
-        }
-        .staff-modal-inner p.sub {
-            color:var(--coffee-300); font-size:0.85rem; margin-bottom:18px;
-        }
-        .staff-modal-inner input {
-            width:100%; padding:14px; border:2px solid var(--cream);
-            border-radius:var(--radius-sm); font-size:1rem;
-            font-family:'Tajawal',sans-serif; text-align:center;
-            margin-bottom:10px; outline:none; transition:border-color 0.2s;
-            box-sizing:border-box;
-        }
-        .staff-modal-inner input:focus { border-color:var(--gold); }
-        .staff-modal-inner .staff-btn {
-            width:100%; padding:14px; background:var(--coffee-700); color:var(--gold);
-            border:none; border-radius:var(--radius-sm); font-size:1rem;
-            font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer;
-            transition:background 0.2s;
-        }
-        .staff-modal-inner .staff-btn:active { background:var(--coffee-900); }
-        .staff-modal-inner .staff-btn.secondary { background:var(--cream); color:var(--coffee-700); margin-top:8px; }
-        .staff-error { color:#e74c3c; font-size:0.85rem; margin-bottom:10px; }
-
-        /* Management Panel */
-        .staff-panel {
-            position:fixed; bottom:0; left:0; right:0; z-index:9997;
-            background:var(--coffee-900); border-top:2px solid var(--gold);
-            box-shadow:0 -4px 24px rgba(0,0,0,0.3);
-            transition:transform 0.3s ease; max-height:65vh;
-            display:flex; flex-direction:column;
-        }
-        .staff-panel.hidden { transform:translateY(100%); }
-        .staff-bar {
+        .pos-overlay.open { display:flex; }
+        .pos-header {
             display:flex; justify-content:space-between; align-items:center;
-            padding:10px 16px;
+            padding:12px 20px; background:var(--coffee-900);
+            border-bottom:1px solid rgba(212,168,90,0.3);
         }
-        .staff-bar-title { font-family:'Cairo',sans-serif; color:var(--gold); font-size:1rem; }
-        .staff-bar-actions { display:flex; gap:8px; }
-        .staff-bar-actions button {
-            background:none; border:1px solid var(--gold); color:var(--gold);
-            padding:4px 12px; border-radius:6px; font-family:'Tajawal',sans-serif;
-            font-size:0.8rem; cursor:pointer; transition:0.15s;
+        .pos-header-title { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.2rem; }
+        .pos-header-actions { display:flex; gap:10px; align-items:center; }
+        .pos-btn {
+            padding:8px 16px; border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-weight:700; font-size:0.9rem; cursor:pointer; border:none; transition:0.15s;
         }
-        .staff-bar-actions button:active { background:var(--gold); color:var(--coffee-900); }
-        .staff-tabs {
-            display:flex; gap:4px; padding:0 16px;
+        .pos-btn-sm { padding:6px 12px; font-size:0.8rem; }
+        .pos-btn-gold { background:var(--gold); color:var(--coffee-900); }
+        .pos-btn-gold:active { opacity:0.8; }
+        .pos-btn-outline { background:transparent; border:1px solid var(--gold); color:var(--gold); }
+        .pos-btn-outline:active { background:var(--gold); color:var(--coffee-900); }
+        .pos-btn-danger { background:#c0392b; color:var(--foam); }
+        .pos-btn-danger:active { opacity:0.8; }
+
+        /* POS Body */
+        .pos-body {
+            display:flex; flex:1; overflow:hidden;
         }
-        .staff-tab {
-            flex:1; padding:10px; background:transparent; color:var(--coffee-300);
-            border:none; border-bottom:2px solid transparent;
-            font-family:'Tajawal',sans-serif; font-size:0.9rem; cursor:pointer;
-            transition:0.15s;
+        /* Tables Side */
+        .pos-tables-side {
+            width:240px; overflow-y:auto; padding:12px 10px;
+            border-left:1px solid rgba(255,255,255,0.06);
+            background:rgba(0,0,0,0.15);
         }
-        .staff-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
-        .staff-tab:active { opacity:0.7; }
-        .staff-content {
-            padding:12px 16px; overflow-y:auto; flex:1;
-            min-height:100px;
+        .pos-tables-side h4 {
+            color:var(--gold); font-family:'Cairo',sans-serif;
+            margin:0 0 10px; font-size:0.95rem; text-align:center;
         }
-        .staff-content .stat-row {
-            display:flex; justify-content:space-between; gap:8px; margin-bottom:8px;
+        .pos-tables-grid {
+            display:grid; grid-template-columns:1fr 1fr; gap:8px;
         }
-        .staff-content .stat-card {
-            flex:1; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm);
-            padding:12px 8px; text-align:center;
+        .pos-table-card {
+            padding:16px 8px; border-radius:8px; text-align:center;
+            cursor:pointer; transition:0.15s; border:2px solid transparent;
+            background:rgba(255,255,255,0.05);
         }
-        .staff-content .stat-card .num { font-size:1.2rem; font-weight:700; color:var(--gold); }
-        .staff-content .stat-card .lbl { font-size:0.75rem; color:var(--coffee-300); margin-top:4px; }
-        .staff-content .form-group { margin-bottom:10px; }
-        .staff-content .form-group label { display:block; color:var(--coffee-300); font-size:0.85rem; margin-bottom:4px; }
-        .staff-content .form-group input, .staff-content .form-group select {
-            width:100%; padding:10px; border:1px solid rgba(255,255,255,0.15);
-            border-radius:6px; background:rgba(255,255,255,0.08); color:var(--foam);
-            font-family:'Tajawal',sans-serif; font-size:0.9rem; outline:none;
-            box-sizing:border-box;
+        .pos-table-card:active { transform:scale(0.95); }
+        .pos-table-card.available { border-color:#27ae60; }
+        .pos-table-card.occupied { border-color:#e74c3c; }
+        .pos-table-card.selected { border-color:var(--gold); background:rgba(212,168,90,0.15); }
+        .pos-table-card .num { font-size:1.4rem; font-weight:700; color:var(--foam); }
+        .pos-table-card .status-text { font-size:0.65rem; margin-top:4px; }
+        .pos-table-card.available .status-text { color:#27ae60; }
+        .pos-table-card.occupied .status-text { color:#e74c3c; }
+        .pos-table-card .order-total-badge {
+            font-size:0.7rem; color:var(--gold); margin-top:2px;
         }
-        .staff-content .form-group select option { background:var(--coffee-900); color:var(--foam); }
-        .staff-content .form-group input:focus { border-color:var(--gold); }
-        .staff-submit {
-            width:100%; padding:12px; background:var(--gold); color:var(--coffee-900);
-            border:none; border-radius:6px; font-family:'Tajawal',sans-serif;
-            font-weight:700; font-size:0.95rem; cursor:pointer; transition:0.15s;
+
+        /* Order Panel */
+        .pos-order-panel {
+            flex:1; display:flex; flex-direction:column; overflow:hidden;
         }
-        .staff-submit:active { opacity:0.8; }
-        .staff-toast {
-            position:fixed; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%);
-            background:var(--gold); color:var(--coffee-900); padding:8px 20px;
-            border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:500;
-            font-size:0.9rem; z-index:99999; opacity:0; transition:opacity 0.3s;
-            pointer-events:none; white-space:nowrap;
+        .pos-order-header {
+            padding:10px 16px; background:rgba(0,0,0,0.2);
+            display:flex; justify-content:space-between; align-items:center;
+            border-bottom:1px solid rgba(255,255,255,0.06);
         }
-        .staff-toast.show { opacity:1; }
-        .staff-close-panel {
-            position:absolute; top:8px; left:8px; background:none; border:none;
-            color:var(--coffee-300); font-size:1.2rem; cursor:pointer;
+        .pos-order-header h3 { margin:0; color:var(--gold); font-size:1rem; }
+        .pos-order-header .table-label { color:var(--foam); font-size:0.85rem; }
+        .pos-order-items {
+            flex:1; overflow-y:auto; padding:8px 16px;
         }
-        .staff-toggle-btn {
-            position:fixed; left:16px; bottom:136px; z-index:9998;
-            width:44px; height:44px; border-radius:50%;
-            background:var(--gold); color:var(--coffee-900);
-            border:2px solid var(--gold); cursor:pointer;
+        .pos-order-item {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+        }
+        .pos-order-item .name { color:var(--foam); font-size:0.9rem; }
+        .pos-order-item .qty { color:var(--coffee-300); font-size:0.8rem; margin:0 8px; }
+        .pos-order-item .price { color:var(--gold); font-size:0.9rem; font-weight:700; }
+        .pos-order-item .remove-btn {
+            background:none; border:none; color:#e74c3c; cursor:pointer;
+            font-size:1.1rem; padding:2px 6px;
+        }
+        .pos-order-empty {
+            text-align:center; color:var(--coffee-300); padding:40px 0;
+        }
+        .pos-order-footer {
+            padding:12px 16px; background:rgba(0,0,0,0.2);
+            border-top:1px solid rgba(255,255,255,0.06);
+        }
+        .pos-order-total-row {
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:10px;
+        }
+        .pos-order-total-row .label { color:var(--coffee-300); font-size:0.9rem; }
+        .pos-order-total-row .amount { color:var(--gold); font-size:1.3rem; font-weight:700; }
+        .pos-order-actions { display:flex; gap:8px; }
+        .pos-order-actions button { flex:1; }
+
+        /* Category selector in POS */
+        .pos-cats {
+            display:flex; gap:4px; padding:8px 16px; overflow-x:auto;
+            background:rgba(0,0,0,0.1); border-bottom:1px solid rgba(255,255,255,0.06);
+        }
+        .pos-cat-btn {
+            padding:6px 14px; border-radius:16px; border:1px solid rgba(255,255,255,0.1);
+            background:transparent; color:var(--coffee-300); font-family:'Tajawal',sans-serif;
+            font-size:0.8rem; cursor:pointer; white-space:nowrap; transition:0.15s;
+        }
+        .pos-cat-btn.active { background:var(--gold); color:var(--coffee-900); border-color:var(--gold); }
+        .pos-cat-btn:active { opacity:0.7; }
+
+        /* POS Items grid */
+        .pos-items-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+            gap:8px; padding:8px 16px; overflow-y:auto;
+        }
+        .pos-item-card {
+            background:rgba(255,255,255,0.05); border-radius:8px;
+            padding:12px 8px; text-align:center; cursor:pointer;
+            border:1px solid transparent; transition:0.15s;
+        }
+        .pos-item-card:active { background:rgba(212,168,90,0.15); border-color:var(--gold); }
+        .pos-item-card .item-name { color:var(--foam); font-size:0.85rem; }
+        .pos-item-card .item-price { color:var(--gold); font-size:0.9rem; font-weight:700; margin-top:4px; }
+
+        /* Payment Modal */
+        .pay-overlay {
+            position:fixed; inset:0; background:rgba(26,15,10,0.8);
+            backdrop-filter:blur(4px); z-index:10000;
             display:none; align-items:center; justify-content:center;
-            font-size:1.1rem; box-shadow:0 4px 16px rgba(0,0,0,0.4);
         }
-        .staff-toggle-btn.show { display:flex; }
+        .pay-overlay.open { display:flex; }
+        .pay-modal {
+            background:var(--foam); border-radius:var(--radius-lg);
+            padding:24px; width:92%; max-width:400px; max-height:90vh; overflow-y:auto;
+            box-shadow:0 20px 60px rgba(0,0,0,0.5);
+        }
+        .pay-modal h3 { font-family:'Cairo',sans-serif; color:var(--coffee-900); margin:0 0 16px; font-size:1.1rem; text-align:center; }
+        .pay-total-display {
+            text-align:center; font-size:1.8rem; font-weight:700;
+            color:var(--coffee-900); margin-bottom:16px;
+        }
+        .pay-methods {
+            display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;
+        }
+        .pay-method-btn {
+            padding:12px; border:2px solid var(--cream); border-radius:var(--radius-sm);
+            background:var(--cream); font-family:'Tajawal',sans-serif;
+            font-size:0.9rem; cursor:pointer; transition:0.15s; text-align:center;
+        }
+        .pay-method-btn.active { border-color:var(--gold); background:var(--gold); color:var(--coffee-900); }
+        .pay-method-btn:active { opacity:0.8; }
+        .pay-method-btn .sub { display:block; font-size:0.7rem; opacity:0.7; margin-top:2px; }
+        .pay-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .pay-row label { color:var(--coffee-700); font-size:0.85rem; }
+        .pay-row input {
+            width:120px; padding:8px; border:2px solid var(--cream);
+            border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-size:0.9rem; text-align:center; direction:ltr;
+        }
+        .pay-row input:focus { border-color:var(--gold); outline:none; }
+        .pay-change { text-align:center; font-size:1.2rem; font-weight:700; color:#27ae60; margin:8px 0; }
+        .pay-actions { display:flex; gap:8px; margin-top:16px; }
+        .pay-actions button { flex:1; }
+
+        .cart-fab.pos-hidden { display:none !important; }
 
         @media (min-width: 768px) {
             body { padding: 0; background: #E8E4DA; }
@@ -692,9 +736,8 @@
             .brand-logo { width: 240px; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
-            .admin-float { left: 24px; bottom: 80px; }
-            .staff-toggle-btn { left:24px; bottom:136px; }
-            .staff-panel { left:auto; right:24px; bottom:24px; width:360px; border-radius:var(--radius-md); border:1px solid var(--gold); max-height:70vh; }
+            .pos-toggle-btn { left: 24px; bottom: 80px; }
+            .pos-tables-side { width:280px; }
         }
     </style>
 </head>
@@ -754,348 +797,7 @@
 
     <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
-    <button class="admin-float" id="adminFloat" onclick="openStaffLogin()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
-    <button class="staff-toggle-btn" id="staffToggleBtn" onclick="toggleStaffPanel()" aria-label="لوحة المحاسبة">📊</button>
-
-    <!-- Staff Login Modal -->
-    <div id="staffLoginOverlay" class="staff-overlay" style="display:none;" onclick="closeStaffLogin()"></div>
-    <div id="staffLoginModal" class="staff-modal" style="display:none;">
-        <div class="staff-modal-inner" onclick="event.stopPropagation()">
-            <img src="logo.svg?v=6" alt="Lucca" style="height:50px;margin-bottom:4px;">
-            <h3>لوحة المحاسبة</h3>
-            <p class="sub">تسجيل الدخول لإدارة المشتريات والمصروفات</p>
-            <input type="password" id="staffPassInput" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')staffLogin()">
-            <div id="staffLoginError" class="staff-error" style="display:none;">❌ كلمة المرور خطأ</div>
-            <button class="staff-btn" onclick="staffLogin()">تسجيل الدخول</button>
-            <button class="staff-btn secondary" onclick="closeStaffLogin()">إلغاء</button>
-        </div>
-    </div>
-
-    <!-- Management Panel -->
-    <div id="staffPanel" class="staff-panel hidden">
-        <button class="staff-close-panel" onclick="closeStaffPanel()" aria-label="إغلاق">✕</button>
-        <div class="staff-bar">
-            <span class="staff-bar-title">📊 لوحة المحاسبة</span>
-            <div class="staff-bar-actions">
-                <button onclick="openAdminPanel()">🖥️ فتح اللوحة الكاملة</button>
-                <button onclick="staffLogout()">تسجيل خروج</button>
-            </div>
-        </div>
-        <div class="staff-tabs" id="staffTabs">
-            <button class="staff-tab active" onclick="switchStaffTab('summary')">📋 ملخص اليوم</button>
-            <button class="staff-tab" onclick="switchStaffTab('purchase')">🛒 مشتريات</button>
-            <button class="staff-tab" onclick="switchStaffTab('expense')">💰 مصروفات</button>
-        </div>
-        <div class="staff-content" id="staffContent"></div>
-    </div>
-
-    <div id="staffToast" class="staff-toast"></div>
-
-    <div id="adminToast" class="admin-toast"></div>
-
-    <!-- Admin Overlay for modals -->
-    <div id="closeShiftOverlay" class="admin-overlay" onclick="document.getElementById('closeShiftModal').style.display='none';this.style.display='none';"></div>
-
-    <!-- Close Shift Modal -->
-    <div id="closeShiftModal" class="admin-modal">
-        <div class="admin-modal-inner" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="document.getElementById('closeShiftModal').style.display='none';document.getElementById('closeShiftOverlay').style.display='none';">✕</button>
-            <h3>🔒 إقفال الوردية</h3>
-            <div class="row">
-                <label>المبلغ الفعلي في الصندوق (ج.م)</label>
-                <input type="number" id="cs-actual" class="admin-input full" placeholder="مثال: 1500" min="0" step="0.5">
-            </div>
-            <div class="row">
-                <button class="admin-btn admin-btn-primary" onclick="crConfirmClose()" style="width:100%;">🔒 تأكيد الإقفال</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== Full Admin Panel ========== -->
-    <div id="adminWrapper" class="admin-wrapper">
-        <div style="position:fixed;inset:0;background:var(--coffee-900);z-index:9996;display:flex;flex-direction:column;overflow:hidden;">
-            <!-- Header -->
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--coffee-900);border-bottom:1px solid rgba(212,168,90,0.3);z-index:2;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="logo.svg?v=6" alt="Lucca" style="height:36px;">
-                    <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;">Lucca</span>
-                    <span style="color:var(--coffee-300);font-size:0.8rem;">SPECIALTY COFFEE</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="color:var(--coffee-300);font-size:0.85rem;" id="adminUserName">مدير النظام</span>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="closeAdminPanel()">✕ إغلاق</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="staffLogout()">تسجيل خروج</button>
-                </div>
-            </div>
-            <!-- Body: Sidebar + Content -->
-            <div style="display:flex;flex:1;overflow:hidden;">
-                <!-- Sidebar -->
-                <div class="admin-sidebar" style="border-left:1px solid rgba(255,255,255,0.06);padding:12px 8px;overflow-y:auto;">
-                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">📊</span> لوحة التحكم</button>
-                    <button class="admin-sidebar-btn" data-tab="cashier" onclick="showAdminTab('cashier')"><span class="icon">💰</span> صندوق اليومية</button>
-                    <button class="admin-sidebar-btn" data-tab="purchases" onclick="showAdminTab('purchases')"><span class="icon">🛒</span> المشتريات</button>
-                    <button class="admin-sidebar-btn" data-tab="employees" onclick="showAdminTab('employees')"><span class="icon">👨‍💼</span> الموظفين</button>
-                    <button class="admin-sidebar-btn" data-tab="reports" onclick="showAdminTab('reports')"><span class="icon">📋</span> التقارير</button>
-                    <button class="admin-sidebar-btn" data-tab="kitchen" onclick="showAdminTab('kitchen')"><span class="icon">🍳</span> المطبخ</button>
-                    <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><span class="icon">⚙️</span> الإعدادات</button>
-                </div>
-                <!-- Main Content -->
-                <div class="admin-main" style="overflow-y:auto;padding:16px 20px;">
-
-                    <!-- Dashboard Tab -->
-                    <div class="admin-tab active" id="at-dashboard">
-                        <h3>📊 لوحة التحكم</h3>
-                        <div class="stats-grid">
-                            <div class="stat-card"><div class="icon-big">🧾</div><div class="val" id="dash-orders">0</div><div class="lbl">طلبات اليوم</div></div>
-                            <div class="stat-card"><div class="icon-big">💰</div><div class="val" id="dash-sales">0</div><div class="lbl">مبيعات (ج.م)</div></div>
-                            <div class="stat-card"><div class="icon-big">💵</div><div class="val" id="dash-cash">0</div><div class="lbl">نقدي</div></div>
-                            <div class="stat-card"><div class="icon-big">💳</div><div class="val" id="dash-card">0</div><div class="lbl">فيزا</div></div>
-                        </div>
-                        <div class="section-card">
-                            <h4>🔗 روابط سريعة</h4>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('cashier')">💰 صندوق اليومية</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('purchases')">🛒 إضافة مشتريات</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('employees')">👨‍💼 تسجيل حضور</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('reports')">📋 التقارير</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>🔗 الاتصال بالسيرفر</h4>
-                            <div class="row">
-                                <span id="dash-server-status" style="font-size:0.9rem;">⏳ جاري الفحص...</span>
-                                <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="checkServerStatus()">🔄</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>📱 رابط المنيو</h4>
-                            <div class="row">
-                                <input type="text" class="admin-input full" id="dash-menu-url" readonly style="font-size:0.8rem;" onclick="this.select()">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cashier Tab -->
-                    <div class="admin-tab" id="at-cashier">
-                        <h3>💰 صندوق اليومية</h3>
-                        <div class="section-card">
-                            <div class="row">
-                                <label>التاريخ</label>
-                                <input type="date" id="crDate" class="admin-input sm" onchange="crLoadDay()">
-                                <span id="crShiftStatus" style="color:var(--coffee-300);font-size:0.85rem;"></span>
-                            </div>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" id="crOpenBtn" onclick="crOpenShift()">🔓 فتح الوردية</button>
-                                <button class="admin-btn admin-btn-danger admin-btn-sm" id="crCloseBtn" style="display:none;" onclick="crCloseShiftDialog()">🔒 إقفال الوردية</button>
-                            </div>
-                        </div>
-                        <div class="section-card" id="crOpeningSection" style="display:none;">
-                            <h4>رصيد الافتتاح</h4>
-                            <div class="row">
-                                <input type="number" id="crOpeningAmount" class="admin-input sm" placeholder="المبلغ" min="0">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crSaveOpening()">💾 حفظ</button>
-                            </div>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card"><div class="val" id="cr-cash">0</div><div class="lbl">مبيعات نقدي</div></div>
-                            <div class="stat-card"><div class="val" id="cr-card">0</div><div class="lbl">مبيعات فيزا</div></div>
-                            <div class="stat-card"><div class="val" id="cr-total">0</div><div class="lbl">إجمالي المبيعات</div></div>
-                            <div class="stat-card"><div class="val" id="cr-exp">0</div><div class="lbl">إجمالي المصروفات</div></div>
-                            <div class="stat-card highlight"><div class="val" id="cr-expected">0</div><div class="lbl">المتوقع بالصندوق</div></div>
-                            <div class="stat-card" id="cr-actual-row" style="display:none;"><div class="val" id="cr-actual">0</div><div class="lbl">الفعلي</div></div>
-                            <div class="stat-card" id="cr-diff-row" style="display:none;"><div class="val" id="cr-diff">0</div><div class="lbl">الفارق</div></div>
-                        </div>
-                        <div class="section-card">
-                            <h4>➕ إضافة مصروف</h4>
-                            <div class="row">
-                                <select id="crExpCat" class="admin-select sm">
-                                    <option value="إيجار">إيجار</option><option value="رواتب">رواتب</option>
-                                    <option value="مشتريات">مشتريات</option><option value="صيانة">صيانة</option>
-                                    <option value="كهرباء">كهرباء</option><option value="مياه">مياه</option>
-                                    <option value="إنترنت">إنترنت</option><option value="تسويق">تسويق</option>
-                                    <option value="نقل">نقل</option><option value="أخرى">أخرى</option>
-                                </select>
-                                <input type="number" id="crExpAmt" class="admin-input sm" placeholder="المبلغ" min="0">
-                                <input type="text" id="crExpNote" class="admin-input sm" placeholder="ملاحظات">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crAddExpense()">➕ إضافة</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>📋 سجل المصروفات</h4>
-                            <div class="admin-table-wrap">
-                                <table class="admin-table">
-                                    <thead><tr><th>التصنيف</th><th>المبلغ</th><th>ملاحظات</th><th></th></tr></thead>
-                                    <tbody id="cr-expenses-body"><tr class="empty"><td colspan="4">جاري التحميل...</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Purchases Tab -->
-                    <div class="admin-tab" id="at-purchases">
-                        <h3>🛒 المشتريات</h3>
-                        <div class="section-card">
-                            <h4>➕ إضافة مشتريات</h4>
-                            <div class="row">
-                                <input type="text" id="pur-item" class="admin-input md" placeholder="اسم الصنف">
-                                <input type="number" id="pur-qty" class="admin-input sm" placeholder="الكمية" value="1" min="1" style="width:80px;">
-                                <input type="number" id="pur-cost" class="admin-input sm" placeholder="التكلفة" min="0" step="0.5">
-                                <button class="admin-btn admin-btn-primary" onclick="addPurchase()">💾 حفظ</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                                <h4 style="margin:0;">📋 سجل المشتريات</h4>
-                                <span style="color:var(--gold);font-size:0.9rem;">الإجمالي: <strong id="pur-total-cost">0</strong> ج.م</span>
-                            </div>
-                            <div class="admin-table-wrap">
-                                <table class="admin-table">
-                                    <thead><tr><th>الصنف</th><th>الكمية</th><th>التكلفة</th><th>التاريخ</th><th></th></tr></thead>
-                                    <tbody id="purchases-body"><tr class="empty"><td colspan="5">جاري التحميل...</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Employees Tab -->
-                    <div class="admin-tab" id="at-employees">
-                        <h3>👨‍💼 الموظفين</h3>
-                        <div class="section-card">
-                            <h4>➕ إضافة موظف</h4>
-                            <div class="row">
-                                <input type="text" id="emp-name" class="admin-input md" placeholder="الاسم">
-                                <input type="text" id="emp-phone" class="admin-input sm" placeholder="الهاتف">
-                                <select id="emp-role" class="admin-select sm">
-                                    <option value="موظف">موظف</option><option value="كاشير">كاشير</option>
-                                    <option value="باريستا">باريستا</option><option value="مشرف">مشرف</option>
-                                    <option value="مدير">مدير</option>
-                                </select>
-                                <button class="admin-btn admin-btn-primary" onclick="addEmployee()">➕ إضافة</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>📋 قائمة الموظفين</h4>
-                            <div id="employees-list" style="color:var(--coffee-300);">جاري التحميل...</div>
-                        </div>
-
-                        <h3 style="margin-top:20px;">📋 الحضور والانصراف</h3>
-                        <div class="section-card">
-                            <div class="row">
-                                <select id="att-emp" class="admin-select sm"><option value="">— اختر موظفاً —</option></select>
-                                <input type="number" id="att-late" class="admin-input sm" placeholder="تأخير (دقائق)" value="0" min="0" style="width:100px;">
-                                <input type="text" id="att-notes" class="admin-input sm" placeholder="ملاحظات">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="checkInEmployee()">✅ تسجيل حضور</button>
-                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="checkOutEmployee()">🔴 انصراف</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>سجل اليوم</h4>
-                            <div class="admin-table-wrap">
-                                <table class="admin-table">
-                                    <thead><tr><th>الموظف</th><th>الحضور</th><th>الانصراف</th><th>تأخير</th><th>مكافأة/خصم</th><th></th></tr></thead>
-                                    <tbody id="att-body"><tr class="empty"><td colspan="6">جاري التحميل...</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Reports Tab -->
-                    <div class="admin-tab" id="at-reports">
-                        <h3>📋 التقارير</h3>
-                        <div class="section-card">
-                            <div class="row">
-                                <label>من</label>
-                                <input type="date" id="rpt-from" class="admin-input sm" onchange="loadReport()">
-                                <label>إلى</label>
-                                <input type="date" id="rpt-to" class="admin-input sm" onchange="loadReport()">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="setDefaultReportDates();loadReport();">📅 هذا الشهر</button>
-                            </div>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-card"><div class="val" id="rpt-orders">0</div><div class="lbl">عدد الطلبات</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-sales">0</div><div class="lbl">إجمالي المبيعات</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-cash">0</div><div class="lbl">نقدي</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-visa">0</div><div class="lbl">فيزا</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-avg">0</div><div class="lbl">متوسط الطلب</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-expenses">0</div><div class="lbl">مصروفات</div></div>
-                            <div class="stat-card"><div class="val" id="rpt-cogs">0</div><div class="lbl">تكلفة المشتريات</div></div>
-                            <div class="stat-card highlight"><div class="val" id="rpt-profit">0</div><div class="lbl">صافي الربح</div></div>
-                            <div class="stat-card highlight"><div class="val" id="rpt-margin">0%</div><div class="lbl">هامش الربح</div></div>
-                        </div>
-                        <div class="section-card">
-                            <h4>تفاصيل الطلبات</h4>
-                            <div class="admin-table-wrap">
-                                <table class="admin-table">
-                                    <thead><tr><th>#</th><th>طاولة</th><th>المبلغ</th><th>الدفع</th><th>الحالة</th><th>التاريخ</th></tr></thead>
-                                    <tbody id="rpt-body"><tr class="empty"><td colspan="6">اختر الفترة</td></tr></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kitchen Tab -->
-                    <div class="admin-tab" id="at-kitchen">
-                        <h3>🍳 المطبخ</h3>
-                        <div class="section-card">
-                            <div class="row">
-                                <span style="color:var(--gold);font-size:1.1rem;" id="kitchen-count">0</span>
-                                <span style="color:var(--coffee-300);">طلبات معلقة</span>
-                                <label style="margin-right:20px;color:var(--coffee-300);font-size:0.85rem;">
-                                    <input type="checkbox" id="kitchen-sound" checked onchange="toggleKitchenSound()"> 🔔 صوت
-                                </label>
-                                <label style="color:var(--coffee-300);font-size:0.85rem;">
-                                    <input type="checkbox" id="kitchen-all" onchange="loadKitchen()"> عرض الكل
-                                </label>
-                            </div>
-                        </div>
-                        <div id="kitchen-grid" class="kitchen-grid">
-                            <div style="text-align:center;color:var(--coffee-300);padding:30px;">جاري التحميل...</div>
-                        </div>
-                    </div>
-
-                    <!-- Settings Tab -->
-                    <div class="admin-tab" id="at-settings">
-                        <h3>⚙️ الإعدادات</h3>
-                        <div class="section-card">
-                            <h4>🔗 الاتصال بالسيرفر</h4>
-                            <div class="row">
-                                <label>رابط السيرفر</label>
-                                <input type="text" id="set-server-url" class="admin-input md" placeholder="http://localhost:3000" style="direction:ltr;">
-                                <span id="server-status" style="font-size:0.85rem;padding:4px 10px;border-radius:6px;">⏳...</span>
-                            </div>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="testServerConnection()">🔄 اختبار الاتصال</button>
-                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="syncNow()">📤 مزامنة البيانات</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>إعدادات النظام</h4>
-                            <div class="row">
-                                <label>رقم واتساب</label>
-                                <input type="text" id="set-whatsapp" class="admin-input md" placeholder="مثال: 201010058989">
-                            </div>
-                            <div class="row">
-                                <label>بداية الدوام</label>
-                                <input type="time" id="set-workstart" class="admin-input sm" value="09:00">
-                            </div>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>💾 إدارة البيانات</h4>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="exportAllData()">📤 تصدير البيانات</button>
-                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="triggerImport()">📥 استيراد البيانات</button>
-                                <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(this)">
-                            </div>
-                        </div>
-                    </div>
-
-                </div><!-- /admin-main -->
-            </div><!-- /flex body -->
-        </div><!-- /fixed overlay -->
-    </div><!-- /adminWrapper -->
+    
 
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
@@ -1136,7 +838,77 @@
     <!-- Toast -->
     <div id="cartToast" class="cart-toast"></div>
 
-    <script src="admin-integration.js"></script>
+    <!-- POS Toggle -->
+    <button class="pos-toggle-btn" id="posToggle" onclick="togglePos()" title="نظام نقاط البيع" aria-label="POS">💻</button>
+
+    <!-- POS Overlay -->
+    <div class="pos-overlay" id="posOverlay">
+        <div class="pos-header">
+            <div class="pos-header-title">☕ Lucca — POS</div>
+            <div class="pos-header-actions">
+                <span id="posSelectedTable" style="color:var(--foam);font-size:0.9rem;"></span>
+                <button class="pos-btn pos-btn-sm pos-btn-danger" onclick="resetPosOrder()" id="posResetBtn" style="display:none;">✕ تفريغ</button>
+                <button class="pos-btn pos-btn-sm pos-btn-outline" onclick="togglePos()">✕ إغلاق</button>
+            </div>
+        </div>
+        <div class="pos-body">
+            <!-- Tables Side -->
+            <div class="pos-tables-side">
+                <h4>🪑 الطاولات</h4>
+                <div class="pos-tables-grid" id="posTablesGrid"></div>
+            </div>
+            <!-- Order Panel -->
+            <div class="pos-order-panel">
+                <div class="pos-order-header">
+                    <h3>🧾 الطلب</h3>
+                    <span class="table-label" id="posOrderTableLabel">اختر طاولة</span>
+                </div>
+                <div class="pos-cats" id="posCats"></div>
+                <div class="pos-items-grid" id="posItemsGrid"></div>
+                <div class="pos-order-items" id="posOrderItems">
+                    <div class="pos-order-empty">👈 اختر طاولة لبدء الطلب</div>
+                </div>
+                <div class="pos-order-footer" id="posOrderFooter" style="display:none;">
+                    <div class="pos-order-total-row">
+                        <span class="label">الإجمالي:</span>
+                        <span class="amount" id="posOrderTotal">0 ج.م</span>
+                    </div>
+                    <div class="pos-order-actions">
+                        <button class="pos-btn pos-btn-gold" onclick="openPayModal()">💰 دفع</button>
+                        <button class="pos-btn pos-btn-outline" onclick="printPosOrder()">🖨️ طباعة</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="pay-overlay" id="payOverlay">
+        <div class="pay-modal">
+            <h3>💰 الدفع</h3>
+            <div class="pay-total-display" id="payTotalDisplay">0 ج.م</div>
+            <div class="pay-methods" id="payMethods">
+                <button class="pay-method-btn active" data-method="cash" onclick="selectPayMethod('cash')">💵 نقدي<span class="sub">Cash</span></button>
+                <button class="pay-method-btn" data-method="visa" onclick="selectPayMethod('visa')">💳 فيزا<span class="sub">Visa</span></button>
+                <button class="pay-method-btn" data-method="instapay" onclick="selectPayMethod('instapay')">📱 انستا باي<span class="sub">InstaPay</span></button>
+                <button class="pay-method-btn" data-method="bank" onclick="selectPayMethod('bank')">🏦 تحويل بنكي<span class="sub">Bank</span></button>
+            </div>
+            <div class="pay-row">
+                <label>💰 المدفوع</label>
+                <input type="number" id="payAmount" placeholder="0" min="0" step="1" inputmode="numeric" oninput="calcPayChange()">
+            </div>
+            <div class="pay-row">
+                <label>💵 الخصم</label>
+                <input type="number" id="payDiscount" placeholder="0" min="0" step="1" inputmode="numeric" oninput="calcPayChange()" value="0">
+            </div>
+            <div class="pay-change" id="payChangeDisplay">الباقي: 0 ج.م</div>
+            <div class="pay-actions">
+                <button class="pos-btn pos-btn-gold" onclick="confirmPayment()">✅ تأكيد الدفع</button>
+                <button class="pos-btn pos-btn-outline" style="background:var(--cream);color:var(--coffee-700);" onclick="closePayModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const _LANG = {
             search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
@@ -1448,200 +1220,350 @@
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
         }
-        // ==================== Staff / Accounting Integration ====================
-        let _staffUser = null;
+        // ==================== POS System ====================
+        let posMode = false;
+        let posSelectedTable = null;
+        let posOrder = [];
+        let posInitialized = false;
 
-        async function openStaffLogin() {
-            document.getElementById('staffLoginOverlay').style.display = 'block';
-            document.getElementById('staffLoginModal').style.display = 'flex';
-            document.getElementById('staffPassInput').value = '';
-            document.getElementById('staffLoginError').style.display = 'none';
-            setTimeout(() => document.getElementById('staffPassInput').focus(), 200);
+        async function togglePos() {
+            posMode = !posMode;
+            document.getElementById('posOverlay').classList.toggle('open', posMode);
+            document.getElementById('posToggle').classList.toggle('active', posMode);
+            document.getElementById('cartFab').classList.toggle('pos-hidden', posMode);
+            if (posMode) {
+                if (!posInitialized) { await LuccaDB.initSystem(); posInitialized = true; }
+                await loadPosTables();
+                renderPosCategories();
+                renderPosItems();
+                document.getElementById('posOrderItems').innerHTML = '<div class="pos-order-empty">👈 اختر طاولة لبدء الطلب</div>';
+            }
         }
 
-        function closeStaffLogin() {
-            document.getElementById('staffLoginOverlay').style.display = 'none';
-            document.getElementById('staffLoginModal').style.display = 'none';
-        }
-
-        async function staffLogin() {
-            const pass = document.getElementById('staffPassInput').value;
-            if (!pass) return;
-            const errEl = document.getElementById('staffLoginError');
+        async function loadPosTables() {
             try {
-                await LuccaDB.initSystem();
-                _staffUser = await LuccaDB.Users.login('admin', pass);
-                closeStaffLogin();
-                document.getElementById('adminFloat').classList.add('logged-in');
-                document.getElementById('staffToggleBtn').classList.add('show');
-                openStaffPanel();
-            } catch (e) {
-                errEl.style.display = 'block';
+                const tables = await LuccaDB.Tables.getAll();
+                renderPosTables(tables);
+            } catch(e) {
+                document.getElementById('posTablesGrid').innerHTML = '<div style="color:var(--coffee-300);text-align:center;">⚠️ خطأ في تحميل الطاولات</div>';
             }
         }
 
-        function staffLogout() {
-            _staffUser = null;
-            LuccaDB.Users.logout();
-            document.getElementById('adminFloat').classList.remove('logged-in');
-            document.getElementById('staffToggleBtn').classList.remove('show');
-            closeStaffPanel();
-            if (typeof closeAdminPanel === 'function') closeAdminPanel();
-            showStaffToast('🚪 تم تسجيل الخروج');
+        function renderPosTables(tables) {
+            const grid = document.getElementById('posTablesGrid');
+            if (!tables || tables.length === 0) {
+                const defaults = [];
+                for (let i = 1; i <= 14; i++) defaults.push({ id: i, number: i, status: 'available' });
+                tables = defaults;
+            }
+            grid.innerHTML = tables.map(t => {
+                const status = t.status === 'occupied' ? 'occupied' : 'available';
+                const selected = posSelectedTable && posSelectedTable.number === t.number ? 'selected' : '';
+                return `<div class="pos-table-card ${status} ${selected}" onclick="selectPosTable('${t.id}')">
+                    <div class="num">${t.number || t.id}</div>
+                    <div class="status-text">${status === 'occupied' ? '🔴 مشغول' : '🟢 متاح'}</div>
+                </div>`;
+            }).join('');
         }
 
-        function toggleStaffPanel() {
-            const panel = document.getElementById('staffPanel');
-            if (panel.classList.contains('hidden')) {
-                openStaffPanel();
+        async function selectPosTable(tableId) {
+            const tables = await LuccaDB.Tables.getAll();
+            const table = tables.find(t => t.id == tableId) || { id: tableId, number: tableId, status: 'available' };
+            posSelectedTable = table;
+            document.getElementById('posSelectedTable').textContent = `🪑 طاولة ${table.number || table.id}`;
+            document.getElementById('posOrderTableLabel').textContent = `🪑 طاولة ${table.number || table.id}`;
+            document.getElementById('posResetBtn').style.display = 'inline-block';
+            posOrder = [];
+            renderPosOrder();
+            renderPosTables(await LuccaDB.Tables.getAll());
+        }
+
+        function renderPosCategories() {
+            const el = document.getElementById('posCats');
+            el.innerHTML = CATEGORIES.map(c =>
+                `<button class="pos-cat-btn" onclick="filterPosItems('${c.id}')">${c.icon} ${c.name()}</button>`
+            ).join('');
+        }
+
+        let posActiveCat = null;
+        function filterPosItems(catId) {
+            posActiveCat = catId;
+            document.querySelectorAll('.pos-cat-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(CATEGORIES.find(c => c.id === catId)?.name())));
+            renderPosItems(catId);
+        }
+
+        function renderPosItems(catId) {
+            const grid = document.getElementById('posItemsGrid');
+            catId = catId || posActiveCat || CATEGORIES[0].id;
+            if (!posActiveCat) posActiveCat = catId;
+            const items = DATA[catId] || [];
+            if (items.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--coffee-300);padding:20px;">لا توجد أصناف</div>';
+                return;
+            }
+            grid.innerHTML = items.map(item =>
+                `<div class="pos-item-card" onclick="addToPosOrder('${item.n.replace(/'/g, "\\'")}', '${Array.isArray(item.p) ? item.p[0] : item.p}')">
+                    <div class="item-name">${item.n}</div>
+                    <div class="item-price">${Array.isArray(item.p) ? item.p[0] : item.p} ج.م</div>
+                </div>`
+            ).join('');
+        }
+
+        function addToPosOrder(name, price) {
+            if (!posSelectedTable) {
+                showCartToast('⚠️ اختر طاولة أولاً');
+                return;
+            }
+            const existing = posOrder.find(i => i.name === name);
+            if (existing) {
+                existing.qty += 1;
             } else {
-                closeStaffPanel();
+                posOrder.push({ name, price: parseFloat(price), qty: 1 });
             }
+            // Mark table as occupied in DB on first item
+            if (posOrder.length === 1 && posSelectedTable.status !== 'occupied') {
+                const tableId = parseInt(posSelectedTable.id || posSelectedTable.number);
+                LuccaDB.Tables.update(tableId, { status: 'occupied', currentOrder: null }).then(() => {
+                    loadPosTables();
+                }).catch(() => {});
+                posSelectedTable.status = 'occupied';
+            }
+            renderPosOrder();
+            showCartToast(`➕ ${name}`);
         }
 
-        function openStaffPanel() {
-            document.getElementById('staffPanel').classList.remove('hidden');
-            document.getElementById('staffToggleBtn').style.display = 'none';
-            switchStaffTab('summary');
+        function removeFromPosOrder(name) {
+            posOrder = posOrder.filter(i => i.name !== name);
+            renderPosOrder();
         }
 
-        function closeStaffPanel() {
-            document.getElementById('staffPanel').classList.add('hidden');
-            document.getElementById('staffToggleBtn').style.display = '';
+        function renderPosOrder() {
+            const el = document.getElementById('posOrderItems');
+            const footer = document.getElementById('posOrderFooter');
+            if (!posOrder || posOrder.length === 0) {
+                el.innerHTML = '<div class="pos-order-empty">🛒 الطلب فارغ</div>';
+                footer.style.display = 'none';
+                return;
+            }
+            footer.style.display = 'block';
+            const total = posOrder.reduce((s, i) => s + i.price * i.qty, 0);
+            el.innerHTML = posOrder.map(i =>
+                `<div class="pos-order-item">
+                    <div>
+                        <span class="name">${i.name}</span>
+                        <span class="qty">×${i.qty}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span class="price">${(i.price * i.qty).toFixed(0)} ج.م</span>
+                        <button class="remove-btn" onclick="removeFromPosOrder('${i.name.replace(/'/g, "\\'")}')" title="حذف">✕</button>
+                    </div>
+                </div>`
+            ).join('');
+            document.getElementById('posOrderTotal').textContent = `${total.toFixed(0)} ج.م`;
         }
 
-        function showStaffToast(msg) {
-            const el = document.getElementById('staffToast');
-            el.textContent = msg;
-            el.classList.add('show');
-            clearTimeout(el._hide);
-            el._hide = setTimeout(() => el.classList.remove('show'), 2000);
+        function resetPosOrder() {
+            if (!posSelectedTable) return;
+            if (posOrder.length > 0 && !confirm('تفريغ الطلب بالكامل؟')) return;
+            const tableId = parseInt(posSelectedTable.id || posSelectedTable.number);
+            posOrder = [];
+            posSelectedTable = null;
+            // Always free the table — don't rely on stale in-memory status
+            LuccaDB.Tables.update(tableId, { status: 'available', currentOrder: null }).catch(() => {});
+            renderPosOrder();
+            document.getElementById('posSelectedTable').textContent = '';
+            document.getElementById('posOrderTableLabel').textContent = 'اختر طاولة';
+            document.getElementById('posResetBtn').style.display = 'none';
+            loadPosTables().catch(() => {});
         }
 
-        function switchStaffTab(tab) {
-            document.querySelectorAll('.staff-tab').forEach(t => t.classList.remove('active'));
-            const btn = document.querySelector(`.staff-tab[onclick*="'${tab}'"]`);
-            if (btn) btn.classList.add('active');
-            renderStaffTab(tab);
+        // ----- Payment -----
+        let payMethod = 'cash';
+        function selectPayMethod(method) {
+            payMethod = method;
+            document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.toggle('active', b.dataset.method === method));
         }
 
-        function renderStaffTab(tab) {
-            const el = document.getElementById('staffContent');
-            if (tab === 'summary') renderStaffSummary(el);
-            else if (tab === 'purchase') renderStaffPurchaseForm(el);
-            else if (tab === 'expense') renderStaffExpenseForm(el);
+        function openPayModal() {
+            if (!posOrder || posOrder.length === 0) { showCartToast('⚠️ أضف أصنافاً أولاً'); return; }
+            const total = posOrder.reduce((s, i) => s + i.price * i.qty, 0);
+            document.getElementById('payTotalDisplay').textContent = `${total.toFixed(0)} ج.م`;
+            document.getElementById('payAmount').value = total;
+            document.getElementById('payDiscount').value = 0;
+            document.getElementById('payChangeDisplay').textContent = 'الباقي: 0 ج.م';
+            document.getElementById('payOverlay').classList.add('open');
+            setTimeout(() => document.getElementById('payAmount').focus(), 200);
         }
 
-        function renderStaffSummary(el) {
-            el.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:20px;">جاري التحميل...</div>';
+        function closePayModal() {
+            document.getElementById('payOverlay').classList.remove('open');
+        }
+
+        function calcPayChange() {
+            const total = posOrder.reduce((s, i) => s + i.price * i.qty, 0);
+            const discount = parseFloat(document.getElementById('payDiscount').value) || 0;
+            const paid = parseFloat(document.getElementById('payAmount').value) || 0;
+            const afterDiscount = Math.max(0, total - discount);
+            const change = paid - afterDiscount;
+            document.getElementById('payChangeDisplay').textContent = `الباقي: ${Math.max(0, change).toFixed(0)} ج.م`;
+        }
+
+        let payingGuard = false;
+        function confirmPayment() {
+            if (payingGuard) return;
+            if (!posSelectedTable) { showCartToast('⚠️ اختر طاولة'); return; }
+            if (!posOrder || posOrder.length === 0) { showCartToast('⚠️ الطلب فارغ'); return; }
+
+            const total = posOrder.reduce((s, i) => s + i.price * i.qty, 0);
+            const discountAmt = parseFloat(document.getElementById('payDiscount').value) || 0;
+            const paid = parseFloat(document.getElementById('payAmount').value) || 0;
+            const afterDiscount = Math.max(0, total - discountAmt);
+            if (paid < afterDiscount) { showCartToast('⚠️ المدفوع أقل من الإجمالي'); return; }
+
+            payingGuard = true;
+            const tableId = parseInt(posSelectedTable.id || posSelectedTable.number);
+
+            const order = {
+                tableId,
+                tableNumber: posSelectedTable.number || posSelectedTable.id,
+                items: posOrder.map(i => ({ name: i.name, price: i.price, quantity: i.qty })),
+                customerName: '',
+                customerPhone: '',
+                paymentMethod: payMethod,
+                status: 'completed',
+                subtotal: total,
+                discount: discountAmt,
+                discountType: 'fixed',
+                discountAmount: discountAmt,
+                tax: 0,
+                total: afterDiscount,
+                paid,
+                change: paid - afterDiscount,
+                date: new Date().toISOString(),
+                createdBy: 'pos'
+            };
+
             (async () => {
                 try {
-                    const orders = await LuccaDB.Orders.getDailySales() || [];
-                    const today = new Date().toISOString().split('T')[0];
-                    const allPurchases = await LuccaDB.Purchases.getAll() || [];
-                    const purchases = allPurchases.filter(p => p.date === today);
-                    const expenses = await LuccaDB.Expenses.getByDate(today) || [];
-                    const totalSales = orders.reduce((s, o) => s + (o.total || 0), 0);
-                    const totalPurchases = purchases.reduce((s, p) => s + (p.total || p.price || 0), 0);
-                    const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
-                    const net = totalSales - totalPurchases - totalExpenses;
-                    el.innerHTML = `
-                        <div class="stat-row">
-                            <div class="stat-card"><div class="num">${orders.length}</div><div class="lbl">طلبات اليوم</div></div>
-                            <div class="stat-card"><div class="num">${totalSales.toFixed(0)} ج.م</div><div class="lbl">مبيعات</div></div>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-card"><div class="num">${totalPurchases.toFixed(0)} ج.م</div><div class="lbl">مشتريات</div></div>
-                            <div class="stat-card"><div class="num">${totalExpenses.toFixed(0)} ج.م</div><div class="lbl">مصروفات</div></div>
-                        </div>
-                        <div class="stat-row">
-                            <div class="stat-card" style="background:rgba(212,168,90,0.15);border:1px solid var(--gold);">
-                                <div class="num" style="color:${net>=0?'var(--gold)':'#e74c3c'}">${net.toFixed(0)} ج.م</div>
-                                <div class="lbl">صافي الربح</div>
-                            </div>
-                        </div>
-                        <button class="staff-submit" onclick="switchStaffTab('purchase')" style="margin-top:8px;">➕ إضافة مشتريات</button>
-                        <button class="staff-submit" onclick="switchStaffTab('expense')" style="margin-top:6px;background:var(--coffee-300);">💰 إضافة مصروف</button>
-                    `;
+                    const id = await LuccaDB.db.add('orders', order);
+
+                    // Free the table with numeric ID
+                    await LuccaDB.Tables.update(tableId, { status: 'available', currentOrder: null });
+
+                    // Backup and sync
+                    LuccaDB.Orders.backup().catch(() => {});
+                    LuccaDB.ServerSync.pushAll().catch(() => {});
+
+                    printThermalReceipt(order);
+                    closePayModal();
+                    posOrder = [];
+                    posSelectedTable = null;
+                    renderPosOrder();
+                    document.getElementById('posSelectedTable').textContent = '';
+                    document.getElementById('posOrderTableLabel').textContent = 'اختر طاولة';
+                    document.getElementById('posResetBtn').style.display = 'none';
+                    await loadPosTables();
+                    showCartToast(`✅ تم الدفع — طاولة ${order.tableNumber}`);
                 } catch(e) {
-                    el.innerHTML = '<div style="text-align:center;color:#e74c3c;padding:20px;">❌ خطأ في تحميل البيانات</div>';
+                    console.error('Payment error:', e);
+                    showCartToast('❌ فشل حفظ الفاتورة');
+                } finally {
+                    payingGuard = false;
                 }
             })();
         }
 
-        function renderStaffPurchaseForm(el) {
-            el.innerHTML = `
-                <div class="form-group">
-                    <label>اسم الصنف</label>
-                    <input type="text" id="pName" placeholder="مثال: سكر">
-                </div>
-                <div class="form-group">
-                    <label>الكمية</label>
-                    <input type="number" id="pQty" placeholder="1" min="1" value="1">
-                </div>
-                <div class="form-group">
-                    <label>السعر (ج.م)</label>
-                    <input type="number" id="pPrice" placeholder="مثال: 150" min="0" step="0.5">
-                </div>
-                <button class="staff-submit" onclick="submitPurchase()">💾 حفظ المشتريات</button>
+        function printThermalReceipt(order) {
+            const line = '────────────────';
+            const lines = [
+                '',
+                '    Specialty Coffee',
+                '      Lucca Café',
+                line,
+                `🪑 طاولة: ${order.tableNumber}`,
+                `📅 ${new Date().toLocaleDateString('ar-EG')}`,
+                `⏰ ${new Date().toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}`,
+                line,
+                ...order.items.map(i => {
+                    const q = i.quantity || i.qty || 1;
+                    const p = i.price || 0;
+                    return `${i.name} ×${q}   ${(p*q).toFixed(0)} ج.م`;
+                }),
+                line,
+                `الإجمالي:          ${order.total.toFixed(0)} ج.م`,
+                order.discount > 0 ? `الخصم:            ${order.discount.toFixed(0)} ج.م` : '',
+                `المدفوع:           ${order.paid.toFixed(0)} ج.م`,
+                `الباقي:            ${order.change.toFixed(0)} ج.م`,
+                `طريقة الدفع:       ${payMethodsMap[order.paymentMethod] || order.paymentMethod}`,
+                line,
+                '       شكراً لزيارتكم',
+                '      نتمنى لكم طيب المذاق',
+                '',
+                ''
+            ].filter(Boolean).join('\n');
+
+            const html = `
+                <html dir="rtl"><head><meta charset="utf-8">
+                <style>
+                    @page { margin:0; size:80mm auto; }
+                    body { font-family:'Courier New',monospace; font-size:12px; text-align:center; padding:10px 0; direction:rtl; }
+                    pre { font-family:'Courier New',monospace; font-size:12px; white-space:pre; direction:rtl; text-align:center; }
+                </style>
+                </head><body><pre>${lines}</pre>
+                <script>window.onload=function(){window.print();window.close()};<${''}/script>
+                </body></html>
             `;
-        }
 
-        async function submitPurchase() {
-            const name = document.getElementById('pName').value.trim();
-            const qty = parseFloat(document.getElementById('pQty').value) || 1;
-            const price = parseFloat(document.getElementById('pPrice').value);
-            if (!name || !price) { showStaffToast('❌ أكمل البيانات'); return; }
             try {
-                await LuccaDB.Purchases.add({
-                    name, quantity: qty, total: price,
-                    date: new Date().toISOString().split('T')[0],
-                    createdAt: new Date().toISOString(),
-                    createdBy: _staffUser?.name || 'admin'
-                });
-                showStaffToast('✅ تم حفظ المشتريات');
-                switchStaffTab('summary');
-            } catch(e) {
-                showStaffToast('❌ فشل الحفظ');
-            }
+                if (window.electronAPI?.isElectron) {
+                    window.electronAPI.printThermal(html);
+                } else if (window.print) {
+                    const printWin = window.open('', '_blank', 'width=300,height=600');
+                    printWin.document.write(html);
+                    printWin.document.close();
+                }
+            } catch(e) {}
         }
+        const payMethodsMap = { cash:'نقدي', visa:'فيزا', instapay:'انستا باي', bank:'تحويل بنكي' };
 
-        function renderStaffExpenseForm(el) {
-            const cats = ['إيجار','رواتب','مشتريات','صيانة','كهرباء','مياه','إنترنت','تسويق','نقل','أخرى'];
-            el.innerHTML = `
-                <div class="form-group">
-                    <label>التصنيف</label>
-                    <select id="eCat">${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
-                </div>
-                <div class="form-group">
-                    <label>المبلغ (ج.م)</label>
-                    <input type="number" id="eAmt" placeholder="مثال: 500" min="0" step="0.5">
-                </div>
-                <div class="form-group">
-                    <label>ملاحظات</label>
-                    <input type="text" id="eNote" placeholder="اختياري">
-                </div>
-                <button class="staff-submit" onclick="submitExpense()">💾 حفظ المصروف</button>
-            `;
-        }
+        function printPosOrder() {
+            if (!posSelectedTable) { showCartToast('⚠️ اختر طاولة'); return; }
+            if (!posOrder || posOrder.length === 0) { showCartToast('⚠️ الطلب فارغ'); return; }
+            const total = posOrder.reduce((s, i) => s + i.price * i.qty, 0);
+            const line = '────────────────';
+            const lines = [
+                '',
+                '    Specialty Coffee',
+                '      Lucca Café',
+                line,
+                `🪑 طاولة: ${posSelectedTable.number || posSelectedTable.id}`,
+                `📅 ${new Date().toLocaleDateString('ar-EG')}`,
+                `⏰ ${new Date().toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}`,
+                line,
+                ...posOrder.map(i => `${i.name} ×${i.qty}   ${(i.price*i.qty).toFixed(0)} ج.م`),
+                line,
+                `الإجمالي:          ${total.toFixed(0)} ج.م`,
+                line,
+                '       طلب مسبق',
+                '',
+                ''
+            ].join('\n');
 
-        async function submitExpense() {
-            const cat = document.getElementById('eCat').value;
-            const amt = parseFloat(document.getElementById('eAmt').value);
-            const note = document.getElementById('eNote').value.trim();
-            if (!amt) { showStaffToast('❌ أدخل المبلغ'); return; }
             try {
-                await LuccaDB.Expenses.add({
-                    category: cat, amount: amt, notes: note,
-                    date: new Date().toISOString().split('T')[0],
-                    createdAt: new Date().toISOString(),
-                    createdBy: _staffUser?.name || 'admin'
-                });
-                showStaffToast('✅ تم حفظ المصروف');
-                switchStaffTab('summary');
-            } catch(e) {
-                showStaffToast('❌ فشل الحفظ');
-            }
+                const printWin = window.open('', '_blank', 'width=300,height=600');
+                printWin.document.write(`
+                    <html dir="rtl"><head><meta charset="utf-8">
+                    <style>
+                        @page { margin:0; size:80mm auto; }
+                        body { font-family:'Courier New',monospace; font-size:12px; text-align:center; padding:10px 0; direction:rtl; }
+                        pre { font-family:'Courier New',monospace; font-size:12px; white-space:pre; direction:rtl; text-align:center; }
+                    </style>
+                    </head><body><pre>${lines}</pre>
+                    <script>window.onload=function(){window.print();window.close()};<${''}/script>
+                    </body></html>
+                `);
+                printWin.document.close();
+            } catch(e) {}
         }
         function shareMenu() {
             const url = window.location.href;
@@ -1782,13 +1704,19 @@
             document.getElementById('langToggle').textContent = lang === 'ar' ? '🇬🇧' : '🇪🇬';
             applyLang();
             LuccaDB.initSystem().catch(() => {});
-            if (typeof QRCode !== 'undefined') {
-                new QRCode(document.getElementById('qrcode'), {
-                    text: window.location.href,
-                    width: 180, height: 180,
-                    colorDark: '#3E2723', colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H
-                });
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(document.getElementById('qrcode'), {
+                        text: window.location.href,
+                        width: 180, height: 180,
+                        colorDark: '#3E2723', colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } else {
+                    document.getElementById('qrcode').innerHTML = '<div style="color:var(--coffee-300);font-size:0.8rem;">📱 QR Code غير متاح أوفلاين</div>';
+                }
+            } catch(e) {
+                document.getElementById('qrcode').innerHTML = '<div style="color:var(--coffee-300);font-size:0.8rem;">📱 QR Code غير متاح أوفلاين</div>';
             }
         });
 

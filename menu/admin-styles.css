@@ -54,6 +54,7 @@
 .admin-select option { background:var(--coffee-900); color:var(--foam); }
 .admin-input.sm { width:120px; }
 .admin-input.md { width:180px; }
+.admin-input.xs { width:80px; }
 .admin-input.full { width:100%; }
 
 /* Buttons */

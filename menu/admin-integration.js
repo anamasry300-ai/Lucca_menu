@@ -29,6 +29,8 @@ function showAdminTab(tab) {
     else if (tab === 'reports') loadReport();
     else if (tab === 'kitchen') { loadKitchen(); startKitchenPolling(); }
     else if (tab === 'settings') loadSettings();
+    else     if (tab === 'recipes') loadRecipesTab();
+    if (tab === 'returns') loadReturnsEmbed();
 }
 
 function showAdminToast(msg) {
@@ -50,6 +52,11 @@ async function loadDashboardStats() {
         const card = orders.filter(o => o.paymentMethod === 'visa').reduce((s, o) => s + (o.total || 0), 0);
         document.getElementById('dash-cash').textContent = cash.toFixed(0);
         document.getElementById('dash-card').textContent = card.toFixed(0);
+        // المرتجعات
+        const today = new Date().toISOString().split('T')[0];
+        const totalReturns = await LuccaDB.Returns.getTotalByDate(today);
+        const returnsEl = document.getElementById('dash-returns');
+        if (returnsEl) returnsEl.textContent = totalReturns.toFixed(0);
         document.getElementById('dash-menu-url').textContent = window.location.href;
         checkServerStatus();
     } catch(e) { console.error('Dashboard:', e); }
@@ -332,8 +339,10 @@ async function loadReport() {
         const visaTotal = orders.filter(o => o.paymentMethod === 'visa').reduce((s, o) => s + (o.total || 0), 0);
         const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
         const totalCOGS = purchases.reduce((s, p) => s + (p.total || 0), 0);
-        const netProfit = totalSales - totalCOGS - totalExpenses;
-        const profitMargin = totalSales > 0 ? ((netProfit / totalSales) * 100).toFixed(1) : '0';
+        const totalReturns = await LuccaDB.Returns.getTotalByDateRange(from, to);
+        const netSales = totalSales - totalReturns;
+        const netProfit = netSales - totalCOGS - totalExpenses;
+        const profitMargin = netSales > 0 ? ((netProfit / netSales) * 100).toFixed(1) : '0';
 
         document.getElementById('rpt-orders').textContent = orders.length;
         document.getElementById('rpt-sales').textContent = totalSales.toFixed(0);
@@ -342,6 +351,7 @@ async function loadReport() {
         document.getElementById('rpt-avg').textContent = orders.length ? (totalSales / orders.length).toFixed(0) : '0';
         document.getElementById('rpt-expenses').textContent = totalExpenses.toFixed(0);
         document.getElementById('rpt-cogs').textContent = totalCOGS.toFixed(0);
+        document.getElementById('rpt-returns').textContent = totalReturns.toFixed(0);
         document.getElementById('rpt-profit').textContent = netProfit.toFixed(0);
         document.getElementById('rpt-profit').style.color = netProfit >= 0 ? 'var(--gold)' : '#e74c3c';
         document.getElementById('rpt-margin').textContent = profitMargin + '%';
@@ -504,4 +514,189 @@ async function importData(fileInput) {
         showAdminToast('✅ تم استيراد البيانات');
     } catch(e) { showAdminToast('❌ فشل الاستيراد'); }
     fileInput.value = '';
+}
+
+// ==================== RECIPES (المقادير) ====================
+function loadRecipesTab() {
+    const pass = localStorage.getItem('luccaRecipesPass');
+    if (pass) {
+        document.getElementById('recipesLock').style.display = 'block';
+        document.getElementById('recipesContent').style.display = 'none';
+    } else {
+        document.getElementById('recipesLock').style.display = 'block';
+        document.getElementById('recipesContent').style.display = 'none';
+        document.getElementById('recipesPass').placeholder = 'تعيين كلمة مرور جديدة';
+    }
+    document.getElementById('recipesPass').value = '';
+}
+
+function unlockRecipes() {
+    const pass = document.getElementById('recipesPass').value.trim();
+    if (!pass) { showAdminToast('❌ أدخل كلمة المرور'); return; }
+    const stored = localStorage.getItem('luccaRecipesPass');
+    if (stored) {
+        if (pass !== stored) { showAdminToast('❌ كلمة المرور خطأ'); return; }
+    } else {
+        localStorage.setItem('luccaRecipesPass', pass);
+        showAdminToast('✅ تم تعيين كلمة المرور');
+    }
+    document.getElementById('recipesLock').style.display = 'none';
+    document.getElementById('recipesContent').style.display = 'block';
+    renderRecipesEditor();
+}
+
+function lockRecipes() {
+    document.getElementById('recipesLock').style.display = 'block';
+    document.getElementById('recipesContent').style.display = 'none';
+    document.getElementById('recipesPass').value = '';
+    showAdminToast('🔒 تم القفل');
+}
+
+function getStoredRecipes() {
+    try { return JSON.parse(localStorage.getItem('luccaRecipes') || '{}'); }
+    catch(e) { return {}; }
+}
+
+function saveStoredRecipes(recipes) {
+    localStorage.setItem('luccaRecipes', JSON.stringify(recipes));
+}
+
+function renderRecipesEditor() {
+    const container = document.getElementById('recipesList');
+    const saved = getStoredRecipes();
+    const cats = CATEGORIES || [];
+    const data = DATA || {};
+    let html = '';
+    for (const cat of cats) {
+        const items = data[cat.id] || [];
+        if (!items.length) continue;
+        html += `<div style="margin-bottom:16px;background:rgba(255,255,255,0.04);border-radius:10px;padding:12px;">
+            <h4 style="color:var(--gold);margin:0 0 8px 0;font-size:0.95rem;">${cat.icon} ${cat.name()}</h4>`;
+        items.forEach((item, idx) => {
+            const key = cat.id + '-' + idx;
+            const dt = saved[key] || item.dt || [];
+            html += `<div style="margin-bottom:8px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <strong style="color:var(--foam);font-size:0.9rem;">${item.n}</strong>
+                    <span style="color:var(--coffee-400);font-size:0.8rem;">${Array.isArray(item.p) ? item.p.join(' / ') : item.p} ج.م</span>
+                </div>
+                <div id="rcp-ing-${cat.id}-${idx}">
+                    ${dt.length ? dt.map((d, di) => `<div style="display:flex;gap:6px;margin-bottom:4px;">
+                        <input class="admin-input xs" value="${d.k.replace(/"/g, '&quot;')}" placeholder="المكون" style="flex:1;padding:4px 8px;font-size:0.8rem;" onchange="updateRecipe('${cat.id}',${idx},${di},'k',this.value)">
+                        <input class="admin-input xs" value="${d.v.replace(/"/g, '&quot;')}" placeholder="الكمية" style="flex:1;padding:4px 8px;font-size:0.8rem;" onchange="updateRecipe('${cat.id}',${idx},${di},'v',this.value)">
+                        <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="removeRecipeLine('${cat.id}',${idx},${di})" style="padding:2px 8px;font-size:0.7rem;">✕</button>
+                    </div>`).join('') : '<div style="color:var(--coffee-400);font-size:0.8rem;margin-bottom:4px;">لا توجد مقادير</div>'}
+                </div>
+                <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="addRecipeLine('${cat.id}',${idx})" style="font-size:0.75rem;margin-top:2px;">➕ إضافة مكون</button>
+            </div>`;
+        });
+        html += `</div>`;
+    }
+    container.innerHTML = html || '<div style="color:var(--coffee-400);padding:20px;text-align:center;">لا توجد أصناف</div>';
+}
+
+function addRecipeLine(catId, idx) {
+    const container = document.getElementById(`rcp-ing-${catId}-${idx}`);
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;gap:6px;margin-bottom:4px;';
+    const lineIdx = container.querySelectorAll('div').length;
+    div.innerHTML = `
+        <input class="admin-input xs" value="" placeholder="المكون" style="flex:1;padding:4px 8px;font-size:0.8rem;" onchange="updateRecipe('${catId}',${idx},${lineIdx},'k',this.value)">
+        <input class="admin-input xs" value="" placeholder="الكمية" style="flex:1;padding:4px 8px;font-size:0.8rem;" onchange="updateRecipe('${catId}',${idx},${lineIdx},'v',this.value)">
+        <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="this.parentElement.remove();saveAllRecipes()" style="padding:2px 8px;font-size:0.7rem;">✕</button>`;
+    container.appendChild(div);
+    saveAllRecipes();
+}
+
+function removeRecipeLine(catId, idx, lineIdx) {
+    const container = document.getElementById(`rcp-ing-${catId}-${idx}`);
+    const lines = container.querySelectorAll('div');
+    if (lines[lineIdx]) lines[lineIdx].remove();
+    saveAllRecipes();
+}
+
+function updateRecipe(catId, idx, lineIdx, field, value) {
+    const saved = getStoredRecipes();
+    const key = catId + '-' + idx;
+    if (!saved[key]) saved[key] = [];
+    if (!saved[key][lineIdx]) saved[key][lineIdx] = { k: '', v: '' };
+    saved[key][lineIdx][field] = value;
+    saveStoredRecipes(saved);
+}
+
+function saveAllRecipes() {
+    const saved = getStoredRecipes();
+    const cats = CATEGORIES || [];
+    const data = DATA || {};
+    // Collect all current values from inputs
+    cats.forEach(cat => {
+        const items = data[cat.id] || [];
+        items.forEach((item, idx) => {
+            const key = cat.id + '-' + idx;
+            const container = document.getElementById(`rcp-ing-${cat.id}-${idx}`);
+            if (!container) return;
+            const lines = container.querySelectorAll('div');
+            const arr = [];
+            lines.forEach(line => {
+                const inputs = line.querySelectorAll('input');
+                if (inputs.length >= 2) {
+                    const k = inputs[0].value.trim();
+                    const v = inputs[1].value.trim();
+                    if (k || v) arr.push({ k, v });
+                }
+            });
+            saved[key] = arr;
+        });
+    });
+    saveStoredRecipes(saved);
+    showAdminToast('💾 تم حفظ المقادير');
+}
+
+// ==================== المرتجعات ====================
+async function loadReturnsEmbed() {
+    const today = new Date().toISOString().split('T')[0];
+    try {
+        const returns = await LuccaDB.Returns.getByDate(today);
+        const total = returns.reduce((s, r) => s + (r.refundAmount || 0), 0);
+        document.getElementById('ret-embed-total').textContent = total.toFixed(0) + ' ج.م';
+        const list = document.getElementById('ret-embed-list');
+        list.innerHTML = returns.length
+            ? returns.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || '')).map(r => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <div>
+                        <div style="color:var(--foam);font-size:0.9rem;">-${(r.refundAmount || 0).toFixed(0)} ج.م</div>
+                        <div style="color:var(--coffee-300);font-size:0.8rem;">${r.reason || '—'} ${r.orderId ? '(فاتورة #' + r.orderId + ')' : ''}</div>
+                    </div>
+                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="deleteReturnEmbed(${r.id})" style="padding:2px 8px;font-size:0.7rem;">✕</button>
+                </div>`).join('')
+            : '<div style="color:var(--coffee-400);padding:10px;">لا توجد مرتجعات اليوم</div>';
+    } catch(e) { console.error('loadReturnsEmbed:', e); }
+}
+
+async function addReturnEmbed() {
+    const orderId = document.getElementById('ret-order-id-embed').value.trim() || null;
+    const amount = parseFloat(document.getElementById('ret-amount-embed').value);
+    const reason = document.getElementById('ret-reason-embed').value.trim();
+    if (!amount || amount <= 0) { showAdminToast('❌ أدخل المبلغ'); return; }
+    if (!reason) { showAdminToast('❌ أدخل سبب الإرجاع'); return; }
+    try {
+        await LuccaDB.Returns.add({
+            orderId: orderId ? parseInt(orderId) : null,
+            items: [],
+            refundAmount: amount,
+            reason,
+            createdBy: _staffUser?.name || 'admin'
+        });
+        document.getElementById('ret-order-id-embed').value = '';
+        document.getElementById('ret-amount-embed').value = '';
+        document.getElementById('ret-reason-embed').value = '';
+        showAdminToast('✅ تم تسجيل المرتجع');
+        loadReturnsEmbed();
+    } catch(e) { showAdminToast('❌ فشل التسجيل'); }
+}
+
+async function deleteReturnEmbed(id) {
+    if (!confirm('حذف هذا المرتجع؟')) return;
+    try { await LuccaDB.Returns.delete(id); showAdminToast('🗑️ تم الحذف'); loadReturnsEmbed(); }
+    catch(e) { showAdminToast('❌ فشل الحذف'); }
 }
