@@ -73,12 +73,12 @@ function crLoadDay() {
             const opening = shift?.openingBalance || 0;
             const expectedCash = opening + cashSales;
             if (shift?.status === 'open') {
-                document.getElementById('crShiftStatus').textContent = 'a'¤ô j/êjj»èj1 àj2êj5j1';
+                document.getElementById('crShiftStatus').textContent = '🔓 الوردية مفتوحة';
                 document.getElementById('crOpenBtn').disabled = true;
                 document.getElementById('crCloseBtn').style.display = '';
                 document.getElementById('crOpeningSection').style.display = shift.openingBalance ? 'none' : '';
             } else if (shift?.status === 'closed') {
-                document.getElementById('crShiftStatus').textContent = 'a'¤R j/êjj»èj1 àéj1';
+                document.getElementById('crShiftStatus').textContent = '🔒 الوردية مقفلة';
                 document.getElementById('crOpenBtn').disabled = false;
                 document.getElementById('crCloseBtn').style.display = 'none';
                 document.getElementById('crOpeningSection').style.display = 'none';
@@ -89,7 +89,7 @@ function crLoadDay() {
                 document.getElementById('cr-diff').textContent = diff.toFixed(0);
                 document.getElementById('cr-diff').style.color = diff >= 0 ? 'var(--gold)' : '#e74c3c';
             } else {
-                document.getElementById('crShiftStatus').textContent = '8¤ j/êjj»èj1 à j2j2j5 j0jcj»';
+                document.getElementById('crShiftStatus').textContent = '— الوردية لم تفتح بعد';
                 document.getElementById('crOpenBtn').disabled = false;
                 document.getElementById('crCloseBtn').style.display = 'none';
                 document.getElementById('crOpeningSection').style.display = '';
@@ -109,9 +109,9 @@ function crLoadDay() {
 async function crOpenShift() {
     try {
         await LuccaDB.Shifts.open(_cr.date, 0, '');
-        showAdminToast('a'¤ô j2à j2j5 j/êjj»èj1');
+        showAdminToast('🔓 تم فتح الوردية');
         crLoadDay();
-    } catch(e) { showAdminToast('8%î j$ j2j5 j/êjj»èj1'); }
+    } catch(e) { showAdminToast('❌ فشل فتح الوردية'); }
 }
 
 async function crSaveOpening() {
@@ -124,9 +124,9 @@ async function crSaveOpening() {
         } else {
             await LuccaDB.Shifts.open(_cr.date, amount, '');
         }
-        showAdminToast('8£à j2à j5jU jjaèj» j/j/j2j2j/j5');
+        showAdminToast('✅ تم حفظ رصيد الافتتاح');
         crLoadDay();
-    } catch(e) { showAdminToast('8%î j$ j/j5jU'); }
+    } catch(e) { showAdminToast('❌ فشل الحفظ'); }
 }
 
 function crCloseShiftDialog() {
@@ -138,14 +138,14 @@ function crCloseShiftDialog() {
 
 async function crConfirmClose() {
     const actual = parseFloat(document.getElementById('cs-actual').value);
-    if (isNaN(actual)) { showAdminToast('8%î j+j»j« j/àj0jQ j/jcè'); return; }
+    if (isNaN(actual)) { showAdminToast('❌ أدخل المبلغ الفعلي'); return; }
     try {
         await LuccaDB.Shifts.close(_cr.date, actual, '');
         document.getElementById('closeShiftOverlay').style.display = 'none';
         document.getElementById('closeShiftModal').style.display = 'none';
-        showAdminToast('a'¤R j2à j-éj/ j/êjj»èj1');
+        showAdminToast('🔒 تم إقفال الوردية');
         crLoadDay();
-    } catch(e) { showAdminToast('8%î j$ j/j-éj/'); }
+    } catch(e) { showAdminToast('❌ فشل الإقفال'); }
 }
 
 async function crLoadExpensesTable() {
@@ -153,14 +153,14 @@ async function crLoadExpensesTable() {
         const expenses = await LuccaDB.Expenses.getByDate(_cr.date) || [];
         const tbody = document.getElementById('cr-expenses-body');
         tbody.innerHTML = expenses.length
-            ? expenses.map(e => `<tr><td>${e.category || '8¤'}</td><td>${(e.amount || 0).toFixed(0)} j4.à</td><td>${e.notes || '8¤'}</td><td><button class="admin-btn-icon" onclick="crDeleteExpense(${e.id})" title="j5j">a'ùQJU</button></td></tr>`).join('')
-            : '<tr class="empty"><td colspan="4">j/ j2êj4j» àjajêj/j2</td></tr>';
+            ? expenses.map(e => `<tr><td>${e.category || '—'}</td><td>${(e.amount || 0).toFixed(0)} ج.م</td><td>${e.notes || '—'}</td><td><button class="admin-btn-icon" onclick="crDeleteExpense(${e.id})" title="حذف">🗑️</button></td></tr>`).join('')
+            : '<tr class="empty"><td colspan="4">لا توجد مصروفات</td></tr>';
     } catch(e) { console.error('Expenses:', e); }
 }
 
 async function crAddExpense() {
     const amt = parseFloat(document.getElementById('crExpAmt').value);
-    if (!amt) { showAdminToast('8%î j+j»j« j/àj0jQ'); return; }
+    if (!amt) { showAdminToast('❌ أدخل المبلغ'); return; }
     try {
         await LuccaDB.Expenses.add({
             category: document.getElementById('crExpCat').value,
@@ -170,22 +170,22 @@ async function crAddExpense() {
         });
         document.getElementById('crExpAmt').value = '';
         document.getElementById('crExpNote').value = '';
-        showAdminToast('8£à j2à j-jbj/j1 j/àjajê');
+        showAdminToast('✅ تم إضافة المصروف');
         crLoadDay();
-    } catch(e) { showAdminToast('8%î j$ j/j-jbj/j1'); }
+    } catch(e) { showAdminToast('❌ فشل الإضافة'); }
 }
 
 async function crDeleteExpense(id) {
-    if (!confirm('j5j çjj/ j/àjajêj'')) return;
-    try { await LuccaDB.Expenses.delete(id); showAdminToast('a'ùQJU j2à j/j5j'); crLoadDay(); }
-    catch(e) { showAdminToast('8%î j$ j/j5j'); }
+    if (!confirm('حذف هذا المصروف؟')) return;
+    try { await LuccaDB.Expenses.delete(id); showAdminToast('🗑️ تم الحذف'); crLoadDay(); }
+    catch(e) { showAdminToast('❌ فشل الحذف'); }
 }
 
 // ==================== PURCHASES ====================
 async function addPurchase() {
     const name = document.getElementById('pur-item').value.trim();
     const cost = parseFloat(document.getElementById('pur-cost').value);
-    if (!name || !cost) { showAdminToast('8%î j+âà j/j0èj/j/j2'); return; }
+    if (!name || !cost) { showAdminToast('❌ أكمل البيانات'); return; }
     try {
         await LuccaDB.Purchases.add({
             name, quantity: parseFloat(document.getElementById('pur-qty').value) || 1, total: cost,
@@ -194,9 +194,9 @@ async function addPurchase() {
         document.getElementById('pur-item').value = '';
         document.getElementById('pur-qty').value = '1';
         document.getElementById('pur-cost').value = '';
-        showAdminToast('8£à j2à j5jU j/àj$j2jèj/j2');
+        showAdminToast('✅ تم حفظ المشتريات');
         loadPurchases();
-    } catch(e) { showAdminToast('8%î j$ j/j5jU'); }
+    } catch(e) { showAdminToast('❌ فشل الحفظ'); }
 }
 
 async function loadPurchases() {
@@ -207,32 +207,32 @@ async function loadPurchases() {
         document.getElementById('pur-total-cost').textContent = total.toFixed(0);
         tbody.innerHTML = purchases.length
             ? purchases.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date))
-                .map(p => `<tr><td>${p.name}</td><td>${p.quantity || 1}</td><td>${(p.total || 0).toFixed(0)} j4.à</td><td>${p.date || '8¤'}</td><td><button class="admin-btn-icon" onclick="deletePurchase(${p.id})" title="j5j">a'ùQJU</button></td></tr>`).join('')
-            : '<tr class="empty"><td colspan="5">j/ j2êj4j» àj$j2jèj/j2</td></tr>';
+                .map(p => `<tr><td>${p.name}</td><td>${p.quantity || 1}</td><td>${(p.total || 0).toFixed(0)} ج.م</td><td>${p.date || '—'}</td><td><button class="admin-btn-icon" onclick="deletePurchase(${p.id})" title="حذف">🗑️</button></td></tr>`).join('')
+            : '<tr class="empty"><td colspan="5">لا توجد مشتريات</td></tr>';
     } catch(e) { console.error('Purchases:', e); }
 }
 
 async function deletePurchase(id) {
-    if (!confirm('j5j çjç j/àj$j2jèj/j2j'')) return;
-    try { await LuccaDB.Purchases.delete(id); showAdminToast('a'ùQJU j2à j/j5j'); loadPurchases(); }
-    catch(e) { showAdminToast('8%î j$ j/j5j'); }
+    if (!confirm('حذف هذه المشتريات؟')) return;
+    try { await LuccaDB.Purchases.delete(id); showAdminToast('🗑️ تم الحذف'); loadPurchases(); }
+    catch(e) { showAdminToast('❌ فشل الحذف'); }
 }
 
 // ==================== EMPLOYEES ====================
 async function addEmployee() {
     const name = document.getElementById('emp-name').value.trim();
-    if (!name) { showAdminToast('8%î j+j»j« j/jà j/àêjU'); return; }
+    if (!name) { showAdminToast('❌ أدخل اسم الموظف'); return; }
     try {
         await LuccaDB.Employees.add({
             name,
             phone: document.getElementById('emp-phone').value.trim(),
-            role: document.getElementById('emp-role').value || 'àêjU'
+            role: document.getElementById('emp-role').value || 'موظف'
         });
         document.getElementById('emp-name').value = '';
         document.getElementById('emp-phone').value = '';
-        showAdminToast('8£à j2à j-jbj/j1 j/àêjU');
+        showAdminToast('✅ تم إضافة الموظف');
         loadEmployees();
-    } catch(e) { showAdminToast('8%î j$ j/j-jbj/j1'); }
+    } catch(e) { showAdminToast('❌ فشل الإضافة'); }
 }
 
 let _empMap = {};
@@ -243,47 +243,47 @@ async function loadEmployees() {
         employees.forEach(e => _empMap[e.id] = e.name);
         const list = document.getElementById('employees-list');
         if (employees.length === 0) {
-            list.innerHTML = '<div style="color:var(--coffee-300);padding:10px;">j/ èêj4j» àêjUê</div>';
+            list.innerHTML = '<div style="color:var(--coffee-300);padding:10px;">لا يوجد موظفون</div>';
         } else {
             list.innerHTML = employees.map(e => `
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <div><div style="color:var(--foam);font-weight:500;">${e.name}</div><div style="color:var(--coffee-300);font-size:0.8rem;">${e.phone || '8¤'} ,V ${e.role || 'àêjU'}</div></div>
-                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="deleteEmployee(${e.id})">j5j</button>
+                    <div><div style="color:var(--foam);font-weight:500;">${e.name}</div><div style="color:var(--coffee-300);font-size:0.8rem;">${e.phone || '—'} · ${e.role || 'موظف'}</div></div>
+                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="deleteEmployee(${e.id})">حذف</button>
                 </div>`).join('');
         }
         const sel = document.getElementById('att-emp');
         sel.innerHTML = employees.filter(e => e.active !== false).length
-            ? '<option value="">8¤ j/j«j2j àêjUj/ï 8¤</option>' + employees.filter(e => e.active !== false).map(e => `<option value="${e.id}">${e.name}</option>`).join('')
-            : '<option value="">8¤ j/ èêj4j» àêjUê 8¤</option>';
+            ? '<option value="">— اختر موظفاً —</option>' + employees.filter(e => e.active !== false).map(e => `<option value="${e.id}">${e.name}</option>`).join('')
+            : '<option value="">— لا يوجد موظفون —</option>';
     } catch(e) { console.error('Employees:', e); }
 }
 
 async function deleteEmployee(id) {
-    if (!confirm('j5j çjj/ j/àêjUj'')) return;
-    try { await LuccaDB.Employees.delete(id); showAdminToast('a'ùQJU j2à j/j5j'); loadEmployees(); }
-    catch(e) { showAdminToast('8%î j$ j/j5j'); }
+    if (!confirm('حذف هذا الموظف؟')) return;
+    try { await LuccaDB.Employees.delete(id); showAdminToast('🗑️ تم الحذف'); loadEmployees(); }
+    catch(e) { showAdminToast('❌ فشل الحذف'); }
 }
 
 // ---- Attendance ----
 async function checkInEmployee() {
     const empId = parseInt(document.getElementById('att-emp').value);
-    if (!empId) { showAdminToast('8%î j/j«j2j àêjUj/ï'); return; }
+    if (!empId) { showAdminToast('❌ اختر موظفاً'); return; }
     try {
         await LuccaDB.Attendance.checkIn(empId, document.getElementById('att-notes').value.trim());
         document.getElementById('att-notes').value = '';
-        showAdminToast('8£à j2à j2jj4è j/j5jbêj');
+        showAdminToast('✅ تم تسجيل الحضور');
         loadAttendanceRecords();
-    } catch(e) { showAdminToast(e.message || '8%î j$ j/j2jj4è'); }
+    } catch(e) { showAdminToast(e.message || '❌ فشل التسجيل'); }
 }
 
 async function checkOutEmployee() {
     const empId = parseInt(document.getElementById('att-emp').value);
-    if (!empId) { showAdminToast('8%î j/j«j2j àêjUj/ï'); return; }
+    if (!empId) { showAdminToast('❌ اختر موظفاً'); return; }
     try {
         await LuccaDB.Attendance.checkOut(empId);
-        showAdminToast('8£à j2à j2jj4è j/j/jajj/');
+        showAdminToast('✅ تم تسجيل الانصراف');
         loadAttendanceRecords();
-    } catch(e) { showAdminToast(e.message || '8%î j$ j/j2jj4è'); }
+    } catch(e) { showAdminToast(e.message || '❌ فشل التسجيل'); }
 }
 
 async function loadAttendanceRecords() {
@@ -291,21 +291,21 @@ async function loadAttendanceRecords() {
         const records = await LuccaDB.Attendance.getToday() || [];
         const tbody = document.getElementById('att-body');
         tbody.innerHTML = records.length
-            ? records.map(r => `<tr><td>${_empMap[r.employeeId] || '8¤'}</td><td>${r.checkIn ? new Date(r.checkIn).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '8¤'}</td><td>${r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '8¤'}</td><td>${r.lateMinutes ? r.lateMinutes + ' j»' : '8¤'}</td><td>${r.bonus ? r.bonus + ' j4.à' : ''}${r.deduction ? ' / -' + r.deduction + ' j4.à' : ''}</td><td><button class="admin-btn-icon" onclick="editAttendanceBonus(${r.id})" title="j2jcj»è">8#)</button></td></tr>`).join('')
-            : '<tr class="empty"><td colspan="6">j/ j2êj4j» jj4j/j2 j/èêà</td></tr>';
+            ? records.map(r => `<tr><td>${_empMap[r.employeeId] || '—'}</td><td>${r.checkIn ? new Date(r.checkIn).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '—'}</td><td>${r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '—'}</td><td>${r.lateMinutes ? r.lateMinutes + ' د' : '—'}</td><td>${r.bonus ? r.bonus + ' ج.م' : ''}${r.deduction ? ' / -' + r.deduction + ' ج.م' : ''}</td><td><button class="admin-btn-icon" onclick="editAttendanceBonus(${r.id})" title="تعديل">⚡</button></td></tr>`).join('')
+            : '<tr class="empty"><td colspan="6">لا توجد سجلات اليوم</td></tr>';
     } catch(e) { console.error('Attendance:', e); }
 }
 
 async function editAttendanceBonus(id) {
-    const bonus = prompt('j/àâj/j+j1 (j4.à):', '0');
+    const bonus = prompt('المكافأة (ج.م):', '0');
     if (bonus === null) return;
-    const deduction = prompt('j/j«jaà (j4.à):', '0');
+    const deduction = prompt('الخصم (ج.م):', '0');
     if (deduction === null) return;
     try {
         await LuccaDB.Attendance.updateRecord(id, { bonus: parseFloat(bonus) || 0, deduction: parseFloat(deduction) || 0 });
-        showAdminToast('8£à j2à j/j2j5j»èj3');
+        showAdminToast('✅ تم التحديث');
         loadAttendanceRecords();
-    } catch(e) { showAdminToast('8%î j$ j/j2j5j»èj3'); }
+    } catch(e) { showAdminToast('❌ فشل التحديث'); }
 }
 
 // ==================== REPORTS ====================
@@ -349,8 +349,8 @@ async function loadReport() {
         const tbody = document.getElementById('rpt-body');
         tbody.innerHTML = orders.length
             ? orders.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date))
-                .map(o => `<tr><td>#${o.id}</td><td>${o.tableId || '8¤'}</td><td>${o.total || 0} j4.à</td><td>${o.paymentMethod === 'cash' ? 'a'Ra âj/j$' : 'a'R èjj/'}</td><td>${o.status || 'pending'}</td><td>${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ar-EG') : o.date || '8¤'}</td></tr>`).join('')
-            : '<tr class="empty"><td colspan="6">j/ j2êj4j» jVj0j/j2</td></tr>';
+                .map(o => `<tr><td>#${o.id}</td><td>${o.tableId || '—'}</td><td>${o.total || 0} ج.م</td><td>${o.paymentMethod === 'cash' ? '💵 كاش' : '💳 فيزا'}</td><td>${o.status || 'pending'}</td><td>${o.createdAt ? new Date(o.createdAt).toLocaleDateString('ar-EG') : o.date || '—'}</td></tr>`).join('')
+            : '<tr class="empty"><td colspan="6">لا توجد طلبات</td></tr>';
     } catch(e) { console.error('Report:', e); }
 }
 
@@ -388,23 +388,23 @@ async function loadKitchen() {
         kitchenPrevCount = count;
         document.getElementById('kitchen-count').textContent = count;
         const grid = document.getElementById('kitchen-grid');
-        if (!pending.length) { grid.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:30px;">8£à j/ j2êj4j» jVj0j/j2 àjcéj1</div>'; return; }
+        if (!pending.length) { grid.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:30px;">✅ لا توجد طلبات معلقة</div>'; return; }
         grid.innerHTML = pending.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).map(o => {
             const time = o.createdAt ? new Date(o.createdAt).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '';
             return `<div class="kitchen-card ${o.status === 'pending' ? 'new-order' : ''}">
-                <div class="k-header"><span class="k-number">#${o.id}</span><span class="k-table">a'\JU ${o.tableId ? 'jVj/êj1 ' + o.tableId : 'j2èâ j+êj/è'}</span></div>
-                <div class="k-time">a'@ ${time}</div>
-                <div class="k-items">${(o.items || []).map(item => `<div class="k-item"><span>${item.name || item}</span><span class="qty">ù${item.quantity || 1}</span></div>`).join('')}</div>
-                ${o.notes ? `<div class="k-note">a'ô% ${o.notes}</div>` : ''}
-                <div class="k-actions">${o.status === 'pending' ? `<button class="btn-prep" onclick="kitchenUpdateStatus(${o.id},'preparing')">a'Q08a' j2j5j2 j/j2j4çèj</button>` : ''}${o.status === 'preparing' ? `<button class="btn-ready" onclick="kitchenUpdateStatus(${o.id},'completed')">8£à j4j/çj</button>` : ''}</div>
+                <div class="k-header"><span class="k-number">#${o.id}</span><span class="k-table">🍽️ ${o.tableId ? 'طاولة ' + o.tableId : 'تيك أواي'}</span></div>
+                <div class="k-time">🕐 ${time}</div>
+                <div class="k-items">${(o.items || []).map(item => `<div class="k-item"><span>${item.name || item}</span><span class="qty">×${item.quantity || 1}</span></div>`).join('')}</div>
+                ${o.notes ? `<div class="k-note">📝 ${o.notes}</div>` : ''}
+                <div class="k-actions">${o.status === 'pending' ? `<button class="btn-prep" onclick="kitchenUpdateStatus(${o.id},'preparing')">👨‍🍳 تحت التجهيز</button>` : ''}${o.status === 'preparing' ? `<button class="btn-ready" onclick="kitchenUpdateStatus(${o.id},'completed')">✅ جاهز</button>` : ''}</div>
             </div>`;
         }).join('');
     } catch(e) { console.error('Kitchen:', e); }
 }
 
 async function kitchenUpdateStatus(orderId, status) {
-    try { await LuccaDB.Orders.updateStatus(orderId, status); showAdminToast('8£à j2à j2j5j»èj3 j5j/j1 j/jVj0'); loadKitchen(); }
-    catch(e) { showAdminToast('8%î j$ j/j2j5j»èj3'); }
+    try { await LuccaDB.Orders.updateStatus(orderId, status); showAdminToast('✅ تم تحديث حالة الطلب'); loadKitchen(); }
+    catch(e) { showAdminToast('❌ فشل التحديث'); }
 }
 
 function startKitchenPolling() { stopKitchenPolling(); kitchenPollInterval = setInterval(() => loadKitchen(), 5000); }
@@ -419,7 +419,7 @@ function loadSettings() {
 function saveSettings() {
     localStorage.setItem('luccaWhatsApp', document.getElementById('set-whatsapp').value.trim());
     localStorage.setItem('luccaWorkStart', document.getElementById('set-workstart').value);
-    showAdminToast('8£à j2à j5jU j/j-jcj»j/j»j/j2');
+    showAdminToast('✅ تم حفظ الإعدادات');
 }
 
 async function exportAllData() {
@@ -430,8 +430,8 @@ async function exportAllData() {
         const a = document.createElement('a');
         a.href = url; a.download = `lucca-backup-${new Date().toISOString().split('T')[0]}.json`;
         a.click(); URL.revokeObjectURL(url);
-        showAdminToast('8£à j2à j2jaj»èj j/j0èj/j/j2');
-    } catch(e) { showAdminToast('8%î j$ j/j2jaj»èj'); }
+        showAdminToast('✅ تم تصدير البيانات');
+    } catch(e) { showAdminToast('❌ فشل التصدير'); }
 }
 
 function triggerImport() { document.getElementById('import-file').click(); }
@@ -441,7 +441,7 @@ async function importData(fileInput) {
     if (!file) return;
     try {
         await LuccaDB.DataSync.importAll(JSON.parse(await file.text()));
-        showAdminToast('8£à j2à j/jj2èjj/j» j/j0èj/j/j2');
-    } catch(e) { showAdminToast('8%î j$ j/j/jj2èjj/j»'); }
+        showAdminToast('✅ تم استيراد البيانات');
+    } catch(e) { showAdminToast('❌ فشل الاستيراد'); }
     fileInput.value = '';
 }

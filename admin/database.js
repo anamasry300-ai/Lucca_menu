@@ -1,11 +1,11 @@
 /*
-8@¤8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@ù
-8@Q                    Lucca Caff0 - jUj/à j-j»j/jj1 j/àéçë                  8@Q
-8@Q                         j/j-jaj»j/j 1.0                               8@Q
-8@#8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@8@%
+╔══════════════════════════════════════════════════════════════════╗
+║                    Lucca Caffè - نظام إدارة المقهى                  ║
+║                         الإصدار 1.0                               ║
+╚══════════════════════════════════════════════════════════════════╝
 */
 
-// ==================== éj/jcj»j1 j/j0èj/j/j2 j/àj5èj1 ====================
+// ==================== قاعدة البيانات المحلية ====================
 const DB_NAME = 'lucca_caffe_db';
 const DB_VERSION = 3;
 
@@ -27,17 +27,17 @@ class LuccaDatabase {
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 
-                // j4j»ê j/àjj2j«j»àè
+                // جدول المستخدمين
                 if (!db.objectStoreNames.contains('users')) {
                     db.createObjectStore('users', { keyPath: 'id' });
                 }
                 
-                // j4j»ê j/jVj/j0èjj/j2
+                // جدول الطابيزات
                 if (!db.objectStoreNames.contains('tables')) {
                     db.createObjectStore('tables', { keyPath: 'id' });
                 }
                 
-                // j4j»ê j/jVj0j/j2
+                // جدول الطلبات
                 if (!db.objectStoreNames.contains('orders')) {
                     const orderStore = db.createObjectStore('orders', { keyPath: 'id', autoIncrement: true });
                     orderStore.createIndex('tableId', 'tableId', { unique: false });
@@ -45,49 +45,49 @@ class LuccaDatabase {
                     orderStore.createIndex('status', 'status', { unique: false });
                 }
                 
-                // j4j»ê j/jcàj/j)
+                // جدول العملاء
                 if (!db.objectStoreNames.contains('customers')) {
                     const customerStore = db.createObjectStore('customers', { keyPath: 'id', autoIncrement: true });
                     customerStore.createIndex('phone', 'phone', { unique: true });
                 }
                 
-                // j4j»ê j/j-jcj»j/j»j/j2
+                // جدول الإعدادات
                 if (!db.objectStoreNames.contains('settings')) {
                     db.createObjectStore('settings', { keyPath: 'key' });
                 }
 
-                // j4j»ê j/àj«jê
+                // جدول المخزون
                 if (!db.objectStoreNames.contains('inventory')) {
                     const invStore = db.createObjectStore('inventory', { keyPath: 'id', autoIncrement: true });
                     invStore.createIndex('name', 'name', { unique: false });
                 }
 
-                // j4j»ê j/àj$j2jèj/j2
+                // جدول المشتريات
                 if (!db.objectStoreNames.contains('purchases')) {
                     const purStore = db.createObjectStore('purchases', { keyPath: 'id', autoIncrement: true });
                     purStore.createIndex('date', 'date', { unique: false });
                 }
 
-                // j4j»ê j/àêjUè
+                // جدول الموظفين
                 if (!db.objectStoreNames.contains('employees')) {
                     db.createObjectStore('employees', { keyPath: 'id', autoIncrement: true });
                 }
 
-                // j4j»ê j/j5jbêj êj/j/jajj/
+                // جدول الحضور والانصراف
                 if (!db.objectStoreNames.contains('attendance')) {
                     const attStore = db.createObjectStore('attendance', { keyPath: 'id', autoIncrement: true });
                     attStore.createIndex('employeeId', 'employeeId', { unique: false });
                     attStore.createIndex('date', 'date', { unique: false });
                 }
 
-                // j4j»ê j/àjajêj/j2
+                // جدول المصروفات
                 if (!db.objectStoreNames.contains('expenses')) {
                     const expStore = db.createObjectStore('expenses', { keyPath: 'id', autoIncrement: true });
                     expStore.createIndex('date', 'date', { unique: false });
                     expStore.createIndex('category', 'category', { unique: false });
                 }
 
-                // j4j»ê êjj»èj/j2 j/j«jèj1
+                // جدول ورديات الخزينة
                 if (!db.objectStoreNames.contains('shifts')) {
                     db.createObjectStore('shifts', { keyPath: 'date' });
                 }
@@ -95,7 +95,7 @@ class LuccaDatabase {
         });
     }
 
-    // jcàèj/j2 jcj/àj1
+    // عمليات عامة
     async getAll(storeName) {
         return new Promise((resolve, reject) => {
             const transaction = this.db.transaction(storeName, 'readonly');
@@ -157,10 +157,10 @@ class LuccaDatabase {
     }
 }
 
-// j-j$j/j) àj3è êj/j5j»
+// إنشاء مثيل واحد
 const db = new LuccaDatabase();
 
-// ==================== àjj/àj1 àj0j/j$jj1 àjc j/jèjj ====================
+// ==================== مزامنة مباشرة مع السيرفر ====================
 const ServerAPI = {
     getBaseUrl() { return localStorage.getItem('luccaServerUrl') || 'http://localhost:3000'; },
     getApiKey() { return localStorage.getItem('luccaApiKey') || ''; },
@@ -223,12 +223,12 @@ const ServerAPI = {
     }
 };
 
-// ==================== j-j»j/jj1 j/àjj2j«j»àè ====================
+// ==================== إدارة المستخدمين ====================
 const Users = {
     async login(username, password) {
         const users = await db.getAll('users');
         const user = users.find(u => u.username === username);
-        if (!user) throw new Error('j/jà j/àjj2j«j»à j+ê âàj1 j/àjêj j«jVj+');
+        if (!user) throw new Error('اسم المستخدم أو كلمة المرور خطأ');
 
         let valid = false;
         // Support both hashed (pbkdf2:) and legacy plaintext passwords
@@ -241,7 +241,7 @@ const Users = {
                 valid = (computedHash === storedHash);
             } catch(e) {
                 // Web Crypto not available, try server
-                throw new Error('âàj1 j/àjêj àj$jj1 - j/jj2j«j»à j2jj4è j/j»j«ê à j/j«j/j»à');
+                throw new Error('كلمة المرور مشفرة - استخدم تسجيل الدخول من الخادم');
             }
         } else {
             valid = (user.password === password);
@@ -251,7 +251,7 @@ const Users = {
             localStorage.setItem('currentUser', JSON.stringify(user));
             return user;
         }
-        throw new Error('j/jà j/àjj2j«j»à j+ê âàj1 j/àjêj j«jVj+');
+        throw new Error('اسم المستخدم أو كلمة المرور خطأ');
     },
 
     async pbkdf2Hash(password, salt) {
@@ -265,7 +265,7 @@ const Users = {
     async register(userData) {
         const users = await this.getAll();
         if (users.find(u => u.username === userData.username)) {
-            throw new Error('j/jà j/àjj2j«j»à àêj4êj»');
+            throw new Error('اسم المستخدم موجود');
         }
         userData.createdAt = new Date().toISOString();
         userData.role = userData.role || 'cashier';
@@ -299,7 +299,7 @@ const Users = {
                 id: 1,
                 username: 'admin',
                 password: '123456',
-                name: 'àj»èj j/jUj/à',
+                name: 'مدير النظام',
                 role: 'admin',
                 createdAt: new Date().toISOString()
             });
@@ -307,7 +307,7 @@ const Users = {
     }
 };
 
-// ==================== j-j»j/jj1 j/jVj/j0èjj/j2 ====================
+// ==================== إدارة الطابيزات ====================
 const Tables = {
     async init() {
         const tables = await db.getAll('tables');
@@ -343,7 +343,7 @@ const Tables = {
     }
 };
 
-// ==================== j-j»j/jj1 j/jVj0j/j2 ====================
+// ==================== إدارة الطلبات ====================
 const Orders = {
     async createWithPayment(tableId, items, customerName, customerPhone, paymentMethod, options) {
         options = options || {};
@@ -550,7 +550,7 @@ const Orders = {
     }
 };
 
-// ==================== j-j»j/jj1 j/jcàj/j) ====================
+// ==================== إدارة العملاء ====================
 const Customers = {
     async add(phone, name = '', options = {}) {
         const customers = await this.getAll();
@@ -600,7 +600,7 @@ const Customers = {
     }
 };
 
-// ==================== j-j»j/jj1 j/j-jcj»j/j»j/j2 ====================
+// ==================== إدارة الإعدادات ====================
 const Settings = {
     async get(key) {
         const serverData = await ServerAPI.getAll('settings');
@@ -631,7 +631,7 @@ const Settings = {
     }
 };
 
-// ==================== j-j»j/jj1 j/àj«jê ====================
+// ==================== إدارة المخزون ====================
 const Inventory = {
     async getAll() {
         const serverData = await ServerAPI.getAll('inventory');
@@ -679,7 +679,7 @@ const Inventory = {
     }
 };
 
-// ==================== j-j»j/jj1 j/àj$j2jèj/j2 ====================
+// ==================== إدارة المشتريات ====================
 const Purchases = {
     async getAll() {
         const serverData = await ServerAPI.getAll('purchases');
@@ -711,7 +711,7 @@ const Purchases = {
     }
 };
 
-// ==================== j-j»j/jj1 j/àêjUè ====================
+// ==================== إدارة الموظفين ====================
 const Employees = {
     async getAll() {
         const serverData = await ServerAPI.getAll('employees');
@@ -754,7 +754,7 @@ const Employees = {
     }
 };
 
-// ==================== j/j5jbêj êj/j/jajj/ ====================
+// ==================== الحضور والانصراف ====================
 const Attendance = {
     async getAll() {
         const serverData = await ServerAPI.getAll('attendance');
@@ -769,7 +769,7 @@ const Attendance = {
         const today = new Date().toISOString().split('T')[0];
         const existing = await this.getByEmployeeAndDate(employeeId, today);
         if (existing) {
-            throw new Error('j2à j2jj4è j/j5jbêj àjj0éj/ï j/èêà');
+            throw new Error('تم تسجيل الحضور مسبقاً اليوم');
         }
         // Calculate late minutes based on expected start time (configurable, default 9:00 AM)
         const expectedStart = await Settings.get('workStartTime') || '09:00';
@@ -802,10 +802,10 @@ const Attendance = {
         const today = new Date().toISOString().split('T')[0];
         const existing = await this.getByEmployeeAndDate(employeeId, today);
         if (!existing) {
-            throw new Error('à èj2à j2jj4è j/j5jbêj j/èêà');
+            throw new Error('لم يتم تسجيل الحضور اليوم');
         }
         if (existing.checkOut) {
-            throw new Error('j2à j2jj4è j/j/jajj/ àjj0éj/ï');
+            throw new Error('تم تسجيل الانصراف مسبقاً');
         }
         existing.checkOut = new Date().toISOString();
         const diff = new Date(existing.checkOut) - new Date(existing.checkIn);
@@ -847,7 +847,7 @@ const Attendance = {
     }
 };
 
-// ==================== j-j»j/jj1 j/àjajêj/j2 ====================
+// ==================== إدارة المصروفات ====================
 const Expenses = {
     async getAll() {
         const serverData = await ServerAPI.getAll('expenses');
@@ -904,10 +904,10 @@ const Expenses = {
         return items.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
     },
 
-    categories: ['j-èj4j/j', 'jêj/j2j0', 'àj$j2jèj/j2', 'jaèj/j1', 'âçjj0j/j)', 'àèj/ç', 'j-j2jj2', 'j2jêèé', 'é', 'j+j«jë']
+    categories: ['إيجار', 'رواتب', 'مشتريات', 'صيانة', 'كهرباء', 'مياه', 'إنترنت', 'تسويق', 'نقل', 'أخرى']
 };
 
-// ==================== j-j»j/jj1 j/j«jèj1 êj/êjj»èj/j2 ====================
+// ==================== إدارة الخزينة والورديات ====================
 const Shifts = {
     async get(date) {
         date = date || new Date().toISOString().split('T')[0];
@@ -993,7 +993,7 @@ const MenuSync = {
         return {
             id: category.id || `category-${index + 1}`,
             title: category.title || `Category ${index + 1}`,
-            icon: category.icon || '8*',
+            icon: category.icon || '•',
             items: (category.items || []).map(item => ({
                 ...item,
                 price: typeof item.price === 'string' ? parseFloat(item.price) : item.price,
@@ -1027,7 +1027,7 @@ const MenuSync = {
     }
 };
 
-// ==================== j2jaj»èj/j/jj2èjj/j» j/j0èj/j/j2 ====================
+// ==================== تصدير/استيراد البيانات ====================
 const DataSync = {
     async exportAll() {
         const data = {
@@ -1072,7 +1072,7 @@ const DataSync = {
     }
 };
 
-// ==================== j/àjj/àj1 àjc j/jèjj ====================
+// ==================== المزامنة مع السيرفر ====================
 let SERVER_URL = localStorage.getItem('luccaServerUrl') || 'http://localhost:3000';
 
 const ServerSync = {
@@ -1111,10 +1111,10 @@ const ServerSync = {
                 signal: controller.signal
             });
             clearTimeout(timer);
-            if (!res.ok) throw new Error('j$ jjc j/j0èj/j/j2');
-            return { success: true, message: '8£à j2à jjc j/j0èj/j/j2 jèjj' };
+            if (!res.ok) throw new Error('فشل رفع البيانات');
+            return { success: true, message: '✅ تم رفع البيانات للسيرفر' };
         } catch (e) {
-            return { success: false, message: '8%î j$ j/j/j2jaj/ j0j/jèjj: ' + e.message };
+            return { success: false, message: '❌ فشل الاتصال بالسيرفر: ' + e.message };
         }
     },
 
@@ -1138,9 +1138,9 @@ const ServerSync = {
                     await db.add(col, item);
                 }
             }
-            return { success: true, message: '8£à j2à j2j5àè j/j0èj/j/j2 à j/jèjj' };
+            return { success: true, message: '✅ تم تحميل البيانات من السيرفر' };
         } catch (e) {
-            return { success: false, message: '8%î j$ j/j/j2jaj/ j0j/jèjj: ' + e.message };
+            return { success: false, message: '❌ فشل الاتصال بالسيرفر: ' + e.message };
         }
     },
 
@@ -1156,7 +1156,7 @@ const ServerSync = {
     }
 };
 
-// ==================== j2çèj.j1 j/jUj/à ====================
+// ==================== تهيئة النظام ====================
 async function initSystem() {
     await db.init();
 
@@ -1193,14 +1193,14 @@ async function initSystem() {
                     for (const order of parsed) {
                         try { await db.add('orders', order); } catch(e) {}
                     }
-                    console.log(`a'¤ j2à j/jj2jcj/j»j1 ${parsed.length} jVj0 à j/jj« j/j/j5j2èj/jVè`);
+                    console.log(`🔄 تم استعادة ${parsed.length} طلب من النسخ الاحتياطي`);
                 }
             }
         }
     } catch(e) {}
 
-    console.log('8£à j2à j2çèj.j1 jUj/à Lucca Caff0');
+    console.log('✅ تم تهيئة نظام Lucca Caffè');
 }
 
-// j2jaj»èj j/jj2j«j»j/à
+// تصدير للاستخدام
 window.LuccaDB = { db, Users, Tables, Orders, Customers, Settings, Inventory, Purchases, Employees, Attendance, Expenses, Shifts, MenuSync, DataSync, ServerSync, initSystem };

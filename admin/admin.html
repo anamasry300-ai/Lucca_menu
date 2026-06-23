@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucca Specialty Coffee - êj5j1 j/j2j5âà</title>
+    <title>Lucca Specialty Coffee - لوحة التحكم</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -61,7 +61,7 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        /* j$j/j$j1 j2jj4è j/j»j«ê */
+        /* شاشة تسجيل الدخول */
         .login-screen {
             display: flex;
             align-items: center;
@@ -130,7 +130,7 @@
             display: none;
         }
 
-        /* êj5j1 j/j2j5âà */
+        /* لوحة التحكم */
         .admin-panel {
             display: none;
         }
@@ -216,7 +216,7 @@
             display: block;
         }
 
-        /* j0jVj/éj/j2 j/j-j5jaj/j.èj/j2 */
+        /* بطاقات الإحصائيات */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -256,7 +256,7 @@
             margin-top: 5px;
         }
 
-        /* j4j»ê j/jVj/j0èjj/j2 */
+        /* جدول الطابيزات */
         .tables-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -301,7 +301,7 @@
             margin-top: 5px;
         }
 
-        /* àêjj4 j/jVj0 */
+        /* نموذج الطلب */
         .order-form {
             background: var(--warm-white);
             padding: 25px;
@@ -389,7 +389,7 @@
             margin-top: 15px;
         }
 
-        /* j4j»ê j/àj0èjcj/j2 */
+        /* جدول المبيعات */
         .sales-table {
             width: 100%;
             background: var(--card-bg);
@@ -422,7 +422,7 @@
             border-bottom: none;
         }
 
-        /* j/jcàj/j) */
+        /* العملاء */
         .customers-list {
             background: var(--warm-white);
             border-radius: 15px;
@@ -450,7 +450,7 @@
             font-size: 0.9rem;
         }
 
-        /* j/j-jcj»j/j»j/j2 */
+        /* الإعدادات */
         .settings-form {
             background: var(--warm-white);
             padding: 25px;
@@ -507,7 +507,7 @@
             color: white;
         }
 
-        /* j/jj1 àèê j/j+j/jaj/ */
+        /* نافذة منيو الأاصناف */
         .menu-selector {
             max-height: 300px;
             overflow-y: auto;
@@ -535,7 +535,7 @@
             background: var(--cream);
         }
 
-        /* j/j«j2èj/j j/jVj/êj1 j/àj0jjV */
+        /* اختيار الطاولة المبسط */
         .table-select-simple {
             margin-bottom: 20px;
         }
@@ -577,7 +577,7 @@
             border-color: var(--terracotta);
         }
 
-        /* j+éjj/à j/àèê */
+        /* أقسام المنيو */
         .menu-categories {
             margin-bottom: 20px;
         }
@@ -637,7 +637,7 @@
             font-weight: 700;
         }
 
-        /* j/jj1 */
+        /* السلة */
         .cart-section {
             background: var(--warm-white);
             padding: 20px;
@@ -705,7 +705,7 @@
             font-size: 1.5rem;
         }
 
-        /* j/jj1 j/j/j2êjj1 */
+        /* نافذة الفاتورة */
         .invoice-modal {
             display: none;
             position: fixed;
@@ -972,114 +972,114 @@
     </style>
 </head>
 <body>
-    <!-- j$j/j$j1 j2jj4è j/j»j«ê -->
+    <!-- شاشة تسجيل الدخول -->
     <div class="login-screen" id="loginScreen">
         <div class="login-box">
             <h1>Lucca</h1>
             <p class="subtitle">SPECIALTY COFFEE</p>
-            <p>êj5j1 j/j2j5âà</p>
+            <p>لوحة التحكم</p>
             <br>
-            <input type="text" id="username" placeholder="j/jà j/àjj2j«j»à">
-            <input type="password" id="password" placeholder="âàj1 j/àjêj">
-            <button onclick="doLogin()">j»j«ê</button>
-            <p class="error-msg" id="loginError">j/jà j/àjj2j«j»à j+ê âàj1 j/àjêj j«jVj+</p>
+            <input type="text" id="username" placeholder="اسم المستخدم">
+            <input type="password" id="password" placeholder="كلمة المرور">
+            <button onclick="doLogin()">دخول</button>
+            <p class="error-msg" id="loginError">اسم المستخدم أو كلمة المرور خطأ</p>
             <p style="margin-top: 20px; font-size: 0.8rem; color: #666;">
-                j/j2jj/jbè: admin / 123456
+                افتراضي: admin / 123456
             </p>
         </div>
     </div>
 
-    <!-- êj5j1 j/j2j5âà -->
+    <!-- لوحة التحكم -->
     <div class="admin-panel" id="adminPanel">
         <div class="admin-header">
-            <h2>8!@ Lucca - êj5j1 j/j2j5âà</h2>
+            <h2>☕ Lucca - لوحة التحكم</h2>
             <div class="user-info">
-                <span id="currentUserName">àj»èj j/jUj/à</span>
-                <button class="logout-btn" onclick="toggleDarkMode()" id="darkModeBtn" title="j/êjbjc j/èè">a'î"</button>
-                <button class="logout-btn" onclick="doLogout()">j«jêj4</button>
+                <span id="currentUserName">مدير النظام</span>
+                <button class="logout-btn" onclick="toggleDarkMode()" id="darkModeBtn" title="الوضع الليلي">🌙</button>
+                <button class="logout-btn" onclick="doLogout()">خروج</button>
             </div>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('dashboard',this)">a'ôè êj5j1 j/j2j5âà</button>
-            <button class="tab-btn" onclick="showTab('tables',this)">a'\JU j/jVj/j0èjj/j2</button>
-            <button class="tab-btn" onclick="showTab('orders',this)">a'/[ j/jVj0j/j2</button>
-            <button class="tab-btn" onclick="showTab('customers',this)">a'Q- j/jcàj/j)</button>
-            <button class="tab-btn" onclick="showTab('settings',this)">8#"JU j/j-jcj»j/j»j/j2</button>
-            <button class="tab-btn" onclick="showTab('purchases',this)">a'$R j/àj$j2jèj/j2</button>
-            <button class="tab-btn" onclick="showTab('employees',this)">a'Q08a'R] j/àêjUè</button>
-            <button class="tab-btn" onclick="showTab('attendance',this)">a'ôï j/j5jbêj</button>
-            <button class="tab-btn" onclick="showTab('reports',this)">a'ôè j/j2éj/jèj</button>
-            <button class="tab-btn" onclick="showTab('kitchen',this)">a' j/àjVj0j«</button>
-            <button class="tab-btn" onclick="showTab('cashier',this)">a'R jaj»êé j/èêàèj1</button>
+            <button class="tab-btn active" onclick="showTab('dashboard',this)">📊 لوحة التحكم</button>
+            <button class="tab-btn" onclick="showTab('tables',this)">🍽️ الطابيزات</button>
+            <button class="tab-btn" onclick="showTab('orders',this)">🧾 الطلبات</button>
+            <button class="tab-btn" onclick="showTab('customers',this)">👥 العملاء</button>
+            <button class="tab-btn" onclick="showTab('settings',this)">⚙️ الإعدادات</button>
+            <button class="tab-btn" onclick="showTab('purchases',this)">🛒 المشتريات</button>
+            <button class="tab-btn" onclick="showTab('employees',this)">👨‍💼 الموظفين</button>
+            <button class="tab-btn" onclick="showTab('attendance',this)">📋 الحضور</button>
+            <button class="tab-btn" onclick="showTab('reports',this)">📊 التقارير</button>
+            <button class="tab-btn" onclick="showTab('kitchen',this)">🍳 المطبخ</button>
+            <button class="tab-btn" onclick="showTab('cashier',this)">💰 صندوق اليومية</button>
         </div>
         </div>
 
-        <!-- êj5j1 j/j2j5âà -->
+        <!-- لوحة التحكم -->
         <div class="tab-content active" id="dashboard">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="icon">a'\JU</div>
+                    <div class="icon">🍽️</div>
                     <div class="value" id="statTables">0</div>
-                    <div class="label">jVj/êj/j2 àj2j/j5j1</div>
+                    <div class="label">طاولات متاحة</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'/[</div>
+                    <div class="icon">🧾</div>
                     <div class="value" id="statOrders">0</div>
-                    <div class="label">jVj0j/j2 j/èêà</div>
+                    <div class="label">طلبات اليوم</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'R</div>
+                    <div class="icon">💰</div>
                     <div class="value" id="statSales">0</div>
-                    <div class="label">j/àj0èjcj/j2 (j4.à)</div>
+                    <div class="label">المبيعات (ج.م)</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'Q-</div>
+                    <div class="icon">👥</div>
                     <div class="value" id="statCustomers">0</div>
-                    <div class="label">jcàj/j) àjj4è</div>
+                    <div class="label">عملاء مسجلين</div>
                 </div>
             </div>
 
-            <!-- j/j-j4jj/j)j/j2 j/jjèjcj1 -->
+            <!-- الإجراءات السريعة -->
             <div class="order-form" style="margin-top:15px;">
-                <h3>8#) j-j4jj/j)j/j2 jjèjcj1</h3>
+                <h3>⚡ إجراءات سريعة</h3>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;">
                     <button onclick="showTab('purchases',document.querySelector('.tab-btn[onclick*=\"purchases\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                        <div style="font-size:1.6rem;margin-bottom:5px;">a'$R</div>
-                        <div style="font-weight:700;">j-jbj/j1 àj$j2jèj/j2</div>
+                        <div style="font-size:1.6rem;margin-bottom:5px;">🛒</div>
+                        <div style="font-weight:700;">إضافة مشتريات</div>
                     </button>
                     <button onclick="showTab('cashier',document.querySelector('.tab-btn[onclick*=\"cashier\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                        <div style="font-size:1.6rem;margin-bottom:5px;">a'R</div>
-                        <div style="font-weight:700;">j2jj4è àjajê</div>
+                        <div style="font-size:1.6rem;margin-bottom:5px;">💰</div>
+                        <div style="font-weight:700;">تسجيل مصروف</div>
                     </button>
                     <button onclick="showTab('employees',document.querySelector('.tab-btn[onclick*=\"employees\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                        <div style="font-size:1.6rem;margin-bottom:5px;">a'Q08a'R]</div>
-                        <div style="font-weight:700;">j-jbj/j1 àêjU</div>
+                        <div style="font-size:1.6rem;margin-bottom:5px;">👨‍💼</div>
+                        <div style="font-weight:700;">إضافة موظف</div>
                     </button>
                     <button onclick="showTab('cashier',document.querySelector('.tab-btn[onclick*=\"cashier\"]'))" style="flex:1;min-width:140px;padding:16px;border-radius:12px;border:1px solid var(--gold);background:var(--card-bg);cursor:pointer;font-size:1rem;font-family:'Tajawal',sans-serif;transition:transform 0.15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
-                        <div style="font-size:1.6rem;margin-bottom:5px;">a'¤R</div>
-                        <div style="font-weight:700;">j-éj/ j/êjj»èj1</div>
+                        <div style="font-size:1.6rem;margin-bottom:5px;">🔒</div>
+                        <div style="font-weight:700;">إقفال الوردية</div>
                     </button>
                 </div>
             </div>
 
             <div class="backup-section" style="margin-top:25px;">
-                <h3>a'ô j$j/jâ j/àèê àjc j/jcàj/j)</h3>
-                <p>j/jcàj/j) èéj»jê èjVj0ê à j/àèê êèjj2àêj/ j/j/j2êjj1 êj/j2jj/j0 à j+è j4çj/j</p>
+                <h3>📱 شارك المنيو مع العملاء</h3>
+                <p>العملاء يقدرون يطلبون من المنيو ويستلموا الفاتورة واتساب من أي جهاز</p>
                 <div class="backup-buttons" style="flex-direction:column;gap:15px;">
                     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                        <div id="shareQrCode" style="background:white;padding:10px;border-radius:10px;width:130px;height:130px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#999;">j4j/j j-j$j/j) QR...</div>
+                        <div id="shareQrCode" style="background:white;padding:10px;border-radius:10px;width:130px;height:130px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:#999;">جارٍ إنشاء QR...</div>
                         <div style="flex:1;min-width:200px;">
                             <div style="background:var(--cream);padding:12px;border-radius:8px;margin-bottom:8px;font-size:0.9rem;">
-                                <strong>a'ô) j/j$j0âj1 j/àj5èj1:</strong><br>
+                                <strong>📡 الشبكة المحلية:</strong><br>
                                 <span id="localUrl" style="color:var(--terracotta);font-weight:700;direction:ltr;display:block;word-break:break-all;"></span>
-                                <button onclick="copyText('localUrl')" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;">a'ôï jj«</button>
+                                <button onclick="copyText('localUrl')" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;">📋 نسخ</button>
                             </div>
                             <div style="background:var(--cream);padding:12px;border-radius:8px;font-size:0.9rem;">
-                                <strong>a'î jj/j0jV jcj/à (j-j2jj2):</strong><br>
-                                <span id="publicUrl" style="color:var(--terracotta);font-weight:700;direction:ltr;display:block;word-break:break-all;">j$jQQ j/jèjj àjc --tunnel</span>
-                                <button onclick="copyText('publicUrl')" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;">a'ôï jj«</button>
-                                <button onclick="shareViaWhatsapp()" style="background:#25D366;color:white;border:none;padding:2px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem;">a'R4 j$j/jâ êj/j2jj/j0</button>
+                                <strong>🌐 رابط عام (إنترنت):</strong><br>
+                                <span id="publicUrl" style="color:var(--terracotta);font-weight:700;direction:ltr;display:block;word-break:break-all;">شغّل السيرفر مع --tunnel</span>
+                                <button onclick="copyText('publicUrl')" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;">📋 نسخ</button>
+                                <button onclick="shareViaWhatsapp()" style="background:#25D366;color:white;border:none;padding:2px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem;">💬 شارك واتساب</button>
                             </div>
                         </div>
                     </div>
@@ -1087,18 +1087,18 @@
             </div>
         </div>
 
-        <!-- j/jVj/j0èjj/j2 -->
+        <!-- الطابيزات -->
         <div class="tab-content" id="tables">
             <div class="tables-grid" id="tablesGrid"></div>
         </div>
 
-        <!-- j/jVj0j/j2 -->
+        <!-- الطلبات -->
         <div class="tab-content" id="orders">
-            <!-- j/j«j2èj/j j/jVj/êj1 -->
+            <!-- اختيار الطاولة -->
             <div class="order-form">
-                <h3>a'/[ j-j$j/j) jVj0 j4j»èj»</h3>
+                <h3>🧾 إنشاء طلب جديد</h3>
                 <div class="table-select-simple">
-                    <label>jéà j/jVj/êj1:</label>
+                    <label>رقم الطاولة:</label>
                     <div class="table-numbers">
                         <button type="button" class="table-num-btn" onclick="selectTableNum(1, event)">1</button>
                         <button type="button" class="table-num-btn" onclick="selectTableNum(2, event)">2</button>
@@ -1115,37 +1115,37 @@
                         <button type="button" class="table-num-btn" onclick="selectTableNum(13, event)">13</button>
                         <button type="button" class="table-num-btn" onclick="selectTableNum(14, event)">14</button>
                     </div>
-                    <input type="text" id="customerName" placeholder="j/jà j/jcàè (j/j«j2èj/jè)">
-                    <input type="tel" id="customerPhone" placeholder="jéà j/çj/j2 (j/j«j2èj/jè)">
+                    <input type="text" id="customerName" placeholder="اسم العميل (اختياري)">
+                    <input type="tel" id="customerPhone" placeholder="رقم الهاتف (اختياري)">
                     <div style="display:flex;gap:10px;">
-                        <input type="number" id="discountInput" placeholder="j/j«jaà %" style="flex:1;" min="0" max="100">
+                        <input type="number" id="discountInput" placeholder="الخصم %" style="flex:1;" min="0" max="100">
                         <select id="paymentMethodSelect" style="flex:1;">
-                            <option value="cash">a'Ra âj/j$</option>
-                            <option value="visa">a'R èjj/</option>
+                            <option value="cash">💵 كاش</option>
+                            <option value="visa">💳 فيزا</option>
                         </select>
                     </div>
                 </div>
             </div>
 
-            <!-- j/àèê -->
+            <!-- المنيو -->
             <div class="menu-categories" id="menuCategories"></div>
 
-            <!-- j/jj1 -->
+            <!-- السلة -->
             <div class="cart-section" id="cartSection">
-                <h3>a'$R j/jj1</h3>
+                <h3>🛒 السلة</h3>
                 <div class="cart-items" id="cartItems"></div>
                 <div class="cart-total">
-                    <span>j/j-j4àj/è:</span>
-                    <span class="total-amount" id="cartTotal">0 j4.à</span>
+                    <span>الإجمالي:</span>
+                    <span class="total-amount" id="cartTotal">0 ج.م</span>
                 </div>
-                <button class="btn-submit" onclick="submitOrder()">j-j$j/j) j/jVj0</button>
+                <button class="btn-submit" onclick="submitOrder()">إنشاء الطلب</button>
             </div>
             
-            <h3>a'ôï j/jVj0j/j2</h3>
+            <h3>📋 الطلبات</h3>
             <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap;">
-                <input type="text" id="orderSearch" placeholder="a'¤ j0j5j3..." style="flex:1;padding:12px;border:2px solid #ddd;border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:1rem;">
+                <input type="text" id="orderSearch" placeholder="🔍 بحث..." style="flex:1;padding:12px;border:2px solid #ddd;border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:1rem;">
                 <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:8px 15px;background:var(--card-bg);border-radius:var(--radius-sm);box-shadow:var(--shadow);font-size:0.9rem;">
-                    <input type="checkbox" id="showCompletedOrders" onchange="loadOrders()"> jcjjb j/àâj2àj1
+                    <input type="checkbox" id="showCompletedOrders" onchange="loadOrders()"> عرض المكتملة
                 </label>
             </div>
             <div style="overflow-x:auto;">
@@ -1153,13 +1153,13 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>j/jVj/êj1</th>
-                        <th>j/êéj2</th>
-                        <th>j/jcàè</th>
-                        <th>j/j»jc</th>
-                        <th>j/j-j4àj/è</th>
-                        <th>j/j5j/j1</th>
-                        <th>j-j4jj/j)j/j2</th>
+                        <th>الطاولة</th>
+                        <th>الوقت</th>
+                        <th>العميل</th>
+                        <th>الدفع</th>
+                        <th>الإجمالي</th>
+                        <th>الحالة</th>
+                        <th>إجراءات</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -1167,150 +1167,150 @@
             </div>
         </div>
 
-        <!-- j/jcàj/j) -->
+        <!-- العملاء -->
         <div class="tab-content" id="customers">
             <div class="customers-list" id="customersList"></div>
         </div>
 
-        <!-- j/j-jcj»j/j»j/j2 -->
+        <!-- الإعدادات -->
         <div class="tab-content" id="settings">
             <div class="settings-form">
-                <h3>j-jcj»j/j»j/j2 j/jUj/à</h3>
+                <h3>إعدادات النظام</h3>
                 <div class="form-group">
-                    <label>j/jà j/àéçë</label>
+                    <label>اسم المقهى</label>
                     <input type="text" id="cafeName" value="Lucca Specialty Coffee">
                 </div>
                 <div class="form-group">
-                    <label>jcêj/ j/àéçë</label>
-                    <input type="text" id="cafeAddress" value="j$j/jjc àj5àj» jcè - j0j4êj/j âèj1 j/j2jj0èj1 - j0êjjjcèj»">
+                    <label>عنوان المقهى</label>
+                    <input type="text" id="cafeAddress" value="شارع محمد علي - بجوار كلية التربية - بورسعيد">
                 </div>
                 <div class="form-group">
-                    <label>jéà j/çj/j2</label>
+                    <label>رقم الهاتف</label>
                     <input type="tel" id="cafePhone" value="01551007413">
                 </div>
                 <div class="form-group">
-                    <label>jj0j1 j/jbjèj0j1 (%)</label>
+                    <label>نسبة الضريبة (%)</label>
                     <input type="number" id="taxRate" value="14">
                 </div>
                 <div class="form-group">
-                    <label>jéà êj/j2jj/j0 (j-jjj/ j/jVj0j/j2)</label>
+                    <label>رقم واتساب (لإرسال الطلبات)</label>
                     <input type="tel" id="whatsappNumber" placeholder="201010058989" style="direction:ltr;">
                 </div>
                 <div class="form-group">
-                    <label>j0j»j/èj1 j/j»êj/à (j5jj/j0 j/j2j+j«èj)</label>
+                    <label>بداية الدوام (لحساب التأخير)</label>
                     <input type="time" id="workStartTime" value="09:00">
                 </div>
-                <button class="btn-submit" onclick="saveSettings()">j5jU j/j-jcj»j/j»j/j2</button>
+                <button class="btn-submit" onclick="saveSettings()">حفظ الإعدادات</button>
             </div>
 
             <div class="backup-section">
-                <h3>a'¤ j/jj« j/j/j5j2èj/jVè êj/àjj/àj1</h3>
-                <p>j2jaj»èj j/j0èj/j/j2 j/jj2j«j»j/à jcë j+j4çjj1 j+j«jë</p>
+                <h3>🔄 النسخ الاحتياطي والمزامنة</h3>
+                <p>تصدير البيانات للاستخدام على أجهزة أخرى</p>
                 <div class="backup-buttons">
-                    <button class="btn-export" onclick="exportData()">a'ô, j2jaj»èj j/j0èj/j/j2</button>
-                    <button class="btn-import" onclick="document.getElementById('importFile').click()">a'ô- j/jj2èjj/j» j/j0èj/j/j2</button>
+                    <button class="btn-export" onclick="exportData()">📤 تصدير البيانات</button>
+                    <button class="btn-import" onclick="document.getElementById('importFile').click()">📥 استيراد البيانات</button>
                     <input type="file" id="importFile" style="display:none" onchange="importData(this)">
                 </div>
             </div>
 
             <div class="backup-section" style="margin-top:20px;">
-                <h3>a'î j/àjj/àj1 àjc j/jèjj</h3>
-                <p>j$j/jâ j/j0èj/j/j2 j0è j+j4çjj1 àj2jcj»j»j1 jcj0j j/jèjj j/àj5è</p>
+                <h3>🌐 المزامنة مع السيرفر</h3>
+                <p>شارك البيانات بين أجهزة متعددة عبر السيرفر المحلي</p>
                 <div class="form-group">
-                    <label>jj/j0jV j/jèjj</label>
+                    <label>رابط السيرفر</label>
                     <input type="text" id="serverUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
                 </div>
                 <div class="form-group">
-                    <label>àj2j/j5 API (j+j4çjj1 j/j«j/jj4èj1)</label>
+                    <label>مفتاح API (للأجهزة الخارجية)</label>
                     <input type="text" id="apiKeyDisplay" readonly style="direction:ltr;background:var(--cream);font-family:monospace;" value="loading...">
-                    <button onclick="copyApiKey()" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;margin-top:5px;">a'ôï jj« j/àj2j/j5</button>
+                    <button onclick="copyApiKey()" style="background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.8rem;margin-top:5px;">📋 نسخ المفتاح</button>
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;padding:10px;background:var(--cream);border-radius:var(--radius-sm);">
                     <span id="serverStatusDot" style="width:12px;height:12px;border-radius:50%;background:#999;display:inline-block;"></span>
-                    <span id="serverStatusText" style="font-size:0.9rem;">à èj2à j/j/j«j2j0j/j</span>
+                    <span id="serverStatusText" style="font-size:0.9rem;">لم يتم الاختبار</span>
                 </div>
                 <div class="backup-buttons">
-                    <button class="btn-export" onclick="testServerConnection()" style="background:var(--warning);">a'¤î j/j«j2j0j/j j/j/j2jaj/</button>
-                    <button class="btn-export" onclick="pushToServer()" style="background:var(--success);">a'ô, jjc jèjj</button>
-                    <button class="btn-import" onclick="pullFromServer()">a'ô- j2j5àè à j/jèjj</button>
+                    <button class="btn-export" onclick="testServerConnection()" style="background:var(--warning);">🔌 اختبار الاتصال</button>
+                    <button class="btn-export" onclick="pushToServer()" style="background:var(--success);">📤 رفع للسيرفر</button>
+                    <button class="btn-import" onclick="pullFromServer()">📥 تحميل من السيرفر</button>
                 </div>
                 <p id="serverStatus" style="margin-top:10px;font-size:0.9rem;"></p>
             </div>
         </div>
 
-        <!-- j/àj$j2jèj/j2 -->
+        <!-- المشتريات -->
         <div class="tab-content" id="purchases">
             <div class="purchases-form">
-                <h3>a'$R j-jbj/j1 àj$j2jèj/j2</h3>
+                <h3>🛒 إضافة مشتريات</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>j/jà j/ja</label>
-                        <input type="text" id="purchaseItem" placeholder="àj3: j0 jcjj0èjî j5èj0jî jâj">
+                        <label>اسم الصنف</label>
+                        <input type="text" id="purchaseItem" placeholder="مثل: بن عربي، حليب، سكر">
                     </div>
                     <div class="form-group">
-                        <label>j/âàèj1</label>
-                        <input type="number" id="purchaseQty" placeholder="jcj»j» j/êj5j»j/j2">
+                        <label>الكمية</label>
+                        <input type="number" id="purchaseQty" placeholder="عدد الوحدات">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>jjcj j/j2âj1 (j4.à)</label>
-                        <input type="number" id="purchaseCost" placeholder="jjcj j/j$jj/j)">
+                        <label>سعر التكلفة (ج.م)</label>
+                        <input type="number" id="purchaseCost" placeholder="سعر الشراء">
                     </div>
                     <div class="form-group">
-                        <label>jjcj j/j0èjc (j4.à)</label>
-                        <input type="number" id="purchasePrice" placeholder="jjcj j/j0èjc">
+                        <label>سعر البيع (ج.م)</label>
+                        <input type="number" id="purchasePrice" placeholder="سعر البيع">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>j/àêjj»</label>
-                    <input type="text" id="purchaseSupplier" placeholder="j/jà j/àêjj»">
+                    <label>المورد</label>
+                    <input type="text" id="purchaseSupplier" placeholder="اسم المورد">
                 </div>
-                <button class="btn-submit" onclick="addPurchase()">j-jbj/j1 àj$j2jèj/j2</button>
+                <button class="btn-submit" onclick="addPurchase()">إضافة مشتريات</button>
             </div>
 
             <div class="profit-stats">
-                <h3>a'ôè j2éjèj j/j+jj0j/j5 êj/j«jj/j.j</h3>
+                <h3>📊 تقرير الأرباح والخسائر</h3>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="icon">a'Ra</div>
+                        <div class="icon">💵</div>
                         <div class="value" id="totalRevenue">0</div>
-                        <div class="label">j-j4àj/è j/àj0èjcj/j2</div>
+                        <div class="label">إجمالي المبيعات</div>
                     </div>
                     <div class="stat-card">
-                        <div class="icon">a'$R</div>
+                        <div class="icon">🛒</div>
                         <div class="value" id="totalPurchases">0</div>
-                        <div class="label">j-j4àj/è j/àj$j2jèj/j2</div>
+                        <div class="label">إجمالي المشتريات</div>
                     </div>
                     <div class="stat-card">
-                        <div class="icon">a'ôê</div>
+                        <div class="icon">📈</div>
                         <div class="value" id="grossProfit">0</div>
-                        <div class="label">j-j4àj/è j/jj0j5</div>
+                        <div class="label">إجمالي الربح</div>
                     </div>
                     <div class="stat-card">
-                        <div class="icon">a'R»</div>
+                        <div class="icon">💯</div>
                         <div class="value" id="profitMargin">0%</div>
-                        <div class="label">jj0j1 j/jj0j5</div>
+                        <div class="label">نسبة الربح</div>
                 </div>
             </div>
             <div style="background:var(--card-bg);border-radius:var(--radius);padding:20px;margin-top:20px;box-shadow:var(--shadow);">
-                <h3 style="margin-bottom:15px;color:var(--text);font-family:'Playfair Display',serif;">a'ôê j/àj0èjcj/j2 (j*j«j 7 j+èj/à)</h3>
+                <h3 style="margin-bottom:15px;color:var(--text);font-family:'Playfair Display',serif;">📈 المبيعات (آخر 7 أيام)</h3>
                 <canvas id="salesChart" style="max-height:300px;"></canvas>
             </div>
         </div>
 
             <div class="purchases-list">
-                <h3>a'ôï jj4 j/àj$j2jèj/j2</h3>
+                <h3>📋 سجل المشتريات</h3>
                 <table class="sales-table" id="purchasesTable">
                     <thead>
                         <tr>
-                            <th>j/ja</th>
-                            <th>j/âàèj1</th>
-                            <th>j/j2âj1</th>
-                            <th>j/j0èjc</th>
-                            <th>j/jj0j5</th>
-                            <th>jj0j1 j/jj0j5</th>
-                            <th>j/j2j/jèj«</th>
+                            <th>الصنف</th>
+                            <th>الكمية</th>
+                            <th>التكلفة</th>
+                            <th>البيع</th>
+                            <th>الربح</th>
+                            <th>نسبة الربح</th>
+                            <th>التاريخ</th>
                         </tr>
                     </thead>
                     <tbody id="purchasesBody"></tbody>
@@ -1318,167 +1318,167 @@
             </div>
 
             <div class="profit-summary">
-                <h3>a'ôë àj«ja j/jj0j5 êj/j«jj/jj1</h3>
+                <h3>📉 ملخص الربح والخسارة</h3>
                 <div class="summary-row">
-                    <span>j-j4àj/è j-èjj/j»j/j2 j/àj0èjcj/j2:</span>
-                    <span id="summaryRevenue">0 j4.à</span>
+                    <span>إجمالي إيرادات المبيعات:</span>
+                    <span id="summaryRevenue">0 ج.م</span>
                 </div>
                 <div class="summary-row">
-                    <span>j2âj1 j/j0jbj/jcj1 j/àj0j/jcj1:</span>
-                    <span id="summaryCOGS" style="color:var(--terracotta);">0 j4.à</span>
+                    <span>تكلفة البضاعة المباعة:</span>
+                    <span id="summaryCOGS" style="color:var(--terracotta);">0 ج.م</span>
                 </div>
                 <div class="summary-row">
-                    <span>j-j4àj/è j/àjajêj/j2:</span>
-                    <span id="summaryExpenses" style="color:#e65100;">0 j4.à</span>
+                    <span>إجمالي المصروفات:</span>
+                    <span id="summaryExpenses" style="color:#e65100;">0 ج.م</span>
                 </div>
                 <div class="summary-row highlight">
-                    <span>jaj/è j/jj0j5:</span>
-                    <span id="summaryNetProfit">0 j4.à</span>
+                    <span>صافي الربح:</span>
+                    <span id="summaryNetProfit">0 ج.م</span>
                 </div>
             </div>
         </div>
 
-        <!-- j/àêjUè -->
+        <!-- الموظفين -->
         <div class="tab-content" id="employees">
             <div class="order-form">
-                <h3>a'Q08a'R] j-j»j/jj1 j/àêjUè</h3>
+                <h3>👨‍💼 إدارة الموظفين</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>j/jà j/àêjU</label>
-                        <input type="text" id="empName" placeholder="j/j/jà j/âj/à">
+                        <label>اسم الموظف</label>
+                        <input type="text" id="empName" placeholder="الاسم الكامل">
                     </div>
                     <div class="form-group">
-                        <label>jéà j/àêj0j/è</label>
+                        <label>رقم الموبايل</label>
                         <input type="text" id="empPhone" placeholder="01xxxxxxxxx">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>j/êjUèj1</label>
-                        <input type="text" id="empRole" placeholder="àj3: âj/j$èjjî j0j/jèjj2j/">
+                        <label>الوظيفة</label>
+                        <input type="text" id="empRole" placeholder="مثل: كاشير، باريستا">
                     </div>
                     <div class="form-group">
-                        <label>j/jj/j2j0 (j4.à)</label>
-                        <input type="number" id="empSalary" placeholder="j/jj/j2j0 j/j$çjè">
+                        <label>الراتب (ج.م)</label>
+                        <input type="number" id="empSalary" placeholder="الراتب الشهري">
                     </div>
                 </div>
-                <button class="btn-submit" onclick="addEmployee()">j-jbj/j1 àêjU</button>
+                <button class="btn-submit" onclick="addEmployee()">إضافة موظف</button>
             </div>
             <div class="customers-list" id="employeesList"></div>
         </div>
 
-        <!-- j/j5jbêj êj/j/jajj/ -->
+        <!-- الحضور والانصراف -->
         <div class="tab-content" id="attendance">
             <div class="order-form">
-                <h3>a'ôï j2jj4è j/j5jbêj êj/j/jajj/</h3>
+                <h3>📋 تسجيل الحضور والانصراف</h3>
                 <div class="form-row">
                     <div class="form-group">
-                        <label>j/j«j2j j/àêjU</label>
+                        <label>اختر الموظف</label>
                         <select id="attendanceEmployee">
-                            <option value="">j/j«j2j...</option>
+                            <option value="">اختر...</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>j»éj/j.é j2j+j«èj</label>
+                        <label>دقائق تأخير</label>
                         <input type="number" id="attendanceLate" value="0" min="0" style="width:100px;">
                     </div>
                     <div class="form-group">
-                        <label>àj/j5jUj/j2</label>
-                        <input type="text" id="attendanceNotes" placeholder="j2j+j«èj / j-j / j-j4j/jj1" style="width:180px;">
+                        <label>ملاحظات</label>
+                        <input type="text" id="attendanceNotes" placeholder="تأخير / إذن / إجازة" style="width:180px;">
                     </div>
                 </div>
                 <div class="form-row" style="gap:10px;">
-                    <button class="btn-submit" onclick="checkInEmployee()" style="background:var(--success)">a'¤a j2jj4è j5jbêj</button>
-                    <button class="btn-submit" onclick="checkOutEmployee()" style="background:var(--warning)">a''( j2jj4è j/jajj/</button>
+                    <button class="btn-submit" onclick="checkInEmployee()" style="background:var(--success)">🔵 تسجيل حضور</button>
+                    <button class="btn-submit" onclick="checkOutEmployee()" style="background:var(--warning)">🟠 تسجيل انصراف</button>
                 </div>
             </div>
             <div class="customers-list" id="attendanceList"></div>
         </div>
 
-        <!-- j/j2éj/jèj -->
+        <!-- التقارير -->
         <div class="tab-content" id="reports">
             <div class="order-form">
-                <h3>a'ôè j/j2éj/jèj j/àj2éj»àj1</h3>
+                <h3>📊 التقارير المتقدمة</h3>
                 <div style="display:flex;gap:15px;flex-wrap:wrap;align-items:end;">
                     <div class="form-group" style="flex:1;min-width:150px;">
-                        <label>à j2j/jèj«</label>
+                        <label>من تاريخ</label>
                         <input type="date" id="reportFrom">
                     </div>
                     <div class="form-group" style="flex:1;min-width:150px;">
-                        <label>j-ë j2j/jèj«</label>
+                        <label>إلى تاريخ</label>
                         <input type="date" id="reportTo">
                     </div>
-                    <button class="btn-submit" onclick="loadReport()" style="flex:0;padding:12px 30px;margin:0;width:auto;">jcjjb j/j2éjèj</button>
+                    <button class="btn-submit" onclick="loadReport()" style="flex:0;padding:12px 30px;margin:0;width:auto;">عرض التقرير</button>
                 </div>
             </div>
 
-            <!-- j-j5jaj/j.èj/j2 jjèjcj1 -->
+            <!-- إحصائيات سريعة -->
             <div class="stats-grid" id="reportStats">
                 <div class="stat-card">
-                    <div class="icon">a'/[</div>
+                    <div class="icon">🧾</div>
                     <div class="value" id="reportOrdersCount">0</div>
-                    <div class="label">jcj»j» j/jVj0j/j2</div>
+                    <div class="label">عدد الطلبات</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'R</div>
+                    <div class="icon">💰</div>
                     <div class="value" id="reportTotalSales">0</div>
-                    <div class="label">j-j4àj/è j/àj0èjcj/j2</div>
+                    <div class="label">إجمالي المبيعات</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'Ra</div>
+                    <div class="icon">💵</div>
                     <div class="value" id="reportCashTotal">0</div>
-                    <div class="label">âj/j$</div>
+                    <div class="label">كاش</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'R</div>
+                    <div class="icon">💳</div>
                     <div class="value" id="reportVisaTotal">0</div>
-                    <div class="label">èjj/</div>
+                    <div class="label">فيزا</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'ôè</div>
+                    <div class="icon">📊</div>
                     <div class="value" id="reportAvgOrder">0</div>
-                    <div class="label">àj2êjjV j/jVj0</div>
+                    <div class="label">متوسط الطلب</div>
                 </div>
                 <div class="stat-card" style="background:#fff3e0;">
-                    <div class="icon">a'ô,</div>
+                    <div class="icon">📤</div>
                     <div class="value" id="reportExpenses" style="color:#e65100;">0</div>
-                    <div class="label">j/àjajêj/j2</div>
+                    <div class="label">المصروفات</div>
                 </div>
                 <div class="stat-card" style="background:#fce4ec;">
-                    <div class="icon">a'$R</div>
+                    <div class="icon">🛒</div>
                     <div class="value" id="reportCOGS" style="color:#c62828;">0</div>
-                    <div class="label">j2âj1 j/àj$j2jèj/j2</div>
+                    <div class="label">تكلفة المشتريات</div>
                 </div>
                 <div class="stat-card" style="background:#e8f5e9;">
-                    <div class="icon">a'ôê</div>
+                    <div class="icon">📈</div>
                     <div class="value" id="reportNetProfit" style="color:#2e7d32;font-weight:800;">0</div>
-                    <div class="label">jaj/è j/jj0j5</div>
+                    <div class="label">صافي الربح</div>
                 </div>
                 <div class="stat-card" style="background:#e8f5e9;">
-                    <div class="icon">a'R»</div>
+                    <div class="icon">💯</div>
                     <div class="value" id="reportProfitMargin" style="color:#2e7d32;">0%</div>
-                    <div class="label">çj/àj$ j/jj0j5</div>
+                    <div class="label">هامش الربح</div>
                 </div>
             </div>
 
-            <!-- j4j»ê j/j2éjèj -->
+            <!-- جدول التقرير -->
             <div style="margin:20px 0;display:flex;gap:10px;">
-                <button class="btn-submit" onclick="exportReportCSV()" style="flex:0;padding:12px 25px;margin:0;width:auto;background:var(--olive);">a'ô- j2jaj»èj CSV</button>
-                <button class="btn-submit" onclick="exportReportExcel()" style="flex:0;padding:12px 25px;margin:0;width:auto;background:var(--terracotta);">a'ô- j2jaj»èj Excel</button>
+                <button class="btn-submit" onclick="exportReportCSV()" style="flex:0;padding:12px 25px;margin:0;width:auto;background:var(--olive);">📥 تصدير CSV</button>
+                <button class="btn-submit" onclick="exportReportExcel()" style="flex:0;padding:12px 25px;margin:0;width:auto;background:var(--terracotta);">📥 تصدير Excel</button>
             </div>
 
             <table class="sales-table" id="reportTable">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>j/jVj/êj1</th>
-                        <th>j/jcàè</th>
-                        <th>j/j»jc</th>
-                        <th>j/àj4àêjc</th>
-                        <th>j/jbjèj0j1</th>
-                        <th>j/j-j4àj/è</th>
-                        <th>j/j2j/jèj«</th>
-                        <th>j/j+jaj/</th>
+                        <th>الطاولة</th>
+                        <th>العميل</th>
+                        <th>الدفع</th>
+                        <th>المجموع</th>
+                        <th>الضريبة</th>
+                        <th>الإجمالي</th>
+                        <th>التاريخ</th>
+                        <th>الأصناف</th>
                     </tr>
                 </thead>
                 <tbody id="reportBody"></tbody>
@@ -1487,196 +1487,196 @@
 
     </div>
 
-        <!-- j/àjVj0j« -->
+        <!-- المطبخ -->
         <div class="tab-content" id="kitchen">
             <div class="order-form" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
                 <div>
-                    <h3>a' j/àjVj0j« 8¤ j/jVj0j/j2 j/êj/jj»j1</h3>
-                    <p style="color:var(--olive);font-size:0.9rem;">jVj0j/j2 j4j»èj»j1 j2jUçj àj0j/j$jj1 àjc j2j0èç jaêj2è</p>
+                    <h3>🍳 المطبخ — الطلبات الواردة</h3>
+                    <p style="color:var(--olive);font-size:0.9rem;">طلبات جديدة تظهر مباشرة مع تنبيه صوتي</p>
                 </div>
                 <div style="display:flex;gap:10px;align-items:center;">
                     <span id="kitchenOrderCount" style="background:var(--terracotta);color:white;padding:6px 14px;border-radius:20px;font-weight:700;font-size:1.1rem;">0</span>
                     <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.9rem;">
-                        <input type="checkbox" id="kitchenSoundToggle" checked onchange="toggleKitchenSound()"> a'¤¤ jaêj2
+                        <input type="checkbox" id="kitchenSoundToggle" checked onchange="toggleKitchenSound()"> 🔔 صوت
                     </label>
                     <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:0.9rem;">
-                        <input type="checkbox" id="kitchenAllOrders" onchange="loadKitchen()"> jcjjb j/â
+                        <input type="checkbox" id="kitchenAllOrders" onchange="loadKitchen()"> عرض الكل
                     </label>
                 </div>
             </div>
             <div id="kitchenOrders" class="kitchen-grid" style="min-height:200px;">
-                <p style="color:var(--olive);padding:30px;text-align:center;">j4j/jè j2j5àè j/jVj0j/j2...</p>
+                <p style="color:var(--olive);padding:30px;text-align:center;">جاري تحميل الطلبات...</p>
             </div>
         </div>
 
-        <!-- jaj»êé j/èêàèj1 -->
+        <!-- صندوق اليومية -->
         <div class="tab-content" id="cashier">
             <!-- Shift header -->
             <div class="order-form">
                 <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:15px;">
-                    <h3 style="margin:0;">a'R jaj»êé j/èêàèj1</h3>
+                    <h3 style="margin:0;">💰 صندوق اليومية</h3>
                     <span id="crShiftStatus" style="padding:4px 14px;border-radius:20px;font-size:0.85rem;font-weight:600;display:inline-block;"></span>
                 </div>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
                     <div class="form-group">
-                        <label>j/j2j/jèj«</label>
+                        <label>التاريخ</label>
                         <input type="date" id="crDate" onchange="crLoadDay()">
                     </div>
-                    <button onclick="crOpenShift()" id="crOpenBtn">a'¤ô j2j5 j/êjj»èj1</button>
-                    <button onclick="crCloseShiftDialog()" id="crCloseBtn" class="btn-close-invoice">a'¤R j-éj/ j/êjj»èj1</button>
+                    <button onclick="crOpenShift()" id="crOpenBtn">🔓 فتح الوردية</button>
+                    <button onclick="crCloseShiftDialog()" id="crCloseBtn" class="btn-close-invoice">🔒 إقفال الوردية</button>
                 </div>
             </div>
 
             <!-- Opening balance -->
             <div class="order-form" id="crOpeningSection" style="margin-top:15px;">
-                <h4>a'R j/jjaèj» j/j/j2j2j/j5è</h4>
+                <h4>💰 الرصيد الافتتاحي</h4>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
                     <div class="form-group">
-                        <label>j/àj0jQ j/j/j2j2j/j5è</label>
+                        <label>المبلغ الافتتاحي</label>
                         <input type="number" id="crOpeningAmount" step="0.01" placeholder="0.00">
                     </div>
-                    <button onclick="crSaveOpening()" class="btn-submit">a'R[ j5jU</button>
+                    <button onclick="crSaveOpening()" class="btn-submit">💾 حفظ</button>
                 </div>
             </div>
 
             <!-- Summary cards -->
             <div class="stats-grid" id="crStats" style="margin-top:15px;">
                 <div class="stat-card">
-                    <div class="icon">a'Ra</div>
+                    <div class="icon">💵</div>
                     <div class="value" id="crCashSales">0</div>
-                    <div class="label">àj0èjcj/j2 éj»è</div>
+                    <div class="label">مبيعات نقدي</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'R</div>
+                    <div class="icon">💳</div>
                     <div class="value" id="crCardSales">0</div>
-                    <div class="label">àj0èjcj/j2 èjj/</div>
+                    <div class="label">مبيعات فيزا</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'ôè</div>
+                    <div class="icon">📊</div>
                     <div class="value" id="crTotalSales">0</div>
-                    <div class="label">j-j4àj/è j/àj0èjcj/j2</div>
+                    <div class="label">إجمالي المبيعات</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'ô,</div>
+                    <div class="icon">📤</div>
                     <div class="value" id="crExpensesTotal">0</div>
-                    <div class="label">j-j4àj/è j/àjajêj/j2</div>
+                    <div class="label">إجمالي المصروفات</div>
                 </div>
                 <div class="stat-card">
-                    <div class="icon">a'R</div>
+                    <div class="icon">💰</div>
                     <div class="value" id="crExpectedCash">0</div>
-                    <div class="label">j/àj2êéjc j0j/jaj»êé</div>
+                    <div class="label">المتوقع بالصندوق</div>
                 </div>
                 <div class="stat-card" id="crActualCard" style="display:none;">
-                    <div class="icon">8£à</div>
+                    <div class="icon">✅</div>
                     <div class="value" id="crActualCash">0</div>
-                    <div class="label">j/jcè j0j/jaj»êé</div>
+                    <div class="label">الفعلي بالصندوق</div>
                 </div>
                 <div class="stat-card" id="crDiffCard" style="display:none;">
-                    <div class="icon">8#ûJU</div>
+                    <div class="icon">⚖️</div>
                     <div class="value" id="crDifference">0</div>
-                    <div class="label">j/j/jé</div>
+                    <div class="label">الفارق</div>
                 </div>
             </div>
 
             <!-- Add expense -->
             <div class="order-form" style="margin-top:15px;">
-                <h4>8&@ j-jbj/j1 àjajê</h4>
+                <h4>➕ إضافة مصروف</h4>
                 <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;">
                     <div class="form-group">
-                        <label>j/j0èj/</label>
-                        <input type="text" id="crExpDesc" placeholder="êja j/àjajê">
+                        <label>البيان</label>
+                        <input type="text" id="crExpDesc" placeholder="وصف المصروف">
                     </div>
                     <div class="form-group">
-                        <label>j/àj0jQ</label>
+                        <label>المبلغ</label>
                         <input type="number" id="crExpAmount" step="0.01" placeholder="0.00">
                     </div>
                     <div class="form-group">
-                        <label>j/j2jaè</label>
+                        <label>التصنيف</label>
                         <select id="crExpCategory"></select>
                     </div>
-                    <button onclick="crAddExpense()" class="btn-submit">8&@ j-jbj/j1</button>
+                    <button onclick="crAddExpense()" class="btn-submit">➕ إضافة</button>
                 </div>
             </div>
 
             <!-- Expenses table -->
             <div class="order-form" style="margin-top:15px;">
-                <h4>a'ôï àjajêj/j2 j/èêà</h4>
+                <h4>📋 مصروفات اليوم</h4>
                 <table class="sales-table">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>j/j0èj/</th>
-                            <th>j/j2jaè</th>
-                            <th>j/àj0jQ</th>
+                            <th>البيان</th>
+                            <th>التصنيف</th>
+                            <th>المبلغ</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody id="crExpensesBody">
-                        <tr><td colspan="5" style="text-align:center;color:var(--olive);">j/ j2êj4j» àjajêj/j2</td></tr>
+                        <tr><td colspan="5" style="text-align:center;color:var(--olive);">لا توجد مصروفات</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-    <!-- j/jj1 j/j«j2èj/j j/j»jc (j2jUçj jcj» j-j$j/j) j/jVj0) -->
+    <!-- نافذة اختيار الدفع (تظهر عند إنشاء الطلب) -->
     <div class="invoice-modal" id="paymentModal">
         <div class="invoice-content" style="max-width:360px;text-align:center;">
-            <h3 style="margin-bottom:8px;font-size:1.4rem;">a'R j/j«j2j jVjèéj1 j/j»jc</h3>
-            <p style="color:var(--olive);margin-bottom:20px;font-size:0.95rem;">j/j«j2j jVjèéj1 j/j»jc j-j2àj/à j/jVj0</p>
+            <h3 style="margin-bottom:8px;font-size:1.4rem;">💰 اختر طريقة الدفع</h3>
+            <p style="color:var(--olive);margin-bottom:20px;font-size:0.95rem;">اختر طريقة الدفع لإتمام الطلب</p>
             <div style="display:flex;gap:15px;justify-content:center;">
                 <button onclick="confirmPayment('cash')" style="flex:1;padding:22px 10px;font-size:1.2rem;border-radius:15px;border:2px solid var(--gold);background:var(--cream, #EDE0D4);cursor:pointer;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    <div style="font-size:2rem;margin-bottom:8px;">a'Ra</div>
-                    <div style="font-weight:700;">âj/j$</div>
+                    <div style="font-size:2rem;margin-bottom:8px;">💵</div>
+                    <div style="font-weight:700;">كاش</div>
                 </button>
                 <button onclick="confirmPayment('visa')" style="flex:1;padding:22px 10px;font-size:1.2rem;border-radius:15px;border:2px solid var(--gold);background:var(--cream, #EDE0D4);cursor:pointer;transition:transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                    <div style="font-size:2rem;margin-bottom:8px;">a'R</div>
-                    <div style="font-weight:700;">èjj/</div>
+                    <div style="font-size:2rem;margin-bottom:8px;">💳</div>
+                    <div style="font-weight:700;">فيزا</div>
                 </button>
             </div>
-            <button onclick="document.getElementById('paymentModal').classList.remove('show')" style="margin-top:18px;background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.9rem;">8%î j-jQj/j)</button>
+            <button onclick="document.getElementById('paymentModal').classList.remove('show')" style="margin-top:18px;background:none;border:none;color:var(--olive);cursor:pointer;font-size:0.9rem;">❌ إلغاء</button>
         </div>
     </div>
 
-    <!-- j/jj1 j2j/jaè j/jVj/êj1 -->
+    <!-- نافذة تفاصيل الطاولة -->
     <div class="invoice-modal" id="tableModal">
         <div class="invoice-content" style="max-width:500px;">
             <div class="invoice-header">
-                <h2 id="tableModalTitle">jVj/êj1</h2>
+                <h2 id="tableModalTitle">طاولة</h2>
                 <p style="font-size:1.3rem;font-weight:700;margin-top:5px;" id="tableModalStatus"></p>
             </div>
             <div class="invoice-details" id="tableModalDetails">
-                <p style="color:var(--olive);">j4j/j j/j2j5àè...</p>
+                <p style="color:var(--olive);">جارٍ التحميل...</p>
             </div>
             <div class="invoice-actions" style="justify-content:center;">
-                <button class="btn-close-invoice" onclick="document.getElementById('tableModal').classList.remove('show')">j-jQj/é</button>
+                <button class="btn-close-invoice" onclick="document.getElementById('tableModal').classList.remove('show')">إغلاق</button>
             </div>
         </div>
     </div>
 
-    <!-- j/jj1 j/j/j2êjj1 -->
+    <!-- نافذة الفاتورة -->
     <div class="invoice-modal" id="invoiceModal">
         <div class="invoice-content">
             <div class="invoice-header-print">
                 <h2>Lucca</h2>
                 <p>SPECIALTY COFFEE</p>
-                <p class="invoice-address">j$j/jjc àj5àj» jcè - j0j4êj/j âèj1 j/j2jj0èj1 - j0êjjjcèj»</p>
+                <p class="invoice-address">شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
                 <p class="invoice-phone">01551007413</p>
             </div>
             
             <div class="invoice-details">
-                <p>j/j2êjj1 jéà: <span id="invNumber">#001</span></p>
-                <p>j/j2j/jèj«: <span id="invDate">--</span></p>
-                <p>j/jVj/êj1: <span id="invTable">--</span></p>
-                <p>jVjèéj1 j/j»jc: <span id="invPayment">--</span></p>
+                <p>فاتورة رقم: <span id="invNumber">#001</span></p>
+                <p>التاريخ: <span id="invDate">--</span></p>
+                <p>الطاولة: <span id="invTable">--</span></p>
+                <p>طريقة الدفع: <span id="invPayment">--</span></p>
             </div>
             
             <table class="invoice-items">
                 <thead>
                     <tr>
-                        <th>j/ja</th>
-                        <th>j/âàèj1</th>
-                        <th>j/jjcj</th>
-                        <th>j/j-j4àj/è</th>
+                        <th>الصنف</th>
+                        <th>الكمية</th>
+                        <th>السعر</th>
+                        <th>الإجمالي</th>
                     </tr>
                 </thead>
                 <tbody id="invItems"></tbody>
@@ -1684,71 +1684,71 @@
             
             <div class="invoice-totals">
                 <div class="inv-row">
-                    <span>j/àj4àêjc:</span>
-                    <span id="invSubtotal">0 j4.à</span>
+                    <span>المجموع:</span>
+                    <span id="invSubtotal">0 ج.م</span>
                 </div>
                 <div class="inv-row">
-                    <span>j/jbjèj0j1 (14%):</span>
-                    <span id="invTax">0 j4.à</span>
+                    <span>الضريبة (14%):</span>
+                    <span id="invTax">0 ج.م</span>
                 </div>
                 <div class="inv-row total">
-                    <span>j/j-j4àj/è:</span>
-                    <span id="invTotal">0 j4.à</span>
+                    <span>الإجمالي:</span>
+                    <span id="invTotal">0 ج.م</span>
                 </div>
             </div>
             
             <div class="invoice-footer">
-                <p>j$âjj/ï jèj/jj2âà!</p>
-                <p>j/jj2àj2jc j0éçêj2â! 8!@</p>
+                <p>شكراً لزيارتكم!</p>
+                <p>استمتع بقهوتك! ☕</p>
             </div>
             
             <div class="invoice-actions">
-                <button class="btn-print" onclick="printInvoice()">a'û0JU jVj0j/jcj1</button>
-                <button class="btn-pdf" onclick="exportPDF()">a'ô j2jaj»èj PDF</button>
-                <button class="btn-pdf" onclick="thermalPrintInvoice()">a'/[ jVj0j/jcj1 âj/j$èj</button>
-                <button class="btn-close-invoice" onclick="closeInvoice()">j-jQj/é</button>
+                <button class="btn-print" onclick="printInvoice()">🖨️ طباعة</button>
+                <button class="btn-pdf" onclick="exportPDF()">📄 تصدير PDF</button>
+                <button class="btn-pdf" onclick="thermalPrintInvoice()">🧾 طباعة كاشير</button>
+                <button class="btn-close-invoice" onclick="closeInvoice()">إغلاق</button>
             </div>
         </div>
     </div>
 
-    <!-- j/jj1 j2jcj»è j/jVj0 -->
+    <!-- نافذة تعديل الطلب -->
     <div class="invoice-modal" id="editOrderModal">
         <div class="invoice-content" style="max-width:500px;">
             <div class="invoice-header">
-                <h2>8£JU j2jcj»è j/jVj0 #<span id="editOrderId">0</span></h2>
+                <h2>✏️ تعديل الطلب #<span id="editOrderId">0</span></h2>
             </div>
             <div id="editOrderForm" style="margin-top:20px;">
                 <div class="form-group">
-                    <label>j/jà j/jcàè</label>
+                    <label>اسم العميل</label>
                     <input type="text" id="editCustomerName" style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
                 </div>
                 <div class="form-group">
-                    <label>jéà j/àêj0j/è</label>
+                    <label>رقم الموبايل</label>
                     <input type="tel" id="editCustomerPhone" style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
                 </div>
                 <div class="form-group">
-                    <label>jVjèéj1 j/j»jc</label>
+                    <label>طريقة الدفع</label>
                     <select id="editPaymentMethod" style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
-                        <option value="cash">a'Ra âj/j$</option>
-                        <option value="visa">a'R èjj/</option>
+                        <option value="cash">💵 كاش</option>
+                        <option value="visa">💳 فيزا</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>j/j«jaà (%)</label>
+                    <label>الخصم (%)</label>
                     <input type="number" id="editDiscount" min="0" max="100" style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
                 </div>
                 <div class="form-group">
-                    <label>j/j5j/j1</label>
+                    <label>الحالة</label>
                     <select id="editStatus" style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
-                        <option value="pending">8 éèj» j/j2èj</option>
-                        <option value="completed">8£à àâj2à</option>
+                        <option value="pending">⏳ قيد التنفيذ</option>
+                        <option value="completed">✅ مكتمل</option>
                     </select>
                 </div>
-                <h4 style="margin:15px 0 10px;">a'ô. j/j+jaj/</h4>
+                <h4 style="margin:15px 0 10px;">📦 الأصناف</h4>
                 <div id="editOrderItems" style="margin-bottom:15px;"></div>
                 <div style="display:flex;gap:10px;margin-top:20px;">
-                    <button class="btn-submit" onclick="saveEditOrder()" style="flex:1;">a'R[ j5jU j/j2jcj»èj/j2</button>
-                    <button class="btn-close-invoice" onclick="document.getElementById('editOrderModal').classList.remove('show')" style="flex:0;">j-jQj/j)</button>
+                    <button class="btn-submit" onclick="saveEditOrder()" style="flex:1;">💾 حفظ التعديلات</button>
+                    <button class="btn-close-invoice" onclick="document.getElementById('editOrderModal').classList.remove('show')" style="flex:0;">إلغاء</button>
                 </div>
             </div>
         </div>
@@ -1760,7 +1760,7 @@
     <script src="database.js"></script>
     <script src="../menu/menu-data.js"></script>
     <script>
-        // ==================== j-j»j/jj1 j/j4jj1 ====================
+        // ==================== إدارة الجلسة ====================
         let currentUser = null;
         let cartItems = [];
 
@@ -1817,7 +1817,7 @@
             location.reload();
         }
 
-        // ==================== j-j»j/jj1 j/j2j0êèj0j/j2 ====================
+        // ==================== إدارة التبويبات ====================
         function showTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1833,7 +1833,7 @@
             if (tabId === 'cashier') { crLoadDay(); }
         }
 
-        // ==================== j2j5àè j/j0èj/j/j2 ====================
+        // ==================== تحميل البيانات ====================
         async function loadAllData() {
             await LuccaDB.initSystem();
 
@@ -1899,21 +1899,21 @@
         function generateQR(text, elementId) {
             const el = document.getElementById(elementId);
             if (!el) return;
-            el.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(text)}" alt="QR" style="width:120px;height:120px;border-radius:8px;" onerror="this.parentElement.textContent='8#(JU'">`;
+            el.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(text)}" alt="QR" style="width:120px;height:120px;border-radius:8px;" onerror="this.parentElement.textContent='⚠️'">`;
         }
 
         function copyText(elementId) {
             const text = document.getElementById(elementId).textContent;
             navigator.clipboard.writeText(text).then(() => {
-                alert('8£à j2à jj« j/jj/j0jV');
+                alert('✅ تم نسخ الرابط');
             }).catch(() => {
-                alert('8%î j$ j/jj«');
+                alert('❌ فشل النسخ');
             });
         }
 
         function shareViaWhatsapp() {
             const url = document.getElementById('localUrl').textContent;
-            const msg = encodeURIComponent(`8!@ Lucca Specialty Coffee - j/àèê j/j2j/jcè\n\nj/jVj0 à j/àèê àj0j/j$jj1 êj/jj2à j/j/j2êjj1 êj/j2jj/j0!\n\n${url}`);
+            const msg = encodeURIComponent(`☕ Lucca Specialty Coffee - المنيو التفاعلي\n\nاطلب من المنيو مباشرة واستلم الفاتورة واتساب!\n\n${url}`);
             window.open(`https://wa.me/?text=${msg}`, '_blank');
         }
 
@@ -1923,31 +1923,31 @@
             grid.innerHTML = '';
 
             const statusText = {
-                'available': 'àj2j/j5j1',
-                'reserved': 'àj5j4êjj1',
-                'occupied': 'àj$jQêj1'
+                'available': 'متاحة',
+                'reserved': 'محجوزة',
+                'occupied': 'مشغولة'
             };
 
             tables.forEach(table => {
                 const card = document.createElement('div');
                 card.className = `table-card ${table.status}`;
                 card.innerHTML = `
-                    <div class="number">jVj/êj1 ${table.number}</div>
+                    <div class="number">طاولة ${table.number}</div>
                     <div class="status">${statusText[table.status]}</div>
                 `;
                 card.onclick = () => selectTable(table);
                 grid.appendChild(card);
             });
 
-            // j2j5j»èj3 éj/j.àj1 j/j«j2èj/j j/jVj/êj1
+            // تحديث قائمة اختيار الطاولة
             const tableSelect = document.getElementById('orderTable');
             if (tableSelect) {
-                tableSelect.innerHTML = '<option value="">j/j«j2j j/jVj/êj1</option>';
+                tableSelect.innerHTML = '<option value="">اختر الطاولة</option>';
                 tables.forEach(table => {
                     if (table.status !== 'occupied') {
                         const option = document.createElement('option');
                         option.value = table.id;
-                        option.textContent = `jVj/êj1 ${table.number}`;
+                        option.textContent = `طاولة ${table.number}`;
                         tableSelect.appendChild(option);
                     }
                 });
@@ -1956,47 +1956,47 @@
 
         function selectTable(table) {
             const modal = document.getElementById('tableModal');
-            document.getElementById('tableModalTitle').textContent = `jVj/êj1 ${table.number}`;
-            document.getElementById('tableModalStatus').textContent = table.status === 'occupied' ? 'a'¤$ àj$jQêj1' : table.status === 'reserved' ? 'a''( àj5j4êjj1' : 'a''* àj2j/j5j1';
+            document.getElementById('tableModalTitle').textContent = `طاولة ${table.number}`;
+            document.getElementById('tableModalStatus').textContent = table.status === 'occupied' ? '🔴 مشغولة' : table.status === 'reserved' ? '🟠 محجوزة' : '🟢 متاحة';
             document.getElementById('tableModalStatus').style.color = table.status === 'occupied' ? 'var(--danger)' : table.status === 'reserved' ? 'var(--warning)' : 'var(--success)';
 
             const details = document.getElementById('tableModalDetails');
-            details.innerHTML = '<p style="color:var(--olive);">j4j/j j2j5àè j0èj/j/j2 j/jVj/êj1...</p>';
+            details.innerHTML = '<p style="color:var(--olive);">جارٍ تحميل بيانات الطاولة...</p>';
 
             if (table.status === 'occupied' && table.currentOrder) {
                 LuccaDB.Orders.getAll().then(orders => {
                     const order = orders.find(o => o.id === table.currentOrder);
                     if (order) {
-                        const paymentMap = { 'cash': 'a'Ra âj/j$', 'visa': 'a'R èjj/' };
+                        const paymentMap = { 'cash': '💵 كاش', 'visa': '💳 فيزا' };
                         details.innerHTML = `
                             <div style="margin-bottom:15px;">
-                                <strong>a'Q, j/jcàè:</strong> ${order.customerName || 'jQèj àjj4'}
-                                ${order.customerPhone ? `<br><strong>a'ô& j/àêj0j/è:</strong> ${order.customerPhone}` : ''}
-                                ${order.customerNotes ? `<br><strong>a'ô% àj/j5jUj/j2:</strong> ${order.customerNotes}` : ''}
-                                <br><strong>a'R j/j»jc:</strong> ${paymentMap[order.paymentMethod] || 'âj/j$'}
+                                <strong>👤 العميل:</strong> ${order.customerName || 'غير مسجل'}
+                                ${order.customerPhone ? `<br><strong>📞 الموبايل:</strong> ${order.customerPhone}` : ''}
+                                ${order.customerNotes ? `<br><strong>📝 ملاحظات:</strong> ${order.customerNotes}` : ''}
+                                <br><strong>💳 الدفع:</strong> ${paymentMap[order.paymentMethod] || 'كاش'}
                             </div>
                             <table class="sales-table" style="margin-bottom:15px;">
-                                <thead><tr><th>j/ja</th><th>j/âàèj1</th><th>j/jjcj</th></tr></thead>
+                                <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th></tr></thead>
                                 <tbody>
                                     ${(order.items || []).map(item => `
-                                        <tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.price * item.quantity} j4.à</td></tr>
+                                        <tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.price * item.quantity} ج.م</td></tr>
                                     `).join('')}
                                 </tbody>
                             </table>
                             <div style="font-size:1.2rem;font-weight:bold;color:var(--terracotta);margin-bottom:15px;">
-                                j/j-j4àj/è: ${order.total?.toFixed(2) || 0} j4.à
+                                الإجمالي: ${order.total?.toFixed(2) || 0} ج.م
                             </div>
                             <div style="display:flex;gap:10px;">
-                                <button onclick="completeTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--success);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">8£à j-çj/j) j/jVj0 êj2jèjQ j/jVj/êj1</button>
-                                <button onclick="cancelTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--danger);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">8%î j-jQj/j) j/jVj0</button>
+                                <button onclick="completeTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--success);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">✅ إنهاء الطلب وتفريغ الطاولة</button>
+                                <button onclick="cancelTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--danger);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">❌ إلغاء الطلب</button>
                             </div>
                         `;
                     } else {
-                        details.innerHTML = '<p style="color:var(--olive);">j/ j2êj4j» j0èj/j/j2 jVj0 àj2j/j5j1</p>';
+                        details.innerHTML = '<p style="color:var(--olive);">لا توجد بيانات طلب متاحة</p>';
                     }
                 });
             } else {
-                details.innerHTML = `<p style="color:var(--olive);">${table.status === 'available' ? 'j/jVj/êj1 àj2j/j5j1' : 'j/jVj/êj1 àj5j4êjj1'}</p>`;
+                details.innerHTML = `<p style="color:var(--olive);">${table.status === 'available' ? 'الطاولة متاحة' : 'الطاولة محجوزة'}</p>`;
             }
 
             modal.classList.add('show');
@@ -2011,7 +2011,7 @@
         }
 
         async function cancelTableOrder(tableId, orderId) {
-            if (confirm('ç j+j2 àj2j+âj» à j-jQj/j) j/jVj0j'')) {
+            if (confirm('هل أنت متأكد من إلغاء الطلب؟')) {
                 await LuccaDB.Orders.delete(orderId);
                 document.getElementById('tableModal').classList.remove('show');
                 loadTables();
@@ -2020,7 +2020,7 @@
             }
         }
 
-        // ==================== j-j»j/jj1 j/àèê ====================
+        // ==================== إدارة المنيو ====================
         let selectedTable = null;
         let sharedMenuCatalog = Array.isArray(menuData) ? menuData : [];
 
@@ -2040,7 +2040,7 @@
                 catDiv.innerHTML = `
                     <div class="menu-cat-header" onclick="toggleCategory(${catIndex})">
                         <span>${category.icon} ${category.title}</span>
-                        <span class="toggle-icon">8û]</span>
+                        <span class="toggle-icon">▼</span>
                     </div>
                     <div class="menu-cat-items" id="cat-${catIndex}">
                         ${category.items.map((item, idx) => `
@@ -2095,7 +2095,7 @@
                 row.innerHTML = `
                     <div class="cart-item-info">
                         <div class="name">${item.name}</div>
-                        <div class="price">${item.price} ù ${item.quantity} = ${itemTotal}</div>
+                        <div class="price">${item.price} × ${item.quantity} = ${itemTotal}</div>
                     </div>
                     <div class="cart-item-qty">
                         <button style="background:var(--danger);color:white" onclick="updateQty(${index}, -1)">-</button>
@@ -2106,7 +2106,7 @@
                 container.appendChild(row);
             });
 
-            document.getElementById('cartTotal').textContent = `${total} j4.à`;
+            document.getElementById('cartTotal').textContent = `${total} ج.م`;
         }
 
         function updateQty(index, delta) {
@@ -2119,12 +2119,12 @@
 
         async function submitOrder() {
             if (!selectedTable) {
-                alert('8%î j/j«j2j jéà j/jVj/êj1 j+êj/ï!');
+                alert('❌ اختر رقم الطاولة أولاً!');
                 return;
             }
 
             if (cartItems.length === 0) {
-                alert('8%î j/j«j2j j+jaj/ à j/àèê!');
+                alert('❌ اختر أصناف من المنيو!');
                 return;
             }
 
@@ -2146,10 +2146,10 @@
                 discountType: 'percent'
             });
 
-            // j2j5 êj/j2jj/j0 êjj/ï j0j/jVj0
+            // فتح واتساب فوراً بالطلب
             sendWhatsAppOrder(table, items, method);
 
-            // àjj5 j/jj1
+            // مسح السلة
             cartItems = [];
             selectedTable = null;
             document.querySelectorAll('.table-num-btn').forEach(btn => btn.classList.remove('selected'));
@@ -2164,24 +2164,24 @@
 
         function sendWhatsAppOrder(table, items, paymentMethod) {
             const phone = localStorage.getItem('luccaWhatsApp') || '201010058989';
-            const lines = ['8!@ *Lucca Caf1*', '8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤', ''];
-            lines.push('a'#1 jVj/êj1 jéà: ' + table);
+            const lines = ['☕ *Lucca Café*', '━━━━━━━━━━━━', ''];
+            lines.push('🚩 طاولة رقم: ' + table);
             lines.push('');
             items.forEach(i => {
                 const qty = i.quantity || 1;
                 const price = i.price || 0;
-                lines.push('8* ' + i.name + (i.origin ? ' (' + i.origin + ')' : '') + ' x' + qty + ' = ' + (price * qty).toFixed(0) + ' j4.à');
+                lines.push('• ' + i.name + (i.origin ? ' (' + i.origin + ')' : '') + ' x' + qty + ' = ' + (price * qty).toFixed(0) + ' ج.م');
             });
             lines.push('');
             const total = items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
             const discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
             const afterDiscount = discount > 0 ? total * (1 - discount / 100) : total;
-            lines.push('8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤8¤');
-            lines.push('a'R *j/j-j4àj/è: ' + afterDiscount.toFixed(0) + ' j4.à*');
-            if (discount > 0) lines.push('a'VJU j«jaà: ' + discount + '%');
-            lines.push('a'R j/j»jc: ' + (paymentMethod === 'visa' ? 'èjj/' : 'âj/j$'));
+            lines.push('━━━━━━━━━━━━');
+            lines.push('💰 *الإجمالي: ' + afterDiscount.toFixed(0) + ' ج.م*');
+            if (discount > 0) lines.push('🏷️ خصم: ' + discount + '%');
+            lines.push('💳 الدفع: ' + (paymentMethod === 'visa' ? 'فيزا' : 'كاش'));
             lines.push('');
-            lines.push('j$âjj/ï jèj/jj2âà a'ô');
+            lines.push('شكراً لزيارتكم 📍');
 
             const msg = lines.join('\n');
             window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
@@ -2193,7 +2193,7 @@
             const cost = parseFloat(document.getElementById('purchaseCost').value) || 0;
             const price = parseFloat(document.getElementById('purchasePrice').value) || 0;
             const supplier = document.getElementById('purchaseSupplier').value.trim();
-            if (!item) { alert('j+j»j« j/jà j/ja'); return; }
+            if (!item) { alert('أدخل اسم الصنف'); return; }
             await LuccaDB.Purchases.add({ item, quantity: qty, costPrice: cost, sellingPrice: price, supplier, date: new Date().toISOString() });
             document.getElementById('purchaseItem').value = '';
             document.getElementById('purchaseQty').value = '';
@@ -2201,7 +2201,7 @@
             document.getElementById('purchasePrice').value = '';
             document.getElementById('purchaseSupplier').value = '';
             loadPurchases();
-            alert('8£à j2à j-jbj/j1 j/àj$j2jèj/j2');
+            alert('✅ تم إضافة المشتريات');
         }
 
         async function loadPurchases() {
@@ -2211,14 +2211,14 @@
             tbody.innerHTML = '';
             purchases.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(p => {
                 const profit = (p.sellingPrice || 0) - (p.costPrice || 0);
-                const margin = p.costPrice > 0 ? ((profit / p.costPrice) * 100).toFixed(0) : '8ê&';
+                const margin = p.costPrice > 0 ? ((profit / p.costPrice) * 100).toFixed(0) : '∞';
                 tbody.insertAdjacentHTML('beforeend', `
                     <tr>
                         <td>${p.item}</td>
                         <td>${p.quantity || 1}</td>
-                        <td>${(p.costPrice || 0).toFixed(2)} j4.à</td>
-                        <td>${(p.sellingPrice || 0).toFixed(2)} j4.à</td>
-                        <td>${profit.toFixed(2)} j4.à</td>
+                        <td>${(p.costPrice || 0).toFixed(2)} ج.م</td>
+                        <td>${(p.sellingPrice || 0).toFixed(2)} ج.م</td>
+                        <td>${profit.toFixed(2)} ج.م</td>
                         <td>${margin}%</td>
                         <td>${new Date(p.date).toLocaleDateString('ar-EG')}</td>
                     </tr>
@@ -2239,12 +2239,12 @@
             const cogsEl = document.getElementById('summaryCOGS');
             const expensesEl = document.getElementById('summaryExpenses');
             const profitEl = document.getElementById('summaryNetProfit');
-            if (revenueEl) revenueEl.textContent = totalSelling.toFixed(2) + ' j4.à';
-            if (cogsEl) cogsEl.textContent = totalCost.toFixed(2) + ' j4.à';
-            if (expensesEl) expensesEl.textContent = totalExpenses.toFixed(2) + ' j4.à';
+            if (revenueEl) revenueEl.textContent = totalSelling.toFixed(2) + ' ج.م';
+            if (cogsEl) cogsEl.textContent = totalCost.toFixed(2) + ' ج.م';
+            if (expensesEl) expensesEl.textContent = totalExpenses.toFixed(2) + ' ج.م';
             if (profitEl) {
                 const realProfit = totalSelling - totalCost - totalExpenses;
-                profitEl.textContent = realProfit.toFixed(2) + ' j4.à';
+                profitEl.textContent = realProfit.toFixed(2) + ' ج.م';
                 profitEl.style.color = realProfit >= 0 ? 'var(--success)' : 'var(--terracotta)';
             }
         }
@@ -2260,7 +2260,7 @@
             tbody.innerHTML = '';
 
             filtered = searchTerm ? filtered.filter(o =>
-                `jVj/êj1 ${o.tableId}`.includes(searchTerm) ||
+                `طاولة ${o.tableId}`.includes(searchTerm) ||
                 String(o.id).includes(searchTerm) ||
                 (o.customerName || '').includes(searchTerm) ||
                 (o.customerPhone || '').includes(searchTerm) ||
@@ -2268,32 +2268,32 @@
             ) : filtered;
 
             const isAdmin = currentUser?.role === 'admin';
-            const paymentMap = { 'cash': 'a'Ra âj/j$', 'visa': 'a'R èjj/' };
-            const statusMap = { 'pending': '8 éèj» j/j2èj', 'completed': '8£à àâj2à', 'cancelled': '8%î àjQè' };
+            const paymentMap = { 'cash': '💵 كاش', 'visa': '💳 فيزا' };
+            const statusMap = { 'pending': '⏳ قيد التنفيذ', 'completed': '✅ مكتمل', 'cancelled': '❌ ملغي' };
 
             filtered.sort((a, b) => b.date?.localeCompare(a.date || '') || 0).forEach(order => {
                 const customerDetails = order.customerPhone
-                    ? `${order.customerName || 'jcàè'} - ${order.customerPhone}`
-                    : (order.customerName || 'j0j»ê');
+                    ? `${order.customerName || 'عميل'} - ${order.customerPhone}`
+                    : (order.customerName || 'بدون');
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td style="font-weight:700;color:var(--olive);">#${order.id}</td>
-                    <td style="font-weight:700;">jVj/êj1 ${order.tableId}</td>
+                    <td style="font-weight:700;">طاولة ${order.tableId}</td>
                     <td>${new Date(order.date).toLocaleTimeString('ar-EG')}</td>
                     <td>${customerDetails}</td>
-                    <td>${paymentMap[order.paymentMethod] || 'a'Ra âj/j$'}</td>
-                    <td style="color:var(--terracotta);font-weight:700;">${order.total?.toFixed(2) || 0} j4.à</td>
+                    <td>${paymentMap[order.paymentMethod] || '💵 كاش'}</td>
+                    <td style="color:var(--terracotta);font-weight:700;">${order.total?.toFixed(2) || 0} ج.م</td>
                     <td><span style="background:${order.status === 'completed' ? 'var(--success)' : order.status === 'cancelled' ? 'var(--danger)' : 'var(--warning)'};color:white;padding:3px 10px;border-radius:12px;font-size:0.85rem;">${statusMap[order.status] || order.status}</span></td>
                     <td>
-                        <button onclick="showInvoice(${order.id})" style="background:var(--olive);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="jcjjb j/j/j2êjj1">a'/[</button>
+                        <button onclick="showInvoice(${order.id})" style="background:var(--olive);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="عرض الفاتورة">🧾</button>
                         ${order.status !== 'completed' && order.status !== 'cancelled' ? `
-                            <button onclick="completeOrder(${order.id})" style="background:var(--success);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="j-çj/j) j/jVj0">8£à</button>
+                            <button onclick="completeOrder(${order.id})" style="background:var(--success);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="إنهاء الطلب">✅</button>
                         ` : ''}
                         ${isAdmin ? `
-                            <button onclick="editOrder(${order.id})" style="background:#3498db;color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="j2jcj»è">8£JU</button>
+                            <button onclick="editOrder(${order.id})" style="background:#3498db;color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="تعديل">✏️</button>
                         ` : ''}
                         ${order.status !== 'cancelled' ? `
-                            <button onclick="cancelOrder(${order.id})" style="background:var(--danger);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="${order.status === 'completed' ? 'j5j' : 'j-jQj/j)'}">${order.status === 'completed' ? 'a'ùQJU' : '8%î'}</button>
+                            <button onclick="cancelOrder(${order.id})" style="background:var(--danger);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="${order.status === 'completed' ? 'حذف' : 'إلغاء'}">${order.status === 'completed' ? '🗑️' : '❌'}</button>
                         ` : ''}
                     </td>
                 `;
@@ -2310,9 +2310,9 @@
 
         async function cancelOrder(orderId) {
             if (!currentUser || currentUser.role !== 'admin') {
-                if (!confirm('j+j2 jj2 àj$jj/ï. ç j+j2 àj2j+âj» à j/j-jQj/j)j'')) return;
+                if (!confirm('أنت لست مشرفاً. هل أنت متأكد من الإلغاء؟')) return;
             } else {
-                if (!confirm('ç j+j2 àj2j+âj» à j-jQj/j) j/jVj0j'')) return;
+                if (!confirm('هل أنت متأكد من إلغاء الطلب؟')) return;
             }
             await LuccaDB.Orders.updateStatus(orderId, 'cancelled');
             loadOrders();
@@ -2320,17 +2320,17 @@
             loadDashboard();
         }
 
-        // ==================== j2jcj»è j/jVj0j/j2 ====================
+        // ==================== تعديل الطلبات ====================
         let editingOrderId = null;
 
         async function editOrder(orderId) {
             if (!currentUser || currentUser.role !== 'admin') {
-                alert('8£ï éjV j/àj»èj èàâç j2jcj»è j/jVj0j/j2');
+                alert('✋ فقط المدير يمكنه تعديل الطلبات');
                 return;
             }
             const orders = await LuccaDB.Orders.getAll();
             const order = orders.find(o => o.id === orderId);
-            if (!order) { alert('j/jVj0 jQèj àêj4êj»'); return; }
+            if (!order) { alert('الطلب غير موجود'); return; }
 
             editingOrderId = orderId;
             document.getElementById('editOrderId').textContent = orderId;
@@ -2388,14 +2388,14 @@
                 status: document.getElementById('editStatus').value
             });
 
-            alert('8£à j2à j5jU j/j2jcj»èj/j2');
+            alert('✅ تم حفظ التعديلات');
             document.getElementById('editOrderModal').classList.remove('show');
             editingOrderId = null;
             loadOrders();
             loadDashboard();
         }
 
-        // ==================== j-j»j/jj1 j/jcàj/j) ====================
+        // ==================== إدارة العملاء ====================
         async function loadCustomers() {
             const customers = await LuccaDB.Customers.getAll();
             const container = document.getElementById('customersList');
@@ -2403,23 +2403,23 @@
 
             customers.forEach(customer => {
                 const customerFlags = [
-                    customer.marketingOptIn ? 'èjj2éj0 j/jcjêjb' : 'j0j»ê jcjêjb',
-                    customer.preferredChannel === 'whatsapp' ? 'êj/j2jj/j0' : 'âj/j$èj'
+                    customer.marketingOptIn ? 'يستقبل العروض' : 'بدون عروض',
+                    customer.preferredChannel === 'whatsapp' ? 'واتساب' : 'كاشير'
                 ].join(' - ');
                 const row = document.createElement('div');
                 row.className = 'customer-row';
                 row.innerHTML = `
                     <div>
                         <div class="phone">${customer.phone}</div>
-                        <div>${customer.name || 'j0j»ê j/jà'}</div>
+                        <div>${customer.name || 'بدون اسم'}</div>
                     </div>
-                    <div class="visits">${customer.visits} jèj/jj1</div>
+                    <div class="visits">${customer.visits} زيارة</div>
                 `;
                 container.appendChild(row);
             });
         }
 
-        // ==================== j/j-jcj»j/j»j/j2 ====================
+        // ==================== الإعدادات ====================
         async function saveSettings() {
             const settings = {
                 cafeName: document.getElementById('cafeName').value,
@@ -2435,10 +2435,10 @@
             }
             localStorage.setItem('luccaWhatsApp', settings.whatsappNumber);
 
-            alert('8£à j2à j5jU j/j-jcj»j/j»j/j2!' + (settings.whatsappNumber ? ' jéà êj/j2jj/j0: ' + settings.whatsappNumber : ''));
+            alert('✅ تم حفظ الإعدادات!' + (settings.whatsappNumber ? ' رقم واتساب: ' + settings.whatsappNumber : ''));
         }
 
-        // ==================== j/jj« j/j/j5j2èj/jVè ====================
+        // ==================== النسخ الاحتياطي ====================
         function exportData() {
             LuccaDB.DataSync.downloadBackup();
         }
@@ -2449,7 +2449,7 @@
                 const reader = new FileReader();
                 reader.onload = async (e) => {
                     await LuccaDB.DataSync.importAll(e.target.result);
-                    alert('j2à j/jj2èjj/j» j/j0èj/j/j2 j0j4j/j5!');
+                    alert('تم استيراد البيانات بنجاح!');
                     loadAllData();
                 };
                 reader.readAsText(file);
@@ -2466,16 +2466,16 @@
                     localStorage.setItem('luccaApiKey', data.apiKey);
                 }
             } catch(e) {
-                document.getElementById('apiKeyDisplay').value = 'jQèj àj2j/j5';
+                document.getElementById('apiKeyDisplay').value = 'غير متاح';
             }
         }
 
         function copyApiKey() {
             const key = document.getElementById('apiKeyDisplay').value;
-            navigator.clipboard.writeText(key).then(() => alert('8£à j2à jj« j/àj2j/j5'));
+            navigator.clipboard.writeText(key).then(() => alert('✅ تم نسخ المفتاح'));
         }
 
-        // ==================== j/àjj/àj1 àjc j/jèjj ====================
+        // ==================== المزامنة مع السيرفر ====================
         function saveServerUrl() {
             const url = document.getElementById('serverUrl').value.trim();
             localStorage.setItem('luccaServerUrl', url);
@@ -2487,19 +2487,19 @@
             const status = document.getElementById('serverStatus');
             const dot = document.getElementById('serverStatusDot');
             const text = document.getElementById('serverStatusText');
-            status.textContent = '8 j4j/jè j/j«j2j0j/j j/j/j2jaj/...';
+            status.textContent = '⏳ جاري اختبار الاتصال...';
             status.style.color = 'var(--olive)';
             LuccaDB.ServerSync.setServerUrl(url);
             const ok = await LuccaDB.ServerSync.testConnection();
             if (ok) {
                 dot.style.background = 'var(--success)';
-                text.textContent = '8£à àj2ja';
-                status.textContent = '8£à j/j/j2jaj/ j0j/jèjj j/j4j5';
+                text.textContent = '✅ متصل';
+                status.textContent = '✅ الاتصال بالسيرفر ناجح';
                 status.style.color = 'var(--success)';
             } else {
                 dot.style.background = 'var(--danger)';
-                text.textContent = '8%î jQèj àj2ja';
-                status.textContent = '8%î j$ j/j/j2jaj/ - j2j+âj» à j2j$jQè j/jèjj';
+                text.textContent = '❌ غير متصل';
+                status.textContent = '❌ فشل الاتصال - تأكد من تشغيل السيرفر';
                 status.style.color = 'var(--danger)';
             }
         }
@@ -2507,7 +2507,7 @@
         async function pushToServer() {
             saveServerUrl();
             const status = document.getElementById('serverStatus');
-            status.textContent = '8 j4j/jè jjc j/j0èj/j/j2...';
+            status.textContent = '⏳ جاري رفع البيانات...';
             status.style.color = 'var(--olive)';
             const result = await LuccaDB.ServerSync.pushAll();
             status.textContent = result.message;
@@ -2517,7 +2517,7 @@
         async function pullFromServer() {
             saveServerUrl();
             const status = document.getElementById('serverStatus');
-            status.textContent = '8 j4j/jè j2j5àè j/j0èj/j/j2...';
+            status.textContent = '⏳ جاري تحميل البيانات...';
             status.style.color = 'var(--olive)';
             const result = await LuccaDB.ServerSync.pullAll();
             status.textContent = result.message;
@@ -2527,7 +2527,7 @@
             }
         }
 
-        // ==================== j-j»j/jj1 j/êj/j2èj ====================
+        // ==================== إدارة الفواتير ====================
         let currentInvoiceOrder = null;
 
         function showInvoice(orderOrId) {
@@ -2541,14 +2541,14 @@
             const order = orderOrId;
             currentInvoiceOrder = order;
             
-            // j2jcj0j.j1 j0èj/j/j2 j/j/j2êjj1
+            // تعبئة بيانات الفاتورة
             document.getElementById('invNumber').textContent = `#${String(order.id).padStart(3, '0')}`;
             document.getElementById('invDate').textContent = new Date(order.date).toLocaleDateString('ar-EG');
-            document.getElementById('invTable').textContent = `jVj/êj1 ${order.tableId}`;
-            const paymentMap = { 'cash': 'a'Ra âj/j$', 'visa': 'a'R èjj/', '': '--' };
+            document.getElementById('invTable').textContent = `طاولة ${order.tableId}`;
+            const paymentMap = { 'cash': '💵 كاش', 'visa': '💳 فيزا', '': '--' };
             document.getElementById('invPayment').textContent = paymentMap[order.paymentMethod] || order.paymentMethod || '--';
             
-            // j/j+jaj/
+            // الأصناف
             const tbody = document.getElementById('invItems');
             tbody.innerHTML = '';
             order.items.forEach(item => {
@@ -2562,12 +2562,12 @@
                 tbody.appendChild(row);
             });
             
-            // j/j-j4àj/èj/j2
-            document.getElementById('invSubtotal').textContent = `${order.subtotal?.toFixed(2) || 0} j4.à`;
-            document.getElementById('invTax').textContent = `${order.tax?.toFixed(2) || 0} j4.à`;
-            document.getElementById('invTotal').textContent = `${order.total?.toFixed(2) || 0} j4.à`;
+            // الإجماليات
+            document.getElementById('invSubtotal').textContent = `${order.subtotal?.toFixed(2) || 0} ج.م`;
+            document.getElementById('invTax').textContent = `${order.tax?.toFixed(2) || 0} ج.م`;
+            document.getElementById('invTotal').textContent = `${order.total?.toFixed(2) || 0} ج.م`;
             
-            // j-jUçj/j j/j/jj1
+            // إظهار النافذة
             document.getElementById('invoiceModal').classList.add('show');
         }
 
@@ -2579,14 +2579,14 @@
         function printInvoice() {
             if (!currentInvoiceOrder) return;
             
-            // j-j$j/j) j/jj1 jVj0j/jcj1
+            // إنشاء نافذة طباعة
             const printWindow = window.open('', '_blank', 'width=400,height=600');
             
             const content = `
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>j/j2êjj1 - Lucca Specialty Coffee</title>
+                    <title>فاتورة - Lucca Specialty Coffee</title>
                     <style>
                         * { margin: 0; padding: 0; box-sizing: border-box; }
                         body { font-family: Tahoma, sans-serif; font-size: 12px; padding: 10px; }
@@ -2605,18 +2605,18 @@
                     <div class="header">
 <h1>Lucca</h1>
                         <p>SPECIALTY COFFEE</p>
-                        <p>j$j/jjc àj5àj» jcè - j0j4êj/j âèj1 j/j2jj0èj1 - j0êjjjcèj»</p>
+                        <p>شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
                         <p>01551007413</p>
                     </div>
                     <div class="info">
-                        <span>j/j2êjj1 #: ${String(currentInvoiceOrder.id).padStart(3, '0')}</span>
+                        <span>فاتورة #: ${String(currentInvoiceOrder.id).padStart(3, '0')}</span>
                         <span>${new Date(currentInvoiceOrder.date).toLocaleDateString('ar-EG')}</span>
-                        <span>jVj/êj1 ${currentInvoiceOrder.tableId}</span>
-                        <span>${currentInvoiceOrder.paymentMethod === 'visa' ? 'èjj/' : 'âj/j$'}</span>
+                        <span>طاولة ${currentInvoiceOrder.tableId}</span>
+                        <span>${currentInvoiceOrder.paymentMethod === 'visa' ? 'فيزا' : 'كاش'}</span>
                     </div>
                     <table>
                         <thead>
-                            <tr><th>ja</th><th>âàèj1</th><th>jjcj</th><th>j-j4àj/è</th></tr>
+                            <tr><th>صنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr>
                         </thead>
                         <tbody>
                             ${currentInvoiceOrder.items.map(item => `
@@ -2630,12 +2630,12 @@
                         </tbody>
                     </table>
                     <div class="total">
-                        <div>j/àj4àêjc: ${currentInvoiceOrder.subtotal?.toFixed(2) || 0} j4.à</div>
-                        <div>j/jbjèj0j1 (14%): ${currentInvoiceOrder.tax?.toFixed(2) || 0} j4.à</div>
-                        <div>j/j-j4àj/è: ${currentInvoiceOrder.total?.toFixed(2) || 0} j4.à</div>
+                        <div>المجموع: ${currentInvoiceOrder.subtotal?.toFixed(2) || 0} ج.م</div>
+                        <div>الضريبة (14%): ${currentInvoiceOrder.tax?.toFixed(2) || 0} ج.م</div>
+                        <div>الإجمالي: ${currentInvoiceOrder.total?.toFixed(2) || 0} ج.م</div>
                     </div>
                     <div class="footer">
-                        <p>j$âjj/ï jèj/jj2âà!</p>
+                        <p>شكراً لزيارتكم!</p>
                     </div>
                 </body>
                 </html>
@@ -2649,27 +2649,27 @@
         function exportPDF() {
             if (!currentInvoiceOrder) return;
             
-            // j-j$j/j) àj5j2êë jVj0j/jcj1 â PDF
+            // إنشاء محتوى للطباعة كـ PDF
             const content = `
                 Lucca Specialty Coffee
                 ====================
-                j/j2êjj1 #: ${String(currentInvoiceOrder.id).padStart(3, '0')}
-                j/j2j/jèj«: ${new Date(currentInvoiceOrder.date).toLocaleDateString('ar-EG')}
-                j/jVj/êj1: ${currentInvoiceOrder.tableId}
+                فاتورة #: ${String(currentInvoiceOrder.id).padStart(3, '0')}
+                التاريخ: ${new Date(currentInvoiceOrder.date).toLocaleDateString('ar-EG')}
+                الطاولة: ${currentInvoiceOrder.tableId}
                 
-                j/j+jaj/:
+                الأصناف:
                 ---------
                 ${currentInvoiceOrder.items.map(item => `${item.name} x${item.quantity} = ${item.price * item.quantity}`).join('\n')}
                 
                 ====================
-                j/àj4àêjc: ${currentInvoiceOrder.subtotal?.toFixed(2) || 0} j4.à
-                j/jbjèj0j1 (14%): ${currentInvoiceOrder.tax?.toFixed(2) || 0} j4.à
-                j/j-j4àj/è: ${currentInvoiceOrder.total?.toFixed(2) || 0} j4.à
+                المجموع: ${currentInvoiceOrder.subtotal?.toFixed(2) || 0} ج.م
+                الضريبة (14%): ${currentInvoiceOrder.tax?.toFixed(2) || 0} ج.م
+                الإجمالي: ${currentInvoiceOrder.total?.toFixed(2) || 0} ج.م
                 
-                j$âjj/ï jèj/jj2âà!
+                شكراً لزيارتكم!
             `;
             
-            // j-j$j/j) à jaè jVj0j/jcj1
+            // إنشاء ملف نصي للطباعة
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2677,23 +2677,23 @@
             a.download = `invoice-${currentInvoiceOrder.id}.txt`;
             a.click();
             
-            alert('j2à j2jaj»èj j/j/j2êjj1! èàâ jVj0j/jcj2çj/ à j/à.');
+            alert('تم تصدير الفاتورة! يمكن طباعتها من الملف.');
         }
 
         function thermalPrintInvoice() {
             if (!currentInvoiceOrder) return;
             const o = currentInvoiceOrder;
-            const paymentMap = { 'cash': 'âj/j$', 'visa': 'èjj/' };
+            const paymentMap = { 'cash': 'كاش', 'visa': 'فيزا' };
             const lines = [
                 '',
                 '      Lucca Specialty Coffee',
                 '      ====================',
-                `      j/j2êjj1 #${String(o.id).padStart(3, '0')}`,
+                `      فاتورة #${String(o.id).padStart(3, '0')}`,
                 `      ${new Date(o.date).toLocaleDateString('ar-EG')}`,
-                `      jVj/êj1 ${o.tableId || '-'} | ${paymentMap[o.paymentMethod] || 'âj/j$'}`,
+                `      طاولة ${o.tableId || '-'} | ${paymentMap[o.paymentMethod] || 'كاش'}`,
                 '',
                 '      --------------------',
-                '      j/ja       âà  j/jjcj',
+                '      الصنف       كم  السعر',
                 '      --------------------',
             ];
             o.items.forEach(item => {
@@ -2704,11 +2704,11 @@
             });
             lines.push(
                 '      --------------------',
-                `      j/àj4àêjc:        ${o.subtotal?.toFixed(2) || 0}`,
-                `      j/jbjèj0j1:        ${o.tax?.toFixed(2) || 0}`,
-                `      j/j-j4àj/è:       ${o.total?.toFixed(2) || 0}`,
+                `      المجموع:        ${o.subtotal?.toFixed(2) || 0}`,
+                `      الضريبة:        ${o.tax?.toFixed(2) || 0}`,
+                `      الإجمالي:       ${o.total?.toFixed(2) || 0}`,
                 '',
-                '      j$âjj/ï jèj/jj2âà!',
+                '      شكراً لزيارتكم!',
                 '      01551007413',
                 '',
                 '',
@@ -2716,7 +2716,7 @@
                 ''
             );
 
-            // jVj0j/jcj1 jcj0j WebUSB jVj/j0jcj1 j/j5jj/jèj1 j+ê j/jj1 jVj0j/jcj1 jcj/j»èj1
+            // طباعة عبر WebUSB للطابعة الحرارية أو نافذة طباعة عادية
             const printWindow = window.open('', '_blank', 'width=300,height=600');
             printWindow.document.write(`<html><head><meta charset="utf-8"><style>
                 @page { margin: 0; size: 80mm auto; }
@@ -2768,7 +2768,7 @@
                 pdf.save(`invoice-${currentInvoiceOrder.id}.pdf`);
             } catch (error) {
                 console.error('PDF export failed:', error);
-                alert('j2jcjj j2jaj»èj j/j/j2êjj1 âà PDF.');
+                alert('تعذر تصدير الفاتورة كملف PDF.');
             }
         };
 
@@ -2783,50 +2783,50 @@
                 link.click();
             } catch (error) {
                 console.error('Image export failed:', error);
-                alert('j2jcjj j2jaj»èj j/j/j2êjj1 âjaêjj1.');
+                alert('تعذر تصدير الفاتورة كصورة.');
             }
         }
 
-        // ==================== j-j»j/jj1 j/àêjUè ====================
+        // ==================== إدارة الموظفين ====================
         async function addEmployee() {
             const name = document.getElementById('empName').value.trim();
             const phone = document.getElementById('empPhone').value.trim();
             const role = document.getElementById('empRole').value.trim();
             const salary = parseFloat(document.getElementById('empSalary').value) || 0;
-            if (!name) { alert('j/j»j« j/jà j/àêjU'); return; }
+            if (!name) { alert('ادخل اسم الموظف'); return; }
             await LuccaDB.Employees.add({ name, phone, role, salary });
             document.getElementById('empName').value = '';
             document.getElementById('empPhone').value = '';
             document.getElementById('empRole').value = '';
             document.getElementById('empSalary').value = '';
             loadEmployees();
-            alert('j2à j-jbj/j1 j/àêjU');
+            alert('تم إضافة الموظف');
         }
 
         async function loadEmployees() {
             const list = document.getElementById('employeesList');
             const employees = await LuccaDB.Employees.getAll();
             if (!employees.length) {
-                list.innerHTML = '<p style="color:var(--olive);padding:20px;">j/ èêj4j» àêjUè j0jcj»</p>';
+                list.innerHTML = '<p style="color:var(--olive);padding:20px;">لا يوجد موظفين بعد</p>';
                 return;
             }
-            list.innerHTML = '<table class="sales-table"><thead><tr><th>j/j/jà</th><th>j/àêj0j/è</th><th>j/êjUèj1</th><th>j/jj/j2j0</th><th>j/j5j/j1</th></tr></thead><tbody>' +
+            list.innerHTML = '<table class="sales-table"><thead><tr><th>الاسم</th><th>الموبايل</th><th>الوظيفة</th><th>الراتب</th><th>الحالة</th></tr></thead><tbody>' +
                 employees.map(e => `
                     <tr>
                         <td>${e.name}</td>
                         <td>${e.phone || '-'}</td>
                         <td>${e.role || '-'}</td>
-                        <td>${e.salary || 0} j4.à</td>
-                        <td>${e.active !== false ? 'a''* j$jV' : 'a'¤$ jQèj j$jV'}</td>
+                        <td>${e.salary || 0} ج.م</td>
+                        <td>${e.active !== false ? '🟢 نشط' : '🔴 غير نشط'}</td>
                     </tr>
                 `).join('') + '</tbody></table>';
         }
 
-        // ==================== j/j5jbêj êj/j/jajj/ ====================
+        // ==================== الحضور والانصراف ====================
         async function loadAttendanceEmployees() {
             const select = document.getElementById('attendanceEmployee');
             const employees = await LuccaDB.Employees.getActive();
-            select.innerHTML = '<option value="">j/j«j2j...</option>';
+            select.innerHTML = '<option value="">اختر...</option>';
             employees.forEach(e => {
                 const opt = document.createElement('option');
                 opt.value = e.id;
@@ -2837,30 +2837,30 @@
 
         async function checkInEmployee() {
             const id = parseInt(document.getElementById('attendanceEmployee').value);
-            if (!id) { alert('j/j«j2j àêjU j+êj/ï'); return; }
+            if (!id) { alert('اختر موظف أولاً'); return; }
             const late = parseInt(document.getElementById('attendanceLate').value) || 0;
-            const notes = document.getElementById('attendanceNotes').value.trim() || ('j2j+j«èj ' + late + ' j»éèéj1');
+            const notes = document.getElementById('attendanceNotes').value.trim() || ('تأخير ' + late + ' دقيقة');
             try {
                 const recordId = await LuccaDB.Attendance.checkIn(id, notes);
                 // Override late minutes with user's input
                 if (recordId && late > 0) {
                     await LuccaDB.Attendance.updateRecord(recordId, { lateMinutes: late });
                 }
-                alert('8£à j2à j2jj4è j/j5jbêj' + (late > 0 ? ' (j2j+j«èj ' + late + ' j»)' : ''));
+                alert('✅ تم تسجيل الحضور' + (late > 0 ? ' (تأخير ' + late + ' د)' : ''));
                 document.getElementById('attendanceLate').value = '0';
                 document.getElementById('attendanceNotes').value = '';
                 loadAttendanceRecords();
             } catch (e) {
-                alert('8%î ' + e.message);
+                alert('❌ ' + e.message);
             }
         }
 
         async function checkOutEmployee() {
             const id = parseInt(document.getElementById('attendanceEmployee').value);
-            if (!id) { alert('j/j«j2j àêjU j+êj/ï'); return; }
+            if (!id) { alert('اختر موظف أولاً'); return; }
             try {
                 await LuccaDB.Attendance.checkOut(id);
-                alert('j2à j2jj4è j/j/jajj/');
+                alert('تم تسجيل الانصراف');
                 loadAttendanceRecords();
             } catch (e) {
                 alert(e.message);
@@ -2871,35 +2871,35 @@
             const list = document.getElementById('attendanceList');
             const records = await LuccaDB.Attendance.getAll();
             if (!records.length) {
-                list.innerHTML = '<p style="color:var(--olive);padding:20px;">j/ èêj4j» jj4j/j2 j0jcj»</p>';
+                list.innerHTML = '<p style="color:var(--olive);padding:20px;">لا يوجد سجلات بعد</p>';
                 return;
             }
             const employees = await LuccaDB.Employees.getAll();
             const empMap = {};
             employees.forEach(e => empMap[e.id] = e.name);
 
-            list.innerHTML = '<table class="sales-table"><thead><tr><th>j/àêjU</th><th>j/j2j/jèj«</th><th>j/j5jbêj</th><th>j/j/jajj/</th><th>jj/jcj/j2</th><th>j2j+j«èj</th><th>àâj/j+j1</th><th>j«jaà</th><th>àj/j5jUj/j2</th><th></th></tr></thead><tbody>' +
+            list.innerHTML = '<table class="sales-table"><thead><tr><th>الموظف</th><th>التاريخ</th><th>الحضور</th><th>الانصراف</th><th>ساعات</th><th>تأخير</th><th>مكافأة</th><th>خصم</th><th>ملاحظات</th><th></th></tr></thead><tbody>' +
                 records.sort((a, b) => b.date.localeCompare(a.date) || (b.checkIn || '').localeCompare(a.checkIn || '')).slice(0, 100).map(r => {
                     const lateColor = (r.lateMinutes || 0) > 30 ? 'var(--terracotta)' : (r.lateMinutes || 0) > 15 ? 'var(--gold)' : 'var(--olive)';
                     return '<tr>' +
-                        '<td>' + (empMap[r.employeeId] || 'àêjU') + '</td>' +
+                        '<td>' + (empMap[r.employeeId] || 'موظف') + '</td>' +
                         '<td>' + r.date + '</td>' +
                         '<td>' + (r.checkIn ? new Date(r.checkIn).toLocaleTimeString('ar-EG') : '-') + '</td>' +
-                        '<td>' + (r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG') : 'a'') à èjaj') + '</td>' +
-                        '<td>' + (r.hoursWorked ? r.hoursWorked + ' j' : '-') + '</td>' +
-                        '<td style="color:' + lateColor + ';font-weight:600;">' + (r.lateMinutes ? r.lateMinutes + '\'' : '8¤') + '</td>' +
-                        '<td style="color:var(--success);">' + (r.bonus ? '+' + r.bonus : '8¤') + '</td>' +
-                        '<td style="color:var(--terracotta);">' + (r.deduction ? '-' + r.deduction : '8¤') + '</td>' +
+                        '<td>' + (r.checkOut ? new Date(r.checkOut).toLocaleTimeString('ar-EG') : '🟡 لم ينصرف') + '</td>' +
+                        '<td>' + (r.hoursWorked ? r.hoursWorked + ' س' : '-') + '</td>' +
+                        '<td style="color:' + lateColor + ';font-weight:600;">' + (r.lateMinutes ? r.lateMinutes + '\'' : '—') + '</td>' +
+                        '<td style="color:var(--success);">' + (r.bonus ? '+' + r.bonus : '—') + '</td>' +
+                        '<td style="color:var(--terracotta);">' + (r.deduction ? '-' + r.deduction : '—') + '</td>' +
                         '<td style="font-size:0.8rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;">' + (r.notes || '') + '</td>' +
-                        '<td><button onclick="editAttendanceBonus(' + r.id + ',' + (r.bonus || 0) + ',' + (r.deduction || 0) + ')" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1rem;" title="j2jcj»è j/àâj/j+j1 êj/j«jaà">8#)</button></td>' +
+                        '<td><button onclick="editAttendanceBonus(' + r.id + ',' + (r.bonus || 0) + ',' + (r.deduction || 0) + ')" style="background:none;border:none;cursor:pointer;color:var(--gold);font-size:1rem;" title="تعديل المكافأة والخصم">⚡</button></td>' +
                     '</tr>';
                 }).join('') + '</tbody></table>';
         }
 
         function editAttendanceBonus(id, currentBonus, currentDeduction) {
-            const bonus = prompt('a'R j/àâj/j+j1 (j-jbj/è):', currentBonus || '0');
+            const bonus = prompt('💰 المكافأة (إضافي):', currentBonus || '0');
             if (bonus === null) return;
-            const deduction = prompt('8%î j/j«jaà (j«jaà):', currentDeduction || '0');
+            const deduction = prompt('❌ الخصم (خصم):', currentDeduction || '0');
             if (deduction === null) return;
             LuccaDB.Attendance.updateRecord(id, {
                 bonus: parseFloat(bonus) || 0,
@@ -2909,21 +2909,21 @@
             });
         }
 
-        // ==================== j/êjbjc j/èè ====================
+        // ==================== الوضع الليلي ====================
         function toggleDarkMode() {
             const html = document.documentElement;
             const isDark = html.getAttribute('data-theme') === 'dark';
             html.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('darkModeBtn').textContent = isDark ? 'a'î"' : '8!JU';
+            document.getElementById('darkModeBtn').textContent = isDark ? '🌙' : '☀️';
             localStorage.setItem('luccaTheme', isDark ? '' : 'dark');
         }
 
         if (localStorage.getItem('luccaTheme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
-            document.getElementById('darkModeBtn').textContent = '8!JU';
+            document.getElementById('darkModeBtn').textContent = '☀️';
         }
 
-        // ==================== jjà j0èj/è àj0èjcj/j2 ====================
+        // ==================== رسم بياني للمبيعات ====================
         let salesChart = null;
 
         async function updateSalesChart() {
@@ -2949,7 +2949,7 @@
                     data: {
                         labels: days,
                         datasets: [{
-                            label: 'j/àj0èjcj/j2 (j4.à)',
+                            label: 'المبيعات (ج.م)',
                             data: totals,
                             backgroundColor: 'rgba(200, 90, 62, 0.7)',
                             borderColor: '#C85A3E',
@@ -2969,7 +2969,7 @@
             }
         }
 
-        // ==================== j$j/j$j1 j/àjVj0j« ====================
+        // ==================== شاشة المطبخ ====================
         let kitchenSoundEnabled = true;
         let kitchenPrevCount = 0;
         let kitchenPollInterval = null;
@@ -3024,38 +3024,38 @@
             if (countEl) countEl.textContent = sorted.filter(o => o.status === 'pending').length;
 
             if (!sorted.length) {
-                container.innerHTML = '<p style="color:var(--olive);padding:40px;text-align:center;grid-column:1/-1;">8£à j/ j2êj4j» jVj0j/j2 éèj» j/j2èj</p>';
+                container.innerHTML = '<p style="color:var(--olive);padding:40px;text-align:center;grid-column:1/-1;">✅ لا توجد طلبات قيد التنفيذ</p>';
                 return;
             }
 
-            const statusMap = { 'pending': '8 j4j»èj»', 'preparing': 'a'Q08a' j2j5j2 j/j2j4çèj', 'completed': '8£à àâj2à' };
+            const statusMap = { 'pending': '⏳ جديد', 'preparing': '👨‍🍳 تحت التجهيز', 'completed': '✅ مكتمل' };
             container.innerHTML = sorted.map(order => {
                 const isNew = order.status === 'pending';
                 const isDone = order.status === 'completed';
                 const elapsed = order.date ? Math.floor((Date.now() - new Date(order.date).getTime()) / 60000) : 0;
-                const timeStr = elapsed < 1 ? 'j/j*' : elapsed < 60 ? `àj ${elapsed} j»` : `àj ${Math.floor(elapsed/60)} j`;
+                const timeStr = elapsed < 1 ? 'الآن' : elapsed < 60 ? `منذ ${elapsed} د` : `منذ ${Math.floor(elapsed/60)} س`;
                 return `
                     <div class="kitchen-card ${isNew ? 'new-order' : ''} ${isDone ? 'completed' : ''}">
                         <div class="k-header">
                             <span class="k-number">#${order.id}</span>
-                            <span class="k-table">a'\JU jVj/êj1 ${order.tableId || '?'}</span>
+                            <span class="k-table">🍽️ طاولة ${order.tableId || '?'}</span>
                         </div>
-                        <div class="k-time">a'@ ${timeStr} ,V ${new Date(order.date).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
+                        <div class="k-time">🕐 ${timeStr} · ${new Date(order.date).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
                         <div class="k-items">
                             ${(order.items || []).map(item => `
                                 <div class="k-item">
                                     <span>${item.name}${item.origin ? ' ('.concat(item.origin, ')') : ''}</span>
-                                    <span class="qty">ù${item.quantity}</span>
+                                    <span class="qty">×${item.quantity}</span>
                                 </div>
                             `).join('')}
                         </div>
-                        ${order.customerNotes ? `<div class="k-note">a'ô% ${order.customerNotes}</div>` : ''}
+                        ${order.customerNotes ? `<div class="k-note">📝 ${order.customerNotes}</div>` : ''}
                         ${!isDone ? `
                         <div class="k-actions">
                             ${order.status === 'pending' ? `
-                                <button class="btn-prep" onclick="kitchenUpdateStatus(${order.id}, 'preparing')">a'Q08a' j2j5j2 j/j2j4çèj</button>
+                                <button class="btn-prep" onclick="kitchenUpdateStatus(${order.id}, 'preparing')">👨‍🍳 تحت التجهيز</button>
                             ` : `
-                                <button class="btn-ready" onclick="kitchenUpdateStatus(${order.id}, 'completed')">8£à j4j/çj</button>
+                                <button class="btn-ready" onclick="kitchenUpdateStatus(${order.id}, 'completed')">✅ جاهز</button>
                             `}
                         </div>
                         ` : ''}
@@ -3100,7 +3100,7 @@
             }, 10000);
         }
 
-        // ==================== j/j2éj/jèj j/àj2éj»àj1 ====================
+        // ==================== التقارير المتقدمة ====================
         function setDefaultDates() {
             const now = new Date();
             const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -3110,7 +3110,7 @@
         async function loadReport() {
             const from = document.getElementById('reportFrom').value;
             const to = document.getElementById('reportTo').value;
-            if (!from || !to) { alert('j/j«j2j j2j/jèj« j/j0j»j/èj1 êj/çj/èj1'); return; }
+            if (!from || !to) { alert('اختر تاريخ البداية والنهاية'); return; }
 
             const orders = await LuccaDB.Orders.getAll();
             const filtered = orders.filter(o => {
@@ -3118,7 +3118,7 @@
                 return d >= from && d <= to && (o.status === 'completed' || o.status === 'pending');
             });
 
-            // j-j5jaj/j.èj/j2 j/àj0èjcj/j2
+            // إحصائيات المبيعات
             const totalSales = filtered.reduce((s, o) => s + (o.total || 0), 0);
             const cashTotal = filtered.filter(o => o.paymentMethod === 'cash').reduce((s, o) => s + (o.total || 0), 0);
             const visaTotal = filtered.filter(o => o.paymentMethod === 'visa').reduce((s, o) => s + (o.total || 0), 0);
@@ -3128,7 +3128,7 @@
             document.getElementById('reportVisaTotal').textContent = visaTotal.toFixed(2);
             document.getElementById('reportAvgOrder').textContent = filtered.length ? (totalSales / filtered.length).toFixed(2) : '0';
 
-            // j/àjajêj/j2 + j/àj$j2jèj/j2 j j/j2jj1
+            // المصروفات + المشتريات لنفس الفترة
             const expenses = await LuccaDB.Expenses.getByDateRange(from, to);
             const totalExpenses = expenses.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
             document.getElementById('reportExpenses').textContent = totalExpenses.toFixed(2);
@@ -3141,7 +3141,7 @@
             const totalCOGS = periodPurchases.reduce((s, p) => s + ((p.costPrice || 0) * (p.quantity || 1)), 0);
             document.getElementById('reportCOGS').textContent = totalCOGS.toFixed(2);
 
-            // jaj/è j/jj0j5
+            // صافي الربح
             const netProfit = totalSales - totalCOGS - totalExpenses;
             const profitEl = document.getElementById('reportNetProfit');
             profitEl.textContent = netProfit.toFixed(2);
@@ -3152,15 +3152,15 @@
             marginEl.textContent = margin.toFixed(1) + '%';
             marginEl.style.color = margin >= 15 ? '#2e7d32' : margin >= 5 ? '#e65100' : '#c62828';
 
-            // j4j»ê j/j2éjèj
+            // جدول التقرير
             const tbody = document.getElementById('reportBody');
             tbody.innerHTML = filtered.sort((a, b) => b.date?.localeCompare(a.date || '') || 0).map((o, i) => {
                 const itemsSummary = (o.items || []).map(item => `${item.name} x${item.quantity}`).join(', ');
                 return `<tr>
                     <td>${o.id}</td>
-                    <td>jVj/êj1 ${o.tableId || '-'}</td>
+                    <td>طاولة ${o.tableId || '-'}</td>
                     <td>${o.customerName || o.customerPhone || '-'}</td>
-                    <td>${o.paymentMethod === 'visa' ? 'a'R èjj/' : 'a'Ra âj/j$'}</td>
+                    <td>${o.paymentMethod === 'visa' ? '💳 فيزا' : '💵 كاش'}</td>
                     <td>${(o.subtotal || 0).toFixed(2)}</td>
                     <td>${(o.tax || 0).toFixed(2)}</td>
                     <td style="font-weight:700;color:var(--terracotta);">${(o.total || 0).toFixed(2)}</td>
@@ -3196,9 +3196,9 @@
             const from = document.getElementById('reportFrom').value;
             const to = document.getElementById('reportTo').value;
             const data = getReportData();
-            if (!data.length) { alert('j/ j2êj4j» j0èj/j/j2 j2jaj»èj'); return; }
+            if (!data.length) { alert('لا توجد بيانات للتصدير'); return; }
 
-            const header = 'j/jéà,j/jVj/êj1,j/jcàè,j/j»jc,j/àj4àêjc,j/jbjèj0j1,j/j-j4àj/è,j/j2j/jèj«,j/j+jaj/';
+            const header = 'الرقم,الطاولة,العميل,الدفع,المجموع,الضريبة,الإجمالي,التاريخ,الأصناف';
             const rows = data.map(r => `${r.id},${r.table},${r.customer},${r.payment},${r.subtotal},${r.tax},${r.total},${r.date},"${r.items}"`);
             const csv = [header, ...rows].join('\n');
             const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
@@ -3207,20 +3207,20 @@
             a.href = url;
             a.download = `lucca-report-${from}-to-${to}.csv`;
             a.click();
-            alert('8£à j2à j2jaj»èj j/j2éjèj');
+            alert('✅ تم تصدير التقرير');
         }
 
         function exportReportExcel() {
             const from = document.getElementById('reportFrom').value;
             const to = document.getElementById('reportTo').value;
             const data = getReportData();
-            if (!data.length) { alert('j/ j2êj4j» j0èj/j/j2 j2jaj»èj'); return; }
+            if (!data.length) { alert('لا توجد بيانات للتصدير'); return; }
 
-            const header = ['j/jéà', 'j/jVj/êj1', 'j/jcàè', 'j/j»jc', 'j/àj4àêjc', 'j/jbjèj0j1', 'j/j-j4àj/è', 'j/j2j/jèj«', 'j/j+jaj/'];
+            const header = ['الرقم', 'الطاولة', 'العميل', 'الدفع', 'المجموع', 'الضريبة', 'الإجمالي', 'التاريخ', 'الأصناف'];
             const rows = data.map(r => [r.id, r.table, r.customer, r.payment, r.subtotal, r.tax, r.total, r.date, r.items]);
             const allRows = [header, ...rows];
 
-            // j-j$j/j) HTML table à Excel
+            // إنشاء HTML table لملف Excel
             let html = '<table>';
             allRows.forEach(row => {
                 html += '<tr>' + row.map(c => `<td>${c}</td>`).join('') + '</tr>';
@@ -3233,10 +3233,10 @@
             a.href = url;
             a.download = `lucca-report-${from}-to-${to}.xls`;
             a.click();
-            alert('8£à j2à j2jaj»èj j/j2éjèj');
+            alert('✅ تم تصدير التقرير');
         }
 
-        // ==================== Cash Register (jaj»êé j/èêàèj1) ====================
+        // ==================== Cash Register (صندوق اليومية) ====================
         async function crLoadDay() {
             const date = document.getElementById('crDate').value || new Date().toISOString().split('T')[0];
             if (!document.getElementById('crDate').value) document.getElementById('crDate').value = date;
@@ -3248,7 +3248,7 @@
             const openingSection = document.getElementById('crOpeningSection');
 
             if (shift && shift.status === 'closed') {
-                statusEl.textContent = 'a'¤R àéj1';
+                statusEl.textContent = '🔒 مقفلة';
                 statusEl.style.background = '#e8f5e9';
                 statusEl.style.color = '#2e7d32';
                 openBtn.disabled = true;
@@ -3257,7 +3257,7 @@
                 closeBtn.style.opacity = '0.5';
                 openingSection.style.display = 'none';
             } else if (shift && shift.status === 'open') {
-                statusEl.textContent = 'a'¤ô àj2êj5j1';
+                statusEl.textContent = '🔓 مفتوحة';
                 statusEl.style.background = '#fff3e0';
                 statusEl.style.color = '#e65100';
                 openBtn.disabled = true;
@@ -3266,7 +3266,7 @@
                 closeBtn.style.opacity = '1';
                 openingSection.style.display = shift.openingBalance > 0 ? 'none' : '';
             } else {
-                statusEl.textContent = '8 jQèj àj2êj5j1';
+                statusEl.textContent = '⏳ غير مفتوحة';
                 statusEl.style.background = '#f5f5f5';
                 statusEl.style.color = '#666';
                 openBtn.disabled = false;
@@ -3286,7 +3286,7 @@
 
         async function crOpenShift() {
             const date = document.getElementById('crDate').value;
-            if (!confirm('a'¤ô ç j2jèj» j2j5 êjj»èj1 j/èêà ' + date + 'j'')) return;
+            if (!confirm('🔓 هل تريد فتح وردية اليوم ' + date + '؟')) return;
             await LuccaDB.Shifts.open(date, 0, '');
             await crLoadDay();
         }
@@ -3294,24 +3294,24 @@
         async function crSaveOpening() {
             const date = document.getElementById('crDate').value;
             const amount = parseFloat(document.getElementById('crOpeningAmount').value) || 0;
-            if (amount < 0) { alert('8%î j/jjaèj» j/j/j2j2j/j5è j/ èàâ j+ èâê jj/j0j/ï'); return; }
+            if (amount < 0) { alert('❌ الرصيد الافتتاحي لا يمكن أن يكون سالباً'); return; }
             const shift = await LuccaDB.Shifts.get(date);
-            if (shift && shift.status === 'closed') { alert('8%î j/êjj»èj1 àéj1'); return; }
+            if (shift && shift.status === 'closed') { alert('❌ الوردية مقفلة'); return; }
             await LuccaDB.Shifts.open(date, amount, shift?.notes || '');
-            alert('8£à j2à j5jU j/jjaèj» j/j/j2j2j/j5è');
+            alert('✅ تم حفظ الرصيد الافتتاحي');
             await crLoadDay();
         }
 
         async function crCloseShiftDialog() {
             const date = document.getElementById('crDate').value;
             const shift = await LuccaDB.Shifts.get(date);
-            if (!shift || shift.status !== 'open') { alert('8%î j/êjj»èj1 jQèj àj2êj5j1'); return; }
+            if (!shift || shift.status !== 'open') { alert('❌ الوردية غير مفتوحة'); return; }
 
             const expected = document.getElementById('crExpectedCash').textContent;
-            const actual = prompt('a'R j+j»j« j/jcj»j» j/jcè j0j/jaj»êé\n(j/àj2êéjc: ' + expected + ')', expected);
+            const actual = prompt('💰 أدخل العدد الفعلي بالصندوق\n(المتوقع: ' + expected + ')', expected);
             if (actual === null) return;
 
-            const notes = prompt('a'ô% àj/j5jUj/j2 j/j-éj/ (j/j«j2èj/jè):', '');
+            const notes = prompt('📝 ملاحظات الإقفال (اختياري):', '');
             if (notes === null) return;
 
             const result = await LuccaDB.Shifts.close(date, parseFloat(actual), notes || '');
@@ -3331,9 +3331,9 @@
                 }
 
                 if (Math.abs(diff) > 5) {
-                    alert('8#(JU èêj4j» j/jé ' + diff.toFixed(2) + ' è j/jaj»êé!\nj/àj2êéjc: ' + result.expectedCash.toFixed(2) + '\nj/jcè: ' + result.actualCash.toFixed(2));
+                    alert('⚠️ يوجد فارق ' + diff.toFixed(2) + ' في الصندوق!\nالمتوقع: ' + result.expectedCash.toFixed(2) + '\nالفعلي: ' + result.actualCash.toFixed(2));
                 } else {
-                    alert('8£à j2à j-éj/ j/êjj»èj1 j0j4j/j5\nj/j/jé: ' + diff.toFixed(2));
+                    alert('✅ تم إقفال الوردية بنجاح\nالفارق: ' + diff.toFixed(2));
                 }
             }
             await crLoadDay();
@@ -3372,16 +3372,16 @@
             const tbody = document.getElementById('crExpensesBody');
             const expenses = await LuccaDB.Expenses.getByDate(date);
             if (!expenses.length) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--olive);">j/ j2êj4j» àjajêj/j2</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--olive);">لا توجد مصروفات</td></tr>';
                 return;
             }
             tbody.innerHTML = expenses.map((e, i) =>
                 '<tr>' +
                     '<td>' + (i + 1) + '</td>' +
                     '<td>' + (e.description || '-') + '</td>' +
-                    '<td><span style="background:#f5f5f5;padding:2px 10px;border-radius:10px;font-size:0.85rem;">' + (e.category || 'j+j«jë') + '</span></td>' +
+                    '<td><span style="background:#f5f5f5;padding:2px 10px;border-radius:10px;font-size:0.85rem;">' + (e.category || 'أخرى') + '</span></td>' +
                     '<td style="font-weight:600;color:var(--terracotta);">' + (parseFloat(e.amount) || 0).toFixed(2) + '</td>' +
-                    '<td><button onclick="crDeleteExpense(' + e.id + ')" style="background:none;border:none;color:var(--terracotta);cursor:pointer;font-size:1.1rem;">8£@</button></td>' +
+                    '<td><button onclick="crDeleteExpense(' + e.id + ')" style="background:none;border:none;color:var(--terracotta);cursor:pointer;font-size:1.1rem;">✕</button></td>' +
                 '</tr>'
             ).join('');
         }
@@ -3392,8 +3392,8 @@
             const amount = parseFloat(document.getElementById('crExpAmount').value);
             const category = document.getElementById('crExpCategory').value;
 
-            if (!description) { alert('8%î j+j»j« j0èj/ j/àjajê'); return; }
-            if (!amount || amount <= 0) { alert('8%î j+j»j« àj0jQ jaj5èj5'); return; }
+            if (!description) { alert('❌ أدخل بيان المصروف'); return; }
+            if (!amount || amount <= 0) { alert('❌ أدخل مبلغ صحيح'); return; }
 
             await LuccaDB.Expenses.add({ date: date, description: description, amount: amount, category: category });
             document.getElementById('crExpDesc').value = '';
@@ -3403,7 +3403,7 @@
         }
 
         async function crDeleteExpense(id) {
-            if (!confirm('8#(JU ç j2jèj» j5j çjj/ j/àjajêj'')) return;
+            if (!confirm('⚠️ هل تريد حذف هذا المصروف؟')) return;
             await LuccaDB.Expenses.delete(id);
             const date = document.getElementById('crDate').value;
             await crLoadExpenses(date);
@@ -3414,7 +3414,7 @@
         setTimeout(function() {
             const sel = document.getElementById('crExpCategory');
             if (sel) {
-                const cats = ['j-èj4j/j', 'jêj/j2j0', 'àj$j2jèj/j2', 'jaèj/j1', 'âçjj0j/j)', 'àèj/ç', 'j-j2jj2', 'j2jêèé', 'é', 'j+j«jë'];
+                const cats = ['إيجار', 'رواتب', 'مشتريات', 'صيانة', 'كهرباء', 'مياه', 'إنترنت', 'تسويق', 'نقل', 'أخرى'];
                 cats.forEach(function(c) {
                     const opt = document.createElement('option');
                     opt.value = c;
@@ -3428,7 +3428,7 @@
             }
         }, 500);
 
-        // ==================== j/j0j5j3 è j/jVj0j/j2 ====================
+        // ==================== البحث في الطلبات ====================
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('orderSearch');
             if (searchInput) {
