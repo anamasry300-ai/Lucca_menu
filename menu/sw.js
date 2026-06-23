@@ -1,4 +1,4 @@
-const CACHE = 'lucca-menu-v2';
+const CACHE = 'lucca-menu-v3';
 const urlsToCache = [
   '.',
   'index.html',
@@ -56,6 +56,13 @@ self.addEventListener('fetch', event => {
           return new Response('', { status: 200, statusText: 'OK' });
         }
       })
+    );
+    return;
+  }
+
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request).catch(() => caches.match(request).then(cached => cached || caches.match('.')))
     );
     return;
   }
