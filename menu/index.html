@@ -763,6 +763,19 @@
         }
         .chat-input-wrap button:active { transform: scale(0.9); }
 
+        .chat-items { display:flex; flex-direction:column; gap:6px; padding:6px 0 0; }
+        .chat-add-btn {
+            display:flex; align-items:center; justify-content:space-between;
+            background:#fff; border:1px solid var(--cream); border-radius:10px;
+            padding:8px 12px; font-family:'Tajawal',sans-serif; font-size:0.82rem;
+            cursor:pointer; transition:all 0.2s; width:100%;
+        }
+        .chat-add-btn:active { background:var(--foam); border-color:var(--gold); }
+        .chat-add-icon {
+            width:26px;height:26px;border-radius:50%;background:var(--gold);
+            color:var(--coffee-900);display:flex;align-items:center;justify-content:center;
+            font-size:1rem;font-weight:700;flex-shrink:0;
+        }
         .chat-suggestions {
             display: flex;
             flex-wrap: wrap;
@@ -1373,17 +1386,66 @@
             if (chatOpen) {
                 document.body.style.overflow = 'hidden';
                 document.getElementById('chatInput').focus();
+                // Show welcome suggestions if not already added
+                const welcomeMsg = document.getElementById('chatWelcomeMsg');
+                if (welcomeMsg && !welcomeMsg.dataset.suggestionsShown) {
+                    welcomeMsg.dataset.suggestionsShown = '1';
+                    const sug = lang === 'ar'
+                        ? ['☕ حاجة سخنة', '🧊 حاجة ساقعة', '🔥 الأكثر طلباً', '📍 العنوان']
+                        : ['☕ Something hot', '🧊 Something iced', '🔥 Best sellers', '📍 Address'];
+                    setTimeout(() => {
+                        const sDiv = document.createElement('div');
+                        sDiv.className = 'chat-suggestions';
+                        sug.forEach(s => {
+                            const btn = document.createElement('button');
+                            btn.textContent = s;
+                            btn.onclick = function() { chatInput.value = s; sendChatMsg(); };
+                            sDiv.appendChild(btn);
+                        });
+                        const container = document.getElementById('chatMessages');
+                        container.appendChild(sDiv);
+                        container.scrollTop = container.scrollHeight;
+                    }, 400);
+                }
             } else {
                 document.body.style.overflow = '';
             }
         }
 
-        function chatMsg(text, isUser, suggestions) {
+        function renderMD(text) {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+                .replace(/\n/g, '<br>')
+                .replace(/•/g, '<span style="color:var(--gold);margin-left:4px">•</span>');
+        }
+        function chatMsg(text, isUser, suggestions, items) {
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
             div.className = 'chat-msg ' + (isUser ? 'user' : 'bot');
-            div.textContent = text;
+            if (isUser) {
+                div.textContent = text;
+            } else {
+                div.innerHTML = renderMD(text);
+            }
             container.appendChild(div);
+            if (items && items.length) {
+                const itemsDiv = document.createElement('div');
+                itemsDiv.className = 'chat-items';
+                items.forEach(item => {
+                    const btn = document.createElement('button');
+                    btn.className = 'chat-add-btn';
+                    const label = tn(item) + ' — ' + formatPrice(item.p);
+                    btn.innerHTML = '<span>' + label + '</span><span class="chat-add-icon">+</span>';
+                    btn.onclick = function(e) {
+                        e.stopPropagation();
+                        const price = Array.isArray(item.p) ? item.p[0] : item.p;
+                        addToCart(item.n, price, '', item.en || item.n);
+                        showCartToast('✅ ' + tn(item) + ' أضيف للسلة');
+                    };
+                    itemsDiv.appendChild(btn);
+                });
+                container.appendChild(itemsDiv);
+            }
             if (suggestions) {
                 const sDiv = document.createElement('div');
                 sDiv.className = 'chat-suggestions';
@@ -1549,8 +1611,41 @@
             return null;
         }
 
+        const storeInfo = {
+            phone: '0100 000 0000',
+            location: { ar: 'مصر الجديدة، القاهرة', en: 'Heliopolis, Cairo' },
+            hours: { ar: 'من ٨ صباحاً لـ ١٢ منتصف الليل', en: '8 AM to 12 AM' },
+            social: { ar: 'إنستجرام: @lucca.cafe', en: 'Instagram: @lucca.cafe' }
+        };
+        let chatHistory = [];
+
         function botKnows(msg) {
             const m = msg.toLowerCase().trim();
+
+            // ── Context: follow-up question ──
+            const followUp = /^(سعره|كام|كام سعره|price|how much|ايه ده|ده ايه|tell me|what'?s this|عايز|اديني|جيب|دوس)/i.test(m);
+            if (followUp && chatHistory.length) {
+                for (let i = chatHistory.length - 1; i >= 0; i--) {
+                    if (!chatHistory[i].isUser && chatHistory[i].items && chatHistory[i].items.length) {
+                        const item = chatHistory[i].items[0];
+                        const displayPrice = Array.isArray(item.p) ? item.p.join(' / ') : item.p;
+                        if (/عايز|اديني|جيب|دوس/i.test(m)) {
+                            const price = Array.isArray(item.p) ? item.p[0] : item.p;
+                            addToCart(item.n, price, '', item.en || item.n);
+                            return { text: lang === 'ar' ? '✅ تمت الإضافة! عايز حاجة تاني؟ 😊' : '✅ Added! Want anything else? 😊', sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '🧧 خلصت'] : ['🔥 Best sellers', '🧧 That\'s all'] };
+                        }
+                        return { text: lang === 'ar' ? `**${tn(item)}** — ${displayPrice} ج.م` : `**${tn(item)}** — ${displayPrice} EGP`, sug: [lang === 'ar' ? '➕ ضيفه' : '➕ Add it', lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers'] };
+                    }
+                }
+            }
+
+            // ── Store info ──
+            if (/(العنوان|location|مواعيد|ساعات|hours|رقم|تليفون|phone|address|فروع|عنوان|موقع|place|أين|فين)/i.test(m)) {
+                const t = lang === 'ar'
+                    ? `📍 **العنوان:** ${storeInfo.location.ar}\n🕐 **ساعات العمل:** ${storeInfo.hours.ar}\n📞 **تليفون:** ${storeInfo.phone}\n📷 ${storeInfo.social.ar}`
+                    : `📍 **Address:** ${storeInfo.location.en}\n🕐 **Hours:** ${storeInfo.hours.en}\n📞 **Phone:** ${storeInfo.phone}\n📷 ${storeInfo.social.en}`;
+                return { text: t, sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '☕ حاجة سخنة'] : ['🔥 Best sellers', '☕ Something hot'] };
+            }
 
             // ── Calorie query ──
             const calMatch = m.match(/^(سعرات|سعرة|calories|calorie|kcal)\s+(.+)/i) || m.match(/calories\s+in\s+(.+)/i) || m.match(/(.+)\s+(calories|calorie|kcal|سعرات|سعرة)\s*$/i);
@@ -1574,21 +1669,21 @@
                 const t = lang === 'ar'
                     ? 'ربنا يقومك بالسلامة 🙏 أنصحك بحاجة دافية وخفيفة:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• شاي أعشاب — ٣٥ ج.م\n• شاي أحمد أخضر — ٣٥ ج.م\n• ليمون نعناع — ٧٥ ج.م')
                     : 'Feel better! 🙏 Try something soothing:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Herbal Tea — 35 EGP\n• Ahmed Green Tea — 35 EGP\n• Mint Lemon — 75 EGP');
-                return { text: t, sug: lang === 'ar' ? ['شاي أعشاب', 'ليمون نعناع'] : ['Herbal Tea', 'Mint Lemon'] };
+                return { text: t, sug: lang === 'ar' ? ['شاي أعشاب', 'ليمون نعناع'] : ['Herbal Tea', 'Mint Lemon'], items };
             }
             if (/(برد|زكام|cold|سخونية|كحة|cough)/i.test(m)) {
                 const items = menuIndex.filter(i => /(سحلب|هوت شوكليت|شاي كرك|Hot Cider|Sahlab|Karak|Hot Chocolate)/i.test(i.n) || /(sahlab|karak|hot chocolate|cider)/i.test(i.en)).slice(0, 3);
                 const t = lang === 'ar'
                     ? 'الله يعافيك 🤧 مشروبات سخنة هتدفيك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• سحلب — ٨٥ ج.م\n• هوت شوكليت — ٧٠ ج.م\n• شاي أحمد كرك — ٥٠ ج.م')
                     : 'Get well! 🤧 Hot drinks to warm you:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Sahlab — 85 EGP\n• Hot Chocolate — 70 EGP\n• Ahmed Karak Tea — 50 EGP');
-                return { text: t, sug: lang === 'ar' ? ['سحلب', 'هوت شوكليت'] : ['Sahlab', 'Hot Chocolate'] };
+                return { text: t, sug: lang === 'ar' ? ['سحلب', 'هوت شوكليت'] : ['Sahlab', 'Hot Chocolate'], items };
             }
             if (/(عطشان|thirsty|ظمآن)/i.test(m)) {
                 const items = menuIndex.filter(i => i.catId === 'juice' || i.catId === 'soda' || i.catId === 'soft-drinks').slice(0, 3);
                 const t = lang === 'ar'
                     ? 'عندك أحلى المشروبات المنعشة 🥤:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• مانجو — ٩٠ ج.م\n• برتقال — ٧٥ ج.م\n• موهيتو — ٧٥ ج.م')
                     : 'Refreshing drinks for you 🥤:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mango — 90 EGP\n• Orange — 75 EGP\n• Mojito — 75 EGP');
-                return { text: t, sug: lang === 'ar' ? ['عصير مانجو', 'موهيتو'] : ['Mango Juice', 'Mojito'] };
+                return { text: t, sug: lang === 'ar' ? ['عصير مانجو', 'موهيتو'] : ['Mango Juice', 'Mojito'], items };
             }
             if (/(جوعان|hungry|عايز\s*أكل)/i.test(m)) {
                 const items = menuIndex.filter(i => i.catId === 'breakfast' || i.catId === 'pizza').slice(0, 4);
@@ -1597,7 +1692,7 @@
                     : 'Hungry? I got you! 😋\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mixed Cheese Toast — 30 EGP\n• Pastrami Sandwich — 30 EGP\n• Salami Pizza — 170 EGP');
                 const sug = items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
                 sug.push(lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers');
-                return { text: t, sug };
+                return { text: t, sug, items };
             }
             if (/(تعبان|tired|طاقة|energy|نعسان|sleepy)/i.test(m)) {
                 const t = lang === 'ar'
@@ -1616,7 +1711,7 @@
                 const t = lang === 'ar'
                     ? 'حاجة منعشة وخفيفة 🍃\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• برتقال — ٧٥ ج.م\n• آيس كوفي — ٨٠ ج.م\n• موهيتو — ٧٥ ج.م')
                     : 'Light & refreshing 🍃\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Orange Juice — 75 EGP\n• Iced Coffee — 80 EGP\n• Mojito — 75 EGP');
-                return { text: t, sug: items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en) };
+                return { text: t, sug: items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en), items };
             }
 
             // ── Diet query ──
@@ -1636,7 +1731,7 @@
                         ? '💎 **القهوة المختصة في Lucca**\n\nأفضل ٣٪ من بن العالم، بنمحمصه خفيف عشان نكهته الأصلية تظهر. بنستورد محاصيل من أثيوبيا وبرازيل وكولومبيا والهند، كل محصول له طعم مختلف.\n\nطريقة التحضير:\n• V60 — بنقطرها يدوي، قهوة نقية وعطرية.\n• آيس دريب — قهوة مفلترة مثلجة، بنقطر V60 على ثلج، منعشة.\n\nالفرق بينها وبين القهوة العادية؟ البن المختصة مش بتتحمص زيادة عشان تحتفظ بنكهتها الحقيقية. الطعم أنقى، الحموضة لطيفة، والريحة غير.\n\nمتوفر عندنا:\n' + specs.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
                         : '💎 **Specialty Coffee at Lucca**\n\nTop 3% of global coffee, light roasted for authentic flavor. Sourced from Ethiopia, Brazil, Colombia & India.\n\nBrew methods:\n• V60 — hand-poured, clean & aromatic.\n• Iced Drip — filtered iced coffee, V60 dripped over ice, refreshing.\n\nThe difference from regular coffee? Specialty is never over-roasted, preserving real flavor.\n\nAvailable:\n' + specs.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
                     const sug = specs.slice(0, 2).concat(lang === 'ar' ? ['ايه الفرق بينهم؟', '🔥 عايز حلويات معاها؟'] : ['What\'s the difference?', '🔥 Want dessert?']).map(i => typeof i === 'string' ? i : (lang === 'ar' ? i.n : i.en));
-                    return { text: t, sug };
+                    return { text: t, sug, items: specs };
                 }
             }
 
@@ -1715,7 +1810,7 @@
                     ? '⭐ **الأكثر طلباً في Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.ar || i.d || ''}`).join('\n') : '') + '\n\nأي واحد تحس إنه لك؟'
                     : '⭐ **Most Popular at Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.en || i.de || ''}`).join('\n') : '') + '\n\nWhich one feels right for you?';
                 const sug = popular.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug };
+                return { text: t, sug, items: popular };
             }
 
             // ── New arrivals ──
@@ -1725,7 +1820,7 @@
                     ? '🆕 **جديدنا — أول واحد يجرب!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}${i.d ? '\n   ' + i.d : ''}`).join('\n') : '') + '\n\n🔥 عايز تجرب واحد؟'
                     : '🆕 **New Arrivals — Be first to try!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}${i.de ? '\n   ' + i.de : ''}`).join('\n') : '') + '\n\n🔥 Want to try one?';
                 const sug = newItems.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug };
+                return { text: t, sug, items: newItems };
             }
 
             // ── Category search (with upsell, max 4 items) ──
@@ -1742,7 +1837,7 @@
                             items.map((i, idx) => `${idx+1}. **${lang === 'ar' ? i.n : i.en}** — ${formatPrice(i.p)}`).join('\n') +
                             (pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '');
                         const sug = items.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                        return { text: t, sug };
+                        return { text: t, sug, items };
                     }
                 }
             }
@@ -1756,7 +1851,7 @@
                     const lines = found.map(i => `• ${lang === 'ar' ? i.n : i.en}: ${formatPrice(i.p)}`);
                     const pair = found.length === 1 ? upsellPair(found[0].catId) : null;
                     const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
-                    return { text: lines.join('\n') + ups };
+                    return { text: lines.join('\n') + ups, items: found };
                 }
             }
 
@@ -1772,7 +1867,7 @@
                 const pair = results.length === 1 ? upsellPair(results[0].catId) : null;
                 const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
                 const sug = results.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: lines.join('\n') + ups, sug };
+                return { text: lines.join('\n') + ups, sug, items: results };
             }
             if (results.length >= 8) {
                 const cats = [...new Set(results.map(i => i.catId))];
@@ -1792,7 +1887,7 @@
                     : '🎯 **Special deal:** Grab a best-seller with a dessert — mind-blowing!\n' + popular.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
                 const sug = popular.map(i => lang === 'ar' ? i.n : (i.en || i.n));
                 sug.push(lang === 'ar' ? '🔥 عايز حلويات' : '🔥 Desserts');
-                return { text: t, sug };
+                return { text: t, sug, items: popular };
             }
 
             // ── Budget ──
@@ -1802,7 +1897,7 @@
                     ? '💰 أحسن حاجة بأسعار مناسبة:\n' + sorted.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
                     : '💰 Best value picks:\n' + sorted.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n');
                 const sug = sorted.map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug };
+                return { text: t, sug, items: sorted };
             }
 
             // ── Dessert / sweet with coffee upsell ──
@@ -1813,7 +1908,7 @@
                     : '🍰 Great desserts:\n' + (desserts.length ? desserts.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Cheesecake — 90 EGP\n• Molten Cake — 80 EGP\n• Cookies — 40 EGP') + '\n\n🔥 Want coffee with that?';
                 const sug = desserts.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
                 sug.push(lang === 'ar' ? 'لاتيه ☕' : 'Latte ☕');
-                return { text: t, sug };
+                return { text: t, sug, items: desserts };
             }
 
             // ── Default: ask a question instead of dumping help ──
@@ -1831,15 +1926,19 @@
             const msg = input.value.trim();
             if (!msg) return;
             input.value = '';
+            chatHistory.push({ text: msg, isUser: true });
+            if (chatHistory.length > 10) chatHistory.shift();
             chatMsg(msg, true);
             chatTyping(true);
             setTimeout(() => {
                 chatTyping(false);
                 const reply = botKnows(msg);
+                chatHistory.push({ text: reply.text, isUser: false, items: reply.items || null });
+                if (chatHistory.length > 10) chatHistory.shift();
                 if (reply.sug) {
-                    chatMsg(reply.text, false, reply.sug);
+                    chatMsg(reply.text, false, reply.sug, reply.items);
                 } else {
-                    chatMsg(reply.text, false);
+                    chatMsg(reply.text, false, null, reply.items);
                 }
             }, 600 + Math.random() * 400);
         }
