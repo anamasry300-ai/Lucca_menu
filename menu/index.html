@@ -1076,7 +1076,7 @@
 
         function tn(item) { return lang === 'en' && item.en ? item.en : item.n; }
         function td(item) { return lang === 'en' && item.de ? item.de : (item.d || ''); }
-        function getImg(catId, item) { return item.img || getItemImage(catId, item.en || item.n) || ''; }
+        function getImg(catId, item) { return ''; }
         function badgeLabel(type) {
             const labels = { popular: { ar: '⭐', en: '⭐' }, new: { ar: '🆕', en: '🆕' }, specialty: { ar: '💎', en: '💎' } };
             return (labels[type] || {})[lang] || type;
