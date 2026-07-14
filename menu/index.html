@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="images.js"></script>
     <style>
         html { scroll-behavior: smooth; }
         :root {
@@ -176,8 +177,11 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: var(--foam);
-            box-shadow: 0 2px 12px rgba(26,15,10,0.08);
+            background: rgba(247,242,235,0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 2px 20px rgba(26,15,10,0.08);
+            border-bottom: 1px solid rgba(166,123,91,0.08);
         }
         .search-container {
             padding: 12px 16px 8px;
@@ -185,7 +189,6 @@
         .search-box {
             position: relative;
         }
-        .search-box { position: relative; }
         .search-box input {
             width: 100%;
             padding: 12px 44px 12px 44px;
@@ -335,71 +338,13 @@
         }
         .category.expanded .toggle-icon { transform: rotate(180deg); }
 
-        .category-items {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.3s ease;
-            opacity: 0;
-        }
-        .category.expanded .category-items {
-            max-height: 5000px;
-            opacity: 1;
-        }
-
-        .menu-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 13px 18px;
-            border-bottom: 1px solid var(--cream);
-            gap: 10px;
-            transition: background 0.2s, padding 0.2s;
-        }
-        .menu-item:last-child { border-bottom: none; }
         .menu-item:active { background: var(--cream); }
-        .menu-item:hover { background: rgba(237,224,212,0.5); padding-right: 22px; }
-        html[dir="ltr"] .menu-item:hover { padding-right: 18px; padding-left: 22px; }
 
-        .item-info { flex: 1; min-width: 0; }
-        .item-name {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--coffee-900);
-        }
-        .item-name-ar { font-weight: 700; }
-        .item-description {
-            font-size: 0.82rem;
-            color: var(--coffee-500);
-            margin-top: 2px;
-            font-style: italic;
-        }
-        .item-price-wrap {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 2px;
-            flex-shrink: 0;
-        }
-        .item-price {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--coffee-700);
-            white-space: nowrap;
-        }
-        .price-unit {
-            font-size: 0.78rem;
-            color: var(--coffee-500);
-            font-weight: 500;
-        }
         .dual-price {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
-        .add-cart-btn { width:32px; height:32px; border:none; border-radius:50%; background:var(--gold); color:var(--coffee-900); font-size:1.2rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s, background 0.2s, box-shadow 0.2s; box-shadow:0 2px 6px rgba(212,168,90,0.3); }
-        .add-cart-btn:hover { transform:scale(1.15); background:var(--gold-light); box-shadow:0 4px 12px rgba(212,168,90,0.4); }
-        .add-cart-btn:active { transform:scale(0.9); }
         .cart-fab { position:fixed; bottom:80px; left:16px; z-index:100; width:56px; height:56px; border-radius:50%; background:var(--coffee-700); color:var(--foam); border:none; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 20px rgba(62,35,18,0.3); display:none; align-items:center; justify-content:center; transition:transform 0.2s, box-shadow 0.2s; }
         .cart-fab.show { display:flex; animation:fabPop 0.35s ease; }
         .cart-fab:active { transform:scale(0.9); }
@@ -413,7 +358,6 @@
         .cart-drag-handle { width:40px; height:4px; border-radius:2px; background:var(--cream); margin:8px auto 0; flex-shrink:0; cursor:grab; }
         .cart-header { display:flex; align-items:center; gap:10px; padding:12px 20px; border-bottom:1px solid var(--cream); background:var(--foam); border-radius:20px 20px 0 0; }
         .cart-header h3 { margin:0; flex:1; font-size:1.1rem; color:var(--coffee-900); }
-        .cart-header h3 { margin:0; flex:1; font-size:1.1rem; }
         #cartCount { background:var(--coffee-700); color:#fff; font-size:0.8rem; font-weight:700; padding:2px 10px; border-radius:12px; }
         .cart-close { background:none; border:none; font-size:1.3rem; cursor:pointer; padding:4px; color:#999; }
         .cart-items { flex:1; overflow-y:auto; padding:12px 20px; }
@@ -430,7 +374,6 @@
         .cart-send-btn:active { transform:translateY(0); }
         .cart-toast { position:fixed; bottom:150px; left:50%; transform:translateX(-50%); z-index:300; background:var(--coffee-900); color:var(--foam); padding:10px 24px; border-radius:10px; font-size:0.9rem; font-weight:600; opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none; white-space:nowrap; box-shadow:0 4px 16px rgba(26,15,10,0.3); }
         .cart-toast.show { opacity:1; transform:translateX(-50%) translateY(-4px); }
-        .cart-toast.show { opacity:1; }
         .lang-toggle { position:fixed; bottom:16px; right:16px; z-index:100; width:44px; height:44px; border-radius:50%; background:var(--gold); color:var(--coffee-900); border:none; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 12px rgba(212,168,90,0.3); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; }
         .lang-toggle:active { transform:scale(0.9); }
         @media (min-width:768px) { .lang-toggle { left:auto; right:24px; bottom:80px; } }
@@ -444,6 +387,158 @@
         .cart-table-input label { display:block; font-size:0.85rem; color:var(--coffee-500); margin-bottom:4px; }
         .cart-table-input input { width:100%; padding:10px 12px; border:1px solid var(--cream); border-radius:8px; font-size:1rem; box-sizing:border-box; }
         .dual-price .item-price { font-size: 1rem; }
+
+        /* ─── بطاقات (Grid Cards) ─── */
+        .category-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 10px !important;
+        }
+        .category.expanded .category-items {
+            max-height: none;
+            padding: 10px !important;
+        }
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(26,15,10,0.07);
+            border: 1px solid rgba(166,123,91,0.12);
+            transition: transform 0.25s, box-shadow 0.3s;
+            animation: fadeInUp 0.35s ease both;
+            padding: 0;
+            gap: 0;
+        }
+        .menu-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(26,15,10,0.13);
+            border-color: var(--gold);
+        }
+        .menu-item:hover .item-img-wrap {
+            transform: scale(1.05);
+        }
+
+        .item-img-wrap {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: var(--cream);
+            position: relative;
+        }
+        .item-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s, opacity 0.3s;
+        }
+
+        .item-info {
+            padding: 10px 12px 4px;
+            flex: 1;
+        }
+        .item-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--coffee-900);
+        }
+        .item-description {
+            font-size: 0.75rem;
+            color: var(--coffee-500);
+            margin-top: 3px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-price-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 12px 10px;
+            gap: 6px;
+        }
+        .item-price {
+            font-size: 0.95rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            color: var(--coffee-700);
+        }
+        .price-unit {
+            font-size: 0.7rem;
+            color: var(--coffee-500);
+        }
+        .dual-price .item-price { font-size: 0.85rem; }
+        .add-cart-btn {
+            width: 30px; height: 30px;
+            border: none; border-radius: 50%;
+            background: var(--gold);
+            color: var(--coffee-900);
+            font-size: 1.1rem; font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 6px rgba(212,168,90,0.3);
+            flex-shrink: 0;
+        }
+        .add-cart-btn:hover {
+            transform: scale(1.12);
+            background: var(--gold-light);
+            box-shadow: 0 4px 12px rgba(212,168,90,0.4);
+        }
+        .add-cart-btn:active { transform: scale(0.9); }
+
+        @media (min-width: 640px) {
+            .category-items { grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 14px !important; }
+            .category.expanded .category-items { padding: 14px !important; }
+            .item-name { font-size: 1rem; }
+            .item-description { font-size: 0.8rem; }
+            .item-price { font-size: 1rem; }
+        }
+        @media (min-width: 1024px) {
+            .category-items { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 1px 5px;
+            border-radius: 6px;
+            margin-right: 4px;
+            vertical-align: middle;
+            line-height: 1.3;
+        }
+        .badge-popular { background: #FFD700; color: #3E2312; }
+        .badge-new { background: #4CAF50; color: #fff; }
+        .badge-specialty { background: #C85A3E; color: #fff; }
+
+        .item-img-placeholder {
+            width: 100%; height: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--cream), #E5D8CC);
+            color: var(--coffee-500);
+        }
+        @media (min-width: 640px) {
+            .item-img-placeholder { font-size: 3rem; }
+        }
+
+        /* التصنيفات اللي فيها أصول (specialty) تاخد عرض كامل */
+        .menu-item:has(.origin-selection) { grid-column: 1 / -1; flex-direction: row; }
+        .menu-item:has(.origin-selection) .item-img-wrap { width: 100px; height: 100px; flex-shrink: 0; }
+        .menu-item:has(.origin-selection) .item-info { padding: 12px; }
+        .menu-item:has(.origin-selection) .item-price-wrap { flex-direction: column; align-items: flex-end; padding: 12px; }
 
         .origin-selection {
             background: #FFF9F0;
@@ -483,12 +578,218 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .menu-item {
-            animation: fadeInUp 0.35s ease both;
+
+        /* ─── AI Chat Bot ─── */
+        .chat-btn {
+            position: fixed;
+            bottom: 66px; right: 16px;
+            z-index: 99;
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--coffee-700), var(--gold));
+            color: var(--foam);
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(62,35,18,0.35);
+            display: flex;
+            align-items: center; justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
+        .chat-btn:active { transform: scale(0.9); }
+        .chat-btn:hover { box-shadow: 0 6px 24px rgba(62,35,18,0.45); }
+        @media (min-width:768px) { .chat-btn { left: auto; right: 136px; bottom: 24px; } }
+
+        .chat-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(26,15,10,0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 200;
+            display: none;
+        }
+        .chat-overlay.show { display: block; }
+
+        .chat-panel {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 201;
+            background: #fff;
+            border-radius: 20px 20px 0 0;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
+            box-shadow: 0 -4px 30px rgba(26,15,10,0.2);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .chat-panel.show { transform: translateY(0); }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--cream);
+            background: linear-gradient(135deg, var(--coffee-700), var(--coffee-500));
+            border-radius: 20px 20px 0 0;
+            color: var(--foam);
+            flex-shrink: 0;
+        }
+        .chat-header .avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .chat-header .info { flex: 1; }
+        .chat-header .info h3 { font-size: 0.95rem; margin: 0; font-family: 'Cairo', sans-serif; }
+        .chat-header .info p { font-size: 0.72rem; opacity: 0.8; margin: 0; }
+        .chat-close {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: var(--foam);
+            font-size: 1rem;
+            cursor: pointer;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center; justify-content: center;
+            transition: background 0.2s;
+        }
+        .chat-close:hover { background: rgba(255,255,255,0.25); }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #FAF8F5;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-thumb { background: var(--cream); border-radius: 2px; }
+
+        .chat-msg {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            animation: msgIn 0.3s ease both;
+            word-wrap: break-word;
+        }
+        @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .chat-msg.bot {
+            align-self: flex-start;
+            background: #fff;
+            color: var(--coffee-900);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 4px rgba(26,15,10,0.06);
+        }
+        .chat-msg.user {
+            align-self: flex-end;
+            background: var(--coffee-700);
+            color: var(--foam);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-typing {
+            display: flex;
+            gap: 4px;
+            padding: 12px 16px;
+            background: #fff;
+            border-radius: 16px;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 4px rgba(26,15,10,0.06);
+        }
+        .chat-typing span {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--coffee-300);
+            animation: typingDot 1.2s infinite;
+        }
+        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes typingDot { 0%,60%,100% { opacity: 0.3; } 30% { opacity: 1; } }
+
+        .chat-input-wrap {
+            display: flex;
+            gap: 8px;
+            padding: 10px 14px 14px;
+            border-top: 1px solid var(--cream);
+            background: var(--foam);
+            border-radius: 0 0 20px 20px;
+            flex-shrink: 0;
+        }
+        .chat-input-wrap input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid var(--cream);
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-family: 'Tajawal', sans-serif;
+            background: #fff;
+            color: var(--coffee-900);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chat-input-wrap input:focus { border-color: var(--coffee-500); }
+        .chat-input-wrap button {
+            width: 42px; height: 42px;
+            border: none;
+            border-radius: 50%;
+            background: var(--coffee-700);
+            color: var(--foam);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center; justify-content: center;
+            transition: transform 0.15s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .chat-input-wrap button:active { transform: scale(0.9); }
+
+        .chat-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 0 0;
+        }
+        .chat-suggestions button {
+            background: var(--gold);
+            color: var(--coffee-900);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 2px 6px rgba(212,168,90,0.25);
+        }
+        .chat-suggestions button:active { transform: scale(0.95); }
         .category:hover { box-shadow: var(--shadow-md); transform:translateY(-1px); }
         .tab:not(.active):hover { background: #E5D8CC; transform: translateY(-1px); }
         .category-header:hover { background: #E5D8CC; }
+        .category-header h2 { gap: 8px; }
+        .category-header .category-icon { width: 32px; height: 32px; font-size: 1rem; }
+        .category { margin: 12px 0; }
+        .menu-content { padding: 8px 16px 100px; }
+
+        @media (min-width: 768px) {
+            .category { margin: 16px 0; }
+            .menu-content { padding: 12px 20px 100px; }
+        }
 
         .qr-section {
             background: linear-gradient(180deg, var(--foam) 0%, var(--cream) 100%);
@@ -608,7 +909,7 @@
             <p style="font-size: 0.9rem; opacity: 0.7;">SPECIALTY COFFEE</p>
             <p>📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
             <p class="contact">📞 +20 10 10058989</p>
-            <p style="margin-top: 14px; font-size: 0.82rem; opacity: 0.5;">Specialty Coffee since 2024 ☕</p>
+            <p id="footerAppEl" style="margin-top: 14px; font-size: 0.82rem; opacity: 0.5;">Specialty Coffee since 2024 ☕</p>
         </div>
     </div>
 
@@ -654,6 +955,27 @@
     <!-- Toast -->
     <div id="cartToast" class="cart-toast"></div>
 
+    <!-- AI Chat Bot -->
+    <button class="chat-btn" id="chatBtn" onclick="toggleChat()" aria-label="فتح المساعد">🤖</button>
+    <div id="chatOverlay" class="chat-overlay" onclick="toggleChat()"></div>
+    <div id="chatPanel" class="chat-panel">
+        <div class="chat-header">
+            <div class="avatar">☕</div>
+            <div class="info">
+                <h3 id="chatTitleLabel">🤖 Lucca AI</h3>
+                <p id="chatStatusLabel">متاح للمساعدة</p>
+            </div>
+            <button class="chat-close" onclick="toggleChat()" aria-label="إغلاق">✕</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-msg bot" id="chatWelcomeMsg">☕🔥 أهلاً بيك في Lucca! أنا بوت لوكا الذكي — عايز تعرف إيه الأكثر مبيعاً؟ ولا عايز توصية مخصوص ليك؟</div>
+        </div>
+        <div class="chat-input-wrap">
+            <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." autocomplete="off" onkeydown="if(event.key==='Enter') sendChatMsg()">
+            <button onclick="sendChatMsg()" aria-label="إرسال">➤</button>
+        </div>
+    </div>
+
     <script>
         const _LANG = {
             search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
@@ -671,7 +993,7 @@
             specDesc: { ar: 'القهوة المختصة هي أجود 3% من إنتاج القهوة العالمي، نختارها بعناية من أفضل المزارع حول العالم. كل حبة قهوة في Lucca تمر بمعايير جودة صارمة لنضمن لك طعماً نقياً ومميزاً.', en: 'Specialty coffee is the top 3% of global coffee production, carefully sourced from the best farms worldwide. Every Lucca bean meets strict quality standards for a pure, distinctive taste.' },
             qrTitle: { ar: '📱 امسح QR للوصول للمنيو', en: '📱 Scan QR to access the menu' },
             qrDesc: { ar: 'يمكنك مسح هذا الكود للوصول السريع إلى قائمة الطعام من هاتفك المحمول', en: 'Scan this code to quickly access the menu from your phone' },
-            footerApp: { ar: 'Buon Appetito! 🍽️', en: 'Buon Appetito! 🍽️' },
+            footerApp: { ar: 'Specialty Coffee منذ 2024 ☕', en: 'Specialty Coffee since 2024 ☕' },
             backTop: { ar: 'العودة للأعلى', en: 'Back to top' },
             originTitle: { ar: 'اختر المحصول لـ', en: 'Choose origin for' },
             originCancel: { ar: 'إلغاء', en: 'Cancel' },
@@ -680,6 +1002,10 @@
             waTotal: { ar: '💵 *الإجمالي:', en: '💵 *Total:' },
             waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
             originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
+            chatTitle: { ar: '🤖 بوت لوكا الذكي', en: '🤖 Lucca Smart Bot' },
+            chatStatus: { ar: 'بوت لوكا الذكي تحت أمرك ☕', en: 'Lucca Smart Bot at your service ☕' },
+            chatPlace: { ar: 'اسألني عن أي حاجة…', en: 'Ask me anything…' },
+            chatWelcome: { ar: '☕🔥 أهلاً بيك في Lucca! أنا بوت لوكا الذكي — عايز تعرف إيه الأكثر مبيعاً؟ ولا عايز توصية مخصوص ليك؟ أنا هنا أبيعلك أحلى كوباية وأحلى أكل! اطلب أي حاجة وإحنا هنخدمك بسرعة! 💪', en: '☕🔥 Welcome to Lucca! I\'m Lucca Smart Bot — want to know what\'s selling like crazy? Need a personal recommendation? I\'ll get you the best coffee and food, fast! Order anything and we\'ll serve you quick! 💪' },
             catNames: {
                 ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
                 en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
@@ -703,7 +1029,7 @@
                 tableNumLabel: 'tableLabel',
                 tableNum: 'tablePlace',
                 orderNotes: 'notesPlace',
-                notesLabelEl: 'notesLabel',
+                notesLabel: 'notesLabel',
                 totalLabel: 'total',
                 sendBtnLabel: 'sendBtn',
                 shareBtn: 'shareLabel',
@@ -712,7 +1038,11 @@
                 qrTitleEl: 'qrTitle',
                 qrDescEl: 'qrDesc',
                 footerAppEl: 'footerApp',
-                backToTop: 'backTop'
+                backToTop: 'backTop',
+                chatTitleLabel: 'chatTitle',
+                chatStatusLabel: 'chatStatus',
+                chatInput: 'chatPlace',
+                chatWelcomeMsg: 'chatWelcome'
             };
             for (const [id, key] of Object.entries(byId)) {
                 const el = document.getElementById(id);
@@ -744,122 +1074,185 @@
             { icon: '➕', name: () => t('catNames').addons, id: 'addons' }
         ];
 
-        const DATA = {
+        function tn(item) { return lang === 'en' && item.en ? item.en : item.n; }
+        function td(item) { return lang === 'en' && item.de ? item.de : (item.d || ''); }
+        function getImg(catId, item) { return item.img || getItemImage(catId, item.en || item.n) || ''; }
+        function badgeLabel(type) {
+            const labels = { popular: { ar: '⭐', en: '⭐' }, new: { ar: '🆕', en: '🆕' }, specialty: { ar: '💎', en: '💎' } };
+            return (labels[type] || {})[lang] || type;
+        }
+
+        // ─── كيفية إضافة صنف جديد ───
+        // كل صنف له الخصائص دي:
+        //   n:  الاسم بالعربي (إجباري)
+        //   en: الاسم بالإنجليزي (للترجمة)
+        //   p:  السعر (رقم أو مصفوفة [نص, كامل])
+        //   d:  الوصف بالعربي (اختياري)
+        //   de: الوصف بالإنجليزي (اختياري)
+        //   origins: المحاصيل المتاحة (اختياري)
+        //   b:  badge (وسم) اختياري: 'popular', 'new', 'specialty'
+        //   img: رابط صورة مخصصة (اختياري - لو محددش بجيب من images.js)
+        //
+        // مثال لإضافة صنف جديد:
+        // { n: 'اسم الصنف', en: 'Item Name', p: '50', d: 'وصف', de: 'Description' }
+        //
+        // لإضافة تصنيف جديد:
+        // 1. ضيف id جديد في CATEGORIES تحت (line ~730)
+        // 2. ضيف المفتاح في catNames.ar و catNames.en في _LANG
+        // 3. ضيف البيانات تحت الـ DATA
+        // 4. ضيف الصور في ملف images.js
+        // ──────────────────────────────
+
+        let DATA = {
             specialty: [
-                { n: 'V60', p: '80', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
-                { n: 'آيس دريب', p: '80', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
-                { n: 'قهوة اليوم', p: '50', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] }
+                { n: 'V60', en: 'V60', p: '80', b: 'popular', d: 'قهوة مفلترة يدوياً بطريقة V60', de: 'Hand-poured V60 filter coffee', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
+                { n: 'آيس دريب', en: 'Iced Drip', p: '80', b: 'specialty', d: 'قهوة مفلترة مثلجة — نفس طريقة V60 بنقطرها على ثلج عشان تطلع منعشة', de: 'Iced filtered coffee — same V60 pour-over method dripped over ice for a refreshing cup', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
+                { n: 'قهوة اليوم', en: "Coffee of the Day", p: '50', d: 'تصفية يومية من حبوب مختارة', de: 'Daily brew from selected beans', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] }
             ],
             coffee: [
-                { n: 'إسبريسو', p: '45' }, { n: 'إسبريسو دبل', p: '70' },
-                { n: 'قهوة تركي', p: '35' }, { n: 'ميكاتو', p: '50' },
-                { n: 'ميكاتو دبل', p: '80' }, { n: 'موكا', p: '75' },
-                { n: 'وايت موكا', p: '75' }, { n: 'فلات وايت', p: '80' },
-                { n: 'كورتادو', p: '75' }, { n: 'كابتشينو', p: '85' },
-                { n: 'لاتيه', p: '85' },                 { n: 'قهوة بندق', p: '70' },
-                { n: 'قهوة فرنساوي', p: '65' }, { n: 'نسكافيه', p: '70' },
-                { n: 'هوت شوكليت', p: '70' }, { n: 'هوت شوكليت نوتيلا', p: '80' }
+                { n: 'إسبريسو', en: 'Espresso', p: '45', b: 'popular', d: 'جرعة إسبريسو مركزة', de: 'Concentrated espresso shot' },
+                { n: 'إسبريسو دبل', en: 'Double Espresso', p: '70', d: 'جرعة مزدوجة من الإسبريسو', de: 'Double shot of rich espresso' },
+                { n: 'قهوة تركي', en: 'Turkish Coffee', p: '35', d: 'قهوة تركية تقليدية', de: 'Traditional Turkish coffee' },
+                { n: 'ميكاتو', en: 'Piccolo', p: '50', d: 'قطرة حليب على جرعة إسبريسو', de: 'Drop of milk on espresso' },
+                { n: 'ميكاتو دبل', en: 'Double Piccolo', p: '80', d: 'إسبريسو دبل مع لمسة حليب', de: 'Double espresso with a touch of milk' },
+                { n: 'موكا', en: 'Mocha', p: '75', d: 'إسبريسو مع شوكولاتة وحليب', de: 'Espresso with dark chocolate & steamed milk' },
+                { n: 'وايت موكا', en: 'White Mocha', p: '75', d: 'موكا ناعمة مع حليب', de: 'Smooth mocha with white chocolate' },
+                { n: 'فلات وايت', en: 'Flat White', p: '80', b: 'specialty', d: 'إسبريسو مع طبقة رقيقة من الحليب', de: 'Espresso with thin velvety milk layer' },
+                { n: 'كورتادو', en: 'Cortado', p: '75', d: 'نسبة متوازنة بين الإسبريسو والحليب', de: 'Balanced espresso with warm milk' },
+                { n: 'كابتشينو', en: 'Cappuccino', p: '85', b: 'popular', d: 'إسبريسو مع رغوة كثيفة', de: 'Espresso with thick foam & steamed milk' },
+                { n: 'لاتيه', en: 'Latte', p: '85', b: 'popular', d: 'قهوة إسبريسو مع حليب مخملي', de: 'Espresso with velvety steamed milk' },
+                { n: 'قهوة بندق', en: 'Hazelnut Coffee', p: '70', b: 'popular', d: 'قهوة بنكهة البندق المحمص', de: 'Coffee with roasted hazelnut flavor' },
+                { n: 'قهوة فرنساوي', en: 'French Press', p: '65', d: 'قهوة فرنسي برس غنية', de: 'Rich French press coffee' },
+                { n: 'نسكافيه', en: 'Nescafe', p: '70', d: 'مشروب قهوة سريع التحضير', de: 'Instant coffee drink' }
             ],
             'hot-drinks': [
-                { n: 'شاي', p: '35' }, { n: 'شاي كرك', p: '50' },
-                { n: 'شاي أخضر', p: '35' }, { n: 'ميكس أعشاب', p: '50' },
-                { n: 'شاي بالبن', p: '50' }, { n: 'هوت سيدر', p: '50' },
-                { n: 'أعشاب', p: '35' }
+                { n: 'هوت شوكليت', en: 'Hot Chocolate', p: '70', d: 'مشروب شوكولاتة دافئ', de: 'Warm rich chocolate drink' },
+                { n: 'هوت شوكليت نوتيلا', en: 'Nutella Hot Chocolate', p: '80', b: 'specialty', d: 'شوكولاتة ساخنة مع نوتيلا', de: 'Hot chocolate with Nutella' },
+                { n: 'شاي', en: 'Ahmed Tea', p: '35', d: 'شاي أحمد الأسود الطازج', de: 'Fresh Ahmed black tea' },
+                { n: 'شاي كرك', en: 'Ahmed Karak Tea', p: '50', b: 'specialty', d: 'شاي أحمد كرك هندي', de: 'Ahmed Indian spiced Karak tea' },
+                { n: 'شاي أخضر', en: 'Ahmed Green Tea', p: '35', d: 'شاي أحمد الأخضر الطازج', de: 'Fresh Ahmed green tea' },
+                { n: 'ميكس أعشاب', en: 'Herbal Mix', p: '50', d: 'خلطة أعشاب متنوعة', de: 'Mixed herbal blend' },
+                { n: 'شاي بالبن', en: 'Ahmed Milk Tea', p: '50', d: 'شاي أحمد مع لبن', de: 'Ahmed tea with milk' },
+                { n: 'هوت سيدر', en: 'Hot Cider', p: '50', b: 'new', d: 'مشروب تفاح ساخن بالقرفة', de: 'Hot apple cider with cinnamon' },
+                { n: 'أعشاب', en: 'Herbal Tea', p: '35', d: 'مشروب أعشاب دافئ', de: 'Warm herbal drink' }
             ],
             'iced-coffee': [
-                { n: 'آيس كوفي', p: '80' }, { n: 'آيس لاتيه', p: '85' },
-                { n: 'آيس موكا', p: '90' }, { n: 'آيس وايت موكا', p: '90' },
-                { n: 'فرابتشينو', p: '95' },
-                { n: 'فرابيه', p: ['85', '95'], d: 'كلاسيك أو فروت' }
+                { n: 'آيس كوفي', en: 'Iced Coffee', p: '80', b: 'popular', d: 'قهوة مثلجة', de: 'Chilled iced coffee' },
+                { n: 'آيس لاتيه', en: 'Iced Latte', p: '85', b: 'popular', d: 'لاتيه مثلج', de: 'Iced latte' },
+                { n: 'آيس موكا', en: 'Iced Mocha', p: '90', d: 'موكا مثلج', de: 'Iced mocha' },
+                { n: 'آيس وايت موكا', en: 'Iced White Mocha', p: '90', d: 'وايت موكا مثلج', de: 'Iced white mocha' },
+                { n: 'فرابتشينو', en: 'Frappuccino', p: '95', b: 'specialty', d: 'فرابتشينو مثلج', de: 'Blended iced frappuccino' },
+                { n: 'فرابيه', en: 'Frappe', p: ['85', '95'], d: 'كلاسيك أو فروت', de: 'Classic or Fruit' }
             ],
             milkshake: [
-                { n: 'شوكولاتة', p: '90' }, { n: 'فانيليا', p: '90' },
-                { n: 'فراولة', p: '90' }, { n: 'مانجو', p: '90' },
-                { n: 'نوتيلا', p: '100' }, { n: 'كراميل', p: '90' },
-                { n: 'أوريو', p: '110' }, { n: 'ميكس شوكليت', p: '120' }
+                { n: 'شوكولاتة', en: 'Chocolate', p: '90', b: 'popular', d: 'ميلك شيك شوكولاتة', de: 'Chocolate milkshake' },
+                { n: 'فانيليا', en: 'Vanilla', p: '90', d: 'ميلك شيك فانيليا', de: 'Vanilla milkshake' },
+                { n: 'فراولة', en: 'Strawberry', p: '90', b: 'popular', d: 'ميلك شيك فراولة', de: 'Strawberry milkshake' },
+                { n: 'مانجو', en: 'Mango', p: '90', d: 'ميلك شيك مانجو', de: 'Mango milkshake' },
+                { n: 'نوتيلا', en: 'Nutella', p: '100', b: 'specialty', d: 'ميلك شيك نوتيلا', de: 'Nutella milkshake' },
+                { n: 'كراميل', en: 'Caramel', p: '90', d: 'ميلك شيك كراميل', de: 'Caramel milkshake' },
+                { n: 'أوريو', en: 'Oreo', p: '110', b: 'new', d: 'ميلك شيك أوريو', de: 'Oreo milkshake' },
+                { n: 'ميكس شوكليت', en: 'Chocolate Mix', p: '120', b: 'specialty', d: 'ميلك شيك شوكليت ميكس', de: 'Mixed chocolate milkshake' }
             ],
             juice: [
-                { n: 'مانجو', p: '90' }, { n: 'فراولة', p: '80' },
-                { n: 'جوافة', p: '75' }, { n: 'كيوي', p: '90' },
-                { n: 'برتقال', p: '75' }, { n: 'ليمون', p: '70' },
-                { n: 'ليمون نعناع', p: '75' }
+                { n: 'مانجو', en: 'Mango', p: '90', b: 'popular', d: 'عصير مانجو طازج', de: 'Fresh mango juice' },
+                { n: 'فراولة', en: 'Strawberry', p: '80', d: 'عصير فراولة طازج', de: 'Fresh strawberry juice' },
+                { n: 'جوافة', en: 'Guava', p: '75', b: 'new', d: 'عصير جوافة طازج', de: 'Fresh guava juice' },
+                { n: 'كيوي', en: 'Kiwi', p: '90', b: 'new', d: 'عصير كيوي طازج', de: 'Fresh kiwi juice' },
+                { n: 'برتقال', en: 'Orange', p: '75', b: 'popular', d: 'عصير برتقال طازج', de: 'Fresh orange juice' },
+                { n: 'ليمون', en: 'Lemon', p: '70', d: 'عصير ليمون طازج', de: 'Fresh lemon juice' },
+                { n: 'ليمون نعناع', en: 'Mint Lemon', p: '75', b: 'new', d: 'ليمون طازج مع نعناع', de: 'Fresh lemon with mint' }
             ],
             desserts: [
-                { n: 'وافل كلاسيك', p: ['40', '80'], d: 'نص / كامل' },
-                { n: 'وافل ميكس شوكليت', p: '140' },
-                { n: 'وافل فورسيزون', p: '120' },
-                { n: 'وافل بابل', p: '85' },
-                { n: 'وافل فواكه', p: '110' },
-                { n: 'سان سيباستيان', p: '70' },
-                { n: 'مولتن', p: '80' },
-                { n: 'براونيز', p: '80' },
-                { n: 'كوكيز', p: '40' },
-                { n: 'أم علي مكسرات', p: '90' },
-                { n: 'تشيز كيك', p: '90' },
-                { n: 'موس جالاكسي', p: '100' }
+                { n: 'وافل كلاسيك', en: 'Classic Waffle', p: ['40', '80'], b: 'popular', d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'وافل ميكس شوكليت', en: 'Chocolate Waffle', p: '140', b: 'specialty', d: 'وافل بالشوكولاتة', de: 'Chocolate mixed waffle' },
+                { n: 'وافل فورسيزون', en: 'Four Seasons Waffle', p: '120', b: 'specialty', d: 'وافل بأربع نكهات', de: 'Four flavors waffle' },
+                { n: 'وافل بابل', en: 'Bubble Waffle', p: '85', d: 'وافل بابل', de: 'Bubble waffle' },
+                { n: 'وافل فواكه', en: 'Fruit Waffle', p: '110', d: 'وافل بالفواكه', de: 'Fresh fruit waffle' },
+                { n: 'سان سيباستيان', en: 'San Sebastian', p: '70', b: 'new', d: 'تشيز كيك فطري', de: 'Basque cheesecake' },
+                { n: 'مولتن', en: 'Molten Cake', p: '80', b: 'popular', d: 'كيك الشوكولاتة الذائبة', de: 'Chocolate molten cake' },
+                { n: 'براونيز', en: 'Brownie', p: '80', d: 'براونيز شوكولاتة', de: 'Chocolate brownie' },
+                { n: 'كوكيز', en: 'Cookies', p: '40', d: 'كوكيز طازج', de: 'Fresh cookies' },
+                { n: 'أم علي مكسرات', en: 'Om Ali with Nuts', p: '90', d: 'أم علي بالمكسرات', de: 'Egyptian bread pudding with nuts' },
+                { n: 'تشيز كيك', en: 'Cheesecake', p: '90', b: 'popular', d: 'تشيز كيك كلاسيك', de: 'Classic cheesecake' },
+                { n: 'موس جالاكسي', en: 'Galaxy Mousse', p: '100', b: 'specialty', d: 'موس جالاكسي بالشوكولاتة', de: 'Galaxy chocolate mousse' },
+                { n: 'بان كيك', en: 'Pancake', p: '80', b: 'new', d: 'بان كيك طري مع صوص الشوكولاتة', de: 'Soft pancake with chocolate sauce' },
+                { n: 'كريب رول', en: 'Crepe Roll', p: '85', b: 'new', d: 'كريب رول محشي كريمة', de: 'Cream-filled crepe roll' },
+                { n: 'كريب فتوتشيني', en: 'Crepe Fettuccine', p: '95', b: 'new', d: 'كريب فتوتشيني بصوص الشوكولاتة', de: 'Fettuccine-style crepe with chocolate sauce' }
             ],
             smoothie: [
-                { n: 'من اختيارك', p: '75' }
+                { n: 'من اختيارك', en: 'Your Choice', p: '75', b: 'popular', d: 'سموزي طازج من اختيارك', de: 'Fresh smoothie of your choice' }
             ],
             soda: [
-                { n: 'جيلي كولا', p: '75' }, { n: 'صن شاين', p: '75' },
-                { n: 'صن رايز', p: '75' }, { n: 'موهيتو', p: '75' },
-                { n: 'موهيتو فليفر', p: '100' }, { n: 'شيري كولا', p: '75' },
-                { n: 'ميكس بيري', p: '80' },
-                { n: 'بلو بيري فراولة', p: '75' },
-                { n: 'بينا كولادا', p: '75' },
-                { n: 'باشون أناناس', p: '75' },
-                { n: 'ريدبول فليفر', p: '120' },
-                { n: 'ميكس لوكا', p: '80' }
+                { n: 'جيلي كولا', en: 'Jelly Cola', p: '75' },
+                { n: 'صن شاين', en: 'Sunshine', p: '75' },
+                { n: 'صن رايز', en: 'Sunrise', p: '75' },
+                { n: 'موهيتو', en: 'Mojito', p: '75', b: 'popular', d: 'موهيتو كلاسيك', de: 'Classic mojito' },
+                { n: 'موهيتو فليفر', en: 'Mojito Flavor', p: '100', b: 'new', d: 'موهيتو بالنكهة', de: 'Flavored mojito' },
+                { n: 'شيري كولا', en: 'Cherry Cola', p: '75' },
+                { n: 'ميكس بيري', en: 'Mixed Berry', p: '80', b: 'new' },
+                { n: 'بلو بيري فراولة', en: 'Blueberry Strawberry', p: '75' },
+                { n: 'بينا كولادا', en: 'Pina Colada', p: '75' },
+                { n: 'باشون أناناس', en: 'Passion Pineapple', p: '75' },
+                { n: 'ريدبول فليفر', en: 'Redbull Flavor', p: '120', b: 'specialty' },
+                { n: 'ميكس لوكا', en: 'Lucca Mix', p: '80', b: 'specialty' }
             ],
             winter: [
-                { n: 'حمص الشام', p: '80' }, { n: 'بليلة', p: '85' },
-                { n: 'سحلب', p: '85' }, { n: 'سحلب نوتيلا', p: '90' }
+                { n: 'حمص الشام', en: 'Roasted Chickpeas', p: '80', d: 'حمص الشام', de: 'Roasted chickpeas' },
+                { n: 'بليلة', en: 'Balila', p: '85', d: 'بليلة', de: 'Warm chickpea soup' },
+                { n: 'سحلب', en: 'Sahlab', p: '85', b: 'popular', d: 'سحلب ساخن كريمي', de: 'Warm creamy orchid drink' },
+                { n: 'سحلب نوتيلا', en: 'Nutella Sahlab', p: '90', b: 'specialty', d: 'سحلب بنوتيلا', de: 'Sahlab with Nutella' }
             ],
             breakfast: [
-                { n: 'توست ميكس جبن', p: ['30', '60'] },
-                { n: 'توست بسطرمة', p: ['35', '70'] },
-                { n: 'توست روزبيف', p: ['35', '70'] },
-                { n: 'توست رومي مدخن', p: ['35', '70'] },
-                { n: 'توست كفيار', p: ['50', '100'] },
-                { n: 'ساندويتش ميكس جبن', p: '25' },
-                { n: 'ساندويتش بسطرمة', p: '30' }
+                { n: 'توست ميكس جبن', en: 'Mixed Cheese Toast', p: ['30', '60'], d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'توست بسطرمة', en: 'Pastrami Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'توست روزبيف', en: 'Roast Beef Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'توست رومي مدخن', en: 'Smoked Turkey Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'توست كفيار', en: 'Caviar Toast', p: ['50', '100'], d: 'نص / كامل', de: 'Half / Full' },
+                { n: 'ساندويتش ميكس جبن', en: 'Mixed Cheese Sandwich', p: '25' },
+                { n: 'ساندويتش بسطرمة', en: 'Pastrami Sandwich', p: '30' }
             ],
             pizza: [
-                { n: 'بيتزا سي فود', p: '250' },
-                { n: 'بيتزا سلامي', p: '170' },
-                { n: 'بيتزا رانش', p: '200' },
-                { n: 'بيتزا دجاج', p: '200' },
-                { n: 'بيتزا مارجريتا', p: '150' },
-                { n: 'بيتزا تشيكن باربكيو', p: '180' },
-                { n: 'بيتزا اسبايسي رانش', p: '190' },
-                { n: 'بيتزا سوبر سوبريم', p: '220' }
+                { n: 'بيتزا سي فود', en: 'Seafood Pizza', p: '250', b: 'specialty', d: 'بيتزا بالمأكولات البحرية', de: 'Seafood pizza' },
+                { n: 'بيتزا سلامي', en: 'Salami Pizza', p: '170', b: 'popular', d: 'بيتزا بالسلامي الإيطالي', de: 'Italian salami pizza' },
+                { n: 'بيتزا رانش', en: 'Ranch Pizza', p: '200', d: 'بيتزا بصوص الرانش', de: 'Pizza with ranch sauce' },
+                { n: 'بيتزا دجاج', en: 'Chicken Pizza', p: '200', b: 'popular', d: 'بيتزا بقطع الدجاج', de: 'Chicken pizza' },
+                { n: 'بيتزا مارجريتا', en: 'Margherita Pizza', p: '150', d: 'بيتزا كلاسيك بجبن الموزاريلا', de: 'Classic mozzarella pizza' },
+                { n: 'بيتزا تشيكن باربكيو', en: 'BBQ Chicken Pizza', p: '180', d: 'بيتزا بالدجاج وصوص الباربكيو', de: 'BBQ chicken pizza' },
+                { n: 'بيتزا اسبايسي رانش', en: 'Spicy Ranch Pizza', p: '190', d: 'بيتزا حارة بصوص الرانش', de: 'Spicy ranch pizza' },
+                { n: 'بيتزا سوبر سوبريم', en: 'Super Supreme Pizza', p: '220', b: 'popular', d: 'بيتزا الخلطة الفاخرة', de: 'Supreme mix pizza' }
             ],
             'soft-drinks': [
-                { n: 'بيبسي', p: '35' }, { n: 'تويست', p: '35' },
-                { n: 'فيروز', p: '40' }, { n: 'ريدبول', p: '85' },
-                { n: 'بيريل', p: '50' }, { n: 'مياه', p: '10' }
+                { n: 'بيبسي', en: 'Pepsi', p: '35' },
+                { n: 'تويست', en: 'Twist', p: '35' },
+                { n: 'فيروز', en: 'Firoz', p: '40' },
+                { n: 'ريدبول', en: 'Red Bull', p: '85' },
+                { n: 'بيريل', en: 'Birell', p: '50' },
+                { n: 'مياه', en: 'Water', p: '10' }
             ],
             addons: [
-                { n: 'جبن', p: '15', d: 'جبن مقدون' },
-                { n: 'شيكولاتة', p: '15' },
-                { n: 'مكسرات', p: '20' },
-                { n: 'نوتيلا', p: '25' },
-                { n: 'كارت', p: '5', d: 'كارد' },
-                { n: 'طاولة', p: '20' }
+                { n: 'جبن', en: 'Cheese', p: '15', d: 'جبن مقدون', de: 'Mozzarella cheese' },
+                { n: 'شيكولاتة', en: 'Chocolate', p: '15' },
+                { n: 'مكسرات', en: 'Nuts', p: '20' },
+                { n: 'نوتيلا', en: 'Nutella', p: '25' },
+                { n: 'كارت', en: 'Card', p: '5', d: 'كارد', de: 'Card' },
+                { n: 'طاولة', en: 'Table', p: '20' }
             ]
         };
 
         // Cart
         let cart = [];
-        function addToCart(name, price, origin) {
+        function addToCart(nameAr, price, origin, nameEn) {
             price = parseInt(price) || 0;
-            const key = origin ? `${name}||${origin}` : name;
+            const name = nameAr;
+            const en = nameEn || nameAr;
+            const key = origin ? `${nameAr}||${origin}` : nameAr;
             const existing = cart.find(i => i.key === key);
             if (existing) { existing.qty++; }
-            else { cart.push({ key, name, price, qty: 1, origin }); }
+            else { cart.push({ key, nameAr, en, name: nameAr, price, qty: 1, origin }); }
             updateCartUI();
-            showCartToast(`${t('toastAdd')} ${name}${origin ? ` (${origin})` : ''}`);
+            const displayName = lang === 'en' ? (en || nameAr) : nameAr;
+            showCartToast(`${t('toastAdd')} ${displayName}${origin ? ` (${origin})` : ''}`);
         }
         function removeFromCart(key) {
             const idx = cart.findIndex(i => i.key === key);
@@ -894,15 +1287,26 @@
                 return;
             }
             container.innerHTML = cart.map(i => `
-                <div class="cart-item">
-                    <span class="cart-item-name">${i.name}${i.origin ? `<br><small style="color:var(--coffee-500);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
+                <div class="cart-item" data-key="${i.key.replace(/"/g, '&quot;')}" data-price="${i.price}" data-name="${(i.nameAr||i.name).replace(/"/g, '&quot;')}" data-en="${(i.en||'').replace(/"/g, '&quot;')}" data-origin="${(i.origin||'').replace(/"/g, '&quot;')}">
+                    <span class="cart-item-name">${lang === 'en' ? (i.en || i.nameAr || i.name) : (i.nameAr || i.name)}${i.origin ? `<br><small style="color:var(--coffee-500);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
                     <span class="cart-item-price">${(i.price * i.qty).toFixed(0)} ج.م</span>
-                    <button class="cart-qty-btn" onclick="removeFromCart('${i.key.replace(/'/g, "\\'")}')">−</button>
+                    <button class="cart-qty-btn" data-action="dec">−</button>
                     <span class="cart-item-qty">${i.qty}</span>
-                    <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price}, '${(i.origin||'').replace(/'/g, "\\'")}')">+</button>
-                    <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.key.replace(/'/g, "\\'")}')">✕</button>
-                </div>
-            `).join('');
+                    <button class="cart-qty-btn" data-action="inc">+</button>
+                    <button class="cart-qty-btn" data-action="del" style="border-color:#e74c3c;color:#e74c3c;">✕</button>
+                </div>`
+            ).join('');
+            container.onclick = function(e) {
+                const btn = e.target.closest('.cart-qty-btn');
+                if (!btn) return;
+                const row = btn.closest('.cart-item');
+                if (!row) return;
+                const key = row.dataset.key;
+                const action = btn.dataset.action;
+                if (action === 'dec') removeFromCart(key);
+                else if (action === 'inc') addToCart(row.dataset.name, parseInt(row.dataset.price), row.dataset.origin, row.dataset.en);
+                else if (action === 'del') deleteFromCart(key);
+            };
         }
         function toggleCart() {
             const panel = document.getElementById('cartPanel');
@@ -923,9 +1327,13 @@
                 lines.push('');
             }
             cart.forEach(i => {
-                const detail = `${i.name}${i.origin ? ` (${i.origin})` : ''}`;
+                const wName = lang === 'en' ? (i.en || i.nameAr || i.name) : (i.nameAr || i.name);
+                const detail = `${wName}${i.origin ? ` (${i.origin})` : ''}`;
                 lines.push(`• ${detail} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
             });
+            if (lang === 'en') {
+                lines[0] = '☕ *Order from Lucca Café*';
+            }
             if (notes) {
                 lines.push('', `📝 *ملاحظات: ${notes}*`);
             }
@@ -949,6 +1357,486 @@
             el.classList.add('show');
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
+        }
+
+        // ─── AI Chat Bot ───
+        let chatOpen = false;
+        function toggleChat() {
+            chatOpen = !chatOpen;
+            document.getElementById('chatPanel').classList.toggle('show');
+            document.getElementById('chatOverlay').classList.toggle('show');
+            if (chatOpen) {
+                document.body.style.overflow = 'hidden';
+                document.getElementById('chatInput').focus();
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function chatMsg(text, isUser, suggestions) {
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'chat-msg ' + (isUser ? 'user' : 'bot');
+            div.textContent = text;
+            container.appendChild(div);
+            if (suggestions) {
+                const sDiv = document.createElement('div');
+                sDiv.className = 'chat-suggestions';
+                suggestions.forEach(s => {
+                    const btn = document.createElement('button');
+                    btn.textContent = s;
+                    btn.onclick = function() { chatInput.value = s; sendChatMsg(); };
+                    sDiv.appendChild(btn);
+                });
+                container.appendChild(sDiv);
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function chatTyping(show) {
+            const container = document.getElementById('chatMessages');
+            let el = document.getElementById('chatTypingEl');
+            if (!show) { if (el) el.remove(); return; }
+            if (el) return;
+            el = document.createElement('div');
+            el.className = 'chat-typing';
+            el.id = 'chatTypingEl';
+            el.innerHTML = '<span></span><span></span><span></span>';
+            container.appendChild(el);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        let CALORIES = {
+            'specialty||V60': 8, 'specialty||Iced Drip': 8, 'specialty||Coffee of the Day': 8,
+            'coffee||Espresso': 5, 'coffee||Double Espresso': 10, 'coffee||Turkish Coffee': 15,
+            'coffee||Piccolo': 35, 'coffee||Double Piccolo': 55, 'coffee||Mocha': 250,
+            'coffee||White Mocha': 280, 'coffee||Flat White': 130, 'coffee||Cortado': 85,
+            'coffee||Cappuccino': 130, 'coffee||Latte': 180, 'coffee||Hazelnut Coffee': 160,
+            'coffee||French Press': 10, 'coffee||Nescafe': 80,
+            'hot-drinks||Hot Chocolate': 210, 'hot-drinks||Nutella Hot Chocolate': 360,
+            'hot-drinks||Ahmed Tea': 5, 'hot-drinks||Ahmed Karak Tea': 85, 'hot-drinks||Ahmed Green Tea': 5,
+            'hot-drinks||Herbal Mix': 5, 'hot-drinks||Ahmed Milk Tea': 65, 'hot-drinks||Hot Cider': 100,
+            'hot-drinks||Herbal Tea': 5,
+            'iced-coffee||Iced Coffee': 85, 'iced-coffee||Iced Latte': 160, 'iced-coffee||Iced Mocha': 260,
+            'iced-coffee||Iced White Mocha': 290, 'iced-coffee||Frappuccino': 360, 'iced-coffee||Frappe': 300,
+            'milkshake||Chocolate': 410, 'milkshake||Vanilla': 390, 'milkshake||Strawberry': 380,
+            'milkshake||Mango': 370, 'milkshake||Nutella': 510, 'milkshake||Caramel': 430,
+            'milkshake||Oreo': 490, 'milkshake||Chocolate Mix': 530,
+            'juice||Mango': 130, 'juice||Strawberry': 100, 'juice||Guava': 100,
+            'juice||Kiwi': 110, 'juice||Orange': 110, 'juice||Lemon': 60, 'juice||Mint Lemon': 60,
+            'desserts||Classic Waffle': [320, 640], 'desserts||Chocolate Waffle': 720,
+            'desserts||Four Seasons Waffle': 660, 'desserts||Bubble Waffle': 410,
+            'desserts||Fruit Waffle': 520, 'desserts||San Sebastian': 360,
+            'desserts||Molten Cake': 460, 'desserts||Brownie': 360, 'desserts||Cookies': 210,
+            'desserts||Om Ali with Nuts': 410, 'desserts||Cheesecake': 360,             'desserts||Galaxy Mousse': 420, 'desserts||Pancake': 350, 'desserts||Crepe Roll': 380, 'desserts||Crepe Fettuccine': 420,
+            'smoothie||Your Choice': 160,
+            'soda||Jelly Cola': 130, 'soda||Sunshine': 130, 'soda||Sunrise': 130,
+            'soda||Mojito': 100, 'soda||Mojito Flavor': 120, 'soda||Cherry Cola': 130,
+            'soda||Mixed Berry': 100, 'soda||Blueberry Strawberry': 100,
+            'soda||Pina Colada': 150, 'soda||Passion Pineapple': 120,
+            'soda||Redbull Flavor': 110, 'soda||Lucca Mix': 130,
+            'winter||Roasted Chickpeas': 210, 'winter||Balila': 260,
+            'winter||Sahlab': 260, 'winter||Nutella Sahlab': 360,
+            'breakfast||Mixed Cheese Toast': [260, 520], 'breakfast||Pastrami Toast': [310, 620],
+            'breakfast||Roast Beef Toast': [310, 620], 'breakfast||Smoked Turkey Toast': [290, 580],
+            'breakfast||Caviar Toast': [210, 420], 'breakfast||Mixed Cheese Sandwich': 360,
+            'breakfast||Pastrami Sandwich': 410,
+            'pizza||Seafood Pizza': 820, 'pizza||Salami Pizza': 720, 'pizza||Ranch Pizza': 770,
+            'pizza||Chicken Pizza': 670, 'pizza||Margherita Pizza': 620,
+            'pizza||BBQ Chicken Pizza': 720, 'pizza||Spicy Ranch Pizza': 740,
+            'pizza||Super Supreme Pizza': 820,
+            'soft-drinks||Pepsi': 150, 'soft-drinks||Twist': 150, 'soft-drinks||Firoz': 100,
+            'soft-drinks||Red Bull': 110, 'soft-drinks||Birell': 50, 'soft-drinks||Water': 0,
+            'addons||Cheese': 50, 'addons||Chocolate': 70, 'addons||Nuts': 100,
+            'addons||Nutella': 150, 'addons||Card': 0, 'addons||Table': 0
+        };
+
+        function cal(item) {
+            const k = item.catId + '||' + item.en;
+            const c = CALORIES[k];
+            if (c === undefined) return '';
+            if (Array.isArray(c)) return c.map(v => v + ' سعرة').join(' / ');
+            return c + ' سعرة';
+        }
+
+        function buildMenuIndex() {
+            const idx = [];
+            for (const cat of CATEGORIES) {
+                const items = DATA[cat.id];
+                if (!items) continue;
+                const catNameAr = _LANG.catNames.ar[cat.id] || cat.id;
+                const catNameEn = _LANG.catNames.en[cat.id] || cat.id;
+                for (const item of items) {
+                    const en = item.en || item.n;
+                    idx.push({
+                        catId: cat.id,
+                        catAr: catNameAr,
+                        catEn: catNameEn,
+                        n: item.n,
+                        en: en,
+                        p: item.p,
+                        c: CALORIES[cat.id + '||' + en],
+                        d: item.d || '',
+                        de: item.de || '',
+                        b: item.b || '',
+                        origins: item.origins || []
+                    });
+                }
+            }
+            return idx;
+        }
+        let menuIndex = buildMenuIndex();
+        function rebuildMenuIndex() { menuIndex = buildMenuIndex(); }
+        const chatInput = document.getElementById('chatInput');
+
+        function searchMenu(q) {
+            q = q.toLowerCase().trim();
+            if (!q) return [];
+            return menuIndex.filter(item =>
+                item.n.toLowerCase().includes(q) ||
+                item.en.toLowerCase().includes(q) ||
+                item.catAr.includes(q) ||
+                item.catEn.toLowerCase().includes(q) ||
+                item.d.includes(q) ||
+                item.de.toLowerCase().includes(q)
+            );
+        }
+
+        function formatPrice(p) {
+            if (Array.isArray(p)) return p.join(' / ') + ' ج.م';
+            return p + ' ج.م';
+        }
+
+        function upsellPair(catId) {
+            const pairs = {
+                coffee: { ar: '🔥 جرب معاها حاجة من الحلويات — الكنافة بالنوتيلا جامدة جداً!', en: '🔥 Pair it with a dessert — the Nutella Kunafa is fire!' },
+                'hot-drinks': { ar: '🔥 عايز حاجة جنبها؟ جرب الكنافة أو البان كيك!', en: '🔥 Want something on the side? Try Kunafa or Pancakes!' },
+                desserts: { ar: '☕ الكوباي دي محتاجة قهوة — جرب الكورتادو أو سينجل أوريجن!', en: '☕ This needs coffee — try Cortado or Single Origin!' },
+                'iced-coffee': { ar: '🍰 لو عايز حاجة تسكري معاها، الكنافة اختيار ممتاز!', en: '🍰 Want something sweet with it? Kunafa is a perfect match!' },
+                milkshake: { ar: '🧇 الميلك شيك مع وافل أو بان كيك = أقوى كومبو!', en: '🧇 Milkshake + Waffle or Pancake = the ultimate combo!' },
+                breakfast: { ar: '☕ الفطار الكامل محتاج قهوة سادة — جرب الإسبريسو!', en: '☕ Full breakfast needs a black coffee — try Espresso!' },
+                specialty: { ar: '🍫 القهوة المختصة مع الكنافة = تجربة مش هتنساها!', en: '🍫 Specialty coffee + Nutella Kunafa = unforgettable!' }
+            };
+            return pairs[catId] || null;
+        }
+
+        let chatCtx = null;
+
+        function coffeeGuide(item) {
+            const guides = {
+                'إسبريسو': { ar: 'جرعة قهوة مركزة، قوية جداً (٥ سعرات فقط)، تناسب عشاق القهوة الحقيقيين', en: 'Concentrated espresso shot, very strong (5 cal), for true coffee lovers' },
+                'Double Espresso': { ar: 'جرعة دبل قوية — صاحية الصبح بجد', en: 'Double shot — a real morning kick' },
+                'كابتشينو': { ar: 'إسبريسو مع رغوة حليب كثيفة — ناعم ومتوازن، ممتاز للمبتدئين', en: 'Espresso with thick milk foam — smooth & balanced, great for beginners' },
+                'لاتيه': { ar: 'إسبريسو مع حليب مخملي — أخف من الكابتشينو، طعمه كريمي', en: 'Espresso with velvety milk — lighter than cappuccino, creamy taste' },
+                'Cappuccino': { ar: 'إسبريسو مع رغوة حليب كثيفة — ناعم ومتوازن، ممتاز للمبتدئين', en: 'Espresso with thick milk foam — smooth & balanced, great for beginners' },
+                'Latte': { ar: 'إسبريسو مع حليب مخملي — أخف من الكابتشينو، طعمه كريمي', en: 'Espresso with velvety milk — lighter than cappuccino, creamy taste' },
+                'Flat White': { ar: 'إسبريسو دبل مع طبقة حليب رقيقة ناعمة — طعم قوي مع قوام مخملي', en: 'Double espresso with thin velvety milk — strong flavor, silky texture' },
+                'Mocha': { ar: 'إسبريسو مع شوكولاتة وحليب — طعم غني، حلو ومناسب لمحبي الشوكولاتة', en: 'Espresso with chocolate & milk — rich, sweet, for chocolate lovers' },
+                'Cortado': { ar: 'نسبة متوازنة بين الإسبريسو والحليب الدافئ — طعم قوي مش طاغي', en: 'Perfect balance of espresso & warm milk — strong but smooth' },
+                'Piccolo': { ar: 'جرعة إسبريسو مع قطرة حليب — صغيرة لكن قوية', en: 'Small espresso with a drop of milk — tiny but mighty' },
+                'V60': { ar: 'قهوة مفلترة يدوي — نقية، عطرية، بتظهر نكهات البن الأصيلة', en: 'Hand-poured filter coffee — clean, aromatic, pure origin flavors' },
+                'Iced Drip': { ar: 'قهوة مفلترة مثلجة — بنقطر V60 على ثلج، منعشة وخفيفة', en: 'Iced filtered coffee — V60 dripped over ice, refreshing & light' }
+            };
+            const g = guides[item.en] || guides[item.n];
+            if (g) return g;
+            if (item.catId === 'coffee') return { ar: 'من قسم القهوة — طعم غني وممتاز', en: 'From our coffee section — rich and excellent' };
+            if (item.catId === 'specialty') return { ar: 'القهوة المختصة — أفضل ٣٪ بن في العالم بنكهة أصلية لا تُقاوم', en: 'Specialty coffee — top 3% beans, authentic irresistible flavor' };
+            return null;
+        }
+
+        function botKnows(msg) {
+            const m = msg.toLowerCase().trim();
+
+            // ── Calorie query ──
+            const calMatch = m.match(/^(سعرات|سعرة|calories|calorie|kcal)\s+(.+)/i) || m.match(/calories\s+in\s+(.+)/i) || m.match(/(.+)\s+(calories|calorie|kcal|سعرات|سعرة)\s*$/i);
+            if (calMatch) {
+                const q = (calMatch[2] || calMatch[1] || '').trim().replace(/\s+in$/, '');
+                if (q && q.length > 1) {
+                    const found = menuIndex.filter(i => i.n.includes(q) || i.en.toLowerCase().includes(q));
+                    if (found.length) {
+                        const lines = found.map(i => {
+                            const cStr = i.c !== undefined ? cal(i) : (lang === 'ar' ? 'السعرات غير متوفرة' : 'Calories N/A');
+                            return `• ${lang === 'ar' ? i.n : i.en}: ${cStr} — ${formatPrice(i.p)}`;
+                        });
+                        return { text: lines.join('\n'), sug: found.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en) };
+                    }
+                }
+            }
+
+            // ── Symptom queries ──
+            if (/(بطني|وجع\s*بطن|stomach|معدة|هضم|digest|انتفاخ|قولون)/i.test(m)) {
+                const items = menuIndex.filter(i => /(ميكس أعشاب|شاي أخضر|ليمون نعناع|أعشاب|Herbal|Green Tea|Mint Lemon)/i.test(i.n) || /(herbal|green tea|mint)/i.test(i.en)).slice(0, 3);
+                const t = lang === 'ar'
+                    ? 'ربنا يقومك بالسلامة 🙏 أنصحك بحاجة دافية وخفيفة:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• شاي أعشاب — ٣٥ ج.م\n• شاي أحمد أخضر — ٣٥ ج.م\n• ليمون نعناع — ٧٥ ج.م')
+                    : 'Feel better! 🙏 Try something soothing:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Herbal Tea — 35 EGP\n• Ahmed Green Tea — 35 EGP\n• Mint Lemon — 75 EGP');
+                return { text: t, sug: lang === 'ar' ? ['شاي أعشاب', 'ليمون نعناع'] : ['Herbal Tea', 'Mint Lemon'] };
+            }
+            if (/(برد|زكام|cold|سخونية|كحة|cough)/i.test(m)) {
+                const items = menuIndex.filter(i => /(سحلب|هوت شوكليت|شاي كرك|Hot Cider|Sahlab|Karak|Hot Chocolate)/i.test(i.n) || /(sahlab|karak|hot chocolate|cider)/i.test(i.en)).slice(0, 3);
+                const t = lang === 'ar'
+                    ? 'الله يعافيك 🤧 مشروبات سخنة هتدفيك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• سحلب — ٨٥ ج.م\n• هوت شوكليت — ٧٠ ج.م\n• شاي أحمد كرك — ٥٠ ج.م')
+                    : 'Get well! 🤧 Hot drinks to warm you:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Sahlab — 85 EGP\n• Hot Chocolate — 70 EGP\n• Ahmed Karak Tea — 50 EGP');
+                return { text: t, sug: lang === 'ar' ? ['سحلب', 'هوت شوكليت'] : ['Sahlab', 'Hot Chocolate'] };
+            }
+            if (/(عطشان|thirsty|ظمآن)/i.test(m)) {
+                const items = menuIndex.filter(i => i.catId === 'juice' || i.catId === 'soda' || i.catId === 'soft-drinks').slice(0, 3);
+                const t = lang === 'ar'
+                    ? 'عندك أحلى المشروبات المنعشة 🥤:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• مانجو — ٩٠ ج.م\n• برتقال — ٧٥ ج.م\n• موهيتو — ٧٥ ج.م')
+                    : 'Refreshing drinks for you 🥤:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mango — 90 EGP\n• Orange — 75 EGP\n• Mojito — 75 EGP');
+                return { text: t, sug: lang === 'ar' ? ['عصير مانجو', 'موهيتو'] : ['Mango Juice', 'Mojito'] };
+            }
+            if (/(جوعان|hungry|عايز\s*أكل)/i.test(m)) {
+                const items = menuIndex.filter(i => i.catId === 'breakfast' || i.catId === 'pizza').slice(0, 4);
+                const t = lang === 'ar'
+                    ? 'جوعان؟ تعال أقولك على حاجة تشبع 😋\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• توست ميكس جبن — ٣٠ ج.م\n• ساندويتش بسطرمة — ٣٠ ج.م\n• بيتزا سلامي — ١٧٠ ج.م')
+                    : 'Hungry? I got you! 😋\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mixed Cheese Toast — 30 EGP\n• Pastrami Sandwich — 30 EGP\n• Salami Pizza — 170 EGP');
+                const sug = items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
+                sug.push(lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers');
+                return { text: t, sug };
+            }
+            if (/(تعبان|tired|طاقة|energy|نعسان|sleepy)/i.test(m)) {
+                const t = lang === 'ar'
+                    ? '⚡ عايز طاقة؟ الكافيين جاهز أبركك بيه!\nالإسبريسو دبل (١٠ ج.م) — هيجيلك طاقة بسرعة والطعم جامد.'
+                    : '⚡ Need energy? Caffeine to the rescue!\nDouble Espresso (10 EGP) — hits fast and tastes great.';
+                return { text: t, sug: lang === 'ar' ? ['إسبريسو دبل', 'كابتشينو'] : ['Double Espresso', 'Cappuccino'] };
+            }
+            if (/(صداع|headache)/i.test(m)) {
+                const t = lang === 'ar'
+                    ? 'الصداع ده؟ 🤕 الكافيين بيساعد — جرب إسبريسو (٤٥ ج.م) أو شاي أحمد (٣٥ ج.م)'
+                    : 'Headache? 🤕 Caffeine helps — try Espresso (45 EGP) or Ahmed Tea (35 EGP)';
+                return { text: t, sug: lang === 'ar' ? ['إسبريسو', 'شاي أحمد'] : ['Espresso', 'Ahmed Tea'] };
+            }
+            if (/(منعش|refresh|حاجة\s*باردة|خفيف|light)/i.test(m) && !/(specialty|مختصة)/i.test(m)) {
+                const items = menuIndex.filter(i => i.catId === 'juice' || i.catId === 'iced-coffee' || i.catId === 'soda').slice(0, 3);
+                const t = lang === 'ar'
+                    ? 'حاجة منعشة وخفيفة 🍃\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• برتقال — ٧٥ ج.م\n• آيس كوفي — ٨٠ ج.م\n• موهيتو — ٧٥ ج.م')
+                    : 'Light & refreshing 🍃\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Orange Juice — 75 EGP\n• Iced Coffee — 80 EGP\n• Mojito — 75 EGP');
+                return { text: t, sug: items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en) };
+            }
+
+            // ── Diet query ──
+            if (/(دايت|diet|ريجيم|low.cal|keto|صحي|healthy)/i.test(m)) {
+                const lowCal = menuIndex.filter(i => { const c = i.c; if (c === undefined || c === 0) return false; if (Array.isArray(c)) return parseInt(c[0]) <= 100; return parseInt(c) <= 100; }).slice(0, 5);
+                const t = lang === 'ar'
+                    ? '🥗 عايز حاجة صحية وخفيفة؟ تمام:\n' + (lowCal.length ? lowCal.map(i => `• ${i.n} — ${formatPrice(i.p)} (${cal(i)})`).join('\n') : '• شاي أحمد أخضر — ٣٥ ج.م (٥ سعرات)\n• إسبريسو — ٤٥ ج.م (٥ سعرات)')
+                    : '🥗 Healthy picks:\n' + (lowCal.length ? lowCal.map(i => `• ${i.en} — ${formatPrice(i.p)} (${cal(i)})`).join('\n') : '• Ahmed Green Tea — 35 EGP (5 cal)\n• Espresso — 45 EGP (5 cal)');
+                return { text: t, sug: lang === 'ar' ? ['كم سعرة في اللاتيه؟', '🔥 الأكثر طلباً'] : ['Calories in latte?', '🔥 Best sellers'] };
+            }
+
+            // ── Specialty Coffee ──
+            if (/(specialty|مختصة|v60|cold drip|ice drip|iced drip|speciality)/i.test(m)) {
+                const specs = menuIndex.filter(i => i.catId === 'specialty');
+                if (specs.length) {
+                    const t = lang === 'ar'
+                        ? '💎 **القهوة المختصة في Lucca**\n\nأفضل ٣٪ من بن العالم، بنمحمصه خفيف عشان نكهته الأصلية تظهر. بنستورد محاصيل من أثيوبيا وبرازيل وكولومبيا والهند، كل محصول له طعم مختلف.\n\nطريقة التحضير:\n• V60 — بنقطرها يدوي، قهوة نقية وعطرية.\n• آيس دريب — قهوة مفلترة مثلجة، بنقطر V60 على ثلج، منعشة.\n\nالفرق بينها وبين القهوة العادية؟ البن المختصة مش بتتحمص زيادة عشان تحتفظ بنكهتها الحقيقية. الطعم أنقى، الحموضة لطيفة، والريحة غير.\n\nمتوفر عندنا:\n' + specs.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
+                        : '💎 **Specialty Coffee at Lucca**\n\nTop 3% of global coffee, light roasted for authentic flavor. Sourced from Ethiopia, Brazil, Colombia & India.\n\nBrew methods:\n• V60 — hand-poured, clean & aromatic.\n• Iced Drip — filtered iced coffee, V60 dripped over ice, refreshing.\n\nThe difference from regular coffee? Specialty is never over-roasted, preserving real flavor.\n\nAvailable:\n' + specs.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
+                    const sug = specs.slice(0, 2).concat(lang === 'ar' ? ['ايه الفرق بينهم؟', '🔥 عايز حلويات معاها؟'] : ['What\'s the difference?', '🔥 Want dessert?']).map(i => typeof i === 'string' ? i : (lang === 'ar' ? i.n : i.en));
+                    return { text: t, sug };
+                }
+            }
+
+            // ── Coffee education: beginner asks about coffee types ──
+            if (/(فرق|difference|between|بين|ايه.*فرق|مقارنة|compare|comparison|شرح)\s*(.*)(espresso|cappuccino|latte|flat.white|americano|قهوة|إسبريسو|كابتشينو|لاتيه)/i.test(m) ||
+                /(espresso|cappuccino|latte|flat.white) (vs|ولا) (espresso|cappuccino|latte|flat.white)/i.test(m)) {
+                const t = lang === 'ar'
+                    ? 'الفرق بينهم ببساطة:\n\n☕ **إسبريسو** — قهوة مركزة وقوية.\n☕ **كابتشينو** — إسبريسو + رغوة حليب كثيفة.\n☕ **لاتيه** — إسبريسو + حليب مخملي (أخف من الكابتشينو).\n☕ **فلات وايت** — إسبريسو دبل + طبقة حليب رقيقة (طعم قوي وقوام حريري).\n☕ **موكا** — إسبريسو + شوكولاتة + حليب.\n\nأي واحد عايز تجرب؟'
+                    : 'Simple breakdown:\n\n☕ **Espresso** — concentrated & strong.\n☕ **Cappuccino** — espresso + thick milk foam.\n☕ **Latte** — espresso + velvety milk (lighter).\n☕ **Flat White** — double espresso + thin milk layer (strong, silky).\n☕ **Mocha** — espresso + chocolate + milk.\n\nWhich one sounds good?';
+                const sug = lang === 'ar'
+                    ? ['كابتشينو', 'لاتيه', 'إسبريسو']
+                    : ['Cappuccino', 'Latte', 'Espresso'];
+                return { text: t, sug };
+            }
+
+            // ── Greetings (consultative, ask a question) ──
+            if (/^(مرحبا|اهل|hello|hi|hey|صباح|مساء)\b/.test(m)) {
+                const texts = lang === 'ar'
+                    ? [
+                        'أهلاً بيك في Lucca ☕ تحب حاجة ساقعة ولا سخنة؟',
+                        'مرحباً! نورتنا 😊 بتدور على قهوة، مشروب منعش، ولا حاجة تسكري مع القهوة؟',
+                        'أهلاً بيك في Lucca! أول مرة تزورنا ولا من زبائننا المميزين؟'
+                      ]
+                    : [
+                        'Welcome to Lucca ☕ Would you like something hot or iced?',
+                        'Hi there! 😊 Looking for coffee, a refreshing drink, or something sweet?',
+                        'Welcome to Lucca! First time here or are you a regular?'
+                      ];
+                const sug = lang === 'ar'
+                    ? ['حاجة سخنة ☕', 'حاجة ساقعة 🧊', 'القهوة المختصة']
+                    : ['Something hot ☕', 'Something iced 🧊', 'Specialty coffee'];
+                return { text: texts[Math.floor(Math.random()*texts.length)], sug };
+            }
+
+            // ── Hot / cold preference ──
+            if (/(ساخن|سخن|hot|ساقعة|ساقع|بارد|cold|iced|مثلج|ice)/i.test(m)) {
+                const isHot = /ساخن|سخن|hot/i.test(m);
+                const sug = isHot
+                    ? (lang === 'ar' ? ['كافيه لاتيه ☕', 'كابتشينو', 'قهوة مختصة'] : ['Latte ☕', 'Cappuccino', 'Specialty coffee'])
+                    : (lang === 'ar' ? ['آيس لاتيه 🧊', 'آيس كوفي', 'موهيتو'] : ['Iced Latte 🧊', 'Iced Coffee', 'Mojito']);
+                const t = lang === 'ar'
+                    ? (isHot ? 'ممتاز! ☕ أنصحك ب:\n• **لاتيه** (٨٥ ج.م) — ناعم ومخملي، لو بتحب الحليب.\n• **كابتشينو** (٨٥ ج.م) — رغوة كثيفة وطعم متوازن.\n• **قهوة مختصة V60** (٨٠ ج.م) — قهوة نقية وعطرية، التجربة الحقيقية.\n\nأو عايز حاجة تسكري معاهم؟ 🍰'
+                        : 'منعش! 🧊 أنصحك ب:\n• **آيس لاتيه** (٨٥ ج.م) — نفس طعم اللاتيه الكلاسيك بس مثلج.\n• **آيس كوفي** (٨٠ ج.م) — قهوة مثلجة منعشة.\n• **موهيتو** (٧٥ ج.م) — لو عايز حاجة فواكه.\n\nعايز حاجة حلوة جمبها؟')
+                    : (isHot ? 'Great choice! ☕ I recommend:\n• **Latte** (85 EGP) — smooth & velvety.\n• **Cappuccino** (85 EGP) — thick foam, balanced.\n• **Specialty V60** (80 EGP) — pure & aromatic, the real deal.\n\nSomething sweet with that? 🍰'
+                        : 'Refreshing! 🧊 I recommend:\n• **Iced Latte** (85 EGP) — classic latte, iced.\n• **Iced Coffee** (80 EGP) — refreshing cold brew.\n• **Mojito** (75 EGP) — fruity & fresh.\n\nWant something sweet with it?');
+                return { text: t, sug };
+            }
+
+            // ── First time visitor ──
+            if (/أول\s*مرة|first.time|new\s*here|جديد/i.test(m)) {
+                const t = lang === 'ar'
+                    ? 'نورت Lucca أول مرة! ☕🎉\n\nعندك ٣ اختيارات ممتازة للمبتدئين:\n1️⃣ **كابتشينو** (٨٥ ج.م) — الأكثر طلباً، طعم متوازن.\n2️⃣ **لاتيه** (٨٥ ج.م) — ناعم وحليبي، لو مش متعود على القهوة.\n3️⃣ **قهوة مختصة V60** (٨٠ ج.م) — لو عايز تجرب القهوة الحقيقية.\n\nبتحب القهوة قوية ولا خفيفة؟'
+                    : 'Welcome to Lucca for the first time! ☕🎉\n\n3 great choices for beginners:\n1️⃣ **Cappuccino** (85 EGP) — most popular, balanced.\n2️⃣ **Latte** (85 EGP) — smooth & milky.\n3️⃣ **Specialty V60** (80 EGP) — taste real coffee.\n\nDo you like strong or mild coffee?';
+                const sug = lang === 'ar' ? ['كابتشينو', 'لاتيه', 'القهوة المختصة'] : ['Cappuccino', 'Latte', 'Specialty coffee'];
+                return { text: t, sug };
+            }
+
+            // ── Strong / mild preference ──
+            if (/(قوي|قوية|strong|خفيف|خفيفة|mild|مر|حامض|sour|bitter)/i.test(m)) {
+                const isStrong = /قوي|قوية|strong/i.test(m);
+                const t = lang === 'ar'
+                    ? (isStrong
+                        ? 'عاش الريّال! 💪 أنصحك:\n• **إسبريسو** (٤٥ ج.م) — أقوى حاجة.\n• **فلات وايت** (٨٠ ج.م) — إسبريسو دبل مع حليب.\n• **كورتادو** (٧٥ ج.م) — إسبريسو متوازن مع لمسة حليب.'
+                        : 'ممتاز! 😊 لو عايز حاجة خفيفة:\n• **لاتيه** (٨٥ ج.م) — ناعم ومخملي.\n• **كابتشينو** (٨٥ ج.م) — متوازن.\n• **قهوة بندق** (٧٠ ج.م) — بنكهة البندق المحمص.')
+                    : (isStrong
+                        ? '💪 Go big! Try:\n• **Espresso** (45 EGP) — strongest shot.\n• **Flat White** (80 EGP) — double espresso with milk.\n• **Cortado** (75 EGP) — balanced espresso with milk.'
+                        : '😊 Going mild:\n• **Latte** (85 EGP) — smooth & velvety.\n• **Cappuccino** (85 EGP) — balanced.\n• **Hazelnut Coffee** (70 EGP) — roasted hazelnut flavor.');
+                const sug = t.match(/•\s*([^—\n]+)/g).slice(0, 2).map(s => s.replace(/[•\s]/g, ''));
+                return { text: t + '\n\n🔥 عايز حاجة حلوة معاها؟', sug: lang === 'ar' ? ['كرواسون', 'تشيز كيك', 'لا شكراً'] : ['Croissant', 'Cheesecake', 'No thanks'] };
+            }
+
+            // ── Best Sellers ──
+            if (/(popular|best|الأكثر|الطلب|توصية|recommend|suggest|best seller|مميز|مشهور|الأفضل)/i.test(m)) {
+                const popular = menuIndex.filter(i => i.b === 'popular').slice(0, 4);
+                const t = lang === 'ar'
+                    ? '⭐ **الأكثر طلباً في Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.ar || i.d || ''}`).join('\n') : '') + '\n\nأي واحد تحس إنه لك؟'
+                    : '⭐ **Most Popular at Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.en || i.de || ''}`).join('\n') : '') + '\n\nWhich one feels right for you?';
+                const sug = popular.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
+                return { text: t, sug };
+            }
+
+            // ── New arrivals ──
+            if (/(جديد|new|جدید)\b/i.test(m) && !/(specialty|مختصة)/i.test(m)) {
+                const newItems = menuIndex.filter(i => i.b === 'new').slice(0, 4);
+                const t = lang === 'ar'
+                    ? '🆕 **جديدنا — أول واحد يجرب!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}${i.d ? '\n   ' + i.d : ''}`).join('\n') : '') + '\n\n🔥 عايز تجرب واحد؟'
+                    : '🆕 **New Arrivals — Be first to try!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}${i.de ? '\n   ' + i.de : ''}`).join('\n') : '') + '\n\n🔥 Want to try one?';
+                const sug = newItems.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
+                return { text: t, sug };
+            }
+
+            // ── Category search (with upsell, max 4 items) ──
+            for (const cat of CATEGORIES) {
+                const cAr = _LANG.catNames.ar[cat.id];
+                const cEn = _LANG.catNames.en[cat.id];
+                if (m.includes(cAr) || m.includes(cEn.toLowerCase()) ||
+                    (cat.id === 'hot-drinks' && /(hot|ساخن|drink|مشروب|شاي|tea)/i.test(m)) ||
+                    (cat.id === 'iced-coffee' && /(iced|مثلج|ice)/i.test(m))) {
+                    const items = menuIndex.filter(i => i.catId === cat.id).slice(0, 4);
+                    if (items.length) {
+                        const pair = upsellPair(cat.id);
+                        const t = `${cat.icon} **${lang === 'ar' ? cAr : cEn}**\n` +
+                            items.map((i, idx) => `${idx+1}. **${lang === 'ar' ? i.n : i.en}** — ${formatPrice(i.p)}`).join('\n') +
+                            (pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '');
+                        const sug = items.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
+                        return { text: t, sug };
+                    }
+                }
+            }
+
+            // ── Price query ──
+            const priceMatch = m.match(/(كم\s*سعر|price|سعر|how much|كم\b)\s*(.+)/i);
+            if (priceMatch) {
+                const q = priceMatch[2].trim();
+                const found = menuIndex.filter(i => i.n.includes(q) || i.en.toLowerCase().includes(q));
+                if (found.length) {
+                    const lines = found.map(i => `• ${lang === 'ar' ? i.n : i.en}: ${formatPrice(i.p)}`);
+                    const pair = found.length === 1 ? upsellPair(found[0].catId) : null;
+                    const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
+                    return { text: lines.join('\n') + ups };
+                }
+            }
+
+            // ── Item search ──
+            const results = searchMenu(m);
+            if (results.length > 0 && results.length < 8) {
+                const lines = results.slice(0, 4).map(i =>
+                    `• **${lang === 'ar' ? i.n : i.en}** — ${formatPrice(i.p)}` +
+                    (i.c !== undefined ? ` (${cal(i)})` : '') +
+                    (i.d && lang === 'ar' ? `\n  ${i.d}` : '') +
+                    (i.de && lang === 'en' ? `\n  ${i.de}` : '')
+                );
+                const pair = results.length === 1 ? upsellPair(results[0].catId) : null;
+                const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
+                const sug = results.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
+                return { text: lines.join('\n') + ups, sug };
+            }
+            if (results.length >= 8) {
+                const cats = [...new Set(results.map(i => i.catId))];
+                const catNames = cats.map(c => _LANG.catNames[lang === 'ar' ? 'ar' : 'en'][c] || c);
+                const t = lang === 'ar'
+                    ? `لقيت ${results.length} حاجة في الأقسام: ${catNames.join('، ')}\n\nعايز تشوف قسم معين؟`
+                    : `Found ${results.length} items in: ${catNames.join(', ')}\n\nWant to see a specific category?`;
+                const sug = catNames.slice(0, 3).concat(lang === 'ar' ? ['🔥 الأكثر طلباً'] : ['🔥 Best sellers']);
+                return { text: t, sug };
+            }
+
+            // ── Combo / deal ──
+            if (/(combo|deal|عرض|كومبو)/i.test(m)) {
+                const popular = menuIndex.filter(i => i.b === 'popular').slice(0, 2);
+                const t = lang === 'ar'
+                    ? '🎯 **عرض خاص:** خد واحد من الأكثر طلباً مع قطعة حلو — الطعم هيجننك!\n' + popular.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
+                    : '🎯 **Special deal:** Grab a best-seller with a dessert — mind-blowing!\n' + popular.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
+                const sug = popular.map(i => lang === 'ar' ? i.n : (i.en || i.n));
+                sug.push(lang === 'ar' ? '🔥 عايز حلويات' : '🔥 Desserts');
+                return { text: t, sug };
+            }
+
+            // ── Budget ──
+            if (/(رخيص|budget|cheap|اقل|ارخص|cheapest|lowest)/i.test(m)) {
+                const sorted = [...menuIndex].sort((a, b) => a.p - b.p).slice(0, 3);
+                const t = lang === 'ar'
+                    ? '💰 أحسن حاجة بأسعار مناسبة:\n' + sorted.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
+                    : '💰 Best value picks:\n' + sorted.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n');
+                const sug = sorted.map(i => lang === 'ar' ? i.n : i.en);
+                return { text: t, sug };
+            }
+
+            // ── Dessert / sweet with coffee upsell ──
+            if (/(حلو|حلويات|dessert|croissant|كرواسون|كوكيز|cookie|تشيز|cheesecake)/i.test(m)) {
+                const desserts = menuIndex.filter(i => i.catId === 'desserts').slice(0, 3);
+                const t = lang === 'ar'
+                    ? '🍰 عندك حلويات جامدة:\n' + (desserts.length ? desserts.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• تشيز كيك — ٩٠ ج.م\n• مولتن كيك — ٨٠ ج.م\n• كوكيز — ٤٠ ج.م') + '\n\n🔥 عايز قهوة معاها؟'
+                    : '🍰 Great desserts:\n' + (desserts.length ? desserts.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Cheesecake — 90 EGP\n• Molten Cake — 80 EGP\n• Cookies — 40 EGP') + '\n\n🔥 Want coffee with that?';
+                const sug = desserts.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
+                sug.push(lang === 'ar' ? 'لاتيه ☕' : 'Latte ☕');
+                return { text: t, sug };
+            }
+
+            // ── Default: ask a question instead of dumping help ──
+            const sug = lang === 'ar'
+                ? ['حاجة سخنة ☕', 'حاجة ساقعة 🧊', 'القهوة المختصة 💎']
+                : ['Something hot ☕', 'Something iced 🧊', 'Specialty coffee 💎'];
+            const t = lang === 'ar'
+                ? 'أهلاً بيك في Lucca ☕\n\nعشان أساعدك أحسن:\n- بتحب القهوة قوية ولا خفيفة؟\n- عايز حاجة سخنة ولا ساقعة؟\n- ولا أول مرة وجرب حاجة جديدة؟\n\nقولي وإني تحت أمرك 😊'
+                : 'Welcome to Lucca ☕\n\nTo help you better:\n- Do you like strong or mild coffee?\n- Hot or iced?\n- Or first time trying something new?\n\nLet me know! 😊';
+            return { text: t, sug };
+        }
+
+        function sendChatMsg() {
+            const input = chatInput;
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            chatMsg(msg, true);
+            chatTyping(true);
+            setTimeout(() => {
+                chatTyping(false);
+                const reply = botKnows(msg);
+                if (reply.sug) {
+                    chatMsg(reply.text, false, reply.sug);
+                } else {
+                    chatMsg(reply.text, false);
+                }
+            }, 600 + Math.random() * 400);
         }
 
         function shareMenu() {
@@ -976,46 +1864,59 @@
             return `<span class="item-price">${p} <span class="price-unit">ج.م</span></span>`;
         }
 
-        function renderItem(item, idx) {
+        function renderItem(item, idx, catId, catIcon) {
+            const imgUrl = getImg(catId, item);
+            const itemName = tn(item);
+            const itemDesc = td(item);
+            const safeName = item.n.replace(/'/g, "\\'");
+            const safeEn = item.en ? item.en.replace(/'/g, "\\'") : safeName;
+            const fallbackIcon = catIcon || '☕';
             let origins = '';
             if (item.origins) {
                 origins = `
                     <div class="origin-selection">
                         <div class="label">${t('originLabel')}</div>
                         <div class="origin-options">
-                            ${item.origins.map(o => `<button class="origin-tag" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}')" aria-label="إضافة ${item.n} ${o}">${o}</button>`).join('')}
+                            ${item.origins.map(o => `<button class="origin-tag" onclick="addToCart('${safeName}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}', '${safeEn}')">${o}</button>`).join('')}
                         </div>
                     </div>`;
             }
-            const desc = item.d ? `<div class="item-description">${item.d}</div>` : '';
+            const badge = item.b ? `<span class="badge badge-${item.b}">${badgeLabel(item.b)}</span>` : '';
+            const desc = itemDesc ? `<div class="item-description">${itemDesc}</div>` : '';
             const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
             const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
             const hasOrigins = item.origins && item.origins.length > 0;
+            const hasOrigClass = hasOrigins ? 'has-origins' : '';
+            const imgTag = imgUrl
+                ? `<div class="item-img-wrap"><img class="item-img" src="${imgUrl}" alt="${itemName}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="item-img-placeholder" style="display:none">${fallbackIcon}</div></div>`
+                : `<div class="item-img-wrap"><div class="item-img-placeholder">${fallbackIcon}</div></div>`;
             return `
-                <div class="menu-item" style="animation-delay:${(idx||0)*0.035}s">
+                <div class="menu-item ${hasOrigClass}" style="animation-delay:${(idx||0)*0.035}s">
+                    ${imgTag}
                     <div class="item-info">
-                        <div class="item-name">${item.n}</div>
+                        <div class="item-name">${itemName} ${badge}</div>
                         ${desc}
                         ${origins}
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')" aria-label="إضافة ${item.n}">+</button>`}
+                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="addToCart('${safeName}', '${itemPrice}', '', '${safeEn}')" aria-label="${lang === 'ar' ? 'إضافة' : 'Add'} ${itemName}">+</button>`}
                     </div>
                 </div>`;
         }
 
-        function renderCategory(cat) {
+        function renderCategory(cat, idx) {
             const items = DATA[cat.id];
             if (!items) return '';
+            const expanded = idx === 0 ? ' expanded' : '';
             return `
-                <div class="category" id="cat-${cat.id}" data-cat-id="${cat.id}">
+                <div class="category${expanded}" id="cat-${cat.id}" data-cat-id="${cat.id}">
                     <div class="category-header" onclick="toggleCategory(this)">
                         <h2><span class="category-icon">${cat.icon}</span> ${cat.name()}</h2>
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="category-items">
-                        ${items.map((item, idx) => renderItem(item, idx)).join('')}
+                        ${items.map((item, idx) => renderItem(item, idx, cat.id, cat.icon)).join('')}
                     </div>
                 </div>`;
         }
@@ -1031,7 +1932,7 @@
 
         function renderMenu() {
             const menuEl = document.getElementById('menuContent');
-            menuEl.innerHTML = CATEGORIES.map(renderCategory).join('');
+            menuEl.innerHTML = CATEGORIES.map((c, i) => renderCategory(c, i)).join('');
         }
 
         function toggleCategory(header) {
@@ -1097,6 +1998,15 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
+            // Load fresh data from server if available
+            fetch('/api/menu').then(r => r.json()).then(data => {
+                if (data && data.items) {
+                    DATA = data.items;
+                    CALORIES = data.calories || {};
+                    rebuildMenuIndex();
+                    applyLang();
+                }
+            }).catch(() => {});
         });
 
         if ('serviceWorker' in navigator) {

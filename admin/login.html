@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucca Admin</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a0f0a; color: #ede0d4; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+.login { background: #3e2312; padding: 40px; border-radius: 16px; width: 320px; }
+h1 { text-align: center; margin-bottom: 10px; color: #d4a85a; font-size: 22px; }
+p { text-align: center; color: #a67b5b; margin-bottom: 24px; font-size: 14px; }
+input { width: 100%; padding: 12px; border: 1px solid #6d4c41; border-radius: 10px; background: #1a0f0a; color: #ede0d4; font-size: 16px; margin-bottom: 16px; }
+input:focus { outline: none; border-color: #d4a85a; }
+button { width: 100%; padding: 12px; background: #d4a85a; border: none; border-radius: 10px; color: #1a0f0a; font-size: 16px; font-weight: 700; cursor: pointer; }
+button:hover { background: #e8cc8a; }
+.error { color: #ff6b6b; font-size: 13px; text-align: center; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="login">
+  <h1>🔒 Lucca Admin</h1>
+  <p>دخول لوحة التحكم</p>
+  <input type="password" id="password" placeholder="كلمة السر" onkeydown="if(event.key==='Enter') login()">
+  <button onclick="login()">دخول</button>
+  <div id="error" class="error"></div>
+</div>
+<script>
+async function login() {
+  const pwd = document.getElementById('password').value;
+  const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pwd }) });
+  if (res.ok) { window.location.href = '/admin'; }
+  else { document.getElementById('error').textContent = '⚠️ كلمة السر غلط'; }
+}
+</script>
+</body>
+</html>

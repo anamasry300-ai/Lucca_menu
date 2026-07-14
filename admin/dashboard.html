@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - Lucca Menu</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', 'Tajawal', sans-serif; background: #1a0f0a; color: #ede0d4; padding: 20px; direction: rtl; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+.header h1 { color: #d4a85a; font-size: 24px; }
+.header .info { color: #a67b5b; font-size: 13px; }
+.btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn-gold { background: #d4a85a; color: #1a0f0a; }
+.btn-gold:hover { background: #e8cc8a; }
+.btn-red { background: #c0392b; color: #fff; }
+.btn-red:hover { background: #e74c3c; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-outline { background: transparent; border: 1px solid #6d4c41; color: #ede0d4; }
+.btn-outline:hover { border-color: #d4a85a; }
+.categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.cat-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid #6d4c41; background: transparent; color: #ede0d4; cursor: pointer; font-size: 13px; }
+.cat-btn.active { background: #d4a85a; color: #1a0f0a; border-color: #d4a85a; }
+.cat-btn:hover { border-color: #d4a85a; }
+
+.items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.item-card { background: #3e2312; border-radius: 12px; padding: 12px; display: flex; gap: 12px; align-items: start; }
+.item-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+.item-info { flex: 1; min-width: 0; }
+.item-info .name { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.item-info .en-name { color: #a67b5b; font-size: 12px; margin-bottom: 4px; }
+.item-info .price { color: #d4a85a; font-size: 14px; font-weight: 700; }
+.item-info .desc { color: #a67b5b; font-size: 11px; margin-top: 4px; }
+.item-actions { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+
+/* Modal */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+.modal-overlay.show { display: flex; }
+.modal { background: #3e2312; border-radius: 16px; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+.modal h2 { color: #d4a85a; margin-bottom: 16px; font-size: 20px; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 13px; color: #a67b5b; margin-bottom: 4px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #6d4c41; border-radius: 8px; background: #1a0f0a; color: #ede0d4; font-size: 14px; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: #d4a85a; }
+.form-group textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+.form-row { display: flex; gap: 12px; }
+.form-row .form-group { flex: 1; }
+.modal-actions { display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end; }
+
+/* Image upload */
+.dropzone { border: 2px dashed #6d4c41; border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; color: #a67b5b; font-size: 13px; transition: 0.2s; }
+.dropzone:hover { border-color: #d4a85a; color: #d4a85a; }
+.dropzone img { max-width: 120px; max-height: 120px; border-radius: 8px; display: block; margin: 0 auto 8px; }
+
+.empty-state { text-align: center; padding: 40px; color: #6d4c41; }
+
+/* responsive */
+@media (max-width: 600px) {
+  .items-grid { grid-template-columns: 1fr; }
+  .header { flex-direction: column; align-items: stretch; text-align: center; }
+  .form-row { flex-direction: column; }
+}
+
+/* cart preview */
+.cart-notice { background: #2d1a0e; border: 1px solid #6d4c41; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #a67b5b; margin-bottom: 12px; }
+.cart-notice a { color: #d4a85a; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>☕ Lucca Admin</h1>
+    <div class="info" id="status">تم التحميل</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="btn btn-gold" onclick="showAddModal()">+ إضافة صنف</button>
+    <button class="btn btn-outline" onclick="showAddCategoryModal()">+ إضافة تصنيف</button>
+    <button class="btn btn-outline" onclick="saveAll()">💾 حفظ الكل</button>
+    <button class="btn btn-red btn-sm" onclick="logout()">خروج</button>
+  </div>
+</div>
+
+<div class="cart-notice" id="cartNotice">⚠️ التعديلات على وشك الظهور فوراً في المنيو الرئيسي. اضغط "حفظ الكل" عشان تطبق.</div>
+
+<div class="categories" id="categoryTabs"></div>
+<div class="items-grid" id="itemsContainer"></div>
+
+<!-- Add/Edit Item Modal -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <h2 id="modalTitle">إضافة صنف</h2>
+    <div class="form-row">
+      <div class="form-group"><label>الاسم (عربي)</label><input id="f_nameAr" placeholder="مثال: بان كيك"></div>
+      <div class="form-group"><label>الاسم (English)</label><input id="f_nameEn" placeholder="Example: Pancake"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>السعر</label><input id="f_price" placeholder="80 أو 40,80 للأنصاف"></div>
+      <div class="form-group"><label>Badge</label>
+        <select id="f_badge"><option value="">—</option><option value="popular">🔥 popular</option><option value="new">🆕 new</option><option value="specialty">⭐ specialty</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label>الوصف (عربي)</label><textarea id="f_descAr" placeholder="وصف قصير"></textarea></div>
+    <div class="form-group"><label>الوصف (English)</label><textarea id="f_descEn" placeholder="Short description"></textarea></div>
+
+    <div class="form-group">
+      <label>الصورة</label>
+      <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+        <img id="previewImg" src="" style="display:none">
+        <div id="dropzoneText">اضغط لرفع صورة أو اسحبها هنا</div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
+      <div style="font-size:11px;color:#6d4c41;margin-top:4px;">سيتم حفظها كـ: images/<span id="previewPath">التصنيف/الاسم.jpg</span></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('itemModal')">إلغاء</button>
+      <button class="btn btn-gold" id="saveBtn" onclick="saveItem()">إضافة</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal-overlay" id="catModal">
+  <div class="modal">
+    <h2>إضافة تصنيف</h2>
+    <div class="form-group"><label>الـ ID (بالانجليزي، بدون مسافات)</label><input id="f_catId" placeholder="مثال: pasta"></div>
+    <div class="form-group"><label>الاسم (انجليزي)</label><input id="f_catName" placeholder="مثال: Pasta"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal('catModal')">إلغاء</button>
+      <button class="btn btn-gold" onclick="saveCategory()">إضافة</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let menuData = null;
+let currentCat = null;
+let editingItem = null;
+let pendingImage = null;
+let selectedCatForAdd = null;
+
+async function loadMenu() {
+  const res = await fetch('/api/menu');
+  menuData = await res.json();
+  render();
+}
+
+function render() {
+  const cats = Object.keys(menuData.items);
+  const tabs = document.getElementById('categoryTabs');
+  const itemsContainer = document.getElementById('itemsContainer');
+  tabs.innerHTML = '';
+  itemsContainer.innerHTML = '';
+
+  // Render category tabs
+  const catOrder = Object.keys(menuData.categories);
+  cats.sort((a, b) => {
+    const ia = catOrder.indexOf(a);
+    const ib = catOrder.indexOf(b);
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  });
+
+  cats.forEach(catId => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (catId === currentCat ? ' active' : '');
+    btn.textContent = menuData.categories[catId] || catId;
+    btn.onclick = () => { currentCat = catId; render(); };
+    tabs.appendChild(btn);
+  });
+
+  // Items for selected category
+  if (!currentCat || !menuData.items[currentCat]) {
+    currentCat = cats[0];
+  }
+  const items = menuData.items[currentCat] || [];
+  if (items.length === 0) {
+    itemsContainer.innerHTML = '<div class="empty-state">لا توجد أصناف في هذا التصنيف</div>';
+    return;
+  }
+  items.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+    const slug = (item.en || item.n).replace(/[^\w\s]/g,'').trim().replace(/\s+/g,'-').toLowerCase();
+    const imgSrc = `menu/images/${currentCat}/${slug}.jpg`;
+    const priceStr = Array.isArray(item.p) ? `${item.p[0]} / ${item.p[1]} ج.م` : `${item.p} ج.م`;
+    card.innerHTML = `
+      <img src="${imgSrc}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%236d4c41%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23ede0d4%22 font-size=%2230%22>📷</text></svg>'">
+      <div class="item-info">
+        <div class="name">${item.b ? getBadge(item.b) : ''} ${item.n}</div>
+        <div class="en-name">${item.en || ''}</div>
+        <div class="price">${priceStr}</div>
+        ${item.d ? `<div class="desc">${item.d}</div>` : ''}
+        <div class="item-actions">
+          <button class="btn btn-outline btn-sm" onclick="editItem('${currentCat}', ${idx})">✏️ تعديل</button>
+          <button class="btn btn-red btn-sm" onclick="deleteItem('${currentCat}', ${idx})">🗑️ حذف</button>
+        </div>
+      </div>
+    `;
+    itemsContainer.appendChild(card);
+  });
+}
+
+function getBadge(b) {
+  if (b === 'popular') return '🔥';
+  if (b === 'new') return '🆕';
+  if (b === 'specialty') return '⭐';
+  return '';
+}
+
+function showAddModal() {
+  editingItem = null;
+  selectedCatForAdd = currentCat;
+  document.getElementById('modalTitle').textContent = 'إضافة صنف في ' + (menuData.categories[currentCat] || currentCat);
+  document.getElementById('f_nameAr').value = '';
+  document.getElementById('f_nameEn').value = '';
+  document.getElementById('f_price').value = '';
+  document.getElementById('f_badge').value = '';
+  document.getElementById('f_descAr').value = '';
+  document.getElementById('f_descEn').value = '';
+  document.getElementById('saveBtn').textContent = 'إضافة';
+  pendingImage = null;
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('dropzoneText').textContent = 'اضغط لرفع صورة أو اسحبها هنا';
+  document.getElementById('previewPath').textContent = (selectedCatForAdd || '...') + '/الاسم.jpg';
+  document.getElementById('itemModal').classList.add('show');
+}
+
+function editItem(catId, idx) {
+  const item = menuData.items[catId][idx];
+  editingItem = { catId, idx };
+  selectedCatForAdd = catId;
+  document.getElementById('modalTitle').textContent = 'تعديل: ' + item.n;
+  document.getElementById('f_nameAr').value = item.n;
+  document.getElementById('f_nameEn').value = item.en || '';
+  document.getElementById('f_price').value = Array.isArray(item.p) ? item.p.join(',') : item.p;
+  document.getElementById('f_badge').value = item.b || '';
+  document.getElementById('f_descAr').value = item.d || '';
+  document.getElementById('f_descEn').value = item.de || '';
+  document.getElementById('saveBtn').textContent = 'حفظ';
+  pendingImage = null;
+  const slug = (item.en || item.n).replace(/[^\w\s]/g,'').trim().replace(/\s+/g,'-').toLowerCase();
+  document.getElementById('previewImg').src = `menu/images/${catId}/${slug}.jpg`;
+  document.getElementById('previewImg').style.display = 'block';
+  document.getElementById('previewImg').onerror = function(){ this.style.display='none'; document.getElementById('dropzoneText').textContent='اضغط لرفع صورة'; };
+  document.getElementById('dropzoneText').textContent = 'اضغط لتغيير الصورة';
+  document.getElementById('previewPath').textContent = catId + '/' + slug + '.jpg';
+  document.getElementById('itemModal').classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    document.getElementById('previewImg').src = ev.target.result;
+    document.getElementById('previewImg').style.display = 'block';
+    document.getElementById('dropzoneText').textContent = '✓ تم اختيار الصورة';
+    pendingImage = { file, dataUrl: ev.target.result };
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveItem() {
+  const catId = selectedCatForAdd || currentCat;
+  const nameAr = document.getElementById('f_nameAr').value.trim();
+  const nameEn = document.getElementById('f_nameEn').value.trim();
+  const priceVal = document.getElementById('f_price').value.trim();
+  const badge = document.getElementById('f_badge').value;
+  const descAr = document.getElementById('f_descAr').value.trim();
+  const descEn = document.getElementById('f_descEn').value.trim();
+
+  if (!nameAr || !nameEn || !priceVal) {
+    alert('من فضلك املأ الاسم عربي وإنجليزي والسعر');
+    return;
+  }
+
+  // Parse price
+  let price;
+  if (priceVal.includes(',')) {
+    price = priceVal.split(',').map(s => s.trim());
+  } else {
+    price = priceVal;
+  }
+
+  const item = { n: nameAr, en: nameEn, p: price };
+  if (badge) item.b = badge;
+  if (descAr) item.d = descAr;
+  if (descEn) item.de = descEn;
+
+  if (!menuData.items[catId]) menuData.items[catId] = [];
+
+  if (editingItem) {
+    menuData.items[catId][editingItem.idx] = item;
+  } else {
+    menuData.items[catId].push(item);
+  }
+
+  // Upload image if pending
+  if (pendingImage) {
+    const slug = (nameEn || nameAr).replace(/[^\w\s]/g,'').trim().replace(/\s+/g,'-').toLowerCase();
+    const filename = slug + '.jpg';
+    const formData = new FormData();
+    formData.append('image', pendingImage.file);
+    try {
+      await fetch(`/api/upload/${catId}/${filename}`, { method: 'POST', body: formData });
+    } catch(e) {
+      console.error('Upload failed:', e);
+    }
+  }
+
+  closeModal('itemModal');
+  render();
+  document.getElementById('status').textContent = '⚠️ فيه تغييرات غير محفوظة';
+}
+
+function deleteItem(catId, idx) {
+  if (!confirm(`تأكيد حذف "${menuData.items[catId][idx].n}"؟`)) return;
+  menuData.items[catId].splice(idx, 1);
+  render();
+  document.getElementById('status').textContent = '⚠️ فيه تغييرات غير محفوظة';
+}
+
+async function saveAll() {
+  try {
+    const res = await fetch('/api/menu', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(menuData)
+    });
+    if (!res.ok) throw new Error('Save failed');
+    document.getElementById('status').textContent = '✅ تم الحفظ! ' + new Date().toLocaleTimeString('ar-EG');
+  } catch(e) {
+    alert('خطأ في الحفظ: ' + e.message);
+  }
+}
+
+function showAddCategoryModal() {
+  document.getElementById('f_catId').value = '';
+  document.getElementById('f_catName').value = '';
+  document.getElementById('catModal').classList.add('show');
+}
+
+function saveCategory() {
+  const id = document.getElementById('f_catId').value.trim();
+  const name = document.getElementById('f_catName').value.trim();
+  if (!id || !name) { alert('املأ الحقلين'); return; }
+  if (menuData.items[id]) { alert('التصنيف موجود بالفعل'); return; }
+  menuData.items[id] = [];
+  menuData.categories[id] = name;
+  currentCat = id;
+  closeModal('catModal');
+  render();
+  document.getElementById('status').textContent = '⚠️ فيه تغييرات غير محفوظة';
+}
+
+function logout() {
+  fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/admin');
+}
+
+loadMenu();
+</script>
+</body>
+</html>
