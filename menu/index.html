@@ -390,14 +390,19 @@
 
         /* ─── بطاقات (Grid Cards) ─── */
         .category-items {
+            max-height: 0;
+            overflow: hidden;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            padding: 10px !important;
+            padding: 0 10px !important;
+            opacity: 0;
+            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
         }
         .category.expanded .category-items {
-            max-height: none;
+            max-height: 2000px;
             padding: 10px !important;
+            opacity: 1;
         }
         .menu-item {
             display: flex;
@@ -497,7 +502,7 @@
         .add-cart-btn:active { transform: scale(0.9); }
 
         @media (min-width: 640px) {
-            .category-items { grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 14px !important; }
+            .category-items { grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0 14px !important; }
             .category.expanded .category-items { padding: 14px !important; }
             .item-name { font-size: 1rem; }
             .item-description { font-size: 0.8rem; }
@@ -968,7 +973,7 @@
             <button class="chat-close" onclick="toggleChat()" aria-label="إغلاق">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg bot" id="chatWelcomeMsg">☕🔥 أهلاً بيك في Lucca! أنا بوت لوكا الذكي — عايز تعرف إيه الأكثر مبيعاً؟ ولا عايز توصية مخصوص ليك؟</div>
+            <div class="chat-msg bot" id="chatWelcomeMsg">☕ أنا بوت لوكا الذكي، أنا هنا في خدمتك، لو احتجت أي استفسار أو تسأل على أي شئ أنا تحت أمرك</div>
         </div>
         <div class="chat-input-wrap">
             <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." autocomplete="off" onkeydown="if(event.key==='Enter') sendChatMsg()">
@@ -1005,7 +1010,7 @@
             chatTitle: { ar: '🤖 بوت لوكا الذكي', en: '🤖 Lucca Smart Bot' },
             chatStatus: { ar: 'بوت لوكا الذكي تحت أمرك ☕', en: 'Lucca Smart Bot at your service ☕' },
             chatPlace: { ar: 'اسألني عن أي حاجة…', en: 'Ask me anything…' },
-            chatWelcome: { ar: '☕🔥 أهلاً بيك في Lucca! أنا بوت لوكا الذكي — عايز تعرف إيه الأكثر مبيعاً؟ ولا عايز توصية مخصوص ليك؟ أنا هنا أبيعلك أحلى كوباية وأحلى أكل! اطلب أي حاجة وإحنا هنخدمك بسرعة! 💪', en: '☕🔥 Welcome to Lucca! I\'m Lucca Smart Bot — want to know what\'s selling like crazy? Need a personal recommendation? I\'ll get you the best coffee and food, fast! Order anything and we\'ll serve you quick! 💪' },
+            chatWelcome: { ar: '☕ أنا بوت لوكا الذكي، أنا هنا في خدمتك، لو احتجت أي استفسار أو تسأل على أي شئ أنا تحت أمرك', en: '☕ I\'m Lucca Smart Bot, I\'m here at your service. If you need any inquiry or ask about anything, I\'m at your command.' },
             catNames: {
                 ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
                 en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
