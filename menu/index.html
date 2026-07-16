@@ -986,7 +986,7 @@
             <button class="chat-close" onclick="toggleChat()" aria-label="إغلاق">✕</button>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg bot" id="chatWelcomeMsg">☕ أنا بوت لوكا الذكي، أنا هنا في خدمتك، لو احتجت أي استفسار أو تسأل على أي شئ أنا تحت أمرك</div>
+            <div class="chat-msg bot" id="chatWelcomeMsg">☕ Loading...</div>
         </div>
         <div class="chat-input-wrap">
             <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." autocomplete="off" onkeydown="if(event.key==='Enter') sendChatMsg()">
@@ -1020,10 +1020,10 @@
             waTotal: { ar: '💵 *الإجمالي:', en: '💵 *Total:' },
             waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
             originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
-            chatTitle: { ar: '🤖 بوت لوكا الذكي', en: '🤖 Lucca Smart Bot' },
-            chatStatus: { ar: 'بوت لوكا الذكي تحت أمرك ☕', en: 'Lucca Smart Bot at your service ☕' },
+            chatTitle: { ar: '🤖 بوت لوكا الذكي 💬', en: '🤖 Lucca Smart Bot 💬' },
+            chatStatus: { ar: 'بوت لوكا تحت أمرك — اسأل على أي حاجة 😊', en: 'Lucca Bot at your service — ask me anything 😊' },
             chatPlace: { ar: 'اسألني عن أي حاجة…', en: 'Ask me anything…' },
-            chatWelcome: { ar: '☕ أنا بوت لوكا الذكي، أنا هنا في خدمتك، لو احتجت أي استفسار أو تسأل على أي شئ أنا تحت أمرك', en: '☕ I\'m Lucca Smart Bot, I\'m here at your service. If you need any inquiry or ask about anything, I\'m at your command.' },
+            chatWelcome: { ar: '☕ أنا بوت لوكا الذكي — عايز تساعد في إيه النهاردة؟', en: '☕ I\'m Lucca Smart Bot — what can I help you with today?' },
             catNames: {
                 ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
                 en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
@@ -1386,13 +1386,12 @@
             if (chatOpen) {
                 document.body.style.overflow = 'hidden';
                 document.getElementById('chatInput').focus();
-                // Show welcome suggestions if not already added
                 const welcomeMsg = document.getElementById('chatWelcomeMsg');
                 if (welcomeMsg && !welcomeMsg.dataset.suggestionsShown) {
                     welcomeMsg.dataset.suggestionsShown = '1';
-                    const sug = lang === 'ar'
-                        ? ['☕ حاجة سخنة', '🧊 حاجة ساقعة', '🔥 الأكثر طلباً', '📍 العنوان']
-                        : ['☕ Something hot', '🧊 Something iced', '🔥 Best sellers', '📍 Address'];
+                    const tg = getTimeGreeting();
+                    welcomeMsg.innerHTML = renderMD(tg.greeting);
+                    const sug = tg.suggestions;
                     setTimeout(() => {
                         const sDiv = document.createElement('div');
                         sDiv.className = 'chat-suggestions';
@@ -1617,6 +1616,27 @@
             hours: { ar: 'من ٨ صباحاً لـ ١٢ منتصف الليل', en: '8 AM to 12 AM' },
             social: { ar: 'إنستجرام: @lucca.cafe', en: 'Instagram: @lucca.cafe' }
         };
+        function getTimeGreeting() {
+            const h = new Date().getHours();
+            let p;
+            if (h >= 5 && h < 12) p = 'm';
+            else if (h >= 12 && h < 17) p = 'a';
+            else if (h >= 17 && h < 21) p = 'e';
+            else p = 'n';
+            const g = {
+                m: { ar: 'صباح النور ☀️ صحيت على خير؟ جهزتلك كابتشينو الصبح يفتح النفس — ولا عايز حاجة تسكري معاه؟', en: 'Good morning ☀️ Rise and shine! Got a cappuccino waiting to start your day — or something sweet with it?' },
+                a: { ar: 'نهارك سعيد ☕ بعد الغدا جه وقت القهوة — عايز إسبريسو يظبطك ولا آيس لاتيه مخصوص ليك؟', en: 'Good afternoon ☕ Post-lunch coffee time — need an Espresso to reset or an Iced Latte?' },
+                e: { ar: 'مساء الخير 🌆 يومك كان طويل؟ تعال خد كابتشينو واستريح — أو حاجة من الحلويات عشان تدلع نفسك', en: 'Good evening 🌆 Long day? Grab a cappuccino and chill — or a dessert to treat yourself' },
+                n: { ar: 'مساء النور 🌙 لسه صاحي؟ لو عايز حاجة دافية قبل النوم — سحلب أو هوت شوكليت هيظبطوا المود', en: 'Good evening 🌙 Still up? A warm Sahlab or Hot Chocolate before bed — perfect vibes' }
+            };
+            const sug = {
+                m: { ar: ['☕ كابتشينو', '🥐 كرواسون', '🔥 الأكثر طلباً'], en: ['☕ Cappuccino', '🥐 Croissant', '🔥 Best sellers'] },
+                a: { ar: ['🧊 آيس لاتيه', '☕ إسبريسو', '🍰 تشيز كيك'], en: ['🧊 Iced Latte', '☕ Espresso', '🍰 Cheesecake'] },
+                e: { ar: ['☕ لاتيه', '🍪 كوكيز', '🔥 الأكثر طلباً'], en: ['☕ Latte', '🍪 Cookies', '🔥 Best sellers'] },
+                n: { ar: ['☕ سحلب', '🍫 هوت شوكليت', '🔥 الأكثر طلباً'], en: ['☕ Sahlab', '🍫 Hot Chocolate', '🔥 Best sellers'] }
+            };
+            return { greeting: g[p][lang], suggestions: sug[p][lang] };
+        }
         let chatHistory = [];
 
         function botKnows(msg) {
@@ -1747,22 +1767,25 @@
                 return { text: t, sug };
             }
 
-            // ── Greetings (consultative, ask a question) ──
+            // ── Greetings (time-aware, warm) ──
             if (/^(مرحبا|اهل|hello|hi|hey|صباح|مساء)\b/.test(m)) {
+                const tg = getTimeGreeting();
                 const texts = lang === 'ar'
                     ? [
-                        'أهلاً بيك في Lucca ☕ تحب حاجة ساقعة ولا سخنة؟',
-                        'مرحباً! نورتنا 😊 بتدور على قهوة، مشروب منعش، ولا حاجة تسكري مع القهوة؟',
-                        'أهلاً بيك في Lucca! أول مرة تزورنا ولا من زبائننا المميزين؟'
+                        tg.greeting,
+                        'يا هلا والله 😊 نورتنا — عايز قهوة ولا حاجة باردة ولا كلهم؟',
+                        'أهلاً بيك في Lucca! أول مرة ولا من زبائننا المميزين؟ 🤝 عموماً إحنا تحت أمرك',
+                        'تصدق إني حاسس إنك عايز حاجة جامدة النهاردة 😎 جرب اللاتيه أو V60'
                       ]
                     : [
-                        'Welcome to Lucca ☕ Would you like something hot or iced?',
-                        'Hi there! 😊 Looking for coffee, a refreshing drink, or something sweet?',
-                        'Welcome to Lucca! First time here or are you a regular?'
+                        tg.greeting,
+                        'Hey hey! 😊 Welcome — coffee, something cold, or both?',
+                        'Welcome to Lucca! First time or are you a regular? 🤝 Either way, I got you!',
+                        'I have a feeling you want something amazing today 😎 Try the Latte or V60'
                       ];
                 const sug = lang === 'ar'
-                    ? ['حاجة سخنة ☕', 'حاجة ساقعة 🧊', 'القهوة المختصة']
-                    : ['Something hot ☕', 'Something iced 🧊', 'Specialty coffee'];
+                    ? [...tg.suggestions, '📍 العنوان']
+                    : [...tg.suggestions, '📍 Address'];
                 return { text: texts[Math.floor(Math.random()*texts.length)], sug };
             }
 
@@ -1911,13 +1934,14 @@
                 return { text: t, sug, items: desserts };
             }
 
-            // ── Default: ask a question instead of dumping help ──
-            const sug = lang === 'ar'
-                ? ['حاجة سخنة ☕', 'حاجة ساقعة 🧊', 'القهوة المختصة 💎']
-                : ['Something hot ☕', 'Something iced 🧊', 'Specialty coffee 💎'];
-            const t = lang === 'ar'
-                ? 'أهلاً بيك في Lucca ☕\n\nعشان أساعدك أحسن:\n- بتحب القهوة قوية ولا خفيفة؟\n- عايز حاجة سخنة ولا ساقعة؟\n- ولا أول مرة وجرب حاجة جديدة؟\n\nقولي وإني تحت أمرك 😊'
-                : 'Welcome to Lucca ☕\n\nTo help you better:\n- Do you like strong or mild coffee?\n- Hot or iced?\n- Or first time trying something new?\n\nLet me know! 😊';
+            // ── Default: time-aware fallback ──
+            const tg = getTimeGreeting();
+            const sug = tg.suggestions;
+            const extra = lang === 'ar' ? ['📍 العنوان'] : ['📍 Address'];
+            sug.push(...extra);
+            const t = tg.greeting + '\n\n' + (lang === 'ar'
+                ? 'عشان أساعدك أحسن:\n- بتحب القهوة قوية ولا خفيفة؟\n- عايز حاجة سخنة ولا ساقعة؟\n- ولا أول مرة وجرب حاجة جديدة؟\n\nقولي وإني تحت أمرك 😊'
+                : 'To help you better:\n- Do you like strong or mild coffee?\n- Hot or iced?\n- First time trying something new?\n\nLet me know! 😊');
             return { text: t, sug };
         }
 
