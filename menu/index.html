@@ -1624,10 +1624,10 @@
             else if (h >= 17 && h < 21) p = 'e';
             else p = 'n';
             const g = {
-                m: { ar: 'صباح النور ☀️ صحيت على خير؟ جهزتلك كابتشينو الصبح يفتح النفس — ولا عايز حاجة تسكري معاه؟', en: 'Good morning ☀️ Rise and shine! Got a cappuccino waiting to start your day — or something sweet with it?' },
-                a: { ar: 'نهارك سعيد ☕ بعد الغدا جه وقت القهوة — عايز إسبريسو يظبطك ولا آيس لاتيه مخصوص ليك؟', en: 'Good afternoon ☕ Post-lunch coffee time — need an Espresso to reset or an Iced Latte?' },
-                e: { ar: 'مساء الخير 🌆 يومك كان طويل؟ تعال خد كابتشينو واستريح — أو حاجة من الحلويات عشان تدلع نفسك', en: 'Good evening 🌆 Long day? Grab a cappuccino and chill — or a dessert to treat yourself' },
-                n: { ar: 'مساء النور 🌙 لسه صاحي؟ لو عايز حاجة دافية قبل النوم — سحلب أو هوت شوكليت هيظبطوا المود', en: 'Good evening 🌙 Still up? A warm Sahlab or Hot Chocolate before bed — perfect vibes' }
+                m: { ar: 'صباح النور ☀️ أهلاً وسهلاً بيك في Lucca! — النهاردة عندنا كابتشينو فريش وطازة، وكرواسون سخن لو تحب حاجة خفيفة مع القهوة. تحت أمرك 😊', en: 'Good morning ☀️ Welcome to Lucca! — We have fresh cappuccino and warm croissants if you\'d like something light with your coffee. At your service 😊' },
+                a: { ar: 'مساء الخير ☕ أهلاً بيك — بنفسك تغديت ولا نجيبلك حاجة خفيفة مع القهوة؟ تحت أمرك في أي حاجة 😊', en: 'Good afternoon ☕ Welcome! — Did you have lunch or shall we get you something light with your coffee? At your service 😊' },
+                e: { ar: 'مساء الخير 🌆 أهلاً بيك في Lucca — يومك كان طويل؟ إحنا هنا عشان نريحك: كابتشينو، لاتيه، أو قطعة حلويات تسعد قلبك. تفضل تحت أمرك 😊', en: 'Good evening 🌆 Welcome to Lucca — Long day? We\'re here to help you unwind: cappuccino, latte, or a dessert to sweeten your evening. At your service 😊' },
+                n: { ar: 'مساء النور 🌙 أهلاً بيك في Lucca — لسه صاحي؟ إحنا موجودين. لو عايز حاجة دافية قبل النوم: سحلب ولا هوت شوكليت؟ تحت أمرك 😊', en: 'Good evening 🌙 Welcome to Lucca — Still up? We\'re here. Want something warm before bed: Sahlab or Hot Chocolate? At your service 😊' }
             };
             const sug = {
                 m: { ar: ['☕ كابتشينو', '🥐 كرواسون', '🔥 الأكثر طلباً'], en: ['☕ Cappuccino', '🥐 Croissant', '🔥 Best sellers'] },
@@ -1643,27 +1643,49 @@
             const m = msg.toLowerCase().trim();
 
             // ── Context: follow-up question ──
-            const followUp = /^(سعره|كام|كام سعره|price|how much|ايه ده|ده ايه|tell me|what'?s this|عايز|اديني|جيب|دوس)/i.test(m);
+            const followUp = /^(سعره|كام|كام سعره|price|how much|ايه ده|ده ايه|tell me|what'?s this|عايز|اديني|جيب|دوس|هات)/i.test(m);
             if (followUp && chatHistory.length) {
                 for (let i = chatHistory.length - 1; i >= 0; i--) {
                     if (!chatHistory[i].isUser && chatHistory[i].items && chatHistory[i].items.length) {
                         const item = chatHistory[i].items[0];
                         const displayPrice = Array.isArray(item.p) ? item.p.join(' / ') : item.p;
-                        if (/عايز|اديني|جيب|دوس/i.test(m)) {
+                        if (/عايز|اديني|جيب|دوس|هات/i.test(m)) {
                             const price = Array.isArray(item.p) ? item.p[0] : item.p;
                             addToCart(item.n, price, '', item.en || item.n);
-                            return { text: lang === 'ar' ? '✅ تمت الإضافة! عايز حاجة تاني؟ 😊' : '✅ Added! Want anything else? 😊', sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '🧧 خلصت'] : ['🔥 Best sellers', '🧧 That\'s all'] };
+                            const t = lang === 'ar' ? '✅ **' + tn(item) + '** أضيف للسلة يا باشا! عايز حاجة تاني ولا كده خلاص؟ 😊' : '✅ **' + tn(item) + '** added! Want anything else or that\'s all? 😊';
+                            return { text: t, sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '🧧 خلصت كده'] : ['🔥 Best sellers', '🧧 That\'s all'] };
                         }
-                        return { text: lang === 'ar' ? `**${tn(item)}** — ${displayPrice} ج.م` : `**${tn(item)}** — ${displayPrice} EGP`, sug: [lang === 'ar' ? '➕ ضيفه' : '➕ Add it', lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers'] };
+                        const t = lang === 'ar' ? `**${tn(item)}** — ${displayPrice} ج.م - عايز أضيفهالك؟` : `**${tn(item)}** — ${displayPrice} EGP - Shall I add it for you?`;
+                        return { text: t, sug: [lang === 'ar' ? '➕ ضيفه' : '➕ Add it', lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers'] };
                     }
                 }
+            }
+
+            // ── Service: done ordering ──
+            if (/^(خلاص|كده\s*خلاص|تمام\s*كده|هو\s*ده|that'?s\s*all|done|خلصت|كفاية|no\s*thanks|لا\s*شكراً)\b/i.test(m)) {
+                const btn = document.getElementById('cartFab');
+                if (btn && btn.classList.contains('show')) {
+                    return { text: lang === 'ar' ? 'تمام باشا 😊 تقدر تراجع طلبك وتأكده من السلة 🛒' : 'Alright 😊 You can review and confirm your order from the cart 🛒', sug: lang === 'ar' ? ['🛒 شوف السلة', '🔥 الأكثر طلباً'] : ['🛒 View cart', '🔥 Best sellers'] };
+                }
+                const t = lang === 'ar'
+                    ? 'تشرفنا بيك 🤝 لو عايز حاجة كمان إحنا موجودين. تحت أمرك في أي وقت! 😊'
+                    : 'It was a pleasure 🤝 If you need anything else, we\'re here. At your service anytime! 😊';
+                return { text: t, sug: lang === 'ar' ? ['☕ حاجة سخنة', '🍪 حلويات'] : ['☕ Something hot', '🍪 Desserts'] };
+            }
+
+            // ── Service: thanks / acknowledgment ──
+            if (/^(شكراً|thanks|thank\s*you|تسلم|ميرسي|متشكر)\b/i.test(m)) {
+                const t = lang === 'ar'
+                    ? 'العفو على إيه يا باشا 🤝 دا واجبنا — تحت أمرك في أي وقت وعايز حاجة تاني إحنا موجودين 😊'
+                    : 'You\'re very welcome 🤝 It\'s our pleasure — at your service anytime, just let us know! 😊';
+                return { text: t, sug: lang === 'ar' ? ['☕ حاجة سخنة', '🔥 الأكثر طلباً'] : ['☕ Something hot', '🔥 Best sellers'] };
             }
 
             // ── Store info ──
             if (/(العنوان|location|مواعيد|ساعات|hours|رقم|تليفون|phone|address|فروع|عنوان|موقع|place|أين|فين)/i.test(m)) {
                 const t = lang === 'ar'
-                    ? `📍 **العنوان:** ${storeInfo.location.ar}\n🕐 **ساعات العمل:** ${storeInfo.hours.ar}\n📞 **تليفون:** ${storeInfo.phone}\n📷 ${storeInfo.social.ar}`
-                    : `📍 **Address:** ${storeInfo.location.en}\n🕐 **Hours:** ${storeInfo.hours.en}\n📞 **Phone:** ${storeInfo.phone}\n📷 ${storeInfo.social.en}`;
+                    ? `📍 **العنوان:** ${storeInfo.location.ar}\n🕐 **ساعات العمل:** ${storeInfo.hours.ar}\n📞 **تليفون:** ${storeInfo.phone}\n📷 ${storeInfo.social.ar}\n\nتحت أمرك في أي استفسار تاني 😊`
+                    : `📍 **Address:** ${storeInfo.location.en}\n🕐 **Hours:** ${storeInfo.hours.en}\n📞 **Phone:** ${storeInfo.phone}\n📷 ${storeInfo.social.en}\n\nAt your service for any other questions 😊`;
                 return { text: t, sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '☕ حاجة سخنة'] : ['🔥 Best sellers', '☕ Something hot'] };
             }
 
@@ -1687,15 +1709,15 @@
             if (/(بطني|وجع\s*بطن|stomach|معدة|هضم|digest|انتفاخ|قولون)/i.test(m)) {
                 const items = menuIndex.filter(i => /(ميكس أعشاب|شاي أخضر|ليمون نعناع|أعشاب|Herbal|Green Tea|Mint Lemon)/i.test(i.n) || /(herbal|green tea|mint)/i.test(i.en)).slice(0, 3);
                 const t = lang === 'ar'
-                    ? 'ربنا يقومك بالسلامة 🙏 أنصحك بحاجة دافية وخفيفة:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• شاي أعشاب — ٣٥ ج.م\n• شاي أحمد أخضر — ٣٥ ج.م\n• ليمون نعناع — ٧٥ ج.م')
-                    : 'Feel better! 🙏 Try something soothing:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Herbal Tea — 35 EGP\n• Ahmed Green Tea — 35 EGP\n• Mint Lemon — 75 EGP');
+                    ? 'ربنا يقومك بالسلامة 🙏 أنصحك بحاجة دافية وخفيفة على معدتك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• شاي أعشاب — ٣٥ ج.م\n• شاي أحمد أخضر — ٣٥ ج.م\n• ليمون نعناع — ٧٥ ج.م') + '\n\nتحت أمرك في أي حاجة تاني 😊'
+                    : 'Feel better! 🙏 Try something soothing for your stomach:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Herbal Tea — 35 EGP\n• Ahmed Green Tea — 35 EGP\n• Mint Lemon — 75 EGP') + '\n\nAt your service for anything else 😊';
                 return { text: t, sug: lang === 'ar' ? ['شاي أعشاب', 'ليمون نعناع'] : ['Herbal Tea', 'Mint Lemon'], items };
             }
             if (/(برد|زكام|cold|سخونية|كحة|cough)/i.test(m)) {
                 const items = menuIndex.filter(i => /(سحلب|هوت شوكليت|شاي كرك|Hot Cider|Sahlab|Karak|Hot Chocolate)/i.test(i.n) || /(sahlab|karak|hot chocolate|cider)/i.test(i.en)).slice(0, 3);
                 const t = lang === 'ar'
-                    ? 'الله يعافيك 🤧 مشروبات سخنة هتدفيك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• سحلب — ٨٥ ج.م\n• هوت شوكليت — ٧٠ ج.م\n• شاي أحمد كرك — ٥٠ ج.م')
-                    : 'Get well! 🤧 Hot drinks to warm you:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Sahlab — 85 EGP\n• Hot Chocolate — 70 EGP\n• Ahmed Karak Tea — 50 EGP');
+                    ? 'الله يعافيك 🤧 مشروبات سخنة هتدفيك وتريحك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• سحلب — ٨٥ ج.م\n• هوت شوكليت — ٧٠ ج.م\n• شاي أحمد كرك — ٥٠ ج.م') + '\n\nعايز حاجة تاني ولا كده تمام؟ 😊'
+                    : 'Get well! 🤧 Hot drinks to warm you up:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Sahlab — 85 EGP\n• Hot Chocolate — 70 EGP\n• Ahmed Karak Tea — 50 EGP') + '\n\nAnything else or that\'s all? 😊';
                 return { text: t, sug: lang === 'ar' ? ['سحلب', 'هوت شوكليت'] : ['Sahlab', 'Hot Chocolate'], items };
             }
             if (/(عطشان|thirsty|ظمآن)/i.test(m)) {
@@ -1708,22 +1730,22 @@
             if (/(جوعان|hungry|عايز\s*أكل)/i.test(m)) {
                 const items = menuIndex.filter(i => i.catId === 'breakfast' || i.catId === 'pizza').slice(0, 4);
                 const t = lang === 'ar'
-                    ? 'جوعان؟ تعال أقولك على حاجة تشبع 😋\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• توست ميكس جبن — ٣٠ ج.م\n• ساندويتش بسطرمة — ٣٠ ج.م\n• بيتزا سلامي — ١٧٠ ج.م')
-                    : 'Hungry? I got you! 😋\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mixed Cheese Toast — 30 EGP\n• Pastrami Sandwich — 30 EGP\n• Salami Pizza — 170 EGP');
+                    ? 'جوعان؟ 😋 عندنا أقسم اختيارات هتشبعك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• توست ميكس جبن — ٣٠ ج.م\n• ساندويتش بسطرمة — ٣٠ ج.م\n• بيتزا سلامي — ١٧٠ ج.م') + '\n\nعايز حاجة تاني ولا كده تمام؟'
+                    : 'Hungry? 😋 We\'ve got some great picks to fill you up:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mixed Cheese Toast — 30 EGP\n• Pastrami Sandwich — 30 EGP\n• Salami Pizza — 170 EGP') + '\n\nAnything else or that\'s all?';
                 const sug = items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
                 sug.push(lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers');
                 return { text: t, sug, items };
             }
             if (/(تعبان|tired|طاقة|energy|نعسان|sleepy)/i.test(m)) {
                 const t = lang === 'ar'
-                    ? '⚡ عايز طاقة؟ الكافيين جاهز أبركك بيه!\nالإسبريسو دبل (١٠ ج.م) — هيجيلك طاقة بسرعة والطعم جامد.'
-                    : '⚡ Need energy? Caffeine to the rescue!\nDouble Espresso (10 EGP) — hits fast and tastes great.';
+                    ? '⚡ عايز تنشط؟ الكافيين جاهز يخدمك — الإسبريسو دبل (٧٠ ج.م) هيجيلك طاقة بسرعة والطعم جامد. عايز جرب حاجة تانيه؟ 😊'
+                    : '⚡ Need a boost? Caffeine to the rescue — Double Espresso (70 EGP) hits fast and tastes great. Want something else? 😊';
                 return { text: t, sug: lang === 'ar' ? ['إسبريسو دبل', 'كابتشينو'] : ['Double Espresso', 'Cappuccino'] };
             }
             if (/(صداع|headache)/i.test(m)) {
                 const t = lang === 'ar'
-                    ? 'الصداع ده؟ 🤕 الكافيين بيساعد — جرب إسبريسو (٤٥ ج.م) أو شاي أحمد (٣٥ ج.م)'
-                    : 'Headache? 🤕 Caffeine helps — try Espresso (45 EGP) or Ahmed Tea (35 EGP)';
+                    ? 'الله يشفيك 🤕 الكافيين بيساعد في الصداع — جرب إسبريسو (٤٥ ج.م) أو شاي أحمد (٣٥ ج.م). تحت أمرك في أي حاجة'
+                    : 'Hope you feel better 🤕 Caffeine helps with headaches — try Espresso (45 EGP) or Ahmed Tea (35 EGP). At your service';
                 return { text: t, sug: lang === 'ar' ? ['إسبريسو', 'شاي أحمد'] : ['Espresso', 'Ahmed Tea'] };
             }
             if (/(منعش|refresh|حاجة\s*باردة|خفيف|light)/i.test(m) && !/(specialty|مختصة)/i.test(m)) {
@@ -1767,21 +1789,21 @@
                 return { text: t, sug };
             }
 
-            // ── Greetings (time-aware, warm) ──
+            // ── Greetings (service etiquette) ──
             if (/^(مرحبا|اهل|hello|hi|hey|صباح|مساء)\b/.test(m)) {
                 const tg = getTimeGreeting();
                 const texts = lang === 'ar'
                     ? [
                         tg.greeting,
-                        'يا هلا والله 😊 نورتنا — عايز قهوة ولا حاجة باردة ولا كلهم؟',
-                        'أهلاً بيك في Lucca! أول مرة ولا من زبائننا المميزين؟ 🤝 عموماً إحنا تحت أمرك',
-                        'تصدق إني حاسس إنك عايز حاجة جامدة النهاردة 😎 جرب اللاتيه أو V60'
+                        'يا هلا والله 😊 نورتنا — تفضل، عايز تشوف القائمة ولا عندك سؤال معين؟ تحت أمرك',
+                        'أهلاً بيك في Lucca 🌟 أول مرة تشرفنا ولا من زبائننا الغاليين؟ على كل حال إحنا هنا في خدمتك 🤝',
+                        'تشرفنا بيك 😊 — تصدق إني حاسس إنك عايز حاجة جامدة النهاردة؟ جرب اللاتيه أو V60'
                       ]
                     : [
                         tg.greeting,
-                        'Hey hey! 😊 Welcome — coffee, something cold, or both?',
-                        'Welcome to Lucca! First time or are you a regular? 🤝 Either way, I got you!',
-                        'I have a feeling you want something amazing today 😎 Try the Latte or V60'
+                        'Hey hey! 😊 Welcome — would you like to browse the menu or do you have a specific question? At your service!',
+                        'Welcome to Lucca 🌟 First time or are you one of our lovely regulars? Either way, we\'re here for you 🤝',
+                        'Pleasure having you! 😊 — I have a feeling you want something amazing today. Try the Latte or V60!'
                       ];
                 const sug = lang === 'ar'
                     ? [...tg.suggestions, '📍 العنوان']
