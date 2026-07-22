@@ -106,6 +106,52 @@ app.delete('/api/image/:catId/:filename', requireAuth, (req, res) => {
   }
 });
 
+// ========== POS Sync API (Offline Queue Backup) ==========
+const POS_DATA_FILE = path.join(__dirname, 'server', 'pos-sync.json');
+if (!fs.existsSync(path.dirname(POS_DATA_FILE))) {
+  fs.mkdirSync(path.dirname(POS_DATA_FILE), { recursive: true });
+}
+
+function readPosData() {
+  try {
+    if (fs.existsSync(POS_DATA_FILE)) {
+      return JSON.parse(fs.readFileSync(POS_DATA_FILE, 'utf8'));
+    }
+  } catch (e) { /* ignore */ }
+  return { orders: [], tables: [] };
+}
+
+function savePosData(data) {
+  fs.writeFileSync(POS_DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
+
+app.post('/api/pos/orders', requireAuth, (req, res) => {
+  const data = readPosData();
+  const existing = data.orders.findIndex(o => o.id === req.body.id);
+  if (existing >= 0) data.orders[existing] = req.body;
+  else data.orders.push(req.body);
+  // Keep only last 5000
+  if (data.orders.length > 5000) data.orders = data.orders.slice(-5000);
+  savePosData(data);
+  res.json({ success: true });
+});
+
+app.put('/api/pos/orders/:id', requireAuth, (req, res) => {
+  const data = readPosData();
+  const idx = data.orders.findIndex(o => o.id === req.params.id);
+  if (idx >= 0) data.orders[idx] = req.body;
+  else data.orders.push(req.body);
+  savePosData(data);
+  res.json({ success: true });
+});
+
+app.delete('/api/pos/orders/:id', requireAuth, (req, res) => {
+  const data = readPosData();
+  data.orders = data.orders.filter(o => o.id !== req.params.id);
+  savePosData(data);
+  res.json({ success: true });
+});
+
 // ========== Admin Panel ==========
 app.get('/admin', (req, res) => {
   if (!req.session.authenticated) {

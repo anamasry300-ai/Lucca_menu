@@ -576,6 +576,17 @@
             color: white;
             border-color: var(--terracotta);
         }
+        .table-num-btn.status-occupied {
+            border-color: var(--danger);
+            background: rgba(244, 67, 54, 0.08);
+        }
+        .table-num-btn.status-paid {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.08);
+        }
+        .table-num-btn.status-free {
+            border-color: var(--success);
+        }
 
         /* أقسام المنيو */
         .menu-categories {
@@ -1000,6 +1011,9 @@
             </div>
         </div>
 
+        <div id="posSaveIndicator" style="position:fixed;bottom:20px;left:20px;z-index:9999;background:var(--success);color:white;padding:10px 20px;border-radius:10px;font-weight:700;box-shadow:0 4px 15px rgba(0,0,0,0.2);opacity:0;transform:translateY(10px);transition:all 0.3s ease;font-size:0.95rem;direction:ltr;">
+            ✓ تم الحفظ تلقائياً
+        </div>
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('dashboard',this)">📊 لوحة التحكم</button>
             <button class="tab-btn" onclick="showTab('tables',this)">🍽️ الطابيزات</button>
@@ -1087,84 +1101,121 @@
             </div>
         </div>
 
-        <!-- الطابيزات -->
+        <!-- الطابيزات — إدارة متقدمة مع Auto-Save -->
         <div class="tab-content" id="tables">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h3>🍽️ إدارة الطابيزات — اختر طاولة لبدء الطلب</h3>
+                <span id="tablesSummary" style="font-size:0.9rem;color:var(--olive);"></span>
+            </div>
             <div class="tables-grid" id="tablesGrid"></div>
         </div>
 
-        <!-- الطلبات -->
+        <!-- الطلبات — واجهة كاشير متطورة مع Auto-Save -->
         <div class="tab-content" id="orders">
-            <!-- اختيار الطاولة -->
-            <div class="order-form">
-                <h3>🧾 إنشاء طلب جديد</h3>
-                <div class="table-select-simple">
-                    <label>رقم الطاولة:</label>
-                    <div class="table-numbers">
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(1, event)">1</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(2, event)">2</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(3, event)">3</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(4, event)">4</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(5, event)">5</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(6, event)">6</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(7, event)">7</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(8, event)">8</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(9, event)">9</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(10, event)">10</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(11, event)">11</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(12, event)">12</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(13, event)">13</button>
-                        <button type="button" class="table-num-btn" onclick="selectTableNum(14, event)">14</button>
+            <div id="posOrderWorkspace" style="display:grid;grid-template-columns:1fr 350px;gap:20px;">
+                <!-- الجهة اليمنى: اختيار الطاولة + المنيو -->
+                <div>
+                    <!-- اختيار الطاولة -->
+                    <div class="order-form" style="padding:15px;">
+                        <h3 style="display:flex;justify-content:space-between;align-items:center;">
+                            <span>🍽️ اختر الطاولة</span>
+                            <span id="posCurrentTable" style="font-size:1rem;color:var(--olive);font-weight:400;">لم يتم اختيار طاولة</span>
+                        </h3>
+                        <div class="table-numbers" id="posTableNumbers">
+                            <button type="button" class="table-num-btn" data-table="1">1</button>
+                            <button type="button" class="table-num-btn" data-table="2">2</button>
+                            <button type="button" class="table-num-btn" data-table="3">3</button>
+                            <button type="button" class="table-num-btn" data-table="4">4</button>
+                            <button type="button" class="table-num-btn" data-table="5">5</button>
+                            <button type="button" class="table-num-btn" data-table="6">6</button>
+                            <button type="button" class="table-num-btn" data-table="7">7</button>
+                            <button type="button" class="table-num-btn" data-table="8">8</button>
+                            <button type="button" class="table-num-btn" data-table="9">9</button>
+                            <button type="button" class="table-num-btn" data-table="10">10</button>
+                            <button type="button" class="table-num-btn" data-table="11">11</button>
+                            <button type="button" class="table-num-btn" data-table="12">12</button>
+                            <button type="button" class="table-num-btn" data-table="13">13</button>
+                            <button type="button" class="table-num-btn" data-table="14">14</button>
+                        </div>
                     </div>
-                    <input type="text" id="customerName" placeholder="اسم العميل (اختياري)">
-                    <input type="tel" id="customerPhone" placeholder="رقم الهاتف (اختياري)">
-                    <div style="display:flex;gap:10px;">
-                        <input type="number" id="discountInput" placeholder="الخصم %" style="flex:1;" min="0" max="100">
-                        <select id="paymentMethodSelect" style="flex:1;">
-                            <option value="cash">💵 كاش</option>
-                            <option value="visa">💳 فيزا</option>
-                        </select>
+
+                    <!-- معلومات العميل والخصم -->
+                    <div class="order-form" id="posCustomerSection" style="padding:15px;display:none;">
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <input type="text" id="posCustomerName" placeholder="اسم العميل (اختياري)" style="flex:1;padding:10px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
+                            <input type="tel" id="posCustomerPhone" placeholder="رقم الهاتف (اختياري)" style="flex:1;padding:10px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
+                            <input type="number" id="posDiscount" placeholder="الخصم %" min="0" max="100" style="width:100px;padding:10px;border:2px solid #ddd;border-radius:8px;font-family:'Tajawal',sans-serif;">
+                        </div>
+                    </div>
+
+                    <!-- المنيو -->
+                    <div id="posMenuContainer" style="margin-top:10px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                            <h3>📋 المنيو</h3>
+                            <span id="posMenuHint" style="font-size:0.85rem;color:var(--olive);">اختر طاولة أولاً لبدء الطلب</span>
+                        </div>
+                        <div class="menu-categories" id="posMenuCategories"></div>
+                    </div>
+                </div>
+
+                <!-- الجهة اليسرى: السلة + الإجراءات -->
+                <div style="position:sticky;top:10px;align-self:start;">
+                    <div class="cart-section" id="posCartSection" style="box-shadow:var(--shadow);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <h3>🛒 الطلب الحالي</h3>
+                            <span id="posOrderId" style="font-size:0.8rem;color:var(--olive);direction:ltr;"></span>
+                        </div>
+                        <div id="posEmptyCart" style="text-align:center;padding:30px 10px;color:var(--olive);font-size:0.9rem;">
+                            <div style="font-size:2rem;margin-bottom:8px;">🛒</div>
+                            اختر طاولة ثم أضف أصناف من المنيو<br>
+                            <small style="color:var(--text-light);">يتم الحفظ تلقائياً ✓</small>
+                        </div>
+                        <div class="cart-items" id="posCartItems" style="max-height:300px;overflow-y:auto;"></div>
+                        <div id="posCartTotal" class="cart-total" style="display:none;">
+                            <span>الإجمالي:</span>
+                            <span class="total-amount" id="posTotalAmount">0 ج.م</span>
+                        </div>
+
+                        <!-- أزرار سير العمل -->
+                        <div id="posWorkflowButtons" style="display:none;margin-top:12px;gap:8px;flex-direction:column;">
+                            <button class="btn-submit" id="posBtnSendToKitchen" onclick="posSendToKitchen()" style="background:var(--warning);margin:0;">
+                                👨‍🍳 إرسال للمطبخ
+                            </button>
+                            <button class="btn-submit" id="posBtnRequestPayment" onclick="posRequestPayment()" style="background:#3498db;margin:0;">
+                                💰 طلب الحساب
+                            </button>
+                            <div id="posPaymentButtons" style="display:none;gap:8px;">
+                                <button onclick="posPay('cash')" style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:12px;background:var(--cream);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:700;">
+                                    💵 كاش
+                                </button>
+                                <button onclick="posPay('visa')" style="flex:1;padding:16px;border:2px solid var(--gold);border-radius:12px;background:var(--cream);cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1.1rem;font-weight:700;">
+                                    💳 فيزا
+                                </button>
+                            </div>
+                            <button class="btn-submit" id="posBtnClose" onclick="posCloseTable()" style="background:var(--danger);margin:0;display:none;">
+                                🔒 إغلاق الطاولة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- قائمة الطلبات النشطة -->
+                    <div style="margin-top:15px;">
+                        <h4 style="margin-bottom:8px;">📋 الطلبات النشطة</h4>
+                        <div id="posActiveOrders" style="max-height:250px;overflow-y:auto;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- المنيو -->
-            <div class="menu-categories" id="menuCategories"></div>
-
-            <!-- السلة -->
-            <div class="cart-section" id="cartSection">
-                <h3>🛒 السلة</h3>
-                <div class="cart-items" id="cartItems"></div>
-                <div class="cart-total">
-                    <span>الإجمالي:</span>
-                    <span class="total-amount" id="cartTotal">0 ج.م</span>
-                </div>
-                <button class="btn-submit" onclick="submitOrder()">إنشاء الطلب</button>
+            <!-- للشاشات الصغيرة: عرض عمودي -->
+            <div id="posOrderWorkspaceMobile" style="display:none;">
+                <p style="text-align:center;padding:40px;color:var(--olive);">📱 استخدم وضع أفقي أو افتح على جهاز أكبر</p>
             </div>
-            
-            <h3>📋 الطلبات</h3>
-            <div style="margin-bottom:15px;display:flex;gap:10px;flex-wrap:wrap;">
-                <input type="text" id="orderSearch" placeholder="🔍 بحث..." style="flex:1;padding:12px;border:2px solid #ddd;border-radius:var(--radius-sm);font-family:'Tajawal',sans-serif;font-size:1rem;">
-                <label style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:8px 15px;background:var(--card-bg);border-radius:var(--radius-sm);box-shadow:var(--shadow);font-size:0.9rem;">
-                    <input type="checkbox" id="showCompletedOrders" onchange="loadOrders()"> عرض المكتملة
-                </label>
-            </div>
-            <div style="overflow-x:auto;">
-            <table class="sales-table" id="activeOrders">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>الطاولة</th>
-                        <th>الوقت</th>
-                        <th>العميل</th>
-                        <th>الدفع</th>
-                        <th>الإجمالي</th>
-                        <th>الحالة</th>
-                        <th>إجراءات</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            </div>
+            <style>
+                @media (max-width:900px) {
+                    #posOrderWorkspace { display:none !important; }
+                    #posOrderWorkspaceMobile { display:block !important; }
+                }
+            </style>
         </div>
 
         <!-- العملاء -->
@@ -1759,6 +1810,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script src="database.js"></script>
     <script src="../menu/menu-data.js"></script>
+    <script src="pos-engine.js"></script>
     <script>
         // ==================== إدارة الجلسة ====================
         let currentUser = null;
@@ -1854,31 +1906,92 @@
             } catch(e) {}
 
             if (LuccaDB.MenuSync) {
-                const storedCatalog = await LuccaDB.MenuSync.syncFromMenuData(sharedMenuCatalog);
+                const storedCatalog = await LuccaDB.MenuSync.syncFromMenuData(window.sharedMenuCatalog || menuData || []);
                 if (Array.isArray(storedCatalog) && storedCatalog.length) {
-                    sharedMenuCatalog = storedCatalog;
+                    window.sharedMenuCatalog = storedCatalog;
                 }
             }
+
+            // Initialize POS v2.0 engine
+            POS.currentUser = currentUser;
+            await _getPos();
+            await _migrateOldOrders();
+            _initPosTableButtons();
+
             await loadDashboard();
             await loadTables();
-            await loadMenuSelector();
             await loadOrders();
             await loadCustomers();
             try { await loadPurchases(); } catch(e) {}
             try { await loadEmployees(); } catch(e) {}
             try { await loadAttendanceEmployees(); } catch(e) {}
             try { await loadAttendanceRecords(); } catch(e) {}
+            try { await loadKitchen(); } catch(e) {}
+        }
+
+        // ── Migrate old orders to POS v2 engine ────────────────
+        async function _migrateOldOrders() {
+            try {
+                const pos = await _getPos();
+                const existing = await pos.getAllOrders();
+                if (existing.length > 5) return;
+                const oldOrders = await LuccaDB.Orders.getAll();
+                let migrated = 0;
+                for (const old of oldOrders) {
+                    const already = existing.find(e => e.oldId === old.id);
+                    if (already) continue;
+                    try {
+                        const paidAt = old.date || old.paidAt || old.updatedAt || new Date().toISOString();
+                        await pos.db.put('archive', {
+                            id: 'migrated-' + old.id + '-' + Date.now(),
+                            oldId: old.id,
+                            tableId: old.tableId || 1,
+                            status: 'PAID',
+                            items: Array.isArray(old.items) ? old.items.map(i => ({
+                                id: POS.uuid(), name: i.name || i.itemName || '', price: i.price || 0, quantity: i.quantity || 1
+                            })) : [],
+                            subtotal: old.subtotal || old.total || 0,
+                            discount: old.discount || 0,
+                            total: old.total || 0,
+                            paymentMethod: old.paymentMethod || 'cash',
+                            customerName: old.customerName || '',
+                            createdAt: paidAt,
+                            updatedAt: paidAt,
+                            paidAt: paidAt
+                        });
+                        migrated++;
+                    } catch(e) { /* skip */ }
+                }
+                if (migrated > 0) console.log('Migrated ' + migrated + ' old orders');
+            } catch(e) { console.warn('Migration skipped:', e.message); }
+        }
+
+        function _initPosTableButtons() {
+            const container = document.getElementById('posTableNumbers');
+            if (!container) return;
+            container.addEventListener('click', (e) => {
+                const btn = e.target.closest('.table-num-btn');
+                if (btn && btn.dataset.table) {
+                    posOpenTable(parseInt(btn.dataset.table));
+                }
+            });
         }
 
         async function loadDashboard() {
-            const tables = await LuccaDB.Tables.getAll();
-            const availableTables = tables.filter(t => t.status === 'available').length;
+            const pos = await _getPos();
+            const posTables = await pos.getTables();
+            const availableTables = posTables.filter(t => t.status === 'FREE').length;
             document.getElementById('statTables').textContent = availableTables;
 
-            const todayOrders = await LuccaDB.Orders.getDailySales();
-            document.getElementById('statOrders').textContent = todayOrders.length;
+            // Active orders from POS engine + completed from old DB
+            let activeOrders = [];
+            try { activeOrders = await pos.getAllActiveOrders(); } catch(e) {}
+            const oldOrders = await LuccaDB.Orders.getDailySales();
+            const totalActive = activeOrders.length;
+            const totalCompleted = oldOrders.filter(o => o.status === 'completed' || o.status === 'pending').length;
+            document.getElementById('statOrders').textContent = totalActive + totalCompleted;
 
-            const totalSales = todayOrders.reduce((sum, o) => sum + (o.total || 0), 0);
+            const totalSales = oldOrders.reduce((sum, o) => sum + (o.total || 0), 0);
             document.getElementById('statSales').textContent = totalSales.toFixed(0);
 
             const customers = await LuccaDB.Customers.getAll();
@@ -1917,136 +2030,142 @@
             window.open(`https://wa.me/?text=${msg}`, '_blank');
         }
 
+        // ════════════════════════════════════════════════════════════
+        //  POS v2.0 — Table & Order Functions (Auto-Save)
+        // ════════════════════════════════════════════════════════════
+        let _posEngine = null;
+        let _posSession = null; // { order, table, isNew }
+
+        async function _getPos() {
+            if (!_posEngine) {
+                _posEngine = await POS.getInstance();
+                _posEngine.onChange((event, data) => {
+                    if (event === 'orderChange' && _posSession && data.id === _posSession.order.id) {
+                        _posSession.order = data;
+                        posRenderCart();
+                    }
+                });
+            }
+            return _posEngine;
+        }
+
+        // ── Table Grid ──────────────────────────────────────────
         async function loadTables() {
-            const tables = await LuccaDB.Tables.getAll();
+            const pos = await _getPos();
+            const tables = await pos.getTables();
             const grid = document.getElementById('tablesGrid');
             grid.innerHTML = '';
 
-            const statusText = {
-                'available': 'متاحة',
-                'reserved': 'محجوزة',
-                'occupied': 'مشغولة'
+            const statusMap = {
+                'FREE': { label: '🟢 فارغة', cls: 'available' },
+                'OCCUPIED': { label: '🔴 مشغولة', cls: 'occupied' },
+                'WAITING_PAYMENT': { label: '🟡 طلب الحساب', cls: 'reserved' },
+                'PAID': { label: '🔵 تم الدفع', cls: 'reserved' },
+                'CLOSED': { label: '⚪ مقفلة', cls: 'available' }
             };
 
             tables.forEach(table => {
+                const info = statusMap[table.status] || { label: '⚪ غير معروفة', cls: 'available' };
                 const card = document.createElement('div');
-                card.className = `table-card ${table.status}`;
+                card.className = `table-card ${info.cls}`;
+                card.id = `table-card-${table.id}`;
                 card.innerHTML = `
-                    <div class="number">طاولة ${table.number}</div>
-                    <div class="status">${statusText[table.status]}</div>
+                    <div class="number">${table.name}</div>
+                    <div class="status">${info.label}</div>
+                    ${table.currentOrderId ? '<div style="font-size:0.7rem;color:var(--olive);margin-top:3px;">طلب مفتوح</div>' : ''}
                 `;
-                card.onclick = () => selectTable(table);
+                card.onclick = () => posOpenTable(table.id);
                 grid.appendChild(card);
             });
 
-            // تحديث قائمة اختيار الطاولة
-            const tableSelect = document.getElementById('orderTable');
-            if (tableSelect) {
-                tableSelect.innerHTML = '<option value="">اختر الطاولة</option>';
-                tables.forEach(table => {
-                    if (table.status !== 'occupied') {
-                        const option = document.createElement('option');
-                        option.value = table.id;
-                        option.textContent = `طاولة ${table.number}`;
-                        tableSelect.appendChild(option);
-                    }
+            // Update summary
+            const free = tables.filter(t => t.status === 'FREE').length;
+            const occ = tables.filter(t => t.status === 'OCCUPIED' || t.status === 'WAITING_PAYMENT').length;
+            const el = document.getElementById('tablesSummary');
+            if (el) el.textContent = `${tables.length} طاولات | ${free} فارغة | ${occ} مشغولة`;
+
+            // Update status dots on table number buttons
+            document.querySelectorAll('#posTableNumbers .table-num-btn').forEach(btn => {
+                const tid = parseInt(btn.dataset.table);
+                const t = tables.find(x => x.id === tid);
+                btn.className = 'table-num-btn';
+                if (t) {
+                    if (t.status === 'OCCUPIED' || t.status === 'WAITING_PAYMENT') btn.classList.add('status-occupied');
+                    else if (t.status === 'PAID') btn.classList.add('status-paid');
+                    else btn.classList.add('status-free');
+                }
+                btn.title = t ? statusMap[t.status]?.label || 'فارغة' : 'فارغة';
+            });
+        }
+
+        // ── Open Table Session (Auto-Create Order) ──────────────
+        async function posOpenTable(tableId) {
+            const pos = await _getPos();
+            try {
+                _posSession = await pos.openTableSession(tableId);
+                const { order, table } = _posSession;
+
+                // Update UI
+                document.getElementById('posCurrentTable').textContent = `🔴 ${table.name}`;
+                document.getElementById('posCustomerSection').style.display = 'flex';
+                document.getElementById('posMenuHint').textContent = `الطلب مفتوح على ${table.name}`;
+                document.getElementById('posOrderId').textContent = `#${order.id.slice(0, 8)}`;
+                document.getElementById('posEmptyCart').style.display = 'none';
+                document.getElementById('posCartItems').style.display = 'block';
+                document.getElementById('posCartTotal').style.display = 'flex';
+                document.getElementById('posWorkflowButtons').style.display = 'flex';
+
+                // Reset workflow buttons
+                document.getElementById('posBtnSendToKitchen').style.display = 'block';
+                document.getElementById('posBtnRequestPayment').style.display = 'none';
+                document.getElementById('posPaymentButtons').style.display = 'none';
+                document.getElementById('posBtnClose').style.display = 'none';
+
+                // Fill customer info if returning
+                document.getElementById('posCustomerName').value = order.customerName || '';
+                document.getElementById('posCustomerPhone').value = order.customerPhone || '';
+                document.getElementById('posDiscount').value = order.discount || 0;
+
+                // Highlight selected table
+                document.querySelectorAll('#posTableNumbers .table-num-btn').forEach(b => {
+                    b.classList.toggle('selected', parseInt(b.dataset.table) === tableId);
                 });
-            }
-        }
 
-        function selectTable(table) {
-            const modal = document.getElementById('tableModal');
-            document.getElementById('tableModalTitle').textContent = `طاولة ${table.number}`;
-            document.getElementById('tableModalStatus').textContent = table.status === 'occupied' ? '🔴 مشغولة' : table.status === 'reserved' ? '🟠 محجوزة' : '🟢 متاحة';
-            document.getElementById('tableModalStatus').style.color = table.status === 'occupied' ? 'var(--danger)' : table.status === 'reserved' ? 'var(--warning)' : 'var(--success)';
+                // Load menu items
+                posLoadMenu();
 
-            const details = document.getElementById('tableModalDetails');
-            details.innerHTML = '<p style="color:var(--olive);">جارٍ تحميل بيانات الطاولة...</p>';
+                // Render cart
+                posRenderCart();
 
-            if (table.status === 'occupied' && table.currentOrder) {
-                LuccaDB.Orders.getAll().then(orders => {
-                    const order = orders.find(o => o.id === table.currentOrder);
-                    if (order) {
-                        const paymentMap = { 'cash': '💵 كاش', 'visa': '💳 فيزا' };
-                        details.innerHTML = `
-                            <div style="margin-bottom:15px;">
-                                <strong>👤 العميل:</strong> ${order.customerName || 'غير مسجل'}
-                                ${order.customerPhone ? `<br><strong>📞 الموبايل:</strong> ${order.customerPhone}` : ''}
-                                ${order.customerNotes ? `<br><strong>📝 ملاحظات:</strong> ${order.customerNotes}` : ''}
-                                <br><strong>💳 الدفع:</strong> ${paymentMap[order.paymentMethod] || 'كاش'}
-                            </div>
-                            <table class="sales-table" style="margin-bottom:15px;">
-                                <thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th></tr></thead>
-                                <tbody>
-                                    ${(order.items || []).map(item => `
-                                        <tr><td>${item.name}</td><td>${item.quantity}</td><td>${item.price * item.quantity} ج.م</td></tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                            <div style="font-size:1.2rem;font-weight:bold;color:var(--terracotta);margin-bottom:15px;">
-                                الإجمالي: ${order.total?.toFixed(2) || 0} ج.م
-                            </div>
-                            <div style="display:flex;gap:10px;">
-                                <button onclick="completeTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--success);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">✅ إنهاء الطلب وتفريغ الطاولة</button>
-                                <button onclick="cancelTableOrder(${table.id}, ${order.id})" style="flex:1;background:var(--danger);color:white;padding:12px;border:none;border-radius:10px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;">❌ إلغاء الطلب</button>
-                            </div>
-                        `;
-                    } else {
-                        details.innerHTML = '<p style="color:var(--olive);">لا توجد بيانات طلب متاحة</p>';
-                    }
-                });
-            } else {
-                details.innerHTML = `<p style="color:var(--olive);">${table.status === 'available' ? 'الطاولة متاحة' : 'الطاولة محجوزة'}</p>`;
-            }
-
-            modal.classList.add('show');
-        }
-
-        async function completeTableOrder(tableId, orderId) {
-            await LuccaDB.Orders.updateStatus(orderId, 'completed');
-            document.getElementById('tableModal').classList.remove('show');
-            loadTables();
-            loadOrders();
-            loadDashboard();
-        }
-
-        async function cancelTableOrder(tableId, orderId) {
-            if (confirm('هل أنت متأكد من إلغاء الطلب؟')) {
-                await LuccaDB.Orders.delete(orderId);
-                document.getElementById('tableModal').classList.remove('show');
+                // Refresh tables grid
                 loadTables();
-                loadOrders();
-                loadDashboard();
+
+            } catch (e) {
+                alert('❌ فشل فتح الطاولة: ' + e.message);
             }
         }
 
-        // ==================== إدارة المنيو ====================
-        let selectedTable = null;
-        let sharedMenuCatalog = Array.isArray(menuData) ? menuData : [];
+        // ── Menu Loading ────────────────────────────────────────
+        let _posMenuCatalog = [];
 
-        function selectTableNum(num, event) {
-            selectedTable = num;
-            document.querySelectorAll('.table-num-btn').forEach(btn => btn.classList.remove('selected'));
-            if (event && event.target) event.target.classList.add('selected');
-        }
-
-        function loadMenuSelector() {
-            const container = document.getElementById('menuCategories');
+        function posLoadMenu() {
+            const container = document.getElementById('posMenuCategories');
+            const catalog = POS.buildMenuCatalog();
+            _posMenuCatalog = catalog;
             container.innerHTML = '';
 
-            sharedMenuCatalog.forEach((category, catIndex) => {
+            catalog.forEach((cat, catIndex) => {
                 const catDiv = document.createElement('div');
-                catDiv.className = 'menu-category';
                 catDiv.innerHTML = `
-                    <div class="menu-cat-header" onclick="toggleCategory(${catIndex})">
-                        <span>${category.icon} ${category.title}</span>
-                        <span class="toggle-icon">▼</span>
+                    <div class="menu-cat-header" onclick="posToggleCategory(${catIndex})">
+                        <span>${cat.icon || '📋'} ${cat.title}</span>
+                        <span style="font-size:0.8rem;">▼</span>
                     </div>
-                    <div class="menu-cat-items" id="cat-${catIndex}">
-                        ${category.items.map((item, idx) => `
-                            <div class="menu-item-btn" data-cat="${catIndex}" data-idx="${idx}">
+                    <div class="menu-cat-items show" id="posCat-${catIndex}">
+                        ${(cat.items || []).map((item, idx) => `
+                            <div class="menu-item-btn" data-item='${JSON.stringify({ catIndex, idx }).replace(/'/g, "&#39;")}'>
                                 <span class="item-name">${item.name}</span>
-                                <span class="item-price">${item.price} ${item.unit || ''}</span>
+                                <span class="item-price">${typeof item.price === 'number' ? item.price : item.price} ج.م</span>
                             </div>
                         `).join('')}
                     </div>
@@ -2054,138 +2173,308 @@
                 container.appendChild(catDiv);
             });
 
-            // Event delegation for menu item buttons
-            container.addEventListener('click', function(e) {
+            // Event delegation
+            container.onclick = (e) => {
                 const btn = e.target.closest('.menu-item-btn');
-                if (btn) {
-                    const catIndex = parseInt(btn.dataset.cat);
-                    const idx = parseInt(btn.dataset.idx);
-                    const item = sharedMenuCatalog[catIndex].items[idx];
-                    addToCart(item);
+                if (btn && btn.dataset.item) {
+                    const { catIndex, idx } = JSON.parse(btn.dataset.item);
+                    const item = catalog[catIndex].items[idx];
+                    posAddToCart(item);
                 }
-            });
+            };
         }
 
-        function toggleCategory(index) {
-            const items = document.getElementById(`cat-${index}`);
-            items.classList.toggle('show');
+        function posToggleCategory(index) {
+            const el = document.getElementById(`posCat-${index}`);
+            if (el) el.classList.toggle('show');
         }
 
-        function addToCart(item) {
-            const existing = cartItems.find(i => i.name === item.name);
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cartItems.push({ ...item, quantity: 1 });
+        // ── Add to Cart (Auto-Save) ─────────────────────────────
+        async function posAddToCart(menuItem) {
+            if (!_posSession) {
+                alert('❌ اختر طاولة أولاً!');
+                return;
             }
-            renderCart();
+            const pos = await _getPos();
+            const updated = await pos.addItem(_posSession.order.id, menuItem);
+            _posSession.order = updated;
+            posRenderCart();
         }
 
-        function renderCart() {
-            const container = document.getElementById('cartItems');
+        async function posUpdateQty(itemId, delta) {
+            if (!_posSession) return;
+            const pos = await _getPos();
+            const updated = await pos.updateItemQty(_posSession.order.id, itemId, delta);
+            _posSession.order = updated;
+            posRenderCart();
+        }
+
+        async function posRemoveItem(itemId) {
+            if (!_posSession) return;
+            const pos = await _getPos();
+            const updated = await pos.removeItem(_posSession.order.id, itemId);
+            _posSession.order = updated;
+            posRenderCart();
+        }
+
+        // ── Render Cart ─────────────────────────────────────────
+        function posRenderCart() {
+            if (!_posSession) return;
+            const order = _posSession.order;
+            const container = document.getElementById('posCartItems');
             container.innerHTML = '';
 
-            let total = 0;
-            cartItems.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+            if (!order.items || order.items.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--olive);">⚠️ السلة فارغة — أضف أصنافاً من المنيو</div>';
+                document.getElementById('posTotalAmount').textContent = '0 ج.م';
+                return;
+            }
 
+            order.items.forEach(item => {
+                const itemTotal = (item.price || 0) * (item.quantity || 1);
                 const row = document.createElement('div');
                 row.className = 'cart-item';
                 row.innerHTML = `
                     <div class="cart-item-info">
                         <div class="name">${item.name}</div>
-                        <div class="price">${item.price} × ${item.quantity} = ${itemTotal}</div>
+                        <div class="price">${item.price} × ${item.quantity} = ${itemTotal.toFixed(2)} ج.م</div>
                     </div>
                     <div class="cart-item-qty">
-                        <button style="background:var(--danger);color:white" onclick="updateQty(${index}, -1)">-</button>
+                        <button class="btn-minus" onclick="posUpdateQty('${item.id}', -1)">−</button>
                         <span>${item.quantity}</span>
-                        <button style="background:var(--success);color:white" onclick="updateQty(${index}, 1)">+</button>
+                        <button class="btn-plus" onclick="posUpdateQty('${item.id}', 1)">+</button>
+                        <button onclick="posRemoveItem('${item.id}')" style="background:var(--danger);color:white;border:none;border-radius:5px;width:28px;height:28px;cursor:pointer;font-size:0.9rem;">✕</button>
                     </div>
                 `;
                 container.appendChild(row);
             });
 
-            document.getElementById('cartTotal').textContent = `${total} ج.م`;
+            document.getElementById('posTotalAmount').textContent = `${order.total.toFixed(2)} ج.م`;
         }
 
-        function updateQty(index, delta) {
-            cartItems[index].quantity += delta;
-            if (cartItems[index].quantity <= 0) {
-                cartItems.splice(index, 1);
-            }
-            renderCart();
-        }
-
-        async function submitOrder() {
-            if (!selectedTable) {
-                alert('❌ اختر رقم الطاولة أولاً!');
-                return;
-            }
-
-            if (cartItems.length === 0) {
-                alert('❌ اختر أصناف من المنيو!');
-                return;
-            }
-
-            document.getElementById('paymentModal').classList.add('show');
-        }
-
-        async function confirmPayment(method) {
-            document.getElementById('paymentModal').classList.remove('show');
-
-            const customerName = document.getElementById('customerName').value;
-            const customerPhone = document.getElementById('customerPhone').value;
-            const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-            const table = selectedTable;
-            const items = [...cartItems];
-
-            await LuccaDB.Orders.create(table, items, customerName, customerPhone, {
-                paymentMethod: method,
-                discount,
-                discountType: 'percent'
+        // ── Customer Info Auto-Save ─────────────────────────────
+        async function posSaveCustomerInfo() {
+            if (!_posSession) return;
+            const name = document.getElementById('posCustomerName').value;
+            const phone = document.getElementById('posCustomerPhone').value;
+            const discount = parseFloat(document.getElementById('posDiscount').value) || 0;
+            const pos = await _getPos();
+            const updated = await pos.updateOrder(_posSession.order.id, {
+                customerName: name,
+                customerPhone: phone,
+                discount: discount
             });
+            _posSession.order = updated;
+            posRenderCart();
+        }
 
-            // فتح واتساب فوراً بالطلب
-            sendWhatsAppOrder(table, items, method);
+        // Debounced auto-save for customer info
+        let _posCustomerTimer = null;
+        document.addEventListener('input', (e) => {
+            if (e.target.id === 'posCustomerName' || e.target.id === 'posCustomerPhone' || e.target.id === 'posDiscount') {
+                if (_posCustomerTimer) clearTimeout(_posCustomerTimer);
+                _posCustomerTimer = setTimeout(() => posSaveCustomerInfo(), 500);
+            }
+        });
 
-            // مسح السلة
-            cartItems = [];
-            selectedTable = null;
-            document.querySelectorAll('.table-num-btn').forEach(btn => btn.classList.remove('selected'));
-            document.getElementById('customerName').value = '';
-            document.getElementById('customerPhone').value = '';
-            document.getElementById('discountInput').value = '';
-            renderCart();
-            loadTables();
+        // ── Workflow Actions ────────────────────────────────────
+        async function posSendToKitchen() {
+            if (!_posSession) return;
+            const pos = await _getPos();
+            await pos.sendToKitchen(_posSession.order.id);
+            _posSession.order.status = ORDER_STATUS.SENT_TO_KITCHEN;
+
+            document.getElementById('posBtnSendToKitchen').style.display = 'none';
+            document.getElementById('posBtnRequestPayment').style.display = 'block';
+
+            // Optional: print kitchen receipt
+            posPrintKitchen(_posSession.order);
+
             loadOrders();
+            loadTables();
+        }
+
+        async function posRequestPayment() {
+            if (!_posSession) return;
+            const pos = await _getPos();
+            // Save customer info first
+            await posSaveCustomerInfo();
+            await pos.requestPayment(_posSession.order.id);
+            _posSession.order.status = ORDER_STATUS.WAITING_PAYMENT;
+
+            document.getElementById('posBtnRequestPayment').style.display = 'none';
+            document.getElementById('posPaymentButtons').style.display = 'flex';
+            document.getElementById('posBtnSendToKitchen').style.display = 'none';
+
+            loadOrders();
+            loadTables();
+        }
+
+        async function posPay(method) {
+            if (!_posSession) return;
+            const pos = await _getPos();
+            await pos.markPaid(_posSession.order.id, method);
+
+            document.getElementById('posPaymentButtons').style.display = 'none';
+            document.getElementById('posBtnRequestPayment').style.display = 'none';
+            document.getElementById('posBtnClose').style.display = 'block';
+
+            posPrintInvoice(_posSession.order);
+
+            // Sync to old DB for reports
+            try {
+                await LuccaDB.Orders.create(_posSession.order.tableId, _posSession.order.items,
+                    _posSession.order.customerName, _posSession.order.customerPhone, {
+                    paymentMethod: method,
+                    discount: _posSession.order.discount || 0,
+                    status: 'completed'
+                });
+            } catch(e) { /* non-critical */ }
+
+            loadOrders();
+            loadTables();
+        }
+
+        async function posCloseTable() {
+            if (!_posSession) return;
+            if (!confirm('🔒 هل أنت متأكد من إغلاق الطاولة وإخلائها؟')) return;
+
+            const pos = await _getPos();
+            await pos.closeTable(_posSession.order.tableId);
+            _posSession = null;
+
+            // Reset UI
+            document.getElementById('posCurrentTable').textContent = 'لم يتم اختيار طاولة';
+            document.getElementById('posCustomerSection').style.display = 'none';
+            document.getElementById('posMenuHint').textContent = 'اختر طاولة أولاً لبدء الطلب';
+            document.getElementById('posOrderId').textContent = '';
+            document.getElementById('posEmptyCart').style.display = 'block';
+            document.getElementById('posCartItems').style.display = 'none';
+            document.getElementById('posCartTotal').style.display = 'none';
+            document.getElementById('posWorkflowButtons').style.display = 'none';
+            document.getElementById('posMenuCategories').innerHTML = '<p style="color:var(--olive);padding:20px;text-align:center;">✅ تم إغلاق الطاولة</p>';
+
+            document.querySelectorAll('#posTableNumbers .table-num-btn').forEach(b => b.classList.remove('selected'));
+
+            loadOrders();
+            loadTables();
             loadDashboard();
         }
 
-        function sendWhatsAppOrder(table, items, paymentMethod) {
-            const phone = localStorage.getItem('luccaWhatsApp') || '201010058989';
-            const lines = ['☕ *Lucca Café*', '━━━━━━━━━━━━', ''];
-            lines.push('🚩 طاولة رقم: ' + table);
-            lines.push('');
-            items.forEach(i => {
-                const qty = i.quantity || 1;
-                const price = i.price || 0;
-                lines.push('• ' + i.name + (i.origin ? ' (' + i.origin + ')' : '') + ' x' + qty + ' = ' + (price * qty).toFixed(0) + ' ج.م');
+        // ── Active Orders List ──────────────────────────────────
+        async function loadOrders() {
+            const container = document.getElementById('posActiveOrders');
+            if (!container) return;
+
+            const pos = await _getPos();
+            const orders = await pos.getAllActiveOrders();
+            const tables = await pos.getTables();
+
+            const tableMap = {};
+            tables.forEach(t => tableMap[t.id] = t.name);
+
+            if (orders.length === 0) {
+                container.innerHTML = '<p style="color:var(--olive);padding:15px;text-align:center;font-size:0.9rem;">لا توجد طلبات نشطة</p>';
+                return;
+            }
+
+            const statusMap = {
+                'OPEN': { label: '🆕 مفتوح', cls: '#3498db' },
+                'SENT_TO_KITCHEN': { label: '👨‍🍳 في المطبخ', cls: '#ff9800' },
+                'WAITING_PAYMENT': { label: '💰 طلب حساب', cls: '#9c27b0' }
+            };
+
+            container.innerHTML = orders.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).map(o => {
+                const s = statusMap[o.status] || { label: o.status, cls: '#666' };
+                const itemCount = (o.items || []).reduce((sum, i) => sum + (i.quantity || 0), 0);
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid #eee;font-size:0.85rem;cursor:pointer;" onclick="posOpenTable(${o.tableId})">
+                    <div>
+                        <strong>${tableMap[o.tableId] || 'طاولة ' + o.tableId}</strong>
+                        <span style="margin-right:8px;color:var(--olive);">${itemCount} صنف</span>
+                    </div>
+                    <div>
+                        <span style="color:${s.cls};font-weight:600;">${s.label}</span>
+                        <span style="margin-right:8px;color:var(--terracotta);font-weight:700;">${o.total.toFixed(0)} ج.م</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ── Print: Kitchen Receipt ──────────────────────────────
+        function posPrintKitchen(order) {
+            const tableName = `طاولة ${order.tableId}`;
+            const lines = [
+                '',
+                '      *** KITCHEN ORDER ***',
+                '      =======================',
+                `      ${tableName} | #${order.id.slice(0, 8)}`,
+                `      ${new Date().toLocaleTimeString('ar-EG')}`,
+                '      -----------------------',
+                ''
+            ];
+            (order.items || []).forEach(item => {
+                lines.push(`      x${item.quantity}  ${item.name}`);
             });
             lines.push('');
-            const total = items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
-            const discount = parseFloat(document.getElementById('discountInput')?.value) || 0;
-            const afterDiscount = discount > 0 ? total * (1 - discount / 100) : total;
-            lines.push('━━━━━━━━━━━━');
-            lines.push('💰 *الإجمالي: ' + afterDiscount.toFixed(0) + ' ج.م*');
-            if (discount > 0) lines.push('🏷️ خصم: ' + discount + '%');
-            lines.push('💳 الدفع: ' + (paymentMethod === 'visa' ? 'فيزا' : 'كاش'));
+            lines.push('      -----------------------');
+            lines.push('      ⏰ يرجى التجهيز فوراً');
             lines.push('');
-            lines.push('شكراً لزيارتكم 📍');
+            lines.push('');
 
-            const msg = lines.join('\n');
-            window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(msg), '_blank');
+            const w = window.open('', '_blank', 'width=300,height=400');
+            w.document.write(`<html><head><meta charset="utf-8"><style>
+                @page { margin: 0; size: 80mm auto; }
+                body { font-family: 'Courier New', monospace; font-size: 12px; white-space: pre; padding: 10px; }
+            </style></head><body><pre>${lines.join('\n')}</pre>
+            <script>window.print();window.close();<\/script></body></html>`);
+            w.document.close();
         }
+
+        // ── Print: Invoice ──────────────────────────────────────
+        function posPrintInvoice(order) {
+            const lines = [
+                '',
+                '      Lucca Specialty Coffee',
+                '      ====================',
+                `      فاتورة #${order.id.slice(0, 8)}`,
+                `      ${new Date().toLocaleDateString('ar-EG')} ${new Date().toLocaleTimeString('ar-EG')}`,
+                `      طاولة ${order.tableId}`,
+                `      ${order.paymentMethod === 'visa' ? 'فيزا' : 'كاش'}`,
+                '',
+                '      --------------------',
+                '      الصنف       كم  السعر',
+                '      --------------------',
+            ];
+            (order.items || []).forEach(item => {
+                const name = (item.name || '').substring(0, 16).padEnd(16);
+                const qty = String(item.quantity || 1).padStart(3);
+                const total = String((item.price * item.quantity).toFixed(0)).padStart(6);
+                lines.push(`      ${name}${qty}${total}`);
+            });
+            lines.push(
+                '      --------------------',
+                `      المجموع:     ${order.subtotal.toFixed(0)}`,
+                `      الضريبة:     ${order.tax.toFixed(0)}`,
+                `      الإجمالي:    ${order.total.toFixed(0)}`,
+                '',
+                '      شكراً لزيارتكم!',
+                '      📍 شارع محمد علي - بورسعيد',
+                '      📞 01551007413',
+                '',
+                ''
+            );
+
+            const w = window.open('', '_blank', 'width=300,height=500');
+            w.document.write(`<html><head><meta charset="utf-8"><style>
+                @page { margin: 0; size: 80mm auto; }
+                body { font-family: 'Courier New', monospace; font-size: 12px; white-space: pre; padding: 5px; }
+            </style></head><body><pre>${lines.join('\n')}</pre>
+            <script>window.print();window.close();<\/script></body></html>`);
+            w.document.close();
+        }
+
+        // Old selectTable, table modal, menu selector, cart functions removed.
+        // Replaced by POS v2.0 auto-save functions above.
 
         async function addPurchase() {
             const item = document.getElementById('purchaseItem').value.trim();
@@ -2249,76 +2538,8 @@
             }
         }
 
-        async function loadOrders() {
-            const orders = await LuccaDB.Orders.getAll();
-            const searchTerm = (document.getElementById('orderSearch')?.value || '').toLowerCase();
-            const showCompleted = document.getElementById('showCompletedOrders')?.checked || false;
-            
-            let filtered = showCompleted ? orders : orders.filter(o => o.status !== 'completed' && o.status !== 'cancelled');
-            
-            const tbody = document.querySelector('#activeOrders tbody');
-            tbody.innerHTML = '';
-
-            filtered = searchTerm ? filtered.filter(o =>
-                `طاولة ${o.tableId}`.includes(searchTerm) ||
-                String(o.id).includes(searchTerm) ||
-                (o.customerName || '').includes(searchTerm) ||
-                (o.customerPhone || '').includes(searchTerm) ||
-                String(o.total).includes(searchTerm)
-            ) : filtered;
-
-            const isAdmin = currentUser?.role === 'admin';
-            const paymentMap = { 'cash': '💵 كاش', 'visa': '💳 فيزا' };
-            const statusMap = { 'pending': '⏳ قيد التنفيذ', 'completed': '✅ مكتمل', 'cancelled': '❌ ملغي' };
-
-            filtered.sort((a, b) => b.date?.localeCompare(a.date || '') || 0).forEach(order => {
-                const customerDetails = order.customerPhone
-                    ? `${order.customerName || 'عميل'} - ${order.customerPhone}`
-                    : (order.customerName || 'بدون');
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td style="font-weight:700;color:var(--olive);">#${order.id}</td>
-                    <td style="font-weight:700;">طاولة ${order.tableId}</td>
-                    <td>${new Date(order.date).toLocaleTimeString('ar-EG')}</td>
-                    <td>${customerDetails}</td>
-                    <td>${paymentMap[order.paymentMethod] || '💵 كاش'}</td>
-                    <td style="color:var(--terracotta);font-weight:700;">${order.total?.toFixed(2) || 0} ج.م</td>
-                    <td><span style="background:${order.status === 'completed' ? 'var(--success)' : order.status === 'cancelled' ? 'var(--danger)' : 'var(--warning)'};color:white;padding:3px 10px;border-radius:12px;font-size:0.85rem;">${statusMap[order.status] || order.status}</span></td>
-                    <td>
-                        <button onclick="showInvoice(${order.id})" style="background:var(--olive);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="عرض الفاتورة">🧾</button>
-                        ${order.status !== 'completed' && order.status !== 'cancelled' ? `
-                            <button onclick="completeOrder(${order.id})" style="background:var(--success);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="إنهاء الطلب">✅</button>
-                        ` : ''}
-                        ${isAdmin ? `
-                            <button onclick="editOrder(${order.id})" style="background:#3498db;color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="تعديل">✏️</button>
-                        ` : ''}
-                        ${order.status !== 'cancelled' ? `
-                            <button onclick="cancelOrder(${order.id})" style="background:var(--danger);color:white;padding:5px 8px;border-radius:5px;border:none;cursor:pointer;margin:2px;" title="${order.status === 'completed' ? 'حذف' : 'إلغاء'}">${order.status === 'completed' ? '🗑️' : '❌'}</button>
-                        ` : ''}
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        async function completeOrder(orderId) {
-            await LuccaDB.Orders.updateStatus(orderId, 'completed');
-            loadOrders();
-            loadTables();
-            loadDashboard();
-        }
-
-        async function cancelOrder(orderId) {
-            if (!currentUser || currentUser.role !== 'admin') {
-                if (!confirm('أنت لست مشرفاً. هل أنت متأكد من الإلغاء؟')) return;
-            } else {
-                if (!confirm('هل أنت متأكد من إلغاء الطلب؟')) return;
-            }
-            await LuccaDB.Orders.updateStatus(orderId, 'cancelled');
-            loadOrders();
-            loadTables();
-            loadDashboard();
-        }
+        // loadOrders moved to POS v2.0 functions above
+        // Old completeOrder, cancelOrder replaced by POS workflow
 
         // ==================== تعديل الطلبات ====================
         let editingOrderId = null;
@@ -2328,8 +2549,19 @@
                 alert('✋ فقط المدير يمكنه تعديل الطلبات');
                 return;
             }
-            const orders = await LuccaDB.Orders.getAll();
-            const order = orders.find(o => o.id === orderId);
+            let order = null;
+            // Try POS engine first
+            if (typeof orderId === 'string' && orderId.length > 10) {
+                try {
+                    const pos = await _getPos();
+                    order = await pos.getOrder(orderId);
+                } catch(e) {}
+            }
+            // Fallback to old DB
+            if (!order) {
+                const orders = await LuccaDB.Orders.getAll();
+                order = orders.find(o => o.id === orderId);
+            }
             if (!order) { alert('الطلب غير موجود'); return; }
 
             editingOrderId = orderId;
@@ -2354,8 +2586,20 @@
 
         async function saveEditOrder() {
             if (!editingOrderId) return;
-            const orders = await LuccaDB.Orders.getAll();
-            const order = orders.find(o => o.id === editingOrderId);
+            let order = null;
+            let isPosOrder = false;
+            // Try POS engine
+            if (typeof editingOrderId === 'string' && editingOrderId.length > 10) {
+                try {
+                    const pos = await _getPos();
+                    order = await pos.getOrder(editingOrderId);
+                    if (order) isPosOrder = true;
+                } catch(e) {}
+            }
+            if (!order) {
+                const orders = await LuccaDB.Orders.getAll();
+                order = orders.find(o => o.id === editingOrderId);
+            }
             if (!order) return;
 
             const items = [];
@@ -2364,29 +2608,44 @@
                 const name = document.getElementById(`editItemName_${i}`)?.value;
                 const qty = parseInt(document.getElementById(`editItemQty_${i}`)?.value) || 1;
                 const price = parseFloat(document.getElementById(`editItemPrice_${i}`)?.value) || 0;
-                if (name) items.push({ name, quantity: qty, price });
+                if (name) items.push({ ...(order.items[i]?.id ? { id: order.items[i].id } : {}), name, quantity: qty, price });
             });
 
             const discount = parseFloat(document.getElementById('editDiscount').value) || 0;
             const subtotal = items.reduce((s, i) => s + (i.price || 0) * (i.quantity || 1), 0);
-            const discountAmount = subtotal * (discount / 100);
-            const afterDiscount = subtotal - discountAmount;
+            const afterDiscount = subtotal * (1 - discount / 100);
             const taxRate = parseFloat(await LuccaDB.Settings.get('taxRate')) || 14;
             const tax = afterDiscount * (taxRate / 100);
+            const total = afterDiscount + tax;
 
-            await LuccaDB.Orders.updateOrder(editingOrderId, {
-                customerName: document.getElementById('editCustomerName').value,
-                customerPhone: document.getElementById('editCustomerPhone').value,
-                paymentMethod: document.getElementById('editPaymentMethod').value,
-                discount: discount,
-                discountAmount: discountAmount,
-                discountType: 'percent',
-                items: items,
-                subtotal: subtotal,
-                tax: tax,
-                total: afterDiscount + tax,
-                status: document.getElementById('editStatus').value
-            });
+            if (isPosOrder) {
+                const pos = await _getPos();
+                await pos.updateOrder(editingOrderId, {
+                    customerName: document.getElementById('editCustomerName').value,
+                    customerPhone: document.getElementById('editCustomerPhone').value,
+                    paymentMethod: document.getElementById('editPaymentMethod').value,
+                    discount: discount,
+                    items: items,
+                    subtotal: subtotal,
+                    tax: tax,
+                    total: total,
+                    status: document.getElementById('editStatus').value
+                });
+            } else {
+                await LuccaDB.Orders.updateOrder(editingOrderId, {
+                    customerName: document.getElementById('editCustomerName').value,
+                    customerPhone: document.getElementById('editCustomerPhone').value,
+                    paymentMethod: document.getElementById('editPaymentMethod').value,
+                    discount: discount,
+                    discountAmount: subtotal * discount / 100,
+                    discountType: 'percent',
+                    items: items,
+                    subtotal: subtotal,
+                    tax: tax,
+                    total: total,
+                    status: document.getElementById('editStatus').value
+                });
+            }
 
             alert('✅ تم حفظ التعديلات');
             document.getElementById('editOrderModal').classList.remove('show');
@@ -2531,11 +2790,28 @@
         let currentInvoiceOrder = null;
 
         function showInvoice(orderOrId) {
-            if (typeof orderOrId === 'number') {
-                LuccaDB.Orders.getAll().then(orders => {
-                    const order = orders.find(o => o.id === orderOrId);
+            if (typeof orderOrId === 'number' || (typeof orderOrId === 'string' && orderOrId.length > 10)) {
+                (async () => {
+                    let order = null;
+                    // Try POS engine first for UUIDs
+                    if (typeof orderOrId === 'string' && orderOrId.length > 10) {
+                        try {
+                            const pos = await _getPos();
+                            order = await pos.getOrder(orderOrId);
+                            if (!order) {
+                                const archived = await pos.getArchivedOrders();
+                                order = archived.find(o => o.id === orderOrId);
+                            }
+                        } catch(e) {}
+                    }
+                    // Fallback to old DB
+                    if (!order) {
+                        const orders = await LuccaDB.Orders.getAll();
+                        order = orders.find(o => o.id === orderOrId);
+                    }
                     if (order) showInvoice(order);
-                });
+                    else alert('الطلب غير موجود');
+                })();
                 return;
             }
             const order = orderOrId;
@@ -3007,11 +3283,20 @@
 
         async function loadKitchen() {
             const showAll = document.getElementById('kitchenAllOrders')?.checked || false;
-            const orders = await LuccaDB.Orders.getAll();
-            const pending = orders.filter(o => o.status === 'pending' || o.status === 'preparing' || (showAll && o.status === 'completed'));
+            let orders;
+            try {
+                const pos = await _getPos();
+                orders = await pos.getAllActiveOrders();
+            } catch(e) {
+                orders = await LuccaDB.Orders.getAll();
+            }
+
+            const kitchenStatuses = ['SENT_TO_KITCHEN', 'OPEN'];
+            if (showAll) kitchenStatuses.push('WAITING_PAYMENT', 'PAID');
+            const pending = orders.filter(o => kitchenStatuses.includes(o.status));
             const sorted = showAll
-                ? pending.sort((a, b) => (b.date || '').localeCompare(a.date || ''))
-                : pending.sort((a, b) => ((a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1)) || (b.date || '').localeCompare(a.date || ''));
+                ? pending.sort((a, b) => (b.updatedAt || b.date || '').localeCompare(a.updatedAt || a.date || ''))
+                : pending.sort((a, b) => ((a.status === 'SENT_TO_KITCHEN' || a.status === 'OPEN' ? 0 : 1) - (b.status === 'SENT_TO_KITCHEN' || b.status === 'OPEN' ? 0 : 1)) || (b.updatedAt || b.date || '').localeCompare(a.updatedAt || a.date || ''));
 
             // Detect new orders for sound
             if (kitchenPrevCount > 0 && sorted.length > kitchenPrevCount) {
@@ -3021,41 +3306,46 @@
 
             const container = document.getElementById('kitchenOrders');
             const countEl = document.getElementById('kitchenOrderCount');
-            if (countEl) countEl.textContent = sorted.filter(o => o.status === 'pending').length;
+            if (countEl) countEl.textContent = sorted.filter(o => o.status === 'SENT_TO_KITCHEN' || o.status === 'OPEN').length;
 
             if (!sorted.length) {
                 container.innerHTML = '<p style="color:var(--olive);padding:40px;text-align:center;grid-column:1/-1;">✅ لا توجد طلبات قيد التنفيذ</p>';
                 return;
             }
 
-            const statusMap = { 'pending': '⏳ جديد', 'preparing': '👨‍🍳 تحت التجهيز', 'completed': '✅ مكتمل' };
+            const statusMap = {
+                'OPEN': '⏳ جديد',
+                'SENT_TO_KITCHEN': '👨‍🍳 تحت التجهيز',
+                'WAITING_PAYMENT': '💰 طلب حساب',
+                'PAID': '✅ تم الدفع'
+            };
             container.innerHTML = sorted.map(order => {
-                const isNew = order.status === 'pending';
-                const isDone = order.status === 'completed';
-                const elapsed = order.date ? Math.floor((Date.now() - new Date(order.date).getTime()) / 60000) : 0;
+                const isNew = order.status === 'OPEN';
+                const isDone = order.status === 'PAID';
+                const elapsed = (order.updatedAt || order.createdAt) ? Math.floor((Date.now() - new Date(order.updatedAt || order.createdAt).getTime()) / 60000) : 0;
                 const timeStr = elapsed < 1 ? 'الآن' : elapsed < 60 ? `منذ ${elapsed} د` : `منذ ${Math.floor(elapsed/60)} س`;
                 return `
                     <div class="kitchen-card ${isNew ? 'new-order' : ''} ${isDone ? 'completed' : ''}">
                         <div class="k-header">
-                            <span class="k-number">#${order.id}</span>
+                            <span class="k-number">#${order.id ? order.id.toString().slice(0, 8) : '?'}</span>
                             <span class="k-table">🍽️ طاولة ${order.tableId || '?'}</span>
                         </div>
-                        <div class="k-time">🕐 ${timeStr} · ${new Date(order.date).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
+                        <div class="k-time">🕐 ${timeStr} · ${new Date(order.updatedAt || order.createdAt).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'})}</div>
                         <div class="k-items">
                             ${(order.items || []).map(item => `
                                 <div class="k-item">
-                                    <span>${item.name}${item.origin ? ' ('.concat(item.origin, ')') : ''}</span>
+                                    <span>${item.name}</span>
                                     <span class="qty">×${item.quantity}</span>
                                 </div>
                             `).join('')}
                         </div>
-                        ${order.customerNotes ? `<div class="k-note">📝 ${order.customerNotes}</div>` : ''}
+                        ${order.notes ? `<div class="k-note">📝 ${order.notes}</div>` : ''}
                         ${!isDone ? `
                         <div class="k-actions">
-                            ${order.status === 'pending' ? `
-                                <button class="btn-prep" onclick="kitchenUpdateStatus(${order.id}, 'preparing')">👨‍🍳 تحت التجهيز</button>
+                            ${order.status === 'OPEN' ? `
+                                <button class="btn-prep" onclick="kitchenUpdateStatus('${order.id}', 'SENT_TO_KITCHEN')">👨‍🍳 تحت التجهيز</button>
                             ` : `
-                                <button class="btn-ready" onclick="kitchenUpdateStatus(${order.id}, 'completed')">✅ جاهز</button>
+                                <button class="btn-ready" onclick="kitchenUpdateStatus('${order.id}', 'PAID')">✅ جاهز</button>
                             `}
                         </div>
                         ` : ''}
@@ -3065,7 +3355,17 @@
         }
 
         async function kitchenUpdateStatus(orderId, status) {
-            await LuccaDB.Orders.updateStatus(orderId, status);
+            try {
+                const pos = await _getPos();
+                if (orderId.length > 20) { // UUID format (new POS engine)
+                    if (status === 'SENT_TO_KITCHEN') await pos.sendToKitchen(orderId);
+                    else if (status === 'PAID') await pos.markPaid(orderId, 'cash');
+                } else {
+                    await LuccaDB.Orders.updateStatus(parseInt(orderId), status);
+                }
+            } catch(e) {
+                await LuccaDB.Orders.updateStatus(parseInt(orderId), status);
+            }
             loadKitchen();
             loadOrders();
             loadDashboard();
@@ -3095,6 +3395,7 @@
                     if (id === 'dashboard') { await loadDashboard(); if (window.Chart) await updateSalesChart(); }
                     if (id === 'tables') await loadTables();
                     if (id === 'orders') await loadOrders();
+                    if (id === 'kitchen') await loadKitchen();
                     if (id === 'customers') await loadCustomers();
                 }
             }, 10000);

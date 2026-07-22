@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucca Café — Talabat Menu (+18%)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        @page { size: A4; margin: 18mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            color: #1A0F0A;
+            background: #fff;
+            line-height: 1.6;
+            font-size: 13px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0 16px;
+            border-bottom: 3px solid #D4A85A;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-family: 'Cairo', sans-serif;
+            font-size: 2rem;
+            color: #3E2312;
+            letter-spacing: 0.05em;
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: #6D4C41;
+            margin-top: 4px;
+        }
+        .header .note {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .category {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+        .category-title {
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #3E2312;
+            background: linear-gradient(135deg, #F7F2EB, #EDE0D4);
+            padding: 7px 14px;
+            border-radius: 8px;
+            border-right: 4px solid #D4A85A;
+            margin-bottom: 6px;
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px 20px;
+        }
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 8px;
+            border-bottom: 1px dotted #E8E4DA;
+        }
+        .item-row:hover { background: #FAF8F5; }
+        .item-name {
+            font-size: 0.92rem;
+            color: #3E2312;
+            flex: 1;
+        }
+        .item-badge {
+            font-size: 0.65rem;
+            margin-right: 4px;
+        }
+        .item-price {
+            font-weight: 700;
+            color: #6D4C41;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+        .footer {
+            text-align: center;
+            padding: 16px 0 8px;
+            border-top: 2px solid #D4A85A;
+            margin-top: 20px;
+            color: #6D4C41;
+            font-size: 0.8rem;
+        }
+        @media print {
+            body { background: #fff; }
+            .no-print { display: none; }
+        }
+        .print-btn {
+            display: block;
+            margin: 16px auto;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, #3E2312, #6D4C41);
+            color: #F7F2EB;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(62,35,18,0.3);
+            transition: transform 0.2s;
+        }
+        .print-btn:hover { transform: translateY(-2px); }
+        .print-btn:active { transform: scale(0.97); }
+    </style>
+</head>
+<body>
+    <div class="no-print" style="text-align:center;padding:10px 0 0">
+        <button class="print-btn" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+    </div>
+
+    <div class="header">
+        <h1>☕ Lucca Café</h1>
+        <div class="subtitle">Specialty Coffee — قائمة طعام</div>
+        <div class="note">أسعار مع هامش ١٨٪ لمنصة طلبات (Talabat)</div>
+    </div>
+
+    <div id="menu"></div>
+
+    <div class="footer">
+        <p><b>Lucca Café</b> — Specialty Coffee Since 2024</p>
+        <p>مصر الجديدة — Talabat Menu</p>
+    </div>
+
+    <script>
+        const MARKUP = 1.18;
+        function mp(p) {
+            if (Array.isArray(p)) return p.map(v => Math.ceil(parseInt(v) * MARKUP / 5) * 5);
+            return Math.ceil(parseInt(p) * MARKUP / 5) * 5;
+        }
+        function pp(p) {
+            if (Array.isArray(p)) return p.map(v => mp(v)).join(' / ') + ' ج.م';
+            return mp(p) + ' ج.م';
+        }
+        const BADGE = { popular: '⭐', new: '🆕', specialty: '💎' };
+        const CATS = [
+            { icon: '✨', name: 'القهوة المختصة', id: 'specialty' },
+            { icon: '☕', name: 'القهوة', id: 'coffee' },
+            { icon: '🫖', name: 'المشروبات الساخنة', id: 'hot-drinks' },
+            { icon: '🧊', name: 'القهوة المثلجة', id: 'iced-coffee' },
+            { icon: '🥛', name: 'الميلك شيك', id: 'milkshake' },
+            { icon: '🍊', name: 'العصائر', id: 'juice' },
+            { icon: '🍰', name: 'الحلويات', id: 'desserts' },
+            { icon: '🥭', name: 'السموزي', id: 'smoothie' },
+            { icon: '🥤', name: 'المشروبات الغازية', id: 'soda' },
+            { icon: '☕', name: 'المشروبات الشتوية', id: 'winter' },
+            { icon: '🍳', name: 'الفطور', id: 'breakfast' },
+            { icon: '🍕', name: 'البيتزا', id: 'pizza' },
+            { icon: '🥫', name: 'المشروبات البيتي', id: 'soft-drinks' },
+            { icon: '➕', name: 'الإضافات', id: 'addons' }
+        ];
+        const DATA = {
+            specialty: [
+                { n: 'V60', en: 'V60', p: '80', b: 'popular' },
+                { n: 'آيس دريب', en: 'Iced Drip', p: '80', b: 'specialty' },
+                { n: 'قهوة اليوم', en: 'Coffee of the Day', p: '50' }
+            ],
+            coffee: [
+                { n: 'إسبريسو', en: 'Espresso', p: '45', b: 'popular' },
+                { n: 'إسبريسو دبل', en: 'Double Espresso', p: '70' },
+                { n: 'قهوة تركي', en: 'Turkish Coffee', p: '35' },
+                { n: 'ميكاتو', en: 'Piccolo', p: '50' },
+                { n: 'ميكاتو دبل', en: 'Double Piccolo', p: '80' },
+                { n: 'موكا', en: 'Mocha', p: '75' },
+                { n: 'وايت موكا', en: 'White Mocha', p: '75' },
+                { n: 'فلات وايت', en: 'Flat White', p: '80', b: 'specialty' },
+                { n: 'كورتادو', en: 'Cortado', p: '75' },
+                { n: 'كابتشينو', en: 'Cappuccino', p: '85', b: 'popular' },
+                { n: 'لاتيه', en: 'Latte', p: '85', b: 'popular' },
+                { n: 'قهوة بندق', en: 'Hazelnut Coffee', p: '70', b: 'popular' },
+                { n: 'قهوة فرنساوي', en: 'French Press', p: '65' },
+                { n: 'نسكافيه', en: 'Nescafe', p: '70' }
+            ],
+            'hot-drinks': [
+                { n: 'هوت شوكليت', en: 'Hot Chocolate', p: '70' },
+                { n: 'هوت شوكليت نوتيلا', en: 'Nutella Hot Chocolate', p: '80', b: 'specialty' },
+                { n: 'شاي', en: 'Ahmed Tea', p: '35' },
+                { n: 'شاي كرك', en: 'Ahmed Karak Tea', p: '50', b: 'specialty' },
+                { n: 'شاي أخضر', en: 'Ahmed Green Tea', p: '35' },
+                { n: 'ميكس أعشاب', en: 'Herbal Mix', p: '50' },
+                { n: 'شاي بالبن', en: 'Ahmed Milk Tea', p: '50' },
+                { n: 'هوت سيدر', en: 'Hot Cider', p: '50', b: 'new' },
+                { n: 'أعشاب', en: 'Herbal Tea', p: '35' }
+            ],
+            'iced-coffee': [
+                { n: 'آيس كوفي', en: 'Iced Coffee', p: '80', b: 'popular' },
+                { n: 'آيس لاتيه', en: 'Iced Latte', p: '85', b: 'popular' },
+                { n: 'آيس موكا', en: 'Iced Mocha', p: '90' },
+                { n: 'آيس وايت موكا', en: 'Iced White Mocha', p: '90' },
+                { n: 'فرابتشينو', en: 'Frappuccino', p: '95', b: 'specialty' },
+                { n: 'فرابيه', en: 'Frappe', p: ['85', '95'] }
+            ],
+            milkshake: [
+                { n: 'شوكولاتة', en: 'Chocolate', p: '90', b: 'popular' },
+                { n: 'فانيليا', en: 'Vanilla', p: '90' },
+                { n: 'فراولة', en: 'Strawberry', p: '90', b: 'popular' },
+                { n: 'مانجو', en: 'Mango', p: '90' },
+                { n: 'نوتيلا', en: 'Nutella', p: '100', b: 'specialty' },
+                { n: 'كراميل', en: 'Caramel', p: '90' },
+                { n: 'أوريو', en: 'Oreo', p: '110', b: 'new' },
+                { n: 'ميكس شوكليت', en: 'Chocolate Mix', p: '120', b: 'specialty' }
+            ],
+            juice: [
+                { n: 'مانجو', en: 'Mango', p: '90', b: 'popular' },
+                { n: 'فراولة', en: 'Strawberry', p: '80' },
+                { n: 'جوافة', en: 'Guava', p: '75', b: 'new' },
+                { n: 'كيوي', en: 'Kiwi', p: '90', b: 'new' },
+                { n: 'برتقال', en: 'Orange', p: '75', b: 'popular' },
+                { n: 'ليمون', en: 'Lemon', p: '70' },
+                { n: 'ليمون نعناع', en: 'Mint Lemon', p: '75', b: 'new' }
+            ],
+            desserts: [
+                { n: 'وافل كلاسيك', en: 'Classic Waffle', p: ['40', '80'], b: 'popular' },
+                { n: 'وافل ميكس شوكليت', en: 'Chocolate Waffle', p: '140', b: 'specialty' },
+                { n: 'وافل فورسيزون', en: 'Four Seasons Waffle', p: '120', b: 'specialty' },
+                { n: 'وافل بابل', en: 'Bubble Waffle', p: '85' },
+                { n: 'وافل فواكه', en: 'Fruit Waffle', p: '110' },
+                { n: 'سان سيباستيان', en: 'San Sebastian', p: '70', b: 'new' },
+                { n: 'مولتن', en: 'Molten Cake', p: '80', b: 'popular' },
+                { n: 'براونيز', en: 'Brownie', p: '80' },
+                { n: 'كوكيز', en: 'Cookies', p: '40' },
+                { n: 'أم علي مكسرات', en: 'Om Ali with Nuts', p: '90' },
+                { n: 'تشيز كيك', en: 'Cheesecake', p: '90', b: 'popular' },
+                { n: 'موس جالاكسي', en: 'Galaxy Mousse', p: '100', b: 'specialty' },
+                { n: 'بان كيك', en: 'Pancake', p: '80', b: 'new' },
+                { n: 'كريب رول', en: 'Crepe Roll', p: '85', b: 'new' },
+                { n: 'كريب فتوتشيني', en: 'Crepe Fettuccine', p: '95', b: 'new' }
+            ],
+            smoothie: [
+                { n: 'من اختيارك', en: 'Your Choice', p: '75', b: 'popular' }
+            ],
+            soda: [
+                { n: 'جيلي كولا', en: 'Jelly Cola', p: '75' },
+                { n: 'صن شاين', en: 'Sunshine', p: '75' },
+                { n: 'صن رايز', en: 'Sunrise', p: '75' },
+                { n: 'موهيتو', en: 'Mojito', p: '75', b: 'popular' },
+                { n: 'موهيتو فليفر', en: 'Mojito Flavor', p: '100', b: 'new' },
+                { n: 'شيري كولا', en: 'Cherry Cola', p: '75' },
+                { n: 'ميكس بيري', en: 'Mixed Berry', p: '80', b: 'new' },
+                { n: 'بلو بيري فراولة', en: 'Blueberry Strawberry', p: '75' },
+                { n: 'بينا كولادا', en: 'Pina Colada', p: '75' },
+                { n: 'باشون أناناس', en: 'Passion Pineapple', p: '75' },
+                { n: 'ريدبول فليفر', en: 'Redbull Flavor', p: '120', b: 'specialty' },
+                { n: 'ميكس لوكا', en: 'Lucca Mix', p: '80', b: 'specialty' }
+            ],
+            winter: [
+                { n: 'حمص الشام', en: 'Roasted Chickpeas', p: '80' },
+                { n: 'بليلة', en: 'Balila', p: '85' },
+                { n: 'سحلب', en: 'Sahlab', p: '85', b: 'popular' },
+                { n: 'سحلب نوتيلا', en: 'Nutella Sahlab', p: '90', b: 'specialty' }
+            ],
+            breakfast: [
+                { n: 'توست ميكس جبن', en: 'Mixed Cheese Toast', p: ['30', '60'] },
+                { n: 'توست بسطرمة', en: 'Pastrami Toast', p: ['35', '70'] },
+                { n: 'توست روزبيف', en: 'Roast Beef Toast', p: ['35', '70'] },
+                { n: 'توست رومي مدخن', en: 'Smoked Turkey Toast', p: ['35', '70'] },
+                { n: 'توست كفيار', en: 'Caviar Toast', p: ['50', '100'] },
+                { n: 'ساندويتش ميكس جبن', en: 'Mixed Cheese Sandwich', p: '25' },
+                { n: 'ساندويتش بسطرمة', en: 'Pastrami Sandwich', p: '30' }
+            ],
+            pizza: [
+                { n: 'بيتزا سي فود', en: 'Seafood Pizza', p: '250', b: 'specialty' },
+                { n: 'بيتزا سلامي', en: 'Salami Pizza', p: '170', b: 'popular' },
+                { n: 'بيتزا رانش', en: 'Ranch Pizza', p: '200' },
+                { n: 'بيتزا دجاج', en: 'Chicken Pizza', p: '200', b: 'popular' },
+                { n: 'بيتزا مارجريتا', en: 'Margherita Pizza', p: '150' },
+                { n: 'بيتزا تشيكن باربكيو', en: 'BBQ Chicken Pizza', p: '180' },
+                { n: 'بيتزا اسبايسي رانش', en: 'Spicy Ranch Pizza', p: '190' },
+                { n: 'بيتزا سوبر سوبريم', en: 'Super Supreme Pizza', p: '220', b: 'popular' }
+            ],
+            'soft-drinks': [
+                { n: 'بيبسي', en: 'Pepsi', p: '35' },
+                { n: 'تويست', en: 'Twist', p: '35' },
+                { n: 'فيروز', en: 'Firoz', p: '40' },
+                { n: 'ريدبول', en: 'Red Bull', p: '85' },
+                { n: 'بيريل', en: 'Birell', p: '50' },
+                { n: 'مياه', en: 'Water', p: '10' }
+            ],
+            addons: [
+                { n: 'جبن', en: 'Cheese', p: '15' },
+                { n: 'شيكولاتة', en: 'Chocolate', p: '15' },
+                { n: 'مكسرات', en: 'Nuts', p: '20' },
+                { n: 'نوتيلا', en: 'Nutella', p: '25' }
+            ]
+        };
+
+        const menuEl = document.getElementById('menu');
+        let html = '';
+        CATS.forEach(cat => {
+            const items = DATA[cat.id];
+            if (!items || !items.length) return;
+            html += '<div class="category">';
+            html += `<div class="category-title">${cat.icon} ${cat.name}</div>`;
+            html += '<div class="items-grid">';
+            items.forEach(item => {
+                const badge = item.b ? ` <span class="item-badge">${BADGE[item.b] || ''}</span>` : '';
+                html += `<div class="item-row">`;
+                html += `<span class="item-name">${item.n}${badge}</span>`;
+                html += `<span class="item-price">${pp(item.p)}</span>`;
+                html += `</div>`;
+            });
+            html += '</div></div>';
+        });
+        menuEl.innerHTML = html;
+    </script>
+</body>
+</html>
