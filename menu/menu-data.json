@@ -122,7 +122,17 @@
       { "n": "توست رومي مدخن", "en": "Smoked Turkey Toast", "p": ["35", "70"], "d": "نص / كامل", "de": "Half / Full" },
       { "n": "توست كفيار", "en": "Caviar Toast", "p": ["50", "100"], "d": "نص / كامل", "de": "Half / Full" },
       { "n": "ساندويتش ميكس جبن", "en": "Mixed Cheese Sandwich", "p": "25" },
-      { "n": "ساندويتش بسطرمة", "en": "Pastrami Sandwich", "p": "30" }
+      { "n": "ساندويتش بسطرمة", "en": "Pastrami Sandwich", "p": "30" },
+      { "n": "كرواسون سادة", "en": "Plain Croissant", "p": "65", "b": "new", "d": "كرواسون سادة طري وفريش", "de": "Fresh soft plain croissant" },
+      { "n": "كرواسون تركي", "en": "Turkish Croissant", "p": "85", "b": "popular", "d": "كرواسون محشي رومي تركي", "de": "Croissant stuffed with smoked turkey" },
+      { "n": "كرواسون روزبيف", "en": "Roast Beef Croissant", "p": "85", "d": "كرواسون محشي روزبيف", "de": "Croissant stuffed with roast beef" },
+      { "n": "كرواسون حلومي بستو", "en": "Halloumi Pesto Croissant", "p": "95", "b": "specialty", "d": "كرواسون محشي جبنة حلومي بصوص البيستو", "de": "Croissant with halloumi & pesto sauce" },
+      { "n": "شباتا تركي", "en": "Turkish Ciabatta", "p": "85", "d": "شباتا محشي رومي تركي", "de": "Ciabatta stuffed with smoked turkey" },
+      { "n": "شباتا روزبيف", "en": "Roast Beef Ciabatta", "p": "85", "d": "شباتا محشي روزبيف", "de": "Ciabatta stuffed with roast beef" },
+      { "n": "شباتا حلومي بستو", "en": "Halloumi Pesto Ciabatta", "p": "95", "b": "specialty", "d": "شباتا محشي جبنة حلومي بصوص البيستو", "de": "Ciabatta with halloumi & pesto sauce" },
+      { "n": "باجيت تركي", "en": "Turkish Baguette", "p": "85", "d": "باجيت محشي رومي تركي", "de": "Baguette stuffed with smoked turkey" },
+      { "n": "باجيت روزبيف", "en": "Roast Beef Baguette", "p": "85", "d": "باجيت محشي روزبيف", "de": "Baguette stuffed with roast beef" },
+      { "n": "باجيت حلومي بستو", "en": "Halloumi Pesto Baguette", "p": "95", "b": "specialty", "d": "باجيت محشي جبنة حلومي بصوص البيستو", "de": "Baguette with halloumi & pesto sauce" }
     ],
     "pizza": [
       { "n": "بيتزا سي فود", "en": "Seafood Pizza", "p": "250", "b": "specialty", "d": "بيتزا بالمأكولات البحرية", "de": "Seafood pizza" },

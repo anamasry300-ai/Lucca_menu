@@ -16,7 +16,17 @@ const menuData = [
             { name: 'توست كفيار (نصف)', price: 50, description: 'توست محمص بالكفيار', badge: 'specialty' },
             { name: 'توست كفيار (كامل)', price: 100, description: 'توست محمص بالكفيار', badge: 'specialty' },
             { name: 'ساندويتش ميكس جبن', price: 25, description: 'ساندويتش بميكس الجبنة' },
-            { name: 'ساندويتش بسطرمة', price: 30, description: 'ساندويتش بالبسطرمة' }
+            { name: 'ساندويتش بسطرمة', price: 30, description: 'ساندويتش بالبسطرمة' },
+            { name: 'كرواسون سادة', price: 65, description: 'كرواسون سادة طري وفريش', badge: 'new' },
+            { name: 'كرواسون تركي', price: 85, description: 'كرواسون محشي رومي تركي', badge: 'popular' },
+            { name: 'كرواسون روزبيف', price: 85, description: 'كرواسون محشي روزبيف' },
+            { name: 'كرواسون حلومي بستو', price: 95, description: 'كرواسون محشي جبنة حلومي بصوص البيستو', badge: 'specialty' },
+            { name: 'شباتا تركي', price: 85, description: 'شباتا محشي رومي تركي' },
+            { name: 'شباتا روزبيف', price: 85, description: 'شباتا محشي روزبيف' },
+            { name: 'شباتا حلومي بستو', price: 95, description: 'شباتا محشي جبنة حلومي بصوص البيستو', badge: 'specialty' },
+            { name: 'باجيت تركي', price: 85, description: 'باجيت محشي رومي تركي' },
+            { name: 'باجيت روزبيف', price: 85, description: 'باجيت محشي روزبيف' },
+            { name: 'باجيت حلومي بستو', price: 95, description: 'باجيت محشي جبنة حلومي بصوص البيستو', badge: 'specialty' }
         ]
     },
     {
