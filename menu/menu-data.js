@@ -151,7 +151,8 @@ const menuData = [
             { name: 'وافل بابل', price: 85, description: 'وافل بابل' },
             { name: 'وافل فواكه', price: 110, description: 'وافل بالفواكه الطازجة' },
             { name: 'تشيز كيك', price: 90, description: 'تشيز كيك كلاسيك', badge: 'popular' },
-            { name: 'موس جالاكسي', price: 100, description: 'موس جالاكسي بالشوكولاتة', badge: 'specialty' }
+            { name: 'موس جالاكسي', price: 100, description: 'موس جالاكسي بالشوكولاتة', badge: 'specialty' },
+            { name: 'ريد فالفيت', price: 95, description: 'ريد فالفيت بكريمة الجبنة', badge: 'new' }
         ]
     },
     {

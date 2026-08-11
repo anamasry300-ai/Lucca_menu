@@ -90,7 +90,8 @@
       { "n": "موس جالاكسي", "en": "Galaxy Mousse", "p": "100", "b": "specialty", "d": "موس جالاكسي بالشوكولاتة", "de": "Galaxy chocolate mousse" },
       { "n": "بان كيك", "en": "Pancake", "p": "80", "b": "new", "d": "بان كيك طري مع صوص الشوكولاتة", "de": "Soft pancake with chocolate sauce" },
       { "n": "كريب رول", "en": "Crepe Roll", "p": "85", "b": "new", "d": "كريب رول محشي كريمة", "de": "Cream-filled crepe roll" },
-      { "n": "كريب فتوتشيني", "en": "Crepe Fettuccine", "p": "95", "b": "new", "d": "كريب فتوتشيني بصوص الشوكولاتة", "de": "Fettuccine-style crepe with chocolate sauce" }
+      { "n": "كريب فتوتشيني", "en": "Crepe Fettuccine", "p": "95", "b": "new", "d": "كريب فتوتشيني بصوص الشوكولاتة", "de": "Fettuccine-style crepe with chocolate sauce" },
+      { "n": "ريد فالفيت", "en": "Red Velvet", "p": "95", "b": "new", "d": "ريد فالفيت بكريمة الجبنة", "de": "Red velvet cake with cream cheese" }
     ],
     "smoothie": [
       { "n": "من اختيارك", "en": "Your Choice", "p": "75", "b": "popular", "d": "سموزي طازج من اختيارك", "de": "Fresh smoothie of your choice" }
