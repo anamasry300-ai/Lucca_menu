@@ -648,7 +648,7 @@
     "determinism": "No timestamps, no randomness, no index-derived ids. Re-running tools/normalize-menu-data.js on an unchanged tree produces an identical file.",
     "generated_from": {
       "branch": "master",
-      "commit": "86a1c259eae1427fc8c573d6a4334309393256dd",
+      "commit": "1f6709e8f0ed91882654dd0017209ecc15d26918",
       "sources": [
         {
           "file": "menu/index.html",
