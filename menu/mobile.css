@@ -1,33 +1,32 @@
 ﻿/* Mobile Responsive (additive, CSS-only) */
 @media (max-width: 768px) {
-  .container { margin: 10px; border-radius: 12px; min-height: auto; }
-  .header { padding: 28px 16px 20px; }
-  .brand-logo { width: 160px; max-width: 70vw; }
-  .header .location { font-size: 0.8rem; margin-top: 10px; text-align: center; }
-  .header .contact-phone { font-size: 0.78rem; margin-top: 4px; }
-  .category-tabs { gap: 8px; padding: 10px 10px 6px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .container { margin: 8px; border-radius: 12px; }
+  .header { padding: 24px 12px 16px; }
+  .brand-logo { width: 150px; max-width: 68vw; }
+  .header .location { font-size: 0.78rem; text-align: center; }
+  .header .contact-phone { font-size: 0.75rem; }
+  .category-tabs { gap: 6px; padding: 8px 8px 4px; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .category-tabs::-webkit-scrollbar { display: none; }
-  .category-tab { padding: 8px 14px; font-size: 0.85rem; flex: 0 0 auto; scroll-snap-align: start; min-height: 44px; }
-  .menu-section { padding: 14px 10px 18px; }
-  .menu-grid { grid-template-columns: 1fr; gap: 12px; }
+  .category-tab { padding: 6px 12px; font-size: 0.82rem; flex: 0 0 auto; scroll-snap-align: start; min-height: 44px; border-radius: 999px; }
+  .menu-section { padding: 10px 8px 16px; }
+  .menu-grid { grid-template-columns: 1fr; gap: 10px; }
   .item { border-radius: 12px; }
   .item-img-wrap { aspect-ratio: 4/5; height: auto; }
-  .item-info { padding: 10px 12px 12px; }
-  .item-name-ar { font-size: 0.98rem; }
-  .item-name-en { font-size: 0.82rem; }
-  .item-desc { font-size: 0.75rem; line-height: 1.5; }
-  .item-price { font-size: 0.9rem; min-height: 44px; display: inline-flex; align-items: center; padding: 6px 10px; }
-  .back-to-top, .lang-toggle { width: 48px; height: 48px; }
-  .back-to-top { right: 14px; bottom: 14px; }
-  .lang-toggle { right: 70px; bottom: 14px; }
+  .item-info { padding: 10px; }
+  .item-name-ar { font-size: 0.96rem; line-height: 1.4; }
+  .item-name-en { font-size: 0.8rem; line-height: 1.3; }
+  .item-desc { font-size: 0.74rem; line-height: 1.5; }
+  .item-price { font-size: 0.88rem; min-height: 44px; padding: 6px 10px; }
+  .back-to-top, .lang-toggle { width: 44px; height: 44px; }
+  .back-to-top { right: 12px; bottom: 12px; }
+  .lang-toggle { right: 64px; bottom: 12px; }
 }
 @media (max-width: 480px) {
-  .container { margin: 6px; border-radius: 10px; }
-  .header { padding: 22px 12px 16px; }
-  .brand-logo { width: 140px; max-width: 65vw; }
-  .category-tabs { padding: 8px 8px 4px; gap: 6px; }
-  .category-tab { padding: 7px 12px; font-size: 0.82rem; }
-  .menu-section { padding: 10px 8px 14px; }
-  .menu-grid { gap: 10px; }
-  .item-info { padding: 9px 10px 10px; }
+  .container { margin: 4px; border-radius: 10px; }
+  .header { padding: 20px 10px 14px; }
+  .brand-logo { width: 130px; max-width: 64vw; }
+  .category-tabs { gap: 5px; }
+  .category-tab { font-size: 0.8rem; padding: 6px 10px; }
+  .menu-grid { gap: 8px; }
+  .item-info { padding: 8px 10px; }
 }
