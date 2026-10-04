@@ -1,0 +1,55 @@
+{
+  "": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["meta", "categories", "products"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["schema_version"],
+      "additionalProperties": true,
+      "properties": { "schema_version": { "type": "number" } }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name_ar", "name_en", "slug", "sort_order", "visible", "is_active"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type":"string"},
+          "name_ar": {"type":["string","null"]},
+          "name_en": {"type":["string","null"]},
+          "slug": {"type":"string"},
+          "sort_order": {"type":"integer"},
+          "visible": {"type":"boolean"},
+          "is_active": {"type":"boolean"}
+        }
+      }
+    },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id","name_ar","name_en","category_id","price","available","visible","is_active","sort_order"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type":"string"},
+          "name_ar": {"type":["string","null"]},
+          "name_en": {"type":["string","null"]},
+          "category_id": {"type":"string"},
+          "price": {"type":"number"},
+          "price_variants": {"type":["null","object"]},
+          "image": {"type":["string","null"]},
+          "image_status": {"type":"string","enum":["resolved","mismatched-filename","missing"]},
+          "calories": {},
+          "available": {"type":"boolean"},
+          "visible": {"type":"boolean"},
+          "is_active": {"type":"boolean"},
+          "sort_order": {"type":"integer"},
+          "slug": {"type":["string","null"]}
+        }
+      }
+    }
+  }
+}
