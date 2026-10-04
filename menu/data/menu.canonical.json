@@ -1,0 +1,3987 @@
+{
+  "categories": [
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 3,
+          "JS": 5,
+          "JSON": 3
+        },
+        "source_ids": {
+          "DATA": "specialty",
+          "JS": "specialty",
+          "JSON": "specialty"
+        }
+      },
+      "icon": "<svg viewBox=\"0 0 24 24\" style=\"width:1em;height:1em;display:block;\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"><path d=\"M4 21 12 3 20 21\"/><path d=\"M20 10q3.5 0 3.5 4q0 4-3.5 4\"/><path d=\"M7 15q2.5-2 5 0q2.5 2 5 0\" stroke-width=\"1\" opacity=\".5\"/><path d=\"M6.5 18q2.5-2 5.5 0q3 2 5.5 0\" stroke-width=\"1\" opacity=\".5\"/><ellipse cx=\"12\" cy=\"22.2\" rx=\"1.2\" ry=\".7\" fill=\"currentColor\" stroke=\"none\"/></svg>",
+      "id": "specialty",
+      "is_active": true,
+      "name_ar": "ط§ظ„ظ‚ظ‡ظˆط© ط§ظ„ظ…ط®طھطµط©",
+      "name_en": "Specialty Coffee",
+      "slug": "specialty-coffee",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 14,
+          "JS": 16,
+          "JSON": 14
+        },
+        "source_ids": {
+          "DATA": "coffee",
+          "JS": "coffee",
+          "JSON": "coffee"
+        }
+      },
+      "icon": "âک•",
+      "id": "coffee",
+      "is_active": true,
+      "name_ar": "ظ‚ط³ظ… ط§ظ„ظ‚ظ‡ظˆط©",
+      "name_en": "Coffee",
+      "slug": "coffee",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 9,
+          "JS": 7,
+          "JSON": 9
+        },
+        "source_ids": {
+          "DATA": "hot-drinks",
+          "JS": "hot",
+          "JSON": "hot-drinks"
+        }
+      },
+      "icon": "ًں«–",
+      "id": "hot-drinks",
+      "is_active": true,
+      "name_ar": "ظ…ط´ط±ظˆط¨ط§طھ ط³ط§ط®ظ†ط©",
+      "name_en": "Hot Drinks",
+      "slug": "hot-drinks",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 6,
+          "JS": 7,
+          "JSON": 6
+        },
+        "source_ids": {
+          "DATA": "iced-coffee",
+          "JS": "iced",
+          "JSON": "iced-coffee"
+        }
+      },
+      "icon": "ًں§‹",
+      "id": "iced-coffee",
+      "is_active": true,
+      "name_ar": "ظ‚ظ‡ظˆط© ظ…ط«ظ„ط¬ط©",
+      "name_en": "Iced Coffee",
+      "slug": "iced-coffee",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 8,
+          "JS": 8,
+          "JSON": 8
+        },
+        "source_ids": {
+          "DATA": "milkshake",
+          "JS": "milkshake",
+          "JSON": "milkshake"
+        }
+      },
+      "icon": "ًں¥›",
+      "id": "milkshake",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ",
+      "name_en": "Milkshake",
+      "slug": "milkshake",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 7,
+          "JS": 7,
+          "JSON": 7
+        },
+        "source_ids": {
+          "DATA": "juice",
+          "JS": "juice",
+          "JSON": "juice"
+        }
+      },
+      "icon": "ًںچٹ",
+      "id": "juice",
+      "is_active": true,
+      "name_ar": "ط¹طµط§ط¦ط± ظپط±ظٹط´",
+      "name_en": "Fresh Juice",
+      "slug": "fresh-juice",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 16,
+          "JS": 12,
+          "JSON": 16
+        },
+        "source_ids": {
+          "DATA": "desserts",
+          "JS": "desserts",
+          "JSON": "desserts"
+        }
+      },
+      "icon": "ًںچ°",
+      "id": "desserts",
+      "is_active": true,
+      "name_ar": "ط­ظ„ظˆظٹط§طھ",
+      "name_en": "Desserts",
+      "slug": "desserts",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 1,
+          "JS": 1,
+          "JSON": 1
+        },
+        "source_ids": {
+          "DATA": "smoothie",
+          "JS": "smoothie",
+          "JSON": "smoothie"
+        }
+      },
+      "icon": "ًں¥­",
+      "id": "smoothie",
+      "is_active": true,
+      "name_ar": "ط³ظ…ظˆط²ظٹ",
+      "name_en": "Smoothie",
+      "slug": "smoothie",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 12,
+          "JS": 12,
+          "JSON": 12
+        },
+        "source_ids": {
+          "DATA": "soda",
+          "JS": "soda",
+          "JSON": "soda"
+        }
+      },
+      "icon": "ًں¥¤",
+      "id": "soda",
+      "is_active": true,
+      "name_ar": "طµظˆط¯ط§",
+      "name_en": "Soda",
+      "slug": "soda",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 4,
+          "JS": 9,
+          "JSON": 4
+        },
+        "source_ids": {
+          "DATA": "winter",
+          "JS": "winter",
+          "JSON": "winter"
+        }
+      },
+      "icon": "âک•",
+      "id": "winter",
+      "is_active": true,
+      "name_ar": "ط£طµظ†ط§ظپ ط´طھظˆظٹط©",
+      "name_en": "Winter Specials",
+      "slug": "winter-specials",
+      "sort_order": 9
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 17,
+          "JS": 22,
+          "JSON": 17
+        },
+        "source_ids": {
+          "DATA": "breakfast",
+          "JS": "breakfast",
+          "JSON": "breakfast"
+        }
+      },
+      "icon": "ًںچ³",
+      "id": "breakfast",
+      "is_active": true,
+      "name_ar": "ظپط·ط§ط±",
+      "name_en": "Breakfast",
+      "slug": "breakfast",
+      "sort_order": 10
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 8,
+          "JS": 8,
+          "JSON": 8
+        },
+        "source_ids": {
+          "DATA": "pizza",
+          "JS": "pizza",
+          "JSON": "pizza"
+        }
+      },
+      "icon": "ًںچ•",
+      "id": "pizza",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§",
+      "name_en": "Pizza",
+      "slug": "pizza",
+      "sort_order": 11
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 6,
+          "JS": 8,
+          "JSON": 6
+        },
+        "source_ids": {
+          "DATA": "soft-drinks",
+          "JS": "cans",
+          "JSON": "soft-drinks"
+        }
+      },
+      "icon": "ًں¥«",
+      "id": "soft-drinks",
+      "is_active": true,
+      "name_ar": "ظ…ط´ط±ظˆط¨ط§طھ ط؛ط§ط²ظٹط©",
+      "name_en": "Soft Drinks",
+      "slug": "soft-drinks",
+      "sort_order": 12
+    },
+    {
+      "_legacy": {
+        "counts": {
+          "DATA": 6,
+          "JS": 6,
+          "JSON": 6
+        },
+        "source_ids": {
+          "DATA": "addons",
+          "JS": "addons",
+          "JSON": "addons"
+        }
+      },
+      "icon": "â‍•",
+      "id": "addons",
+      "is_active": true,
+      "name_ar": "ط¥ط¶ط§ظپط§طھ",
+      "name_en": "Add-ons",
+      "slug": "add-ons",
+      "sort_order": 13
+    }
+  ],
+  "conflicts": [
+    {
+      "detail": "expected images/specialty/v60.jpg but on disk specialty/v60 (2).jpg — enable-time fix required, file NOT renamed in Phase 1",
+      "kind": "image_filename_mismatch",
+      "severity": "high",
+      "target": "specialty/V60"
+    },
+    {
+      "detail": "no file for images/breakfast/halloumi-pesto-baguette.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Halloumi Pesto Baguette"
+    },
+    {
+      "detail": "no file for images/breakfast/halloumi-pesto-ciabatta.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Halloumi Pesto Ciabatta"
+    },
+    {
+      "detail": "no file for images/breakfast/halloumi-pesto-croissant.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Halloumi Pesto Croissant"
+    },
+    {
+      "detail": "no file for images/breakfast/plain-croissant.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Plain Croissant"
+    },
+    {
+      "detail": "no file for images/breakfast/roast-beef-baguette.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Roast Beef Baguette"
+    },
+    {
+      "detail": "no file for images/breakfast/roast-beef-ciabatta.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Roast Beef Ciabatta"
+    },
+    {
+      "detail": "no file for images/breakfast/roast-beef-croissant.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Roast Beef Croissant"
+    },
+    {
+      "detail": "no file for images/breakfast/turkish-baguette.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Turkish Baguette"
+    },
+    {
+      "detail": "no file for images/breakfast/turkish-ciabatta.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Turkish Ciabatta"
+    },
+    {
+      "detail": "no file for images/breakfast/turkish-croissant.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "breakfast/Turkish Croissant"
+    },
+    {
+      "detail": "no file for images/coffee/double-espresso.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "coffee/Double Espresso"
+    },
+    {
+      "detail": "no file for images/coffee/french-press.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "coffee/French Press"
+    },
+    {
+      "detail": "no file for images/coffee/turkish-coffee.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "coffee/Turkish Coffee"
+    },
+    {
+      "detail": "no file for images/coffee/white-mocha.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "coffee/White Mocha"
+    },
+    {
+      "detail": "no file for images/desserts/red-velvet.jpg",
+      "kind": "image_missing",
+      "severity": "medium",
+      "target": "desserts/Red Velvet"
+    },
+    {
+      "detail": "prices [40, 80] have no size label in menu-data.js",
+      "kind": "price_variant_label_unknown",
+      "severity": "medium",
+      "target": "desserts/Classic Waffle"
+    },
+    {
+      "detail": "prices [85, 95] have no size label in menu-data.js",
+      "kind": "price_variant_label_unknown",
+      "severity": "medium",
+      "target": "iced-coffee/Frappe"
+    },
+    {
+      "detail": "present in DATA CALORIES (0) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "addons||Card"
+    },
+    {
+      "detail": "present in DATA CALORIES (0) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "addons||Table"
+    },
+    {
+      "detail": "present in DATA CALORIES (500) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Halloumi Pesto Baguette"
+    },
+    {
+      "detail": "present in DATA CALORIES (520) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Halloumi Pesto Ciabatta"
+    },
+    {
+      "detail": "present in DATA CALORIES (480) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Halloumi Pesto Croissant"
+    },
+    {
+      "detail": "present in DATA CALORIES (280) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Plain Croissant"
+    },
+    {
+      "detail": "present in DATA CALORIES (450) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Roast Beef Baguette"
+    },
+    {
+      "detail": "present in DATA CALORIES (470) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Roast Beef Ciabatta"
+    },
+    {
+      "detail": "present in DATA CALORIES (430) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Roast Beef Croissant"
+    },
+    {
+      "detail": "present in DATA CALORIES (440) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Turkish Baguette"
+    },
+    {
+      "detail": "present in DATA CALORIES (460) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Turkish Ciabatta"
+    },
+    {
+      "detail": "present in DATA CALORIES (420) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "breakfast||Turkish Croissant"
+    },
+    {
+      "detail": "present in DATA CALORIES (480) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "desserts||Red Velvet"
+    },
+    {
+      "detail": "present in DATA CALORIES (50) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Birell"
+    },
+    {
+      "detail": "present in DATA CALORIES (100) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Firoz"
+    },
+    {
+      "detail": "present in DATA CALORIES (150) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Pepsi"
+    },
+    {
+      "detail": "present in DATA CALORIES (110) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Red Bull"
+    },
+    {
+      "detail": "present in DATA CALORIES (150) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Twist"
+    },
+    {
+      "detail": "present in DATA CALORIES (0) but absent from menu-data.json",
+      "kind": "calories_missing_in_json",
+      "severity": "low",
+      "target": "soft-drinks||Water"
+    },
+    {
+      "detail": "DATA=50 JSON=70",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "addons||Cheese"
+    },
+    {
+      "detail": "DATA=70 JSON=130",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "addons||Chocolate"
+    },
+    {
+      "detail": "DATA=100 JSON=180",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "addons||Nuts"
+    },
+    {
+      "detail": "DATA=410 JSON=400",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "breakfast||Pastrami Sandwich"
+    },
+    {
+      "detail": "DATA=720 JSON=590",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||BBQ Chicken Pizza"
+    },
+    {
+      "detail": "DATA=670 JSON=580",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Chicken Pizza"
+    },
+    {
+      "detail": "DATA=620 JSON=510",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Margherita Pizza"
+    },
+    {
+      "detail": "DATA=770 JSON=640",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Ranch Pizza"
+    },
+    {
+      "detail": "DATA=720 JSON=620",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Salami Pizza"
+    },
+    {
+      "detail": "DATA=820 JSON=550",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Seafood Pizza"
+    },
+    {
+      "detail": "DATA=740 JSON=630",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Spicy Ranch Pizza"
+    },
+    {
+      "detail": "DATA=820 JSON=680",
+      "kind": "calories_value_mismatch",
+      "severity": "low",
+      "target": "pizza||Super Supreme Pizza"
+    },
+    {
+      "detail": "DATA=17 JSON=17 JS=22",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "breakfast"
+    },
+    {
+      "detail": "DATA=14 JSON=14 JS=16",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "coffee"
+    },
+    {
+      "detail": "DATA=16 JSON=16 JS=12",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "desserts"
+    },
+    {
+      "detail": "DATA=9 JSON=9 JS=7",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "hot-drinks"
+    },
+    {
+      "detail": "DATA=6 JSON=6 JS=7",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "iced-coffee"
+    },
+    {
+      "detail": "DATA=6 JSON=6 JS=8",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "soft-drinks"
+    },
+    {
+      "detail": "DATA=3 JSON=3 JS=5",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "specialty"
+    },
+    {
+      "detail": "DATA=4 JSON=4 JS=9",
+      "kind": "category_count_mismatch",
+      "severity": "info",
+      "target": "winter"
+    }
+  ],
+  "meta": {
+    "counts": {
+      "categories": 14,
+      "products": 117
+    },
+    "currency": "EGP",
+    "determinism": "No timestamps, no randomness, no index-derived ids. Re-running tools/normalize-menu-data.js on an unchanged tree produces an identical file.",
+    "generated_from": {
+      "branch": "master",
+      "commit": "86a1c259eae1427fc8c573d6a4334309393256dd",
+      "sources": [
+        {
+          "file": "menu/index.html",
+          "role": "authoritative_live",
+          "symbols": [
+            "DATA",
+            "CATEGORIES",
+            "CALORIES",
+            "_LANG.catNames"
+          ]
+        },
+        {
+          "file": "menu/menu-data.json",
+          "role": "stale_snapshot"
+        },
+        {
+          "file": "menu/menu-data.js",
+          "role": "legacy_pos_schema"
+        }
+      ]
+    },
+    "migration_id": "phase1-canonical-v1",
+    "schema_version": 1
+  },
+  "products": [
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "specialty||V60",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 8,
+      "category_id": "specialty",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ظ…ظپظ„طھط±ط© ظٹط¯ظˆظٹط§ظ‹ ط¨ط·ط±ظٹظ‚ط© V60",
+      "description_en": "Hand-poured V60 filter coffee",
+      "id": "specialty-v60",
+      "image": "images/specialty/v60.jpg",
+      "image_actual_file": "v60 (2).jpg",
+      "image_status": "mismatched-filename",
+      "is_active": true,
+      "name_ar": "V60",
+      "name_en": "V60",
+      "origins": [
+        "ًں‡ھًں‡¹ ط¥ط«ظٹظˆط¨ظٹ",
+        "ًں‡§ًں‡· ط¨ط±ط§ط²ظٹظ„ظٹ",
+        "ًں‡®ًں‡³ ظ‡ظ†ط¯ظٹ",
+        "ًں‡¨ًں‡´ ظƒظˆظ„ظˆظ…ط¨ظٹ"
+      ],
+      "price": 80,
+      "price_variants": null,
+      "slug": "specialty-v60",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "specialty||Iced Drip",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 8,
+      "category_id": "specialty",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ظ…ظپظ„طھط±ط© ظ…ط«ظ„ط¬ط© â€” ظ†ظپط³ ط·ط±ظٹظ‚ط© V60 ط¨ظ†ظ‚ط·ط±ظ‡ط§ ط¹ظ„ظ‰ ط«ظ„ط¬ ط¹ط´ط§ظ† طھط·ظ„ط¹ ظ…ظ†ط¹ط´ط©",
+      "description_en": "Iced filtered coffee â€” same V60 pour-over method dripped over ice for a refreshing cup",
+      "id": "specialty-iced-drip",
+      "image": "images/specialty/iced-drip.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¢ظٹط³ ط¯ط±ظٹط¨",
+      "name_en": "Iced Drip",
+      "origins": [
+        "ًں‡ھًں‡¹ ط¥ط«ظٹظˆط¨ظٹ",
+        "ًں‡§ًں‡· ط¨ط±ط§ط²ظٹظ„ظٹ",
+        "ًں‡®ًں‡³ ظ‡ظ†ط¯ظٹ",
+        "ًں‡¨ًں‡´ ظƒظˆظ„ظˆظ…ط¨ظٹ"
+      ],
+      "price": 80,
+      "price_variants": null,
+      "slug": "specialty-iced-drip",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "specialty||Coffee of the Day",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 8,
+      "category_id": "specialty",
+      "currency": "EGP",
+      "description_ar": "طھطµظپظٹط© ظٹظˆظ…ظٹط© ظ…ظ† ط­ط¨ظˆط¨ ظ…ط®طھط§ط±ط©",
+      "description_en": "Daily brew from selected beans",
+      "id": "specialty-coffee-of-the-day",
+      "image": "images/specialty/coffee-of-the-day.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ‚ظ‡ظˆط© ط§ظ„ظٹظˆظ…",
+      "name_en": "Coffee of the Day",
+      "origins": [
+        "ًں‡ھًں‡¹ ط¥ط«ظٹظˆط¨ظٹ",
+        "ًں‡§ًں‡· ط¨ط±ط§ط²ظٹظ„ظٹ",
+        "ًں‡®ًں‡³ ظ‡ظ†ط¯ظٹ",
+        "ًں‡¨ًں‡´ ظƒظˆظ„ظˆظ…ط¨ظٹ"
+      ],
+      "price": 50,
+      "price_variants": null,
+      "slug": "specialty-coffee-of-the-day",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "coffee||Espresso",
+        "price_raw": "45",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 5,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¬ط±ط¹ط© ط¥ط³ط¨ط±ظٹط³ظˆ ظ…ط±ظƒط²ط©",
+      "description_en": "Concentrated espresso shot",
+      "id": "coffee-espresso",
+      "image": "images/coffee/espresso.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ",
+      "name_en": "Espresso",
+      "origins": null,
+      "price": 45,
+      "price_variants": null,
+      "slug": "coffee-espresso",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "coffee||Double Espresso",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 10,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¬ط±ط¹ط© ظ…ط²ط¯ظˆط¬ط© ظ…ظ† ط§ظ„ط¥ط³ط¨ط±ظٹط³ظˆ",
+      "description_en": "Double shot of rich espresso",
+      "id": "coffee-double-espresso",
+      "image": "images/coffee/double-espresso.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ ط¯ط¨ظ„",
+      "name_en": "Double Espresso",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "coffee-double-espresso",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "coffee||Turkish Coffee",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 15,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© طھط±ظƒظٹط© طھظ‚ظ„ظٹط¯ظٹط©",
+      "description_en": "Traditional Turkish coffee",
+      "id": "coffee-turkish-coffee",
+      "image": "images/coffee/turkish-coffee.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظ‚ظ‡ظˆط© طھط±ظƒظٹ",
+      "name_en": "Turkish Coffee",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "coffee-turkish-coffee",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "coffee||Piccolo",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 35,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ط·ط±ط© ط­ظ„ظٹط¨ ط¹ظ„ظ‰ ط¬ط±ط¹ط© ط¥ط³ط¨ط±ظٹط³ظˆ",
+      "description_en": "Drop of milk on espresso",
+      "id": "coffee-piccolo",
+      "image": "images/coffee/piccolo.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط§طھظˆ",
+      "name_en": "Piccolo",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "coffee-piccolo",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "coffee||Double Piccolo",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 55,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ ط¯ط¨ظ„ ظ…ط¹ ظ„ظ…ط³ط© ط­ظ„ظٹط¨",
+      "description_en": "Double espresso with a touch of milk",
+      "id": "coffee-double-piccolo",
+      "image": "images/coffee/double-piccolo.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط§طھظˆ ط¯ط¨ظ„",
+      "name_en": "Double Piccolo",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "coffee-double-piccolo",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "coffee||Mocha",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 250,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ ظ…ط¹ ط´ظˆظƒظˆظ„ط§طھط© ظˆط­ظ„ظٹط¨",
+      "description_en": "Espresso with dark chocolate & steamed milk",
+      "id": "coffee-mocha",
+      "image": "images/coffee/mocha.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظˆظƒط§",
+      "name_en": "Mocha",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "coffee-mocha",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "coffee||White Mocha",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 280,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ…ظˆظƒط§ ظ†ط§ط¹ظ…ط© ظ…ط¹ ط­ظ„ظٹط¨",
+      "description_en": "Smooth mocha with white chocolate",
+      "id": "coffee-white-mocha",
+      "image": "images/coffee/white-mocha.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظˆط§ظٹطھ ظ…ظˆظƒط§",
+      "name_en": "White Mocha",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "coffee-white-mocha",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "coffee||Flat White",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 130,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ ظ…ط¹ ط·ط¨ظ‚ط© ط±ظ‚ظٹظ‚ط© ظ…ظ† ط§ظ„ط­ظ„ظٹط¨",
+      "description_en": "Espresso with thin velvety milk layer",
+      "id": "coffee-flat-white",
+      "image": "images/coffee/flat-white.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپظ„ط§طھ ظˆط§ظٹطھ",
+      "name_en": "Flat White",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "coffee-flat-white",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 8,
+        "calories_key": "coffee||Cortado",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 85,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ†ط³ط¨ط© ظ…طھظˆط§ط²ظ†ط© ط¨ظٹظ† ط§ظ„ط¥ط³ط¨ط±ظٹط³ظˆ ظˆط§ظ„ط­ظ„ظٹط¨",
+      "description_en": "Balanced espresso with warm milk",
+      "id": "coffee-cortado",
+      "image": "images/coffee/cortado.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒظˆط±طھط§ط¯ظˆ",
+      "name_en": "Cortado",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "coffee-cortado",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "array_index": 9,
+        "calories_key": "coffee||Cappuccino",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 130,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ط¥ط³ط¨ط±ظٹط³ظˆ ظ…ط¹ ط±ط؛ظˆط© ظƒط«ظٹظپط©",
+      "description_en": "Espresso with thick foam & steamed milk",
+      "id": "coffee-cappuccino",
+      "image": "images/coffee/cappuccino.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒط§ط¨طھط´ظٹظ†ظˆ",
+      "name_en": "Cappuccino",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "coffee-cappuccino",
+      "sort_order": 9
+    },
+    {
+      "_legacy": {
+        "array_index": 10,
+        "calories_key": "coffee||Latte",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 180,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ط¥ط³ط¨ط±ظٹط³ظˆ ظ…ط¹ ط­ظ„ظٹط¨ ظ…ط®ظ…ظ„ظٹ",
+      "description_en": "Espresso with velvety steamed milk",
+      "id": "coffee-latte",
+      "image": "images/coffee/latte.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ„ط§طھظٹظ‡",
+      "name_en": "Latte",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "coffee-latte",
+      "sort_order": 10
+    },
+    {
+      "_legacy": {
+        "array_index": 11,
+        "calories_key": "coffee||Hazelnut Coffee",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 160,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ط¨ظ†ظƒظ‡ط© ط§ظ„ط¨ظ†ط¯ظ‚ ط§ظ„ظ…ط­ظ…طµ",
+      "description_en": "Coffee with roasted hazelnut flavor",
+      "id": "coffee-hazelnut-coffee",
+      "image": "images/coffee/hazelnut-coffee.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ‚ظ‡ظˆط© ط¨ظ†ط¯ظ‚",
+      "name_en": "Hazelnut Coffee",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "coffee-hazelnut-coffee",
+      "sort_order": 11
+    },
+    {
+      "_legacy": {
+        "array_index": 12,
+        "calories_key": "coffee||French Press",
+        "price_raw": "65",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 10,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ظپط±ظ†ط³ظٹ ط¨ط±ط³ ط؛ظ†ظٹط©",
+      "description_en": "Rich French press coffee",
+      "id": "coffee-french-press",
+      "image": "images/coffee/french-press.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظ‚ظ‡ظˆط© ظپط±ظ†ط³ط§ظˆظٹ",
+      "name_en": "French Press",
+      "origins": null,
+      "price": 65,
+      "price_variants": null,
+      "slug": "coffee-french-press",
+      "sort_order": 12
+    },
+    {
+      "_legacy": {
+        "array_index": 13,
+        "calories_key": "coffee||Nescafe",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 80,
+      "category_id": "coffee",
+      "currency": "EGP",
+      "description_ar": "ظ…ط´ط±ظˆط¨ ظ‚ظ‡ظˆط© ط³ط±ظٹط¹ ط§ظ„طھط­ط¶ظٹط±",
+      "description_en": "Instant coffee drink",
+      "id": "coffee-nescafe",
+      "image": "images/coffee/nescafe.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ†ط³ظƒط§ظپظٹظ‡",
+      "name_en": "Nescafe",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "coffee-nescafe",
+      "sort_order": 13
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "hot-drinks||Hot Chocolate",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 210,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ظ…ط´ط±ظˆط¨ ط´ظˆظƒظˆظ„ط§طھط© ط¯ط§ظپط¦",
+      "description_en": "Warm rich chocolate drink",
+      "id": "hot-drinks-hot-chocolate",
+      "image": "images/hot-drinks/hot-chocolate.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ‡ظˆطھ ط´ظˆظƒظ„ظٹطھ",
+      "name_en": "Hot Chocolate",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "hot-drinks-hot-chocolate",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "hot-drinks||Nutella Hot Chocolate",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 360,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط´ظˆظƒظˆظ„ط§طھط© ط³ط§ط®ظ†ط© ظ…ط¹ ظ†ظˆطھظٹظ„ط§",
+      "description_en": "Hot chocolate with Nutella",
+      "id": "hot-drinks-nutella-hot-chocolate",
+      "image": "images/hot-drinks/nutella-hot-chocolate.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ‡ظˆطھ ط´ظˆظƒظ„ظٹطھ ظ†ظˆطھظٹظ„ط§",
+      "name_en": "Nutella Hot Chocolate",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "hot-drinks-nutella-hot-chocolate",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "hot-drinks||Ahmed Tea",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 5,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط´ط§ظٹ ط£ط­ظ…ط¯ ط§ظ„ط£ط³ظˆط¯ ط§ظ„ط·ط§ط²ط¬",
+      "description_en": "Fresh Ahmed black tea",
+      "id": "hot-drinks-ahmed-tea",
+      "image": "images/hot-drinks/ahmed-tea.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ط§ظٹ",
+      "name_en": "Ahmed Tea",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "hot-drinks-ahmed-tea",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "hot-drinks||Ahmed Karak Tea",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 85,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط´ط§ظٹ ط£ط­ظ…ط¯ ظƒط±ظƒ ظ‡ظ†ط¯ظٹ",
+      "description_en": "Ahmed Indian spiced Karak tea",
+      "id": "hot-drinks-ahmed-karak-tea",
+      "image": "images/hot-drinks/ahmed-karak-tea.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ط§ظٹ ظƒط±ظƒ",
+      "name_en": "Ahmed Karak Tea",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "hot-drinks-ahmed-karak-tea",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "hot-drinks||Ahmed Green Tea",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 5,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط´ط§ظٹ ط£ط­ظ…ط¯ ط§ظ„ط£ط®ط¶ط± ط§ظ„ط·ط§ط²ط¬",
+      "description_en": "Fresh Ahmed green tea",
+      "id": "hot-drinks-ahmed-green-tea",
+      "image": "images/hot-drinks/ahmed-green-tea.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ط§ظٹ ط£ط®ط¶ط±",
+      "name_en": "Ahmed Green Tea",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "hot-drinks-ahmed-green-tea",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "hot-drinks||Herbal Mix",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 5,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط®ظ„ط·ط© ط£ط¹ط´ط§ط¨ ظ…طھظ†ظˆط¹ط©",
+      "description_en": "Mixed herbal blend",
+      "id": "hot-drinks-herbal-mix",
+      "image": "images/hot-drinks/herbal-mix.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط³ ط£ط¹ط´ط§ط¨",
+      "name_en": "Herbal Mix",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "hot-drinks-herbal-mix",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "hot-drinks||Ahmed Milk Tea",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 65,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ط´ط§ظٹ ط£ط­ظ…ط¯ ظ…ط¹ ظ„ط¨ظ†",
+      "description_en": "Ahmed tea with milk",
+      "id": "hot-drinks-ahmed-milk-tea",
+      "image": "images/hot-drinks/ahmed-milk-tea.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ط§ظٹ ط¨ط§ظ„ط¨ظ†",
+      "name_en": "Ahmed Milk Tea",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "hot-drinks-ahmed-milk-tea",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "hot-drinks||Hot Cider",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 100,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ظ…ط´ط±ظˆط¨ طھظپط§ط­ ط³ط§ط®ظ† ط¨ط§ظ„ظ‚ط±ظپط©",
+      "description_en": "Hot apple cider with cinnamon",
+      "id": "hot-drinks-hot-cider",
+      "image": "images/hot-drinks/hot-cider.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ‡ظˆطھ ط³ظٹط¯ط±",
+      "name_en": "Hot Cider",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "hot-drinks-hot-cider",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 8,
+        "calories_key": "hot-drinks||Herbal Tea",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 5,
+      "category_id": "hot-drinks",
+      "currency": "EGP",
+      "description_ar": "ظ…ط´ط±ظˆط¨ ط£ط¹ط´ط§ط¨ ط¯ط§ظپط¦",
+      "description_en": "Warm herbal drink",
+      "id": "hot-drinks-herbal-tea",
+      "image": "images/hot-drinks/herbal-tea.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط£ط¹ط´ط§ط¨",
+      "name_en": "Herbal Tea",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "hot-drinks-herbal-tea",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "iced-coffee||Iced Coffee",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 85,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظ‚ظ‡ظˆط© ظ…ط«ظ„ط¬ط©",
+      "description_en": "Chilled iced coffee",
+      "id": "iced-coffee-iced-coffee",
+      "image": "images/iced-coffee/iced-coffee.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¢ظٹط³ ظƒظˆظپظٹ",
+      "name_en": "Iced Coffee",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "iced-coffee-iced-coffee",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "iced-coffee||Iced Latte",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 160,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظ„ط§طھظٹظ‡ ظ…ط«ظ„ط¬",
+      "description_en": "Iced latte",
+      "id": "iced-coffee-iced-latte",
+      "image": "images/iced-coffee/iced-latte.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¢ظٹط³ ظ„ط§طھظٹظ‡",
+      "name_en": "Iced Latte",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "iced-coffee-iced-latte",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "iced-coffee||Iced Mocha",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 260,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظ…ظˆظƒط§ ظ…ط«ظ„ط¬",
+      "description_en": "Iced mocha",
+      "id": "iced-coffee-iced-mocha",
+      "image": "images/iced-coffee/iced-mocha.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¢ظٹط³ ظ…ظˆظƒط§",
+      "name_en": "Iced Mocha",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "iced-coffee-iced-mocha",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "iced-coffee||Iced White Mocha",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 290,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظˆط§ظٹطھ ظ…ظˆظƒط§ ظ…ط«ظ„ط¬",
+      "description_en": "Iced white mocha",
+      "id": "iced-coffee-iced-white-mocha",
+      "image": "images/iced-coffee/iced-white-mocha.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¢ظٹط³ ظˆط§ظٹطھ ظ…ظˆظƒط§",
+      "name_en": "Iced White Mocha",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "iced-coffee-iced-white-mocha",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "iced-coffee||Frappuccino",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 360,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظپط±ط§ط¨طھط´ظٹظ†ظˆ ظ…ط«ظ„ط¬",
+      "description_en": "Blended iced frappuccino",
+      "id": "iced-coffee-frappuccino",
+      "image": "images/iced-coffee/frappuccino.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپط±ط§ط¨طھط´ظٹظ†ظˆ",
+      "name_en": "Frappuccino",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "iced-coffee-frappuccino",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "iced-coffee||Frappe",
+        "price_raw": [
+          "85",
+          "95"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 300,
+      "category_id": "iced-coffee",
+      "currency": "EGP",
+      "description_ar": "ظƒظ„ط§ط³ظٹظƒ ط£ظˆ ظپط±ظˆطھ",
+      "description_en": "Classic or Fruit",
+      "id": "iced-coffee-frappe",
+      "image": "images/iced-coffee/frappe.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپط±ط§ط¨ظٹظ‡",
+      "name_en": "Frappe",
+      "origins": null,
+      "price": 85,
+      "price_variants": [
+        {
+          "label_ar": null,
+          "label_en": null,
+          "price": 85
+        },
+        {
+          "label_ar": null,
+          "label_en": null,
+          "price": 95
+        }
+      ],
+      "slug": "iced-coffee-frappe",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "milkshake||Chocolate",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 410,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Chocolate milkshake",
+      "id": "milkshake-chocolate",
+      "image": "images/milkshake/chocolate.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ظˆظƒظˆظ„ط§طھط©",
+      "name_en": "Chocolate",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "milkshake-chocolate",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "milkshake||Vanilla",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 390,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ظپط§ظ†ظٹظ„ظٹط§",
+      "description_en": "Vanilla milkshake",
+      "id": "milkshake-vanilla",
+      "image": "images/milkshake/vanilla.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپط§ظ†ظٹظ„ظٹط§",
+      "name_en": "Vanilla",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "milkshake-vanilla",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "milkshake||Strawberry",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 380,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ظپط±ط§ظˆظ„ط©",
+      "description_en": "Strawberry milkshake",
+      "id": "milkshake-strawberry",
+      "image": "images/milkshake/strawberry.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپط±ط§ظˆظ„ط©",
+      "name_en": "Strawberry",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "milkshake-strawberry",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "milkshake||Mango",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 370,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ظ…ط§ظ†ط¬ظˆ",
+      "description_en": "Mango milkshake",
+      "id": "milkshake-mango",
+      "image": "images/milkshake/mango.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ط§ظ†ط¬ظˆ",
+      "name_en": "Mango",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "milkshake-mango",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "milkshake||Nutella",
+        "price_raw": "100",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 510,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ظ†ظˆطھظٹظ„ط§",
+      "description_en": "Nutella milkshake",
+      "id": "milkshake-nutella",
+      "image": "images/milkshake/nutella.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ†ظˆطھظٹظ„ط§",
+      "name_en": "Nutella",
+      "origins": null,
+      "price": 100,
+      "price_variants": null,
+      "slug": "milkshake-nutella",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "milkshake||Caramel",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 430,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ظƒط±ط§ظ…ظٹظ„",
+      "description_en": "Caramel milkshake",
+      "id": "milkshake-caramel",
+      "image": "images/milkshake/caramel.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒط±ط§ظ…ظٹظ„",
+      "name_en": "Caramel",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "milkshake-caramel",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "milkshake||Oreo",
+        "price_raw": "110",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 490,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ط£ظˆط±ظٹظˆ",
+      "description_en": "Oreo milkshake",
+      "id": "milkshake-oreo",
+      "image": "images/milkshake/oreo.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط£ظˆط±ظٹظˆ",
+      "name_en": "Oreo",
+      "origins": null,
+      "price": 110,
+      "price_variants": null,
+      "slug": "milkshake-oreo",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "milkshake||Chocolate Mix",
+        "price_raw": "120",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 530,
+      "category_id": "milkshake",
+      "currency": "EGP",
+      "description_ar": "ظ…ظٹظ„ظƒ ط´ظٹظƒ ط´ظˆظƒظ„ظٹطھ ظ…ظٹظƒط³",
+      "description_en": "Mixed chocolate milkshake",
+      "id": "milkshake-chocolate-mix",
+      "image": "images/milkshake/chocolate-mix.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط³ ط´ظˆظƒظ„ظٹطھ",
+      "name_en": "Chocolate Mix",
+      "origins": null,
+      "price": 120,
+      "price_variants": null,
+      "slug": "milkshake-chocolate-mix",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "juice||Mango",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 130,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ظ…ط§ظ†ط¬ظˆ ط·ط§ط²ط¬",
+      "description_en": "Fresh mango juice",
+      "id": "juice-mango",
+      "image": "images/juice/mango.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ط§ظ†ط¬ظˆ",
+      "name_en": "Mango",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "juice-mango",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "juice||Strawberry",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 100,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ظپط±ط§ظˆظ„ط© ط·ط§ط²ط¬",
+      "description_en": "Fresh strawberry juice",
+      "id": "juice-strawberry",
+      "image": "images/juice/strawberry.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپط±ط§ظˆظ„ط©",
+      "name_en": "Strawberry",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "juice-strawberry",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "juice||Guava",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 100,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ط¬ظˆط§ظپط© ط·ط§ط²ط¬",
+      "description_en": "Fresh guava juice",
+      "id": "juice-guava",
+      "image": "images/juice/guava.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¬ظˆط§ظپط©",
+      "name_en": "Guava",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "juice-guava",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "juice||Kiwi",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 110,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ظƒظٹظˆظٹ ط·ط§ط²ط¬",
+      "description_en": "Fresh kiwi juice",
+      "id": "juice-kiwi",
+      "image": "images/juice/kiwi.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒظٹظˆظٹ",
+      "name_en": "Kiwi",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "juice-kiwi",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "juice||Orange",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 110,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ط¨ط±طھظ‚ط§ظ„ ط·ط§ط²ط¬",
+      "description_en": "Fresh orange juice",
+      "id": "juice-orange",
+      "image": "images/juice/orange.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ط±طھظ‚ط§ظ„",
+      "name_en": "Orange",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "juice-orange",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "juice||Lemon",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 60,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ط¹طµظٹط± ظ„ظٹظ…ظˆظ† ط·ط§ط²ط¬",
+      "description_en": "Fresh lemon juice",
+      "id": "juice-lemon",
+      "image": "images/juice/lemon.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ„ظٹظ…ظˆظ†",
+      "name_en": "Lemon",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "juice-lemon",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "juice||Mint Lemon",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 60,
+      "category_id": "juice",
+      "currency": "EGP",
+      "description_ar": "ظ„ظٹظ…ظˆظ† ط·ط§ط²ط¬ ظ…ط¹ ظ†ط¹ظ†ط§ط¹",
+      "description_en": "Fresh lemon with mint",
+      "id": "juice-mint-lemon",
+      "image": "images/juice/mint-lemon.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ„ظٹظ…ظˆظ† ظ†ط¹ظ†ط§ط¹",
+      "name_en": "Mint Lemon",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "juice-mint-lemon",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "desserts||Classic Waffle",
+        "price_raw": [
+          "40",
+          "80"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": [
+        320,
+        640
+      ],
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "desserts-classic-waffle",
+      "image": "images/desserts/classic-waffle.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظˆط§ظپظ„ ظƒظ„ط§ط³ظٹظƒ",
+      "name_en": "Classic Waffle",
+      "origins": null,
+      "price": 40,
+      "price_variants": [
+        {
+          "label_ar": null,
+          "label_en": null,
+          "price": 40
+        },
+        {
+          "label_ar": null,
+          "label_en": null,
+          "price": 80
+        }
+      ],
+      "slug": "desserts-classic-waffle",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "desserts||Chocolate Waffle",
+        "price_raw": "140",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 720,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظˆط§ظپظ„ ط¨ط§ظ„ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Chocolate mixed waffle",
+      "id": "desserts-chocolate-waffle",
+      "image": "images/desserts/chocolate-waffle.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظˆط§ظپظ„ ظ…ظٹظƒط³ ط´ظˆظƒظ„ظٹطھ",
+      "name_en": "Chocolate Waffle",
+      "origins": null,
+      "price": 140,
+      "price_variants": null,
+      "slug": "desserts-chocolate-waffle",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "desserts||Four Seasons Waffle",
+        "price_raw": "120",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 660,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظˆط§ظپظ„ ط¨ط£ط±ط¨ط¹ ظ†ظƒظ‡ط§طھ",
+      "description_en": "Four flavors waffle",
+      "id": "desserts-four-seasons-waffle",
+      "image": "images/desserts/four-seasons-waffle.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظˆط§ظپظ„ ظپظˆط±ط³ظٹط²ظˆظ†",
+      "name_en": "Four Seasons Waffle",
+      "origins": null,
+      "price": 120,
+      "price_variants": null,
+      "slug": "desserts-four-seasons-waffle",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "desserts||Bubble Waffle",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 410,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظˆط§ظپظ„ ط¨ط§ط¨ظ„",
+      "description_en": "Bubble waffle",
+      "id": "desserts-bubble-waffle",
+      "image": "images/desserts/bubble-waffle.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظˆط§ظپظ„ ط¨ط§ط¨ظ„",
+      "name_en": "Bubble Waffle",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "desserts-bubble-waffle",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "desserts||Fruit Waffle",
+        "price_raw": "110",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 520,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظˆط§ظپظ„ ط¨ط§ظ„ظپظˆط§ظƒظ‡",
+      "description_en": "Fresh fruit waffle",
+      "id": "desserts-fruit-waffle",
+      "image": "images/desserts/fruit-waffle.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظˆط§ظپظ„ ظپظˆط§ظƒظ‡",
+      "name_en": "Fruit Waffle",
+      "origins": null,
+      "price": 110,
+      "price_variants": null,
+      "slug": "desserts-fruit-waffle",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "desserts||San Sebastian",
+        "price_raw": "70",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 360,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "طھط´ظٹط² ظƒظٹظƒ ظپط·ط±ظٹ",
+      "description_en": "Basque cheesecake",
+      "id": "desserts-san-sebastian",
+      "image": "images/desserts/san-sebastian.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط³ط§ظ† ط³ظٹط¨ط§ط³طھظٹط§ظ†",
+      "name_en": "San Sebastian",
+      "origins": null,
+      "price": 70,
+      "price_variants": null,
+      "slug": "desserts-san-sebastian",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "desserts||Molten Cake",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 460,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظƒظٹظƒ ط§ظ„ط´ظˆظƒظˆظ„ط§طھط© ط§ظ„ط°ط§ط¦ط¨ط©",
+      "description_en": "Chocolate molten cake",
+      "id": "desserts-molten-cake",
+      "image": "images/desserts/molten-cake.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظˆظ„طھظ†",
+      "name_en": "Molten Cake",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "desserts-molten-cake",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "desserts||Brownie",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 360,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ط¨ط±ط§ظˆظ†ظٹط² ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Chocolate brownie",
+      "id": "desserts-brownie",
+      "image": "images/desserts/brownie.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ط±ط§ظˆظ†ظٹط²",
+      "name_en": "Brownie",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "desserts-brownie",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 8,
+        "calories_key": "desserts||Cookies",
+        "price_raw": "40",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 210,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظƒظˆظƒظٹط² ط·ط§ط²ط¬",
+      "description_en": "Fresh cookies",
+      "id": "desserts-cookies",
+      "image": "images/desserts/cookies.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒظˆظƒظٹط²",
+      "name_en": "Cookies",
+      "origins": null,
+      "price": 40,
+      "price_variants": null,
+      "slug": "desserts-cookies",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "array_index": 9,
+        "calories_key": "desserts||Om Ali with Nuts",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 410,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ط£ظ… ط¹ظ„ظٹ ط¨ط§ظ„ظ…ظƒط³ط±ط§طھ",
+      "description_en": "Egyptian bread pudding with nuts",
+      "id": "desserts-om-ali-with-nuts",
+      "image": "images/desserts/om-ali-with-nuts.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط£ظ… ط¹ظ„ظٹ ظ…ظƒط³ط±ط§طھ",
+      "name_en": "Om Ali with Nuts",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "desserts-om-ali-with-nuts",
+      "sort_order": 9
+    },
+    {
+      "_legacy": {
+        "array_index": 10,
+        "calories_key": "desserts||Cheesecake",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 360,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "طھط´ظٹط² ظƒظٹظƒ ظƒظ„ط§ط³ظٹظƒ",
+      "description_en": "Classic cheesecake",
+      "id": "desserts-cheesecake",
+      "image": "images/desserts/cheesecake.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھط´ظٹط² ظƒظٹظƒ",
+      "name_en": "Cheesecake",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "desserts-cheesecake",
+      "sort_order": 10
+    },
+    {
+      "_legacy": {
+        "array_index": 11,
+        "calories_key": "desserts||Galaxy Mousse",
+        "price_raw": "100",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 420,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظ…ظˆط³ ط¬ط§ظ„ط§ظƒط³ظٹ ط¨ط§ظ„ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Galaxy chocolate mousse",
+      "id": "desserts-galaxy-mousse",
+      "image": "images/desserts/galaxy-mousse.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظˆط³ ط¬ط§ظ„ط§ظƒط³ظٹ",
+      "name_en": "Galaxy Mousse",
+      "origins": null,
+      "price": 100,
+      "price_variants": null,
+      "slug": "desserts-galaxy-mousse",
+      "sort_order": 11
+    },
+    {
+      "_legacy": {
+        "array_index": 12,
+        "calories_key": "desserts||Pancake",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 350,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ط¨ط§ظ† ظƒظٹظƒ ط·ط±ظٹ ظ…ط¹ طµظˆطµ ط§ظ„ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Soft pancake with chocolate sauce",
+      "id": "desserts-pancake",
+      "image": "images/desserts/pancake.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ط§ظ† ظƒظٹظƒ",
+      "name_en": "Pancake",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "desserts-pancake",
+      "sort_order": 12
+    },
+    {
+      "_legacy": {
+        "array_index": 13,
+        "calories_key": "desserts||Crepe Roll",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 380,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظٹط¨ ط±ظˆظ„ ظ…ط­ط´ظٹ ظƒط±ظٹظ…ط©",
+      "description_en": "Cream-filled crepe roll",
+      "id": "desserts-crepe-roll",
+      "image": "images/desserts/crepe-roll.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒط±ظٹط¨ ط±ظˆظ„",
+      "name_en": "Crepe Roll",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "desserts-crepe-roll",
+      "sort_order": 13
+    },
+    {
+      "_legacy": {
+        "array_index": 14,
+        "calories_key": "desserts||Crepe Fettuccine",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 420,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظٹط¨ ظپطھظˆطھط´ظٹظ†ظٹ ط¨طµظˆطµ ط§ظ„ط´ظˆظƒظˆظ„ط§طھط©",
+      "description_en": "Fettuccine-style crepe with chocolate sauce",
+      "id": "desserts-crepe-fettuccine",
+      "image": "images/desserts/crepe-fettuccine.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒط±ظٹط¨ ظپطھظˆطھط´ظٹظ†ظٹ",
+      "name_en": "Crepe Fettuccine",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "desserts-crepe-fettuccine",
+      "sort_order": 14
+    },
+    {
+      "_legacy": {
+        "array_index": 15,
+        "calories_key": "desserts||Red Velvet",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 480,
+      "category_id": "desserts",
+      "currency": "EGP",
+      "description_ar": "ط±ظٹط¯ ظپط§ظ„ظپظٹطھ ط¨ظƒط±ظٹظ…ط© ط§ظ„ط¬ط¨ظ†ط©",
+      "description_en": "Red velvet cake with cream cheese",
+      "id": "desserts-red-velvet",
+      "image": "images/desserts/red-velvet.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط±ظٹط¯ ظپط§ظ„ظپظٹطھ",
+      "name_en": "Red Velvet",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "desserts-red-velvet",
+      "sort_order": 15
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "smoothie||Your Choice",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 160,
+      "category_id": "smoothie",
+      "currency": "EGP",
+      "description_ar": "ط³ظ…ظˆط²ظٹ ط·ط§ط²ط¬ ظ…ظ† ط§ط®طھظٹط§ط±ظƒ",
+      "description_en": "Fresh smoothie of your choice",
+      "id": "smoothie-your-choice",
+      "image": "images/smoothie/your-choice.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظ† ط§ط®طھظٹط§ط±ظƒ",
+      "name_en": "Your Choice",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "smoothie-your-choice",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "soda||Jelly Cola",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 130,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-jelly-cola",
+      "image": "images/soda/jelly-cola.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¬ظٹظ„ظٹ ظƒظˆظ„ط§",
+      "name_en": "Jelly Cola",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-jelly-cola",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "soda||Sunshine",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 130,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-sunshine",
+      "image": "images/soda/sunshine.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طµظ† ط´ط§ظٹظ†",
+      "name_en": "Sunshine",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-sunshine",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "soda||Sunrise",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 130,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-sunrise",
+      "image": "images/soda/sunrise.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طµظ† ط±ط§ظٹط²",
+      "name_en": "Sunrise",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-sunrise",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "soda||Mojito",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 100,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": "ظ…ظˆظ‡ظٹطھظˆ ظƒظ„ط§ط³ظٹظƒ",
+      "description_en": "Classic mojito",
+      "id": "soda-mojito",
+      "image": "images/soda/mojito.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظˆظ‡ظٹطھظˆ",
+      "name_en": "Mojito",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-mojito",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "soda||Mojito Flavor",
+        "price_raw": "100",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 120,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": "ظ…ظˆظ‡ظٹطھظˆ ط¨ط§ظ„ظ†ظƒظ‡ط©",
+      "description_en": "Flavored mojito",
+      "id": "soda-mojito-flavor",
+      "image": "images/soda/mojito-flavor.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظˆظ‡ظٹطھظˆ ظپظ„ظٹظپط±",
+      "name_en": "Mojito Flavor",
+      "origins": null,
+      "price": 100,
+      "price_variants": null,
+      "slug": "soda-mojito-flavor",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "soda||Cherry Cola",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 130,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-cherry-cola",
+      "image": "images/soda/cherry-cola.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ظٹط±ظٹ ظƒظˆظ„ط§",
+      "name_en": "Cherry Cola",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-cherry-cola",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "soda||Mixed Berry",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 100,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-mixed-berry",
+      "image": "images/soda/mixed-berry.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط³ ط¨ظٹط±ظٹ",
+      "name_en": "Mixed Berry",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "soda-mixed-berry",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "soda||Blueberry Strawberry",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 100,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-blueberry-strawberry",
+      "image": "images/soda/blueberry-strawberry.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظ„ظˆ ط¨ظٹط±ظٹ ظپط±ط§ظˆظ„ط©",
+      "name_en": "Blueberry Strawberry",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-blueberry-strawberry",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 8,
+        "calories_key": "soda||Pina Colada",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 150,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-pina-colada",
+      "image": "images/soda/pina-colada.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹظ†ط§ ظƒظˆظ„ط§ط¯ط§",
+      "name_en": "Pina Colada",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-pina-colada",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "array_index": 9,
+        "calories_key": "soda||Passion Pineapple",
+        "price_raw": "75",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 120,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-passion-pineapple",
+      "image": "images/soda/passion-pineapple.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ط§ط´ظˆظ† ط£ظ†ط§ظ†ط§ط³",
+      "name_en": "Passion Pineapple",
+      "origins": null,
+      "price": 75,
+      "price_variants": null,
+      "slug": "soda-passion-pineapple",
+      "sort_order": 9
+    },
+    {
+      "_legacy": {
+        "array_index": 10,
+        "calories_key": "soda||Redbull Flavor",
+        "price_raw": "120",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 110,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-redbull-flavor",
+      "image": "images/soda/redbull-flavor.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط±ظٹط¯ط¨ظˆظ„ ظپظ„ظٹظپط±",
+      "name_en": "Redbull Flavor",
+      "origins": null,
+      "price": 120,
+      "price_variants": null,
+      "slug": "soda-redbull-flavor",
+      "sort_order": 10
+    },
+    {
+      "_legacy": {
+        "array_index": 11,
+        "calories_key": "soda||Lucca Mix",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 130,
+      "category_id": "soda",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soda-lucca-mix",
+      "image": "images/soda/lucca-mix.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹظƒط³ ظ„ظˆظƒط§",
+      "name_en": "Lucca Mix",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "soda-lucca-mix",
+      "sort_order": 11
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "winter||Roasted Chickpeas",
+        "price_raw": "80",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 210,
+      "category_id": "winter",
+      "currency": "EGP",
+      "description_ar": "ط­ظ…طµ ط§ظ„ط´ط§ظ…",
+      "description_en": "Roasted chickpeas",
+      "id": "winter-roasted-chickpeas",
+      "image": "images/winter/roasted-chickpeas.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط­ظ…طµ ط§ظ„ط´ط§ظ…",
+      "name_en": "Roasted Chickpeas",
+      "origins": null,
+      "price": 80,
+      "price_variants": null,
+      "slug": "winter-roasted-chickpeas",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "winter||Balila",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 260,
+      "category_id": "winter",
+      "currency": "EGP",
+      "description_ar": "ط¨ظ„ظٹظ„ط©",
+      "description_en": "Warm chickpea soup",
+      "id": "winter-balila",
+      "image": "images/winter/balila.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظ„ظٹظ„ط©",
+      "name_en": "Balila",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "winter-balila",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "winter||Sahlab",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 260,
+      "category_id": "winter",
+      "currency": "EGP",
+      "description_ar": "ط³ط­ظ„ط¨ ط³ط§ط®ظ† ظƒط±ظٹظ…ظٹ",
+      "description_en": "Warm creamy orchid drink",
+      "id": "winter-sahlab",
+      "image": "images/winter/sahlab.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط³ط­ظ„ط¨",
+      "name_en": "Sahlab",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "winter-sahlab",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "winter||Nutella Sahlab",
+        "price_raw": "90",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 360,
+      "category_id": "winter",
+      "currency": "EGP",
+      "description_ar": "ط³ط­ظ„ط¨ ط¨ظ†ظˆطھظٹظ„ط§",
+      "description_en": "Sahlab with Nutella",
+      "id": "winter-nutella-sahlab",
+      "image": "images/winter/nutella-sahlab.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط³ط­ظ„ط¨ ظ†ظˆطھظٹظ„ط§",
+      "name_en": "Nutella Sahlab",
+      "origins": null,
+      "price": 90,
+      "price_variants": null,
+      "slug": "winter-nutella-sahlab",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "breakfast||Mixed Cheese Toast",
+        "price_raw": [
+          "30",
+          "60"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": [
+        260,
+        520
+      ],
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "breakfast-mixed-cheese-toast",
+      "image": "images/breakfast/mixed-cheese-toast.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆط³طھ ظ…ظٹظƒط³ ط¬ط¨ظ†",
+      "name_en": "Mixed Cheese Toast",
+      "origins": null,
+      "price": 30,
+      "price_variants": [
+        {
+          "label_ar": "نصف",
+          "label_en": "Half",
+          "price": 30
+        },
+        {
+          "label_ar": "كامل",
+          "label_en": "Full",
+          "price": 60
+        }
+      ],
+      "slug": "breakfast-mixed-cheese-toast",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "breakfast||Pastrami Toast",
+        "price_raw": [
+          "35",
+          "70"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": [
+        310,
+        620
+      ],
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "breakfast-pastrami-toast",
+      "image": "images/breakfast/pastrami-toast.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆط³طھ ط¨ط³ط·ط±ظ…ط©",
+      "name_en": "Pastrami Toast",
+      "origins": null,
+      "price": 35,
+      "price_variants": [
+        {
+          "label_ar": "نصف",
+          "label_en": "Half",
+          "price": 35
+        },
+        {
+          "label_ar": "كامل",
+          "label_en": "Full",
+          "price": 70
+        }
+      ],
+      "slug": "breakfast-pastrami-toast",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "breakfast||Roast Beef Toast",
+        "price_raw": [
+          "35",
+          "70"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": [
+        310,
+        620
+      ],
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "breakfast-roast-beef-toast",
+      "image": "images/breakfast/roast-beef-toast.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆط³طھ ط±ظˆط²ط¨ظٹظپ",
+      "name_en": "Roast Beef Toast",
+      "origins": null,
+      "price": 35,
+      "price_variants": [
+        {
+          "label_ar": "نصف",
+          "label_en": "Half",
+          "price": 35
+        },
+        {
+          "label_ar": "كامل",
+          "label_en": "Full",
+          "price": 70
+        }
+      ],
+      "slug": "breakfast-roast-beef-toast",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "breakfast||Smoked Turkey Toast",
+        "price_raw": [
+          "35",
+          "70"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": [
+        290,
+        580
+      ],
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "breakfast-smoked-turkey-toast",
+      "image": "images/breakfast/smoked-turkey-toast.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆط³طھ ط±ظˆظ…ظٹ ظ…ط¯ط®ظ†",
+      "name_en": "Smoked Turkey Toast",
+      "origins": null,
+      "price": 35,
+      "price_variants": [
+        {
+          "label_ar": "نصف",
+          "label_en": "Half",
+          "price": 35
+        },
+        {
+          "label_ar": "كامل",
+          "label_en": "Full",
+          "price": 70
+        }
+      ],
+      "slug": "breakfast-smoked-turkey-toast",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "breakfast||Caviar Toast",
+        "price_raw": [
+          "50",
+          "100"
+        ],
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": [
+        210,
+        420
+      ],
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظ†طµ / ظƒط§ظ…ظ„",
+      "description_en": "Half / Full",
+      "id": "breakfast-caviar-toast",
+      "image": "images/breakfast/caviar-toast.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆط³طھ ظƒظپظٹط§ط±",
+      "name_en": "Caviar Toast",
+      "origins": null,
+      "price": 50,
+      "price_variants": [
+        {
+          "label_ar": "نصف",
+          "label_en": "Half",
+          "price": 50
+        },
+        {
+          "label_ar": "كامل",
+          "label_en": "Full",
+          "price": 100
+        }
+      ],
+      "slug": "breakfast-caviar-toast",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "breakfast||Mixed Cheese Sandwich",
+        "price_raw": "25",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 360,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "breakfast-mixed-cheese-sandwich",
+      "image": "images/breakfast/mixed-cheese-sandwich.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط³ط§ظ†ط¯ظˆظٹطھط´ ظ…ظٹظƒط³ ط¬ط¨ظ†",
+      "name_en": "Mixed Cheese Sandwich",
+      "origins": null,
+      "price": 25,
+      "price_variants": null,
+      "slug": "breakfast-mixed-cheese-sandwich",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "breakfast||Pastrami Sandwich",
+        "price_raw": "30",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 410,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "breakfast-pastrami-sandwich",
+      "image": "images/breakfast/pastrami-sandwich.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط³ط§ظ†ط¯ظˆظٹطھط´ ط¨ط³ط·ط±ظ…ط©",
+      "name_en": "Pastrami Sandwich",
+      "origins": null,
+      "price": 30,
+      "price_variants": null,
+      "slug": "breakfast-pastrami-sandwich",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "breakfast||Plain Croissant",
+        "price_raw": "65",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "new",
+      "calories": 280,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظˆط§ط³ظˆظ† ط³ط§ط¯ط© ط·ط±ظٹ ظˆظپط±ظٹط´",
+      "description_en": "Fresh soft plain croissant",
+      "id": "breakfast-plain-croissant",
+      "image": "images/breakfast/plain-croissant.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظƒط±ظˆط§ط³ظˆظ† ط³ط§ط¯ط©",
+      "name_en": "Plain Croissant",
+      "origins": null,
+      "price": 65,
+      "price_variants": null,
+      "slug": "breakfast-plain-croissant",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 8,
+        "calories_key": "breakfast||Turkish Croissant",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 420,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظˆط§ط³ظˆظ† ظ…ط­ط´ظٹ ط±ظˆظ…ظٹ طھط±ظƒظٹ",
+      "description_en": "Croissant stuffed with smoked turkey",
+      "id": "breakfast-turkish-croissant",
+      "image": "images/breakfast/turkish-croissant.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظƒط±ظˆط§ط³ظˆظ† طھط±ظƒظٹ",
+      "name_en": "Turkish Croissant",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-turkish-croissant",
+      "sort_order": 8
+    },
+    {
+      "_legacy": {
+        "array_index": 9,
+        "calories_key": "breakfast||Roast Beef Croissant",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 430,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظˆط§ط³ظˆظ† ظ…ط­ط´ظٹ ط±ظˆط²ط¨ظٹظپ",
+      "description_en": "Croissant stuffed with roast beef",
+      "id": "breakfast-roast-beef-croissant",
+      "image": "images/breakfast/roast-beef-croissant.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظƒط±ظˆط§ط³ظˆظ† ط±ظˆط²ط¨ظٹظپ",
+      "name_en": "Roast Beef Croissant",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-roast-beef-croissant",
+      "sort_order": 9
+    },
+    {
+      "_legacy": {
+        "array_index": 10,
+        "calories_key": "breakfast||Halloumi Pesto Croissant",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 480,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ظƒط±ظˆط§ط³ظˆظ† ظ…ط­ط´ظٹ ط¬ط¨ظ†ط© ط­ظ„ظˆظ…ظٹ ط¨طµظˆطµ ط§ظ„ط¨ظٹط³طھظˆ",
+      "description_en": "Croissant with halloumi & pesto sauce",
+      "id": "breakfast-halloumi-pesto-croissant",
+      "image": "images/breakfast/halloumi-pesto-croissant.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ظƒط±ظˆط§ط³ظˆظ† ط­ظ„ظˆظ…ظٹ ط¨ط³طھظˆ",
+      "name_en": "Halloumi Pesto Croissant",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "breakfast-halloumi-pesto-croissant",
+      "sort_order": 10
+    },
+    {
+      "_legacy": {
+        "array_index": 11,
+        "calories_key": "breakfast||Turkish Ciabatta",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 460,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط´ط¨ط§طھط§ ظ…ط­ط´ظٹ ط±ظˆظ…ظٹ طھط±ظƒظٹ",
+      "description_en": "Ciabatta stuffed with smoked turkey",
+      "id": "breakfast-turkish-ciabatta",
+      "image": "images/breakfast/turkish-ciabatta.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط´ط¨ط§طھط§ طھط±ظƒظٹ",
+      "name_en": "Turkish Ciabatta",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-turkish-ciabatta",
+      "sort_order": 11
+    },
+    {
+      "_legacy": {
+        "array_index": 12,
+        "calories_key": "breakfast||Roast Beef Ciabatta",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 470,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط´ط¨ط§طھط§ ظ…ط­ط´ظٹ ط±ظˆط²ط¨ظٹظپ",
+      "description_en": "Ciabatta stuffed with roast beef",
+      "id": "breakfast-roast-beef-ciabatta",
+      "image": "images/breakfast/roast-beef-ciabatta.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط´ط¨ط§طھط§ ط±ظˆط²ط¨ظٹظپ",
+      "name_en": "Roast Beef Ciabatta",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-roast-beef-ciabatta",
+      "sort_order": 12
+    },
+    {
+      "_legacy": {
+        "array_index": 13,
+        "calories_key": "breakfast||Halloumi Pesto Ciabatta",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 520,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط´ط¨ط§طھط§ ظ…ط­ط´ظٹ ط¬ط¨ظ†ط© ط­ظ„ظˆظ…ظٹ ط¨طµظˆطµ ط§ظ„ط¨ظٹط³طھظˆ",
+      "description_en": "Ciabatta with halloumi & pesto sauce",
+      "id": "breakfast-halloumi-pesto-ciabatta",
+      "image": "images/breakfast/halloumi-pesto-ciabatta.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط´ط¨ط§طھط§ ط­ظ„ظˆظ…ظٹ ط¨ط³طھظˆ",
+      "name_en": "Halloumi Pesto Ciabatta",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "breakfast-halloumi-pesto-ciabatta",
+      "sort_order": 13
+    },
+    {
+      "_legacy": {
+        "array_index": 14,
+        "calories_key": "breakfast||Turkish Baguette",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 440,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط¨ط§ط¬ظٹطھ ظ…ط­ط´ظٹ ط±ظˆظ…ظٹ طھط±ظƒظٹ",
+      "description_en": "Baguette stuffed with smoked turkey",
+      "id": "breakfast-turkish-baguette",
+      "image": "images/breakfast/turkish-baguette.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط¨ط§ط¬ظٹطھ طھط±ظƒظٹ",
+      "name_en": "Turkish Baguette",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-turkish-baguette",
+      "sort_order": 14
+    },
+    {
+      "_legacy": {
+        "array_index": 15,
+        "calories_key": "breakfast||Roast Beef Baguette",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 450,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط¨ط§ط¬ظٹطھ ظ…ط­ط´ظٹ ط±ظˆط²ط¨ظٹظپ",
+      "description_en": "Baguette stuffed with roast beef",
+      "id": "breakfast-roast-beef-baguette",
+      "image": "images/breakfast/roast-beef-baguette.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط¨ط§ط¬ظٹطھ ط±ظˆط²ط¨ظٹظپ",
+      "name_en": "Roast Beef Baguette",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "breakfast-roast-beef-baguette",
+      "sort_order": 15
+    },
+    {
+      "_legacy": {
+        "array_index": 16,
+        "calories_key": "breakfast||Halloumi Pesto Baguette",
+        "price_raw": "95",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 500,
+      "category_id": "breakfast",
+      "currency": "EGP",
+      "description_ar": "ط¨ط§ط¬ظٹطھ ظ…ط­ط´ظٹ ط¬ط¨ظ†ط© ط­ظ„ظˆظ…ظٹ ط¨طµظˆطµ ط§ظ„ط¨ظٹط³طھظˆ",
+      "description_en": "Baguette with halloumi & pesto sauce",
+      "id": "breakfast-halloumi-pesto-baguette",
+      "image": "images/breakfast/halloumi-pesto-baguette.jpg",
+      "image_actual_file": null,
+      "image_status": "missing",
+      "is_active": true,
+      "name_ar": "ط¨ط§ط¬ظٹطھ ط­ظ„ظˆظ…ظٹ ط¨ط³طھظˆ",
+      "name_en": "Halloumi Pesto Baguette",
+      "origins": null,
+      "price": 95,
+      "price_variants": null,
+      "slug": "breakfast-halloumi-pesto-baguette",
+      "sort_order": 16
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "pizza||Seafood Pizza",
+        "price_raw": "250",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "specialty",
+      "calories": 820,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط¨ط§ظ„ظ…ط£ظƒظˆظ„ط§طھ ط§ظ„ط¨ط­ط±ظٹط©",
+      "description_en": "Seafood pizza",
+      "id": "pizza-seafood-pizza",
+      "image": "images/pizza/seafood-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط³ظٹ ظپظˆط¯",
+      "name_en": "Seafood Pizza",
+      "origins": null,
+      "price": 250,
+      "price_variants": null,
+      "slug": "pizza-seafood-pizza",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "pizza||Salami Pizza",
+        "price_raw": "170",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 720,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط¨ط§ظ„ط³ظ„ط§ظ…ظٹ ط§ظ„ط¥ظٹط·ط§ظ„ظٹ",
+      "description_en": "Italian salami pizza",
+      "id": "pizza-salami-pizza",
+      "image": "images/pizza/salami-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط³ظ„ط§ظ…ظٹ",
+      "name_en": "Salami Pizza",
+      "origins": null,
+      "price": 170,
+      "price_variants": null,
+      "slug": "pizza-salami-pizza",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "pizza||Ranch Pizza",
+        "price_raw": "200",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 770,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط¨طµظˆطµ ط§ظ„ط±ط§ظ†ط´",
+      "description_en": "Pizza with ranch sauce",
+      "id": "pizza-ranch-pizza",
+      "image": "images/pizza/ranch-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط±ط§ظ†ط´",
+      "name_en": "Ranch Pizza",
+      "origins": null,
+      "price": 200,
+      "price_variants": null,
+      "slug": "pizza-ranch-pizza",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "pizza||Chicken Pizza",
+        "price_raw": "200",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 670,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط¨ظ‚ط·ط¹ ط§ظ„ط¯ط¬ط§ط¬",
+      "description_en": "Chicken pizza",
+      "id": "pizza-chicken-pizza",
+      "image": "images/pizza/chicken-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط¯ط¬ط§ط¬",
+      "name_en": "Chicken Pizza",
+      "origins": null,
+      "price": 200,
+      "price_variants": null,
+      "slug": "pizza-chicken-pizza",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "pizza||Margherita Pizza",
+        "price_raw": "150",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 620,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ظƒظ„ط§ط³ظٹظƒ ط¨ط¬ط¨ظ† ط§ظ„ظ…ظˆط²ط§ط±ظٹظ„ط§",
+      "description_en": "Classic mozzarella pizza",
+      "id": "pizza-margherita-pizza",
+      "image": "images/pizza/margherita-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ظ…ط§ط±ط¬ط±ظٹطھط§",
+      "name_en": "Margherita Pizza",
+      "origins": null,
+      "price": 150,
+      "price_variants": null,
+      "slug": "pizza-margherita-pizza",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "pizza||BBQ Chicken Pizza",
+        "price_raw": "180",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 720,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط¨ط§ظ„ط¯ط¬ط§ط¬ ظˆطµظˆطµ ط§ظ„ط¨ط§ط±ط¨ظƒظٹظˆ",
+      "description_en": "BBQ chicken pizza",
+      "id": "pizza-bbq-chicken-pizza",
+      "image": "images/pizza/bbq-chicken-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ طھط´ظٹظƒظ† ط¨ط§ط±ط¨ظƒظٹظˆ",
+      "name_en": "BBQ Chicken Pizza",
+      "origins": null,
+      "price": 180,
+      "price_variants": null,
+      "slug": "pizza-bbq-chicken-pizza",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 6,
+        "calories_key": "pizza||Spicy Ranch Pizza",
+        "price_raw": "190",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 740,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط­ط§ط±ط© ط¨طµظˆطµ ط§ظ„ط±ط§ظ†ط´",
+      "description_en": "Spicy ranch pizza",
+      "id": "pizza-spicy-ranch-pizza",
+      "image": "images/pizza/spicy-ranch-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط§ط³ط¨ط§ظٹط³ظٹ ط±ط§ظ†ط´",
+      "name_en": "Spicy Ranch Pizza",
+      "origins": null,
+      "price": 190,
+      "price_variants": null,
+      "slug": "pizza-spicy-ranch-pizza",
+      "sort_order": 6
+    },
+    {
+      "_legacy": {
+        "array_index": 7,
+        "calories_key": "pizza||Super Supreme Pizza",
+        "price_raw": "220",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": "popular",
+      "calories": 820,
+      "category_id": "pizza",
+      "currency": "EGP",
+      "description_ar": "ط¨ظٹطھط²ط§ ط§ظ„ط®ظ„ط·ط© ط§ظ„ظپط§ط®ط±ط©",
+      "description_en": "Supreme mix pizza",
+      "id": "pizza-super-supreme-pizza",
+      "image": "images/pizza/super-supreme-pizza.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹطھط²ط§ ط³ظˆط¨ط± ط³ظˆط¨ط±ظٹظ…",
+      "name_en": "Super Supreme Pizza",
+      "origins": null,
+      "price": 220,
+      "price_variants": null,
+      "slug": "pizza-super-supreme-pizza",
+      "sort_order": 7
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "soft-drinks||Pepsi",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 150,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-pepsi",
+      "image": "images/soft-drinks/pepsi.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹط¨ط³ظٹ",
+      "name_en": "Pepsi",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "soft-drinks-pepsi",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "soft-drinks||Twist",
+        "price_raw": "35",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 150,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-twist",
+      "image": "images/soft-drinks/twist.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "طھظˆظٹط³طھ",
+      "name_en": "Twist",
+      "origins": null,
+      "price": 35,
+      "price_variants": null,
+      "slug": "soft-drinks-twist",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "soft-drinks||Firoz",
+        "price_raw": "40",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 100,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-firoz",
+      "image": "images/soft-drinks/firoz.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظپظٹط±ظˆط²",
+      "name_en": "Firoz",
+      "origins": null,
+      "price": 40,
+      "price_variants": null,
+      "slug": "soft-drinks-firoz",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "soft-drinks||Red Bull",
+        "price_raw": "85",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 110,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-red-bull",
+      "image": "images/soft-drinks/red-bull.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط±ظٹط¯ط¨ظˆظ„",
+      "name_en": "Red Bull",
+      "origins": null,
+      "price": 85,
+      "price_variants": null,
+      "slug": "soft-drinks-red-bull",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "soft-drinks||Birell",
+        "price_raw": "50",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 50,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-birell",
+      "image": "images/soft-drinks/birell.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¨ظٹط±ظٹظ„",
+      "name_en": "Birell",
+      "origins": null,
+      "price": 50,
+      "price_variants": null,
+      "slug": "soft-drinks-birell",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "soft-drinks||Water",
+        "price_raw": "10",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 0,
+      "category_id": "soft-drinks",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "soft-drinks-water",
+      "image": "images/soft-drinks/water.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظٹط§ظ‡",
+      "name_en": "Water",
+      "origins": null,
+      "price": 10,
+      "price_variants": null,
+      "slug": "soft-drinks-water",
+      "sort_order": 5
+    },
+    {
+      "_legacy": {
+        "array_index": 0,
+        "calories_key": "addons||Cheese",
+        "price_raw": "15",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 50,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": "ط¬ط¨ظ† ظ…ظ‚ط¯ظˆظ†",
+      "description_en": "Mozzarella cheese",
+      "id": "addons-cheese",
+      "image": "images/addons/cheese.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط¬ط¨ظ†",
+      "name_en": "Cheese",
+      "origins": null,
+      "price": 15,
+      "price_variants": null,
+      "slug": "addons-cheese",
+      "sort_order": 0
+    },
+    {
+      "_legacy": {
+        "array_index": 1,
+        "calories_key": "addons||Chocolate",
+        "price_raw": "15",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 70,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "addons-chocolate",
+      "image": "images/addons/chocolate.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط´ظٹظƒظˆظ„ط§طھط©",
+      "name_en": "Chocolate",
+      "origins": null,
+      "price": 15,
+      "price_variants": null,
+      "slug": "addons-chocolate",
+      "sort_order": 1
+    },
+    {
+      "_legacy": {
+        "array_index": 2,
+        "calories_key": "addons||Nuts",
+        "price_raw": "20",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 100,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "addons-nuts",
+      "image": "images/addons/nuts.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ…ظƒط³ط±ط§طھ",
+      "name_en": "Nuts",
+      "origins": null,
+      "price": 20,
+      "price_variants": null,
+      "slug": "addons-nuts",
+      "sort_order": 2
+    },
+    {
+      "_legacy": {
+        "array_index": 3,
+        "calories_key": "addons||Nutella",
+        "price_raw": "25",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 150,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "addons-nutella",
+      "image": "images/addons/nutella.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظ†ظˆطھظٹظ„ط§",
+      "name_en": "Nutella",
+      "origins": null,
+      "price": 25,
+      "price_variants": null,
+      "slug": "addons-nutella",
+      "sort_order": 3
+    },
+    {
+      "_legacy": {
+        "array_index": 4,
+        "calories_key": "addons||Card",
+        "price_raw": "5",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 0,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": "ظƒط§ط±ط¯",
+      "description_en": "Card",
+      "id": "addons-card",
+      "image": "images/addons/card.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ظƒط§ط±طھ",
+      "name_en": "Card",
+      "origins": null,
+      "price": 5,
+      "price_variants": null,
+      "slug": "addons-card",
+      "sort_order": 4
+    },
+    {
+      "_legacy": {
+        "array_index": 5,
+        "calories_key": "addons||Table",
+        "price_raw": "20",
+        "source": "menu/index.html:let DATA"
+      },
+      "available": true,
+      "badge": null,
+      "calories": 0,
+      "category_id": "addons",
+      "currency": "EGP",
+      "description_ar": null,
+      "description_en": null,
+      "id": "addons-table",
+      "image": "images/addons/table.jpg",
+      "image_actual_file": null,
+      "image_status": "resolved",
+      "is_active": true,
+      "name_ar": "ط·ط§ظˆظ„ط©",
+      "name_en": "Table",
+      "origins": null,
+      "price": 20,
+      "price_variants": null,
+      "slug": "addons-table",
+      "sort_order": 5
+    }
+  ],
+  "stats": {
+    "by_badge": {
+      "new": 13,
+      "popular": 21,
+      "specialty": 17
+    },
+    "by_status": {
+      "mismatched-filename": 1,
+      "missing": 15,
+      "resolved": 101
+    },
+    "categories": 14,
+    "conflicts": 57,
+    "products": 117,
+    "with_origins": 3,
+    "with_variants": 7,
+    "without_calories": 0,
+    "without_description_ar": 22
+  }
+}
