@@ -14,7 +14,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="images.js"></script>
+    <script src="menu-data.js"></script>
+    <script src="../admin/database.js"></script>
+    <link rel="stylesheet" href="admin-styles.css">
     <style>
         html { scroll-behavior: smooth; }
         :root {
@@ -177,11 +179,8 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            background: rgba(247,242,235,0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            box-shadow: 0 2px 20px rgba(26,15,10,0.08);
-            border-bottom: 1px solid rgba(166,123,91,0.08);
+            background: var(--foam);
+            box-shadow: 0 2px 12px rgba(26,15,10,0.08);
         }
         .search-container {
             padding: 12px 16px 8px;
@@ -189,6 +188,7 @@
         .search-box {
             position: relative;
         }
+        .search-box { position: relative; }
         .search-box input {
             width: 100%;
             padding: 12px 44px 12px 44px;
@@ -338,13 +338,84 @@
         }
         .category.expanded .toggle-icon { transform: rotate(180deg); }
 
-        .menu-item:active { background: var(--cream); }
+        .category-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .category.expanded .category-items {
+            max-height: 5000px;
+            opacity: 1;
+        }
 
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--cream);
+            gap: 10px;
+            transition: background 0.2s, padding 0.2s;
+        }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:active { background: var(--cream); }
+        .menu-item:hover { background: rgba(237,224,212,0.5); padding-right: 22px; }
+        html[dir="ltr"] .menu-item:hover { padding-right: 18px; padding-left: 22px; }
+
+        .item-image {
+            width: 76px;
+            height: 76px;
+            flex: 0 0 76px;
+            border-radius: 14px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--cream), #d8c1ab);
+            box-shadow: 0 4px 14px rgba(26,15,10,0.12);
+            border: 1px solid rgba(166,123,91,0.22);
+        }
+        .item-image.is-fallback { display: grid; place-items: center; font-size: 1.8rem; }
+        .item-image img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+
+        .item-info { flex: 1; min-width: 0; }
+        .item-name {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--coffee-900);
+        }
+        .item-name-ar { font-weight: 700; }
+        .item-description {
+            font-size: 0.82rem;
+            color: var(--coffee-500);
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .item-price-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+        .item-price {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--coffee-700);
+            white-space: nowrap;
+        }
+        .price-unit {
+            font-size: 0.78rem;
+            color: var(--coffee-500);
+            font-weight: 500;
+        }
         .dual-price {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             align-items: center;
         }
+        .add-cart-btn { width:32px; height:32px; border:none; border-radius:50%; background:var(--gold); color:var(--coffee-900); font-size:1.2rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform 0.15s, background 0.2s, box-shadow 0.2s; box-shadow:0 2px 6px rgba(212,168,90,0.3); }
+        .add-cart-btn:hover { transform:scale(1.15); background:var(--gold-light); box-shadow:0 4px 12px rgba(212,168,90,0.4); }
+        .add-cart-btn:active { transform:scale(0.9); }
         .cart-fab { position:fixed; bottom:80px; left:16px; z-index:100; width:56px; height:56px; border-radius:50%; background:var(--coffee-700); color:var(--foam); border:none; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 20px rgba(62,35,18,0.3); display:none; align-items:center; justify-content:center; transition:transform 0.2s, box-shadow 0.2s; }
         .cart-fab.show { display:flex; animation:fabPop 0.35s ease; }
         .cart-fab:active { transform:scale(0.9); }
@@ -358,6 +429,7 @@
         .cart-drag-handle { width:40px; height:4px; border-radius:2px; background:var(--cream); margin:8px auto 0; flex-shrink:0; cursor:grab; }
         .cart-header { display:flex; align-items:center; gap:10px; padding:12px 20px; border-bottom:1px solid var(--cream); background:var(--foam); border-radius:20px 20px 0 0; }
         .cart-header h3 { margin:0; flex:1; font-size:1.1rem; color:var(--coffee-900); }
+        .cart-header h3 { margin:0; flex:1; font-size:1.1rem; }
         #cartCount { background:var(--coffee-700); color:#fff; font-size:0.8rem; font-weight:700; padding:2px 10px; border-radius:12px; }
         .cart-close { background:none; border:none; font-size:1.3rem; cursor:pointer; padding:4px; color:#999; }
         .cart-items { flex:1; overflow-y:auto; padding:12px 20px; }
@@ -374,6 +446,7 @@
         .cart-send-btn:active { transform:translateY(0); }
         .cart-toast { position:fixed; bottom:150px; left:50%; transform:translateX(-50%); z-index:300; background:var(--coffee-900); color:var(--foam); padding:10px 24px; border-radius:10px; font-size:0.9rem; font-weight:600; opacity:0; transition:opacity 0.3s, transform 0.3s; pointer-events:none; white-space:nowrap; box-shadow:0 4px 16px rgba(26,15,10,0.3); }
         .cart-toast.show { opacity:1; transform:translateX(-50%) translateY(-4px); }
+        .cart-toast.show { opacity:1; }
         .lang-toggle { position:fixed; bottom:16px; right:16px; z-index:100; width:44px; height:44px; border-radius:50%; background:var(--gold); color:var(--coffee-900); border:none; font-size:1.1rem; cursor:pointer; box-shadow:0 2px 12px rgba(212,168,90,0.3); display:flex; align-items:center; justify-content:center; transition:transform 0.2s; }
         .lang-toggle:active { transform:scale(0.9); }
         @media (min-width:768px) { .lang-toggle { left:auto; right:24px; bottom:80px; } }
@@ -387,163 +460,6 @@
         .cart-table-input label { display:block; font-size:0.85rem; color:var(--coffee-500); margin-bottom:4px; }
         .cart-table-input input { width:100%; padding:10px 12px; border:1px solid var(--cream); border-radius:8px; font-size:1rem; box-sizing:border-box; }
         .dual-price .item-price { font-size: 1rem; }
-
-        /* ─── بطاقات (Grid Cards) ─── */
-        .category-items {
-            max-height: 0;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 0 10px !important;
-            opacity: 0;
-            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
-        }
-        .category.expanded .category-items {
-            max-height: 2000px;
-            padding: 10px !important;
-            opacity: 1;
-        }
-        .menu-item {
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(26,15,10,0.07);
-            border: 1px solid rgba(166,123,91,0.12);
-            transition: transform 0.25s, box-shadow 0.3s;
-            animation: fadeInUp 0.35s ease both;
-            padding: 0;
-            gap: 0;
-        }
-        .menu-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(26,15,10,0.13);
-            border-color: var(--gold);
-        }
-        .menu-item:hover .item-img-wrap {
-            transform: scale(1.05);
-        }
-
-        .item-img-wrap {
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            overflow: hidden;
-            flex-shrink: 0;
-            background: var(--cream);
-            position: relative;
-        }
-        .item-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.4s, opacity 0.3s;
-        }
-
-        .item-info {
-            padding: 10px 12px 4px;
-            flex: 1;
-        }
-        .item-name {
-            font-size: 0.92rem;
-            font-weight: 700;
-            line-height: 1.3;
-            color: var(--coffee-900);
-        }
-        .item-description {
-            font-size: 0.75rem;
-            color: var(--coffee-500);
-            margin-top: 3px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .item-price-wrap {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 12px 10px;
-            gap: 6px;
-        }
-        .item-price {
-            font-size: 0.95rem;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 700;
-            color: var(--coffee-700);
-        }
-        .price-unit {
-            font-size: 0.7rem;
-            color: var(--coffee-500);
-        }
-        .dual-price .item-price { font-size: 0.85rem; }
-        .add-cart-btn {
-            width: 30px; height: 30px;
-            border: none; border-radius: 50%;
-            background: var(--gold);
-            color: var(--coffee-900);
-            font-size: 1.1rem; font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 6px rgba(212,168,90,0.3);
-            flex-shrink: 0;
-        }
-        .add-cart-btn:hover {
-            transform: scale(1.12);
-            background: var(--gold-light);
-            box-shadow: 0 4px 12px rgba(212,168,90,0.4);
-        }
-        .add-cart-btn:active { transform: scale(0.9); }
-
-        @media (min-width: 640px) {
-            .category-items { grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 0 14px !important; }
-            .category.expanded .category-items { padding: 14px !important; }
-            .item-name { font-size: 1rem; }
-            .item-description { font-size: 0.8rem; }
-            .item-price { font-size: 1rem; }
-        }
-        @media (min-width: 1024px) {
-            .category-items { grid-template-columns: repeat(4, 1fr); }
-        }
-
-        .badge {
-            display: inline-block;
-            font-size: 0.65rem;
-            padding: 1px 5px;
-            border-radius: 6px;
-            margin-right: 4px;
-            vertical-align: middle;
-            line-height: 1.3;
-        }
-        .badge-popular { background: #FFD700; color: #3E2312; }
-        .badge-new { background: #4CAF50; color: #fff; }
-        .badge-specialty { background: #C85A3E; color: #fff; }
-
-        .item-img-placeholder {
-            width: 100%; height: 100%;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--cream), #E5D8CC);
-            color: var(--coffee-500);
-        }
-        @media (min-width: 640px) {
-            .item-img-placeholder { font-size: 3rem; }
-        }
-
-        /* التصنيفات اللي فيها أصول (specialty) تاخد عرض كامل */
-        .menu-item:has(.origin-selection) { grid-column: 1 / -1; flex-direction: row; }
-        .menu-item:has(.origin-selection) .item-img-wrap { width: 100px; height: 100px; flex-shrink: 0; }
-        .menu-item:has(.origin-selection) .item-info { padding: 12px; }
-        .menu-item:has(.origin-selection) .item-price-wrap { flex-direction: column; align-items: flex-end; padding: 12px; }
 
         .origin-selection {
             background: #FFF9F0;
@@ -583,231 +499,12 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* ─── AI Chat Bot ─── */
-        .chat-btn {
-            position: fixed;
-            bottom: 66px; right: 16px;
-            z-index: 99;
-            width: 52px; height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--coffee-700), var(--gold));
-            color: var(--foam);
-            border: none;
-            font-size: 1.3rem;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(62,35,18,0.35);
-            display: flex;
-            align-items: center; justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .menu-item {
+            animation: fadeInUp 0.35s ease both;
         }
-        .chat-btn:active { transform: scale(0.9); }
-        .chat-btn:hover { box-shadow: 0 6px 24px rgba(62,35,18,0.45); }
-        @media (min-width:768px) { .chat-btn { left: auto; right: 136px; bottom: 24px; } }
-
-        .chat-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(26,15,10,0.5);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 200;
-            display: none;
-        }
-        .chat-overlay.show { display: block; }
-
-        .chat-panel {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            z-index: 201;
-            background: #fff;
-            border-radius: 20px 20px 0 0;
-            height: 70vh;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.35s cubic-bezier(0.32,0.72,0,1);
-            box-shadow: 0 -4px 30px rgba(26,15,10,0.2);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .chat-panel.show { transform: translateY(0); }
-
-        .chat-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--cream);
-            background: linear-gradient(135deg, var(--coffee-700), var(--coffee-500));
-            border-radius: 20px 20px 0 0;
-            color: var(--foam);
-            flex-shrink: 0;
-        }
-        .chat-header .avatar {
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            background: var(--gold);
-            display: flex;
-            align-items: center; justify-content: center;
-            font-size: 1.2rem;
-        }
-        .chat-header .info { flex: 1; }
-        .chat-header .info h3 { font-size: 0.95rem; margin: 0; font-family: 'Cairo', sans-serif; }
-        .chat-header .info p { font-size: 0.72rem; opacity: 0.8; margin: 0; }
-        .chat-close {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: var(--foam);
-            font-size: 1rem;
-            cursor: pointer;
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center; justify-content: center;
-            transition: background 0.2s;
-        }
-        .chat-close:hover { background: rgba(255,255,255,0.25); }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: #FAF8F5;
-        }
-        .chat-messages::-webkit-scrollbar { width: 4px; }
-        .chat-messages::-webkit-scrollbar-thumb { background: var(--cream); border-radius: 2px; }
-
-        .chat-msg {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 16px;
-            font-size: 0.88rem;
-            line-height: 1.5;
-            animation: msgIn 0.3s ease both;
-            word-wrap: break-word;
-        }
-        @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .chat-msg.bot {
-            align-self: flex-start;
-            background: #fff;
-            color: var(--coffee-900);
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 4px rgba(26,15,10,0.06);
-        }
-        .chat-msg.user {
-            align-self: flex-end;
-            background: var(--coffee-700);
-            color: var(--foam);
-            border-bottom-right-radius: 4px;
-        }
-
-        .chat-typing {
-            display: flex;
-            gap: 4px;
-            padding: 12px 16px;
-            background: #fff;
-            border-radius: 16px;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 4px rgba(26,15,10,0.06);
-        }
-        .chat-typing span {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: var(--coffee-300);
-            animation: typingDot 1.2s infinite;
-        }
-        .chat-typing span:nth-child(2) { animation-delay: 0.15s; }
-        .chat-typing span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes typingDot { 0%,60%,100% { opacity: 0.3; } 30% { opacity: 1; } }
-
-        .chat-input-wrap {
-            display: flex;
-            gap: 8px;
-            padding: 10px 14px 14px;
-            border-top: 1px solid var(--cream);
-            background: var(--foam);
-            border-radius: 0 0 20px 20px;
-            flex-shrink: 0;
-        }
-        .chat-input-wrap input {
-            flex: 1;
-            padding: 10px 14px;
-            border: 2px solid var(--cream);
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-family: 'Tajawal', sans-serif;
-            background: #fff;
-            color: var(--coffee-900);
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .chat-input-wrap input:focus { border-color: var(--coffee-500); }
-        .chat-input-wrap button {
-            width: 42px; height: 42px;
-            border: none;
-            border-radius: 50%;
-            background: var(--coffee-700);
-            color: var(--foam);
-            font-size: 1.1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center; justify-content: center;
-            transition: transform 0.15s, background 0.2s;
-            flex-shrink: 0;
-        }
-        .chat-input-wrap button:active { transform: scale(0.9); }
-
-        .chat-items { display:flex; flex-direction:column; gap:6px; padding:6px 0 0; }
-        .chat-add-btn {
-            display:flex; align-items:center; justify-content:space-between;
-            background:#fff; border:1px solid var(--cream); border-radius:10px;
-            padding:8px 12px; font-family:'Tajawal',sans-serif; font-size:0.82rem;
-            cursor:pointer; transition:all 0.2s; width:100%;
-        }
-        .chat-add-btn:active { background:var(--foam); border-color:var(--gold); }
-        .chat-add-icon {
-            width:26px;height:26px;border-radius:50%;background:var(--gold);
-            color:var(--coffee-900);display:flex;align-items:center;justify-content:center;
-            font-size:1rem;font-weight:700;flex-shrink:0;
-        }
-        .chat-suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            padding: 8px 0 0;
-        }
-        .chat-suggestions button {
-            background: var(--gold);
-            color: var(--coffee-900);
-            border: none;
-            padding: 6px 14px;
-            border-radius: 16px;
-            font-size: 0.78rem;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 2px 6px rgba(212,168,90,0.25);
-        }
-        .chat-suggestions button:active { transform: scale(0.95); }
         .category:hover { box-shadow: var(--shadow-md); transform:translateY(-1px); }
         .tab:not(.active):hover { background: #E5D8CC; transform: translateY(-1px); }
         .category-header:hover { background: #E5D8CC; }
-        .category-header h2 { gap: 8px; }
-        .category-header .category-icon { width: 32px; height: 32px; font-size: 1rem; }
-        .category { margin: 12px 0; }
-        .menu-content { padding: 8px 16px 100px; }
-
-        @media (min-width: 768px) {
-            .category { margin: 16px 0; }
-            .menu-content { padding: 12px 20px 100px; }
-        }
 
         .qr-section {
             background: linear-gradient(180deg, var(--foam) 0%, var(--cream) 100%);
@@ -867,6 +564,211 @@
         }
         .back-to-top.show { display: flex; }
         .back-to-top:active { transform: scale(0.9); }
+        .back-to-top:hover { box-shadow: 0 6px 24px rgba(62,35,18,0.5); }
+        .admin-float {
+            position: fixed; left: 16px; bottom: 80px; z-index: 999;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--coffee-700); color: var(--foam);
+            border: 2px solid var(--gold); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .admin-float:active { transform: scale(0.9); }
+        .admin-float.logged-in { background: var(--gold); color: var(--coffee-900); }
+
+        /* Staff Login Modal */
+        .staff-overlay {
+            position: fixed; inset:0; background:rgba(26,15,10,0.7);
+            backdrop-filter:blur(4px); z-index:9999;
+        }
+        .staff-modal {
+            position:fixed; inset:0; display:flex; align-items:center;
+            justify-content:center; z-index:10000;
+        }
+        .staff-modal-inner {
+            background:var(--foam); padding:28px 24px; border-radius:var(--radius-lg);
+            width:88%; max-width:340px; text-align:center;
+            box-shadow:0 20px 60px rgba(0,0,0,0.4);
+        }
+        .staff-modal-inner h3 {
+            font-family:'Cairo',sans-serif; color:var(--coffee-900);
+            margin:10px 0 6px; font-size:1.2rem;
+        }
+        .staff-modal-inner p.sub {
+            color:var(--coffee-300); font-size:0.85rem; margin-bottom:18px;
+        }
+        .staff-modal-inner input {
+            width:100%; padding:14px; border:2px solid var(--cream);
+            border-radius:var(--radius-sm); font-size:1rem;
+            font-family:'Tajawal',sans-serif; text-align:center;
+            margin-bottom:10px; outline:none; transition:border-color 0.2s;
+            box-sizing:border-box;
+        }
+        .staff-modal-inner input:focus { border-color:var(--gold); }
+        .staff-modal-inner .staff-btn {
+            width:100%; padding:14px; background:var(--coffee-700); color:var(--gold);
+            border:none; border-radius:var(--radius-sm); font-size:1rem;
+            font-family:'Tajawal',sans-serif; font-weight:700; cursor:pointer;
+            transition:background 0.2s;
+        }
+        .staff-modal-inner .staff-btn:active { background:var(--coffee-900); }
+        .staff-modal-inner .staff-btn.secondary { background:var(--cream); color:var(--coffee-700); margin-top:8px; }
+        .staff-error { color:#e74c3c; font-size:0.85rem; margin-bottom:10px; }
+
+        /* Management Panel */
+        .staff-panel {
+            position:fixed; bottom:0; left:0; right:0; z-index:9997;
+            background:var(--coffee-900); border-top:2px solid var(--gold);
+            box-shadow:0 -4px 24px rgba(0,0,0,0.3);
+            transition:transform 0.3s ease; max-height:65vh;
+            display:flex; flex-direction:column;
+        }
+        .staff-panel.hidden { transform:translateY(100%); opacity:0; pointer-events:none; }
+        .staff-panel { transition:transform 0.3s ease, opacity 0.3s ease; }
+        .staff-bar {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:10px 16px;
+        }
+        .staff-bar-title { font-family:'Cairo',sans-serif; color:var(--gold); font-size:1rem; }
+        .staff-bar-actions { display:flex; gap:8px; }
+        .staff-bar-actions button {
+            background:none; border:1px solid var(--gold); color:var(--gold);
+            padding:4px 12px; border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-size:0.8rem; cursor:pointer; transition:0.15s;
+        }
+        .staff-bar-actions button:active { background:var(--gold); color:var(--coffee-900); }
+        .staff-tabs {
+            display:flex; gap:4px; padding:0 16px;
+        }
+        .staff-tab {
+            flex:1; padding:10px; background:transparent; color:var(--coffee-300);
+            border:none; border-bottom:2px solid transparent;
+            font-family:'Tajawal',sans-serif; font-size:0.9rem; cursor:pointer;
+            transition:0.15s;
+        }
+        .staff-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+        .staff-tab:active { opacity:0.7; }
+        .staff-content {
+            padding:12px 16px; overflow-y:auto; flex:1;
+            min-height:100px;
+        }
+        .staff-content .stat-row {
+            display:flex; justify-content:space-between; gap:8px; margin-bottom:8px;
+        }
+        .staff-content .stat-card {
+            flex:1; background:rgba(255,255,255,0.05); border-radius:var(--radius-sm);
+            padding:12px 8px; text-align:center;
+        }
+        .staff-content .stat-card .num { font-size:1.2rem; font-weight:700; color:var(--gold); }
+        .staff-content .stat-card .lbl { font-size:0.75rem; color:var(--coffee-300); margin-top:4px; }
+        .staff-content .form-group { margin-bottom:10px; }
+        .staff-content .form-group label { display:block; color:var(--coffee-300); font-size:0.85rem; margin-bottom:4px; }
+        .staff-content .form-group input, .staff-content .form-group select {
+            width:100%; padding:10px; border:1px solid rgba(255,255,255,0.15);
+            border-radius:6px; background:rgba(255,255,255,0.08); color:var(--foam);
+            font-family:'Tajawal',sans-serif; font-size:0.9rem; outline:none;
+            box-sizing:border-box;
+        }
+        .staff-content .form-group select option { background:var(--coffee-900); color:var(--foam); }
+        .staff-content .form-group input:focus { border-color:var(--gold); }
+        .staff-submit {
+            width:100%; padding:12px; background:var(--gold); color:var(--coffee-900);
+            border:none; border-radius:6px; font-family:'Tajawal',sans-serif;
+            font-weight:700; font-size:0.95rem; cursor:pointer; transition:0.15s;
+        }
+        .staff-submit:active { opacity:0.8; }
+        .staff-toast {
+            position:fixed; bottom:calc(100% + 10px); left:50%; transform:translateX(-50%);
+            background:var(--gold); color:var(--coffee-900); padding:8px 20px;
+            border-radius:8px; font-family:'Tajawal',sans-serif; font-weight:500;
+            font-size:0.9rem; z-index:99999; opacity:0; transition:opacity 0.3s;
+            pointer-events:none; white-space:nowrap;
+        }
+        .staff-toast.show { opacity:1; }
+        .staff-close-panel {
+            position:absolute; top:8px; left:8px; background:none; border:none;
+            color:var(--coffee-300); font-size:1.2rem; cursor:pointer;
+        }
+        .staff-toggle-btn {
+            position:fixed; left:16px; bottom:136px; z-index:9998;
+            width:44px; height:44px; border-radius:50%;
+            background:var(--gold); color:var(--coffee-900);
+            border:2px solid var(--gold); cursor:pointer;
+            display:none; align-items:center; justify-content:center;
+            font-size:1.1rem; box-shadow:0 4px 16px rgba(0,0,0,0.4);
+        }
+        .staff-toggle-btn.show { display:flex; }
+
+        /* LUCCA MENU 2.0 — luxury glass public-menu layer */
+        :root {
+            --glass-bg: rgba(39, 25, 20, 0.68);
+            --glass-line: rgba(255, 239, 216, 0.14);
+            --glass-soft: rgba(255, 248, 237, 0.08);
+            --accent: #d9ad70;
+            --ink: #fff8ef;
+            --muted-ink: rgba(255, 248, 239, 0.66);
+        }
+        body {
+            background: #120b09;
+            color: var(--ink);
+            background-image: radial-gradient(circle at 12% 8%, rgba(179,117,65,.22), transparent 34%), radial-gradient(circle at 90% 18%, rgba(91,112,90,.16), transparent 28%);
+        }
+        .container { max-width: 1180px; background: transparent; box-shadow: none; }
+        .header {
+            min-height: 430px;
+            display: flex;
+            align-items: flex-end;
+            text-align: right;
+            padding: 34px clamp(22px, 5vw, 72px) 54px;
+            overflow: hidden;
+            isolation: isolate;
+            background: linear-gradient(100deg, rgba(18,11,9,.96) 12%, rgba(18,11,9,.72) 54%, rgba(18,11,9,.28)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=85') center/cover;
+        }
+        .header::before { background: linear-gradient(135deg, rgba(255,255,255,.06), transparent 45%); opacity: 1; }
+        .header::after { height: 150px; background: linear-gradient(to top, #120b09, transparent); }
+        .header-content { width: 100%; max-width: 700px; }
+        .brand { align-items: flex-start; }
+        .brand-logo { width: 158px; margin-bottom: 26px; }
+        .header .location { justify-content: flex-start; color: var(--muted-ink); margin-top: 20px; }
+        .header .contact-phone { text-align: right; color: var(--muted-ink); }
+        .header-content::after { content: 'Slowly made. Carefully served.'; display: block; margin-top: 18px; color: var(--accent); font: 600 clamp(1.55rem, 5vw, 3.5rem)/1.08 'Playfair Display', serif; max-width: 570px; direction: ltr; text-align: left; }
+        .specialty-intro { margin: -28px clamp(16px, 4vw, 46px) 0; border: 1px solid var(--glass-line); border-radius: 24px; background: linear-gradient(135deg, rgba(94,59,39,.74), rgba(35,25,20,.66)); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); text-align: right; padding: 24px 26px; z-index: 2; }
+        .specialty-intro h2 { color: var(--accent); font-size: 1.05rem; }
+        .specialty-intro p { color: var(--muted-ink); font-size: .9rem; max-width: none; }
+        .sticky-bar { margin: 18px clamp(16px, 4vw, 46px) 0; border: 1px solid var(--glass-line); border-radius: 20px; background: rgba(25,17,14,.78); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); overflow: hidden; }
+        .search-container { padding: 12px; }
+        .search-box input { background: var(--glass-soft); border-color: var(--glass-line); color: var(--ink); border-radius: 14px; }
+        .search-box input::placeholder { color: var(--muted-ink); }
+        .tabs-container { padding: 4px 12px 12px; }
+        .tab { background: var(--glass-soft); color: var(--muted-ink); border: 1px solid var(--glass-line); min-height: 44px; }
+        .tab.active { background: var(--accent); color: #25160f; box-shadow: 0 8px 20px rgba(217,173,112,.2); }
+        .menu-content { padding: 28px clamp(16px, 4vw, 46px); }
+        .category { background: transparent; box-shadow: none; margin-bottom: 36px; overflow: visible; }
+        .category-header { padding: 10px 2px 16px; background: transparent; border-bottom: 1px solid var(--glass-line); }
+        .category-header h2 { color: var(--ink); font: 700 1.35rem 'Cairo', sans-serif; }
+        .toggle-icon { color: var(--accent); }
+        .category-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-height: 0; padding: 0; }
+        .category.expanded .category-items { padding: 4px 0 0; }
+        .menu-item { display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-areas: 'image image' 'info price'; align-items: stretch; gap: 14px; padding: 12px; border: 1px solid var(--glass-line); border-radius: 22px; background: linear-gradient(145deg, rgba(255,255,255,.105), rgba(255,255,255,.035)); box-shadow: 0 16px 36px rgba(0,0,0,.18); min-height: 300px; transition: transform .25s ease, border-color .25s ease, background .25s ease; }
+        .menu-item:hover { background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.05)); border-color: rgba(217,173,112,.42); padding-right: 12px; transform: translateY(-4px); }
+        .item-image { grid-area: image; width: 100%; height: 176px; flex: none; border: 0; border-radius: 16px; box-shadow: none; background: linear-gradient(135deg, #493127, #241713); }
+        .item-image img { object-position: center; }
+        .item-info { grid-area: info; align-self: end; }
+        .item-name { color: var(--ink); font-size: 1rem; font-weight: 700; line-height: 1.4; }
+        .item-description { color: var(--muted-ink); font-size: .78rem; line-height: 1.55; max-height: 2.5em; overflow: hidden; }
+        .item-price-wrap { grid-area: price; align-self: end; align-items: flex-end; }
+        .item-price { color: var(--accent); font-size: 1rem; }
+        .price-unit { color: var(--muted-ink); font-size: .65rem; }
+        .add-cart-btn { width: 44px; height: 44px; border-radius: 14px; background: var(--accent); color: #24150e; font-size: 1.35rem; }
+        .origin-selection { grid-column: 1 / -1; background: transparent; padding: 6px 0 0; border: 0; }
+        .origin-selection .label { color: var(--muted-ink); }
+        .qr-section, .footer { background: rgba(255,255,255,.04); color: var(--muted-ink); border-color: var(--glass-line); }
+        .cart-panel { background: rgba(27,18,15,.94); border-color: var(--glass-line); backdrop-filter: blur(26px); -webkit-backdrop-filter: blur(26px); }
+        .cart-fab { background: var(--accent); color: #24150e; box-shadow: 0 10px 30px rgba(217,173,112,.28); }
+        @media (max-width: 560px) { .category-items { grid-template-columns: 1fr; } .menu-item { min-height: 0; } .item-image { height: 190px; } }
+        @media (min-width: 768px) { .header { min-height: 500px; } }
+
         @media (min-width: 768px) {
             body { padding: 0; background: #E8E4DA; }
             .container { margin: 20px auto; border-radius: var(--radius-lg); min-height: auto; }
@@ -874,16 +776,67 @@
             .brand-logo { width: 240px; }
             .back-to-top { left: auto; right: 24px; bottom: 24px; }
             .lang-toggle { left: auto; right: 80px; bottom: 24px; }
+            .admin-float { left: 24px; bottom: 80px; }
+            .staff-toggle-btn { left:24px; bottom:136px; }
+            .staff-panel { left:auto; right:24px; bottom:24px; width:360px; border-radius:var(--radius-md); border:1px solid var(--gold); max-height:70vh; }
         }
+        /* Final public-menu overrides after legacy desktop rules */
+        @media (min-width: 768px) { body { background: #120b09; } .header { padding: 34px clamp(22px, 5vw, 72px) 54px; } .brand-logo { width: 158px; } }
+        .product-sheet { position: fixed; z-index: 10001; left: 50%; bottom: 0; width: min(100%, 560px); transform: translate(-50%, 110%); padding: 10px 14px calc(18px + env(safe-area-inset-bottom)); background: rgba(30,20,16,.96); border: 1px solid var(--glass-line); border-bottom: 0; border-radius: 28px 28px 0 0; box-shadow: 0 -24px 70px rgba(0,0,0,.45); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); transition: transform .3s ease; color: var(--ink); }
+        .product-sheet.show { transform: translate(-50%, 0); }
+        .product-sheet-close { position: absolute; top: 12px; left: 12px; z-index: 2; width: 44px; height: 44px; border: 1px solid var(--glass-line); border-radius: 50%; background: rgba(0,0,0,.3); color: var(--ink); cursor: pointer; font-size: 1rem; }
+        .product-sheet-image { height: 230px; border-radius: 20px; background: #281914 center/cover no-repeat; }
+        .product-sheet-content { padding: 18px 6px 0; }
+        .product-sheet-kicker { color: var(--accent); font-size: .68rem; letter-spacing: .18em; direction: ltr; }
+        .product-sheet h2 { margin: 6px 0; color: var(--ink); font: 700 1.35rem 'Cairo', sans-serif; }
+        .product-sheet p { color: var(--muted-ink); line-height: 1.7; min-height: 1.7em; }
+        .product-sheet-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 18px; }
+        .product-sheet-footer strong { color: var(--accent); font: 700 1.25rem 'Cairo', sans-serif; }
+        #productOverlay { z-index: 10000; }
+        .cart-overlay.show { opacity: 1; visibility: visible; }
+        /* Final mobile-first composition pass */
+        .header { min-height: 340px; align-items: stretch; padding: 18px 18px 32px; }
+        .header-content { display:flex; flex-direction:column; justify-content:space-between; max-width:none; }
+        .header-content::after { display:none; }
+        .app-topbar { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:2; }
+        .app-topbar-logo { width:106px; height:auto; filter:drop-shadow(0 4px 14px rgba(0,0,0,.35)); }
+        .app-topbar-actions { display:flex; gap:8px; direction:ltr; }
+        .app-topbar-actions button { width:44px; height:44px; border:1px solid var(--glass-line); border-radius:50%; background:rgba(17,10,8,.44); color:var(--ink); font-size:1.25rem; cursor:pointer; backdrop-filter:blur(12px); }
+        .hero-copy { position:relative; z-index:1; margin-top:auto; padding-top:72px; }
+        .hero-kicker { color:var(--accent); letter-spacing:.16em; font:600 .7rem/1 'Tajawal',sans-serif; direction:ltr; display:block; }
+        .hero-copy h1 { margin:14px 0 8px; max-width:320px; color:var(--ink); font:600 clamp(2.35rem,11vw,4.8rem)/.98 'Playfair Display',serif; direction:ltr; text-align:left; }
+        .hero-copy p { max-width:300px; color:var(--muted-ink); font-size:.9rem; line-height:1.8; }
+        .header .location { position:relative; z-index:1; justify-content:flex-start; font-size:.75rem; margin-top:20px; }
+        .header .contact-phone { position:relative; z-index:1; text-align:right; font-size:.72rem; margin-top:3px; }
+        .specialty-intro { margin-top:-18px; padding:20px 22px; border-radius:20px; }
+        .category-items { gap:12px; }
+        .menu-item { border-color:rgba(255,239,216,.1); border-radius:18px; box-shadow:0 10px 26px rgba(0,0,0,.14); }
+        .item-image.is-fallback { display:flex; flex-direction:column; gap:8px; justify-content:center; align-items:center; background:radial-gradient(circle at 30% 20%,rgba(217,173,112,.16),transparent 38%),linear-gradient(145deg,#30201b,#1d1210); color:var(--accent); }
+        .item-image.is-fallback span { font-size:2.1rem; opacity:.9; }
+        .item-image.is-fallback small { max-width:85%; color:var(--muted-ink); font-size:.75rem; text-align:center; line-height:1.45; }
+        #cat-specialty .category-header { border-bottom-color:rgba(217,173,112,.38); }
+        #cat-specialty .category-header h2 { color:var(--accent); }
+        #cat-specialty .menu-item { background:linear-gradient(145deg,rgba(217,173,112,.13),rgba(255,255,255,.035)); }
+        @media (min-width:768px) { .header { min-height:390px; padding:24px clamp(28px,6vw,80px) 42px; } .hero-copy h1 { max-width:560px; } .menu-content { max-width:1120px; margin:auto; } }
     </style>
+    <link rel="stylesheet" href="luxury-glass.css?v=3">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="header-content">
-                    <div class="brand">
-                        <img src="logo.svg?v=6" alt="Lucca" class="brand-logo" width="230" height="200">
+                <div class="app-topbar">
+                    <img src="logo.svg?v=6" alt="Lucca" class="app-topbar-logo" width="106" height="48">
+                    <div class="app-topbar-actions">
+                        <button type="button" onclick="document.getElementById('searchInput').focus()" aria-label="فتح البحث">⌕</button>
+                        <button type="button" onclick="toggleCart()" aria-label="فتح السلة">🛒</button>
                     </div>
+                </div>
+                <div class="hero-copy">
+                    <span class="hero-kicker">LUCCA / SPECIALTY COFFEE</span>
+                    <h1>Made with intention.</h1>
+                    <p>قهوة مختصة، لحظات هادئة، وتفاصيل تُحضّر بعناية.</p>
+                </div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
                 <div class="contact-phone">📞 +20 10 10058989</div>
             </div>
@@ -927,17 +880,357 @@
             <p style="font-size: 0.9rem; opacity: 0.7;">SPECIALTY COFFEE</p>
             <p>📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</p>
             <p class="contact">📞 +20 10 10058989</p>
-            <p id="footerAppEl" style="margin-top: 14px; font-size: 0.82rem; opacity: 0.5;">Specialty Coffee since 2024 ☕</p>
+            <p style="margin-top: 14px; font-size: 0.82rem; opacity: 0.5;">Specialty Coffee since 2024 ☕</p>
         </div>
     </div>
 
     <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
+    <button class="admin-float" id="adminFloat" onclick="openStaffLogin()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
+    <button class="staff-toggle-btn" id="staffToggleBtn" onclick="toggleStaffPanel()" aria-label="لوحة المحاسبة">📊</button>
+
+    <!-- Staff Login Modal -->
+    <div id="staffLoginOverlay" class="staff-overlay" style="display:none;" onclick="closeStaffLogin()"></div>
+    <div id="staffLoginModal" class="staff-modal" style="display:none;">
+        <div class="staff-modal-inner" onclick="event.stopPropagation()">
+            <img src="logo.svg?v=6" alt="Lucca" style="height:50px;margin-bottom:4px;">
+            <h3>لوحة المحاسبة</h3>
+            <p class="sub">تسجيل الدخول لإدارة المشتريات والمصروفات</p>
+            <input type="password" id="staffPassInput" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')staffLogin()">
+            <div id="staffLoginError" class="staff-error" style="display:none;">❌ كلمة المرور خطأ</div>
+            <button class="staff-btn" onclick="staffLogin()">تسجيل الدخول</button>
+            <button class="staff-btn secondary" onclick="closeStaffLogin()">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- Management Panel -->
+    <div id="staffPanel" class="staff-panel hidden">
+        <button class="staff-close-panel" onclick="closeStaffPanel()" aria-label="إغلاق">✕</button>
+        <div class="staff-bar">
+            <span class="staff-bar-title">📊 لوحة المحاسبة</span>
+            <div class="staff-bar-actions">
+                <button onclick="openAdminPanel()">🖥️ فتح اللوحة الكاملة</button>
+                <button onclick="staffLogout()">تسجيل خروج</button>
+            </div>
+        </div>
+        <div class="staff-tabs" id="staffTabs">
+            <button class="staff-tab active" onclick="switchStaffTab('summary')">📋 ملخص اليوم</button>
+            <button class="staff-tab" onclick="switchStaffTab('purchase')">🛒 مشتريات</button>
+            <button class="staff-tab" onclick="switchStaffTab('expense')">💰 مصروفات</button>
+        </div>
+        <div class="staff-content" id="staffContent"></div>
+    </div>
+
+    <div id="staffToast" class="staff-toast"></div>
+
+    <div id="adminToast" class="admin-toast"></div>
+
+    <!-- Admin Overlay for modals -->
+    <div id="closeShiftOverlay" class="admin-overlay" onclick="document.getElementById('closeShiftModal').style.display='none';this.style.display='none';"></div>
+
+    <!-- Close Shift Modal -->
+    <div id="closeShiftModal" class="admin-modal">
+        <div class="admin-modal-inner" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="document.getElementById('closeShiftModal').style.display='none';document.getElementById('closeShiftOverlay').style.display='none';">✕</button>
+            <h3>🔒 إقفال الوردية</h3>
+            <div class="row">
+                <label>المبلغ الفعلي في الصندوق (ج.م)</label>
+                <input type="number" id="cs-actual" class="admin-input full" placeholder="مثال: 1500" min="0" step="0.5">
+            </div>
+            <div class="row">
+                <button class="admin-btn admin-btn-primary" onclick="crConfirmClose()" style="width:100%;">🔒 تأكيد الإقفال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== Full Admin Panel ========== -->
+    <div id="adminWrapper" class="admin-wrapper">
+        <div style="position:fixed;inset:0;background:var(--coffee-900);z-index:9996;display:flex;flex-direction:column;overflow:hidden;">
+            <!-- Header -->
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--coffee-900);border-bottom:1px solid rgba(212,168,90,0.3);z-index:2;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="logo.svg?v=6" alt="Lucca" style="height:36px;">
+                    <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;">Lucca</span>
+                    <span style="color:var(--coffee-300);font-size:0.8rem;">SPECIALTY COFFEE</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="color:var(--coffee-300);font-size:0.85rem;" id="adminUserName">مدير النظام</span>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="closeAdminPanel()">✕ إغلاق</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="staffLogout()">تسجيل خروج</button>
+                </div>
+            </div>
+            <!-- Body: Sidebar + Content -->
+            <div style="display:flex;flex:1;overflow:hidden;">
+                <!-- Sidebar -->
+                <div class="admin-sidebar" style="border-left:1px solid rgba(255,255,255,0.06);padding:12px 8px;overflow-y:auto;">
+                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">📊</span> لوحة التحكم</button>
+                    <button class="admin-sidebar-btn" data-tab="menu-editor" onclick="showAdminTab('menu-editor')"><span class="icon">✦</span> محرر المنيو</button>
+                    <button class="admin-sidebar-btn" data-tab="cashier" onclick="showAdminTab('cashier')"><span class="icon">💰</span> صندوق اليومية</button>
+                    <button class="admin-sidebar-btn" data-tab="purchases" onclick="showAdminTab('purchases')"><span class="icon">🛒</span> المشتريات</button>
+                    <button class="admin-sidebar-btn" data-tab="employees" onclick="showAdminTab('employees')"><span class="icon">👨‍💼</span> الموظفين</button>
+                    <button class="admin-sidebar-btn" data-tab="reports" onclick="showAdminTab('reports')"><span class="icon">📋</span> التقارير</button>
+                    <button class="admin-sidebar-btn" data-tab="kitchen" onclick="showAdminTab('kitchen')"><span class="icon">🍳</span> المطبخ</button>
+                    <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><span class="icon">⚙️</span> الإعدادات</button>
+                </div>
+                <!-- Main Content -->
+                <div class="admin-main" style="overflow-y:auto;padding:16px 20px;">
+
+                    <!-- Dashboard Tab -->
+                    <div class="admin-tab active" id="at-dashboard">
+                        <h3>📊 لوحة التحكم</h3>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="icon-big">🧾</div><div class="val" id="dash-orders">0</div><div class="lbl">طلبات اليوم</div></div>
+                            <div class="stat-card"><div class="icon-big">💰</div><div class="val" id="dash-sales">0</div><div class="lbl">مبيعات (ج.م)</div></div>
+                            <div class="stat-card"><div class="icon-big">💵</div><div class="val" id="dash-cash">0</div><div class="lbl">نقدي</div></div>
+                            <div class="stat-card"><div class="icon-big">💳</div><div class="val" id="dash-card">0</div><div class="lbl">فيزا</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>🔗 روابط سريعة</h4>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('cashier')">💰 صندوق اليومية</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('purchases')">🛒 إضافة مشتريات</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('employees')">👨‍💼 تسجيل حضور</button>
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('reports')">📋 التقارير</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📱 رابط المنيو</h4>
+                            <div class="row">
+                                <input type="text" class="admin-input full" id="dash-menu-url" readonly style="font-size:0.8rem;" onclick="this.select()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-tab" id="at-menu-editor">
+                        <div id="menu-editor-root"></div>
+                    </div>
+
+                    <!-- Cashier Tab -->
+                    <div class="admin-tab" id="at-cashier">
+                        <h3>💰 صندوق اليومية</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <label>التاريخ</label>
+                                <input type="date" id="crDate" class="admin-input sm" onchange="crLoadDay()">
+                                <span id="crShiftStatus" style="color:var(--coffee-300);font-size:0.85rem;"></span>
+                            </div>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" id="crOpenBtn" onclick="crOpenShift()">🔓 فتح الوردية</button>
+                                <button class="admin-btn admin-btn-danger admin-btn-sm" id="crCloseBtn" style="display:none;" onclick="crCloseShiftDialog()">🔒 إقفال الوردية</button>
+                            </div>
+                        </div>
+                        <div class="section-card" id="crOpeningSection" style="display:none;">
+                            <h4>رصيد الافتتاح</h4>
+                            <div class="row">
+                                <input type="number" id="crOpeningAmount" class="admin-input sm" placeholder="المبلغ" min="0">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crSaveOpening()">💾 حفظ</button>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="val" id="cr-cash">0</div><div class="lbl">مبيعات نقدي</div></div>
+                            <div class="stat-card"><div class="val" id="cr-card">0</div><div class="lbl">مبيعات فيزا</div></div>
+                            <div class="stat-card"><div class="val" id="cr-total">0</div><div class="lbl">إجمالي المبيعات</div></div>
+                            <div class="stat-card"><div class="val" id="cr-exp">0</div><div class="lbl">إجمالي المصروفات</div></div>
+                            <div class="stat-card highlight"><div class="val" id="cr-expected">0</div><div class="lbl">المتوقع بالصندوق</div></div>
+                            <div class="stat-card" id="cr-actual-row" style="display:none;"><div class="val" id="cr-actual">0</div><div class="lbl">الفعلي</div></div>
+                            <div class="stat-card" id="cr-diff-row" style="display:none;"><div class="val" id="cr-diff">0</div><div class="lbl">الفارق</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>➕ إضافة مصروف</h4>
+                            <div class="row">
+                                <select id="crExpCat" class="admin-select sm">
+                                    <option value="إيجار">إيجار</option><option value="رواتب">رواتب</option>
+                                    <option value="مشتريات">مشتريات</option><option value="صيانة">صيانة</option>
+                                    <option value="كهرباء">كهرباء</option><option value="مياه">مياه</option>
+                                    <option value="إنترنت">إنترنت</option><option value="تسويق">تسويق</option>
+                                    <option value="نقل">نقل</option><option value="أخرى">أخرى</option>
+                                </select>
+                                <input type="number" id="crExpAmt" class="admin-input sm" placeholder="المبلغ" min="0">
+                                <input type="text" id="crExpNote" class="admin-input sm" placeholder="ملاحظات">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="crAddExpense()">➕ إضافة</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📋 سجل المصروفات</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>التصنيف</th><th>المبلغ</th><th>ملاحظات</th><th></th></tr></thead>
+                                    <tbody id="cr-expenses-body"><tr class="empty"><td colspan="4">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchases Tab -->
+                    <div class="admin-tab" id="at-purchases">
+                        <h3>🛒 المشتريات</h3>
+                        <div class="section-card">
+                            <h4>➕ إضافة مشتريات</h4>
+                            <div class="row">
+                                <input type="text" id="pur-item" class="admin-input md" placeholder="اسم الصنف">
+                                <input type="number" id="pur-qty" class="admin-input sm" placeholder="الكمية" value="1" min="1" style="width:80px;">
+                                <input type="number" id="pur-cost" class="admin-input sm" placeholder="التكلفة" min="0" step="0.5">
+                                <button class="admin-btn admin-btn-primary" onclick="addPurchase()">💾 حفظ</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                                <h4 style="margin:0;">📋 سجل المشتريات</h4>
+                                <span style="color:var(--gold);font-size:0.9rem;">الإجمالي: <strong id="pur-total-cost">0</strong> ج.م</span>
+                            </div>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>الصنف</th><th>الكمية</th><th>التكلفة</th><th>التاريخ</th><th></th></tr></thead>
+                                    <tbody id="purchases-body"><tr class="empty"><td colspan="5">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employees Tab -->
+                    <div class="admin-tab" id="at-employees">
+                        <h3>👨‍💼 الموظفين</h3>
+                        <div class="section-card">
+                            <h4>➕ إضافة موظف</h4>
+                            <div class="row">
+                                <input type="text" id="emp-name" class="admin-input md" placeholder="الاسم">
+                                <input type="text" id="emp-phone" class="admin-input sm" placeholder="الهاتف">
+                                <select id="emp-role" class="admin-select sm">
+                                    <option value="موظف">موظف</option><option value="كاشير">كاشير</option>
+                                    <option value="باريستا">باريستا</option><option value="مشرف">مشرف</option>
+                                    <option value="مدير">مدير</option>
+                                </select>
+                                <button class="admin-btn admin-btn-primary" onclick="addEmployee()">➕ إضافة</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>📋 قائمة الموظفين</h4>
+                            <div id="employees-list" style="color:var(--coffee-300);">جاري التحميل...</div>
+                        </div>
+
+                        <h3 style="margin-top:20px;">📋 الحضور والانصراف</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <select id="att-emp" class="admin-select sm"><option value="">— اختر موظفاً —</option></select>
+                                <input type="number" id="att-late" class="admin-input sm" placeholder="تأخير (دقائق)" value="0" min="0" style="width:100px;">
+                                <input type="text" id="att-notes" class="admin-input sm" placeholder="ملاحظات">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="checkInEmployee()">✅ تسجيل حضور</button>
+                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="checkOutEmployee()">🔴 انصراف</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>سجل اليوم</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>الموظف</th><th>الحضور</th><th>الانصراف</th><th>تأخير</th><th>مكافأة/خصم</th><th></th></tr></thead>
+                                    <tbody id="att-body"><tr class="empty"><td colspan="6">جاري التحميل...</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reports Tab -->
+                    <div class="admin-tab" id="at-reports">
+                        <h3>📋 التقارير</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <label>من</label>
+                                <input type="date" id="rpt-from" class="admin-input sm" onchange="loadReport()">
+                                <label>إلى</label>
+                                <input type="date" id="rpt-to" class="admin-input sm" onchange="loadReport()">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="setDefaultReportDates();loadReport();">📅 هذا الشهر</button>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-card"><div class="val" id="rpt-orders">0</div><div class="lbl">عدد الطلبات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-sales">0</div><div class="lbl">إجمالي المبيعات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-cash">0</div><div class="lbl">نقدي</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-visa">0</div><div class="lbl">فيزا</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-avg">0</div><div class="lbl">متوسط الطلب</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-expenses">0</div><div class="lbl">مصروفات</div></div>
+                            <div class="stat-card"><div class="val" id="rpt-cogs">0</div><div class="lbl">تكلفة المشتريات</div></div>
+                            <div class="stat-card highlight"><div class="val" id="rpt-profit">0</div><div class="lbl">صافي الربح</div></div>
+                            <div class="stat-card highlight"><div class="val" id="rpt-margin">0%</div><div class="lbl">هامش الربح</div></div>
+                        </div>
+                        <div class="section-card">
+                            <h4>تفاصيل الطلبات</h4>
+                            <div class="admin-table-wrap">
+                                <table class="admin-table">
+                                    <thead><tr><th>#</th><th>طاولة</th><th>المبلغ</th><th>الدفع</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+                                    <tbody id="rpt-body"><tr class="empty"><td colspan="6">اختر الفترة</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kitchen Tab -->
+                    <div class="admin-tab" id="at-kitchen">
+                        <h3>🍳 المطبخ</h3>
+                        <div class="section-card">
+                            <div class="row">
+                                <span style="color:var(--gold);font-size:1.1rem;" id="kitchen-count">0</span>
+                                <span style="color:var(--coffee-300);">طلبات معلقة</span>
+                                <label style="margin-right:20px;color:var(--coffee-300);font-size:0.85rem;">
+                                    <input type="checkbox" id="kitchen-sound" checked onchange="toggleKitchenSound()"> 🔔 صوت
+                                </label>
+                                <label style="color:var(--coffee-300);font-size:0.85rem;">
+                                    <input type="checkbox" id="kitchen-all" onchange="loadKitchen()"> عرض الكل
+                                </label>
+                            </div>
+                        </div>
+                        <div id="kitchen-grid" class="kitchen-grid">
+                            <div style="text-align:center;color:var(--coffee-300);padding:30px;">جاري التحميل...</div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="admin-tab" id="at-settings">
+                        <h3>⚙️ الإعدادات</h3>
+                        <div class="section-card">
+                            <h4>إعدادات النظام</h4>
+                            <div class="row">
+                                <label>رقم واتساب</label>
+                                <input type="text" id="set-whatsapp" class="admin-input md" placeholder="مثال: 201010058989">
+                            </div>
+                            <div class="row">
+                                <label>بداية الدوام</label>
+                                <input type="time" id="set-workstart" class="admin-input sm" value="09:00">
+                            </div>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+                            </div>
+                        </div>
+                        <div class="section-card">
+                            <h4>💾 إدارة البيانات</h4>
+                            <div class="row">
+                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="exportAllData()">📤 تصدير البيانات</button>
+                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="triggerImport()">📥 استيراد البيانات</button>
+                                <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /admin-main -->
+            </div><!-- /flex body -->
+        </div><!-- /fixed overlay -->
+    </div><!-- /adminWrapper -->
 
     <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة للأعلى">↑</button>
 
     <!-- Cart -->
     <div id="cartOverlay" class="cart-overlay" onclick="toggleCart()"></div>
+    <div id="productOverlay" class="cart-overlay" onclick="closeProductDetail()"></div>
+    <section id="productSheet" class="product-sheet" role="dialog" aria-modal="true" aria-labelledby="productSheetTitle">
+        <button class="product-sheet-close" onclick="closeProductDetail()" aria-label="إغلاق تفاصيل المنتج">✕</button>
+        <div id="productSheetImage" class="product-sheet-image"></div>
+        <div class="product-sheet-content">
+            <div class="product-sheet-kicker">LUCCA SELECTION</div>
+            <h2 id="productSheetTitle"></h2>
+            <p id="productSheetDescription"></p>
+            <div id="productSheetOrigins"></div>
+            <div class="product-sheet-footer"><strong id="productSheetPrice"></strong><button id="productSheetAdd" class="add-cart-btn">+</button></div>
+        </div>
+    </section>
     <div id="cartPanel" class="cart-panel">
         <div class="cart-drag-handle"></div>
         <div class="cart-header">
@@ -973,27 +1266,8 @@
     <!-- Toast -->
     <div id="cartToast" class="cart-toast"></div>
 
-    <!-- AI Chat Bot -->
-    <button class="chat-btn" id="chatBtn" onclick="toggleChat()" aria-label="فتح المساعد">🤖</button>
-    <div id="chatOverlay" class="chat-overlay" onclick="toggleChat()"></div>
-    <div id="chatPanel" class="chat-panel">
-        <div class="chat-header">
-            <div class="avatar">☕</div>
-            <div class="info">
-                <h3 id="chatTitleLabel">🤖 Lucca AI</h3>
-                <p id="chatStatusLabel">متاح للمساعدة</p>
-            </div>
-            <button class="chat-close" onclick="toggleChat()" aria-label="إغلاق">✕</button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg bot" id="chatWelcomeMsg">☕ Loading...</div>
-        </div>
-        <div class="chat-input-wrap">
-            <input type="text" id="chatInput" placeholder="اكتب سؤالك هنا..." autocomplete="off" onkeydown="if(event.key==='Enter') sendChatMsg()">
-            <button onclick="sendChatMsg()" aria-label="إرسال">➤</button>
-        </div>
-    </div>
-
+    <script src="admin-integration.js"></script>
+    <script src="menu-editor.js"></script>
     <script>
         const _LANG = {
             search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
@@ -1011,7 +1285,7 @@
             specDesc: { ar: 'القهوة المختصة هي أجود 3% من إنتاج القهوة العالمي، نختارها بعناية من أفضل المزارع حول العالم. كل حبة قهوة في Lucca تمر بمعايير جودة صارمة لنضمن لك طعماً نقياً ومميزاً.', en: 'Specialty coffee is the top 3% of global coffee production, carefully sourced from the best farms worldwide. Every Lucca bean meets strict quality standards for a pure, distinctive taste.' },
             qrTitle: { ar: '📱 امسح QR للوصول للمنيو', en: '📱 Scan QR to access the menu' },
             qrDesc: { ar: 'يمكنك مسح هذا الكود للوصول السريع إلى قائمة الطعام من هاتفك المحمول', en: 'Scan this code to quickly access the menu from your phone' },
-            footerApp: { ar: 'Specialty Coffee منذ 2024 ☕', en: 'Specialty Coffee since 2024 ☕' },
+            footerApp: { ar: 'Buon Appetito! 🍽️', en: 'Buon Appetito! 🍽️' },
             backTop: { ar: 'العودة للأعلى', en: 'Back to top' },
             originTitle: { ar: 'اختر المحصول لـ', en: 'Choose origin for' },
             originCancel: { ar: 'إلغاء', en: 'Cancel' },
@@ -1020,10 +1294,6 @@
             waTotal: { ar: '💵 *الإجمالي:', en: '💵 *Total:' },
             waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
             originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
-            chatTitle: { ar: '🤖 بوت لوكا الذكي 💬', en: '🤖 Lucca Smart Bot 💬' },
-            chatStatus: { ar: 'بوت لوكا تحت أمرك — اسأل على أي حاجة 😊', en: 'Lucca Bot at your service — ask me anything 😊' },
-            chatPlace: { ar: 'اسألني عن أي حاجة…', en: 'Ask me anything…' },
-            chatWelcome: { ar: '☕ أنا بوت لوكا الذكي — عايز تساعد في إيه النهاردة؟', en: '☕ I\'m Lucca Smart Bot — what can I help you with today?' },
             catNames: {
                 ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
                 en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
@@ -1047,7 +1317,7 @@
                 tableNumLabel: 'tableLabel',
                 tableNum: 'tablePlace',
                 orderNotes: 'notesPlace',
-                notesLabel: 'notesLabel',
+                notesLabelEl: 'notesLabel',
                 totalLabel: 'total',
                 sendBtnLabel: 'sendBtn',
                 shareBtn: 'shareLabel',
@@ -1056,11 +1326,7 @@
                 qrTitleEl: 'qrTitle',
                 qrDescEl: 'qrDesc',
                 footerAppEl: 'footerApp',
-                backToTop: 'backTop',
-                chatTitleLabel: 'chatTitle',
-                chatStatusLabel: 'chatStatus',
-                chatInput: 'chatPlace',
-                chatWelcomeMsg: 'chatWelcome'
+                backToTop: 'backTop'
             };
             for (const [id, key] of Object.entries(byId)) {
                 const el = document.getElementById(id);
@@ -1092,196 +1358,168 @@
             { icon: '➕', name: () => t('catNames').addons, id: 'addons' }
         ];
 
-        function tn(item) { return lang === 'en' && item.en ? item.en : item.n; }
-        function td(item) { return lang === 'en' && item.de ? item.de : (item.d || ''); }
-        function getImg(catId, item) { return ''; }
-        function badgeLabel(type) {
-            const labels = { popular: { ar: '⭐', en: '⭐' }, new: { ar: '🆕', en: '🆕' }, specialty: { ar: '💎', en: '💎' } };
-            return (labels[type] || {})[lang] || type;
-        }
-
-        // ─── كيفية إضافة صنف جديد ───
-        // كل صنف له الخصائص دي:
-        //   n:  الاسم بالعربي (إجباري)
-        //   en: الاسم بالإنجليزي (للترجمة)
-        //   p:  السعر (رقم أو مصفوفة [نص, كامل])
-        //   d:  الوصف بالعربي (اختياري)
-        //   de: الوصف بالإنجليزي (اختياري)
-        //   origins: المحاصيل المتاحة (اختياري)
-        //   b:  badge (وسم) اختياري: 'popular', 'new', 'specialty'
-        //   img: رابط صورة مخصصة (اختياري - لو محددش بجيب من images.js)
-        //
-        // مثال لإضافة صنف جديد:
-        // { n: 'اسم الصنف', en: 'Item Name', p: '50', d: 'وصف', de: 'Description' }
-        //
-        // لإضافة تصنيف جديد:
-        // 1. ضيف id جديد في CATEGORIES تحت (line ~730)
-        // 2. ضيف المفتاح في catNames.ar و catNames.en في _LANG
-        // 3. ضيف البيانات تحت الـ DATA
-        // 4. ضيف الصور في ملف images.js
-        // ──────────────────────────────
-
-        let DATA = {
+        const DATA = {
             specialty: [
-                { n: 'V60', en: 'V60', p: '80', b: 'popular', d: 'قهوة مفلترة يدوياً بطريقة V60', de: 'Hand-poured V60 filter coffee', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
-                { n: 'آيس دريب', en: 'Iced Drip', p: '80', b: 'specialty', d: 'قهوة مفلترة مثلجة — نفس طريقة V60 بنقطرها على ثلج عشان تطلع منعشة', de: 'Iced filtered coffee — same V60 pour-over method dripped over ice for a refreshing cup', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
-                { n: 'قهوة اليوم', en: "Coffee of the Day", p: '50', d: 'تصفية يومية من حبوب مختارة', de: 'Daily brew from selected beans', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] }
+                { n: 'V60', p: '80', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
+                { n: 'آيس دريب', p: '80', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] },
+                { n: 'قهوة اليوم', p: '50', origins: ['🇪🇹 إثيوبي', '🇧🇷 برازيلي', '🇮🇳 هندي', '🇨🇴 كولومبي'] }
             ],
             coffee: [
-                { n: 'إسبريسو', en: 'Espresso', p: '45', b: 'popular', d: 'جرعة إسبريسو مركزة', de: 'Concentrated espresso shot' },
-                { n: 'إسبريسو دبل', en: 'Double Espresso', p: '70', d: 'جرعة مزدوجة من الإسبريسو', de: 'Double shot of rich espresso' },
-                { n: 'قهوة تركي', en: 'Turkish Coffee', p: '35', d: 'قهوة تركية تقليدية', de: 'Traditional Turkish coffee' },
-                { n: 'ميكاتو', en: 'Piccolo', p: '50', d: 'قطرة حليب على جرعة إسبريسو', de: 'Drop of milk on espresso' },
-                { n: 'ميكاتو دبل', en: 'Double Piccolo', p: '80', d: 'إسبريسو دبل مع لمسة حليب', de: 'Double espresso with a touch of milk' },
-                { n: 'موكا', en: 'Mocha', p: '75', d: 'إسبريسو مع شوكولاتة وحليب', de: 'Espresso with dark chocolate & steamed milk' },
-                { n: 'وايت موكا', en: 'White Mocha', p: '75', d: 'موكا ناعمة مع حليب', de: 'Smooth mocha with white chocolate' },
-                { n: 'فلات وايت', en: 'Flat White', p: '80', b: 'specialty', d: 'إسبريسو مع طبقة رقيقة من الحليب', de: 'Espresso with thin velvety milk layer' },
-                { n: 'كورتادو', en: 'Cortado', p: '75', d: 'نسبة متوازنة بين الإسبريسو والحليب', de: 'Balanced espresso with warm milk' },
-                { n: 'كابتشينو', en: 'Cappuccino', p: '85', b: 'popular', d: 'إسبريسو مع رغوة كثيفة', de: 'Espresso with thick foam & steamed milk' },
-                { n: 'لاتيه', en: 'Latte', p: '85', b: 'popular', d: 'قهوة إسبريسو مع حليب مخملي', de: 'Espresso with velvety steamed milk' },
-                { n: 'قهوة بندق', en: 'Hazelnut Coffee', p: '70', b: 'popular', d: 'قهوة بنكهة البندق المحمص', de: 'Coffee with roasted hazelnut flavor' },
-                { n: 'قهوة فرنساوي', en: 'French Press', p: '65', d: 'قهوة فرنسي برس غنية', de: 'Rich French press coffee' },
-                { n: 'نسكافيه', en: 'Nescafe', p: '70', d: 'مشروب قهوة سريع التحضير', de: 'Instant coffee drink' }
+                { n: 'إسبريسو', p: '45' }, { n: 'إسبريسو دبل', p: '70' },
+                { n: 'قهوة تركي', p: '35' }, { n: 'ميكاتو', p: '50' },
+                { n: 'ميكاتو دبل', p: '80' }, { n: 'موكا', p: '75' },
+                { n: 'وايت موكا', p: '75' }, { n: 'فلات وايت', p: '80' },
+                { n: 'كورتادو', p: '75' }, { n: 'كابتشينو', p: '85' },
+                { n: 'لاتيه', p: '85' },                 { n: 'قهوة بندق', p: '70' },
+                { n: 'قهوة فرنساوي', p: '65' }, { n: 'نسكافيه', p: '70' },
+                { n: 'هوت شوكليت', p: '70' }, { n: 'هوت شوكليت نوتيلا', p: '80' }
             ],
             'hot-drinks': [
-                { n: 'هوت شوكليت', en: 'Hot Chocolate', p: '70', d: 'مشروب شوكولاتة دافئ', de: 'Warm rich chocolate drink' },
-                { n: 'هوت شوكليت نوتيلا', en: 'Nutella Hot Chocolate', p: '80', b: 'specialty', d: 'شوكولاتة ساخنة مع نوتيلا', de: 'Hot chocolate with Nutella' },
-                { n: 'شاي', en: 'Ahmed Tea', p: '35', d: 'شاي أحمد الأسود الطازج', de: 'Fresh Ahmed black tea' },
-                { n: 'شاي كرك', en: 'Ahmed Karak Tea', p: '50', b: 'specialty', d: 'شاي أحمد كرك هندي', de: 'Ahmed Indian spiced Karak tea' },
-                { n: 'شاي أخضر', en: 'Ahmed Green Tea', p: '35', d: 'شاي أحمد الأخضر الطازج', de: 'Fresh Ahmed green tea' },
-                { n: 'ميكس أعشاب', en: 'Herbal Mix', p: '50', d: 'خلطة أعشاب متنوعة', de: 'Mixed herbal blend' },
-                { n: 'شاي بالبن', en: 'Ahmed Milk Tea', p: '50', d: 'شاي أحمد مع لبن', de: 'Ahmed tea with milk' },
-                { n: 'هوت سيدر', en: 'Hot Cider', p: '50', b: 'new', d: 'مشروب تفاح ساخن بالقرفة', de: 'Hot apple cider with cinnamon' },
-                { n: 'أعشاب', en: 'Herbal Tea', p: '35', d: 'مشروب أعشاب دافئ', de: 'Warm herbal drink' }
+                { n: 'شاي', p: '35' }, { n: 'شاي كرك', p: '50' },
+                { n: 'شاي أخضر', p: '35' }, { n: 'ميكس أعشاب', p: '50' },
+                { n: 'شاي بالبن', p: '50' }, { n: 'هوت سيدر', p: '50' },
+                { n: 'أعشاب', p: '35' }
             ],
             'iced-coffee': [
-                { n: 'آيس كوفي', en: 'Iced Coffee', p: '80', b: 'popular', d: 'قهوة مثلجة', de: 'Chilled iced coffee' },
-                { n: 'آيس لاتيه', en: 'Iced Latte', p: '85', b: 'popular', d: 'لاتيه مثلج', de: 'Iced latte' },
-                { n: 'آيس موكا', en: 'Iced Mocha', p: '90', d: 'موكا مثلج', de: 'Iced mocha' },
-                { n: 'آيس وايت موكا', en: 'Iced White Mocha', p: '90', d: 'وايت موكا مثلج', de: 'Iced white mocha' },
-                { n: 'فرابتشينو', en: 'Frappuccino', p: '95', b: 'specialty', d: 'فرابتشينو مثلج', de: 'Blended iced frappuccino' },
-                { n: 'فرابيه', en: 'Frappe', p: ['85', '95'], d: 'كلاسيك أو فروت', de: 'Classic or Fruit' }
+                { n: 'آيس كوفي', p: '80' }, { n: 'آيس لاتيه', p: '85' },
+                { n: 'آيس موكا', p: '90' }, { n: 'آيس وايت موكا', p: '90' },
+                { n: 'فرابتشينو', p: '95' },
+                { n: 'فرابيه', p: ['85', '95'], d: 'كلاسيك أو فروت' }
             ],
             milkshake: [
-                { n: 'شوكولاتة', en: 'Chocolate', p: '90', b: 'popular', d: 'ميلك شيك شوكولاتة', de: 'Chocolate milkshake' },
-                { n: 'فانيليا', en: 'Vanilla', p: '90', d: 'ميلك شيك فانيليا', de: 'Vanilla milkshake' },
-                { n: 'فراولة', en: 'Strawberry', p: '90', b: 'popular', d: 'ميلك شيك فراولة', de: 'Strawberry milkshake' },
-                { n: 'مانجو', en: 'Mango', p: '90', d: 'ميلك شيك مانجو', de: 'Mango milkshake' },
-                { n: 'نوتيلا', en: 'Nutella', p: '100', b: 'specialty', d: 'ميلك شيك نوتيلا', de: 'Nutella milkshake' },
-                { n: 'كراميل', en: 'Caramel', p: '90', d: 'ميلك شيك كراميل', de: 'Caramel milkshake' },
-                { n: 'أوريو', en: 'Oreo', p: '110', b: 'new', d: 'ميلك شيك أوريو', de: 'Oreo milkshake' },
-                { n: 'ميكس شوكليت', en: 'Chocolate Mix', p: '120', b: 'specialty', d: 'ميلك شيك شوكليت ميكس', de: 'Mixed chocolate milkshake' }
+                { n: 'شوكولاتة', p: '90' }, { n: 'فانيليا', p: '90' },
+                { n: 'فراولة', p: '90' }, { n: 'مانجو', p: '90' },
+                { n: 'نوتيلا', p: '100' }, { n: 'كراميل', p: '90' },
+                { n: 'أوريو', p: '110' }, { n: 'ميكس شوكليت', p: '120' }
             ],
             juice: [
-                { n: 'مانجو', en: 'Mango', p: '90', b: 'popular', d: 'عصير مانجو طازج', de: 'Fresh mango juice' },
-                { n: 'فراولة', en: 'Strawberry', p: '80', d: 'عصير فراولة طازج', de: 'Fresh strawberry juice' },
-                { n: 'جوافة', en: 'Guava', p: '75', b: 'new', d: 'عصير جوافة طازج', de: 'Fresh guava juice' },
-                { n: 'كيوي', en: 'Kiwi', p: '90', b: 'new', d: 'عصير كيوي طازج', de: 'Fresh kiwi juice' },
-                { n: 'برتقال', en: 'Orange', p: '75', b: 'popular', d: 'عصير برتقال طازج', de: 'Fresh orange juice' },
-                { n: 'ليمون', en: 'Lemon', p: '70', d: 'عصير ليمون طازج', de: 'Fresh lemon juice' },
-                { n: 'ليمون نعناع', en: 'Mint Lemon', p: '75', b: 'new', d: 'ليمون طازج مع نعناع', de: 'Fresh lemon with mint' }
+                { n: 'مانجو', p: '90' }, { n: 'فراولة', p: '80' },
+                { n: 'جوافة', p: '75' }, { n: 'كيوي', p: '90' },
+                { n: 'برتقال', p: '75' }, { n: 'ليمون', p: '70' },
+                { n: 'ليمون نعناع', p: '75' }
             ],
             desserts: [
-                { n: 'وافل كلاسيك', en: 'Classic Waffle', p: ['40', '80'], b: 'popular', d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'وافل ميكس شوكليت', en: 'Chocolate Waffle', p: '140', b: 'specialty', d: 'وافل بالشوكولاتة', de: 'Chocolate mixed waffle' },
-                { n: 'وافل فورسيزون', en: 'Four Seasons Waffle', p: '120', b: 'specialty', d: 'وافل بأربع نكهات', de: 'Four flavors waffle' },
-                { n: 'وافل بابل', en: 'Bubble Waffle', p: '85', d: 'وافل بابل', de: 'Bubble waffle' },
-                { n: 'وافل فواكه', en: 'Fruit Waffle', p: '110', d: 'وافل بالفواكه', de: 'Fresh fruit waffle' },
-                { n: 'سان سيباستيان', en: 'San Sebastian', p: '70', b: 'new', d: 'تشيز كيك فطري', de: 'Basque cheesecake' },
-                { n: 'مولتن', en: 'Molten Cake', p: '80', b: 'popular', d: 'كيك الشوكولاتة الذائبة', de: 'Chocolate molten cake' },
-                { n: 'براونيز', en: 'Brownie', p: '80', d: 'براونيز شوكولاتة', de: 'Chocolate brownie' },
-                { n: 'كوكيز', en: 'Cookies', p: '40', d: 'كوكيز طازج', de: 'Fresh cookies' },
-                { n: 'أم علي مكسرات', en: 'Om Ali with Nuts', p: '90', d: 'أم علي بالمكسرات', de: 'Egyptian bread pudding with nuts' },
-                { n: 'تشيز كيك', en: 'Cheesecake', p: '90', b: 'popular', d: 'تشيز كيك كلاسيك', de: 'Classic cheesecake' },
-                { n: 'موس جالاكسي', en: 'Galaxy Mousse', p: '100', b: 'specialty', d: 'موس جالاكسي بالشوكولاتة', de: 'Galaxy chocolate mousse' },
-                { n: 'بان كيك', en: 'Pancake', p: '80', b: 'new', d: 'بان كيك طري مع صوص الشوكولاتة', de: 'Soft pancake with chocolate sauce' },
-                { n: 'كريب رول', en: 'Crepe Roll', p: '85', b: 'new', d: 'كريب رول محشي كريمة', de: 'Cream-filled crepe roll' },
-                { n: 'كريب فتوتشيني', en: 'Crepe Fettuccine', p: '95', b: 'new', d: 'كريب فتوتشيني بصوص الشوكولاتة', de: 'Fettuccine-style crepe with chocolate sauce' },
-                { n: 'ريد فالفيت', en: 'Red Velvet', p: '95', b: 'new', d: 'ريد فالفيت بكريمة الجبنة', de: 'Red velvet cake with cream cheese' }
+                { n: 'وافل كلاسيك', p: ['40', '80'], d: 'نص / كامل' },
+                { n: 'وافل ميكس شوكليت', p: '140' },
+                { n: 'وافل فورسيزون', p: '120' },
+                { n: 'وافل بابل', p: '85' },
+                { n: 'وافل فواكه', p: '110' },
+                { n: 'سان سيباستيان', p: '70' },
+                { n: 'مولتن', p: '80' },
+                { n: 'براونيز', p: '80' },
+                { n: 'كوكيز', p: '40' },
+                { n: 'أم علي مكسرات', p: '90' },
+                { n: 'تشيز كيك', p: '90' },
+                { n: 'موس جالاكسي', p: '100' }
             ],
             smoothie: [
-                { n: 'من اختيارك', en: 'Your Choice', p: '75', b: 'popular', d: 'سموزي طازج من اختيارك', de: 'Fresh smoothie of your choice' }
+                { n: 'من اختيارك', p: '75' }
             ],
             soda: [
-                { n: 'جيلي كولا', en: 'Jelly Cola', p: '75' },
-                { n: 'صن شاين', en: 'Sunshine', p: '75' },
-                { n: 'صن رايز', en: 'Sunrise', p: '75' },
-                { n: 'موهيتو', en: 'Mojito', p: '75', b: 'popular', d: 'موهيتو كلاسيك', de: 'Classic mojito' },
-                { n: 'موهيتو فليفر', en: 'Mojito Flavor', p: '100', b: 'new', d: 'موهيتو بالنكهة', de: 'Flavored mojito' },
-                { n: 'شيري كولا', en: 'Cherry Cola', p: '75' },
-                { n: 'ميكس بيري', en: 'Mixed Berry', p: '80', b: 'new' },
-                { n: 'بلو بيري فراولة', en: 'Blueberry Strawberry', p: '75' },
-                { n: 'بينا كولادا', en: 'Pina Colada', p: '75' },
-                { n: 'باشون أناناس', en: 'Passion Pineapple', p: '75' },
-                { n: 'ريدبول فليفر', en: 'Redbull Flavor', p: '120', b: 'specialty' },
-                { n: 'ميكس لوكا', en: 'Lucca Mix', p: '80', b: 'specialty' }
+                { n: 'جيلي كولا', p: '75' }, { n: 'صن شاين', p: '75' },
+                { n: 'صن رايز', p: '75' }, { n: 'موهيتو', p: '75' },
+                { n: 'موهيتو فليفر', p: '100' }, { n: 'شيري كولا', p: '75' },
+                { n: 'ميكس بيري', p: '80' },
+                { n: 'بلو بيري فراولة', p: '75' },
+                { n: 'بينا كولادا', p: '75' },
+                { n: 'باشون أناناس', p: '75' },
+                { n: 'ريدبول فليفر', p: '120' },
+                { n: 'ميكس لوكا', p: '80' }
             ],
             winter: [
-                { n: 'حمص الشام', en: 'Roasted Chickpeas', p: '80', d: 'حمص الشام', de: 'Roasted chickpeas' },
-                { n: 'بليلة', en: 'Balila', p: '85', d: 'بليلة', de: 'Warm chickpea soup' },
-                { n: 'سحلب', en: 'Sahlab', p: '85', b: 'popular', d: 'سحلب ساخن كريمي', de: 'Warm creamy orchid drink' },
-                { n: 'سحلب نوتيلا', en: 'Nutella Sahlab', p: '90', b: 'specialty', d: 'سحلب بنوتيلا', de: 'Sahlab with Nutella' }
+                { n: 'حمص الشام', p: '80' }, { n: 'بليلة', p: '85' },
+                { n: 'سحلب', p: '85' }, { n: 'سحلب نوتيلا', p: '90' }
             ],
             breakfast: [
-                { n: 'توست ميكس جبن', en: 'Mixed Cheese Toast', p: ['30', '60'], d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'توست بسطرمة', en: 'Pastrami Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'توست روزبيف', en: 'Roast Beef Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'توست رومي مدخن', en: 'Smoked Turkey Toast', p: ['35', '70'], d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'توست كفيار', en: 'Caviar Toast', p: ['50', '100'], d: 'نص / كامل', de: 'Half / Full' },
-                { n: 'ساندويتش ميكس جبن', en: 'Mixed Cheese Sandwich', p: '25' },
-                { n: 'ساندويتش بسطرمة', en: 'Pastrami Sandwich', p: '30' },
-                { n: 'كرواسون سادة', en: 'Plain Croissant', p: '65', b: 'new', d: 'كرواسون سادة طري وفريش', de: 'Fresh soft plain croissant' },
-                { n: 'كرواسون تركي', en: 'Turkish Croissant', p: '85', b: 'popular', d: 'كرواسون محشي رومي تركي', de: 'Croissant stuffed with smoked turkey' },
-                { n: 'كرواسون روزبيف', en: 'Roast Beef Croissant', p: '85', d: 'كرواسون محشي روزبيف', de: 'Croissant stuffed with roast beef' },
-                { n: 'كرواسون حلومي بستو', en: 'Halloumi Pesto Croissant', p: '95', b: 'specialty', d: 'كرواسون محشي جبنة حلومي بصوص البيستو', de: 'Croissant with halloumi & pesto sauce' },
-                { n: 'شباتا تركي', en: 'Turkish Ciabatta', p: '85', d: 'شباتا محشي رومي تركي', de: 'Ciabatta stuffed with smoked turkey' },
-                { n: 'شباتا روزبيف', en: 'Roast Beef Ciabatta', p: '85', d: 'شباتا محشي روزبيف', de: 'Ciabatta stuffed with roast beef' },
-                { n: 'شباتا حلومي بستو', en: 'Halloumi Pesto Ciabatta', p: '95', b: 'specialty', d: 'شباتا محشي جبنة حلومي بصوص البيستو', de: 'Ciabatta with halloumi & pesto sauce' },
-                { n: 'باجيت تركي', en: 'Turkish Baguette', p: '85', d: 'باجيت محشي رومي تركي', de: 'Baguette stuffed with smoked turkey' },
-                { n: 'باجيت روزبيف', en: 'Roast Beef Baguette', p: '85', d: 'باجيت محشي روزبيف', de: 'Baguette stuffed with roast beef' },
-                { n: 'باجيت حلومي بستو', en: 'Halloumi Pesto Baguette', p: '95', b: 'specialty', d: 'باجيت محشي جبنة حلومي بصوص البيستو', de: 'Baguette with halloumi & pesto sauce' }
+                { n: 'توست ميكس جبن', p: ['30', '60'] },
+                { n: 'توست بسطرمة', p: ['35', '70'] },
+                { n: 'توست روزبيف', p: ['35', '70'] },
+                { n: 'توست رومي مدخن', p: ['35', '70'] },
+                { n: 'توست كفيار', p: ['50', '100'] },
+                { n: 'ساندويتش ميكس جبن', p: '25' },
+                { n: 'ساندويتش بسطرمة', p: '30' }
             ],
             pizza: [
-                { n: 'بيتزا سي فود', en: 'Seafood Pizza', p: '250', b: 'specialty', d: 'بيتزا بالمأكولات البحرية', de: 'Seafood pizza' },
-                { n: 'بيتزا سلامي', en: 'Salami Pizza', p: '170', b: 'popular', d: 'بيتزا بالسلامي الإيطالي', de: 'Italian salami pizza' },
-                { n: 'بيتزا رانش', en: 'Ranch Pizza', p: '200', d: 'بيتزا بصوص الرانش', de: 'Pizza with ranch sauce' },
-                { n: 'بيتزا دجاج', en: 'Chicken Pizza', p: '200', b: 'popular', d: 'بيتزا بقطع الدجاج', de: 'Chicken pizza' },
-                { n: 'بيتزا مارجريتا', en: 'Margherita Pizza', p: '150', d: 'بيتزا كلاسيك بجبن الموزاريلا', de: 'Classic mozzarella pizza' },
-                { n: 'بيتزا تشيكن باربكيو', en: 'BBQ Chicken Pizza', p: '180', d: 'بيتزا بالدجاج وصوص الباربكيو', de: 'BBQ chicken pizza' },
-                { n: 'بيتزا اسبايسي رانش', en: 'Spicy Ranch Pizza', p: '190', d: 'بيتزا حارة بصوص الرانش', de: 'Spicy ranch pizza' },
-                { n: 'بيتزا سوبر سوبريم', en: 'Super Supreme Pizza', p: '220', b: 'popular', d: 'بيتزا الخلطة الفاخرة', de: 'Supreme mix pizza' }
+                { n: 'بيتزا سي فود', p: '250' },
+                { n: 'بيتزا سلامي', p: '170' },
+                { n: 'بيتزا رانش', p: '200' },
+                { n: 'بيتزا دجاج', p: '200' },
+                { n: 'بيتزا مارجريتا', p: '150' },
+                { n: 'بيتزا تشيكن باربكيو', p: '180' },
+                { n: 'بيتزا اسبايسي رانش', p: '190' },
+                { n: 'بيتزا سوبر سوبريم', p: '220' }
             ],
             'soft-drinks': [
-                { n: 'بيبسي', en: 'Pepsi', p: '35' },
-                { n: 'تويست', en: 'Twist', p: '35' },
-                { n: 'فيروز', en: 'Firoz', p: '40' },
-                { n: 'ريدبول', en: 'Red Bull', p: '85' },
-                { n: 'بيريل', en: 'Birell', p: '50' },
-                { n: 'مياه', en: 'Water', p: '10' }
+                { n: 'بيبسي', p: '35' }, { n: 'تويست', p: '35' },
+                { n: 'فيروز', p: '40' }, { n: 'ريدبول', p: '85' },
+                { n: 'بيريل', p: '50' }, { n: 'مياه', p: '10' }
             ],
             addons: [
-                { n: 'جبن', en: 'Cheese', p: '15', d: 'جبن مقدون', de: 'Mozzarella cheese' },
-                { n: 'شيكولاتة', en: 'Chocolate', p: '15' },
-                { n: 'مكسرات', en: 'Nuts', p: '20' },
-                { n: 'نوتيلا', en: 'Nutella', p: '25' },
-                { n: 'كارت', en: 'Card', p: '5', d: 'كارد', de: 'Card' },
-                { n: 'طاولة', en: 'Table', p: '20' }
+                { n: 'جبن', p: '15', d: 'جبن مقدون' },
+                { n: 'شيكولاتة', p: '15' },
+                { n: 'مكسرات', p: '20' },
+                { n: 'نوتيلا', p: '25' },
+                { n: 'كارت', p: '5', d: 'كارد' },
+                { n: 'طاولة', p: '20' }
             ]
         };
 
+        // Image adapter: keeps the visible DATA canonical while reusing the existing image registry.
+        const IMAGE_CATEGORY_MAP = {
+            specialty: 'القهوة المختصه', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة',
+            'iced-coffee': 'القهوة المثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش',
+            desserts: 'الحلويات', smoothie: 'سموزي', soda: 'مشروبات صودا', winter: 'مشروبات شتوية',
+            breakfast: 'الفطور', pizza: 'البيتزا', 'soft-drinks': 'مشروبات غازية وطاقة', addons: 'الإضافات'
+        };
+        const IMAGE_FALLBACKS = {
+            specialty: '☕', coffee: '☕', 'hot-drinks': '🫖', 'iced-coffee': '🧋', milkshake: '🥛',
+            juice: '🍊', desserts: '🍰', smoothie: '🥭', soda: '🥤', winter: '🍂', breakfast: '🍳',
+            pizza: '🍕', 'soft-drinks': '🥫', addons: '➕'
+        };
+        function getProductImage(item, categoryId) {
+            if (Object.prototype.hasOwnProperty.call(item, 'image')) return item.image;
+            const sourceData = typeof menuData !== 'undefined' ? menuData : [];
+            const category = sourceData.find(c => c.title === IMAGE_CATEGORY_MAP[categoryId]);
+            if (!category) return null;
+            const exact = category.items.find(source => source.name === item.n);
+            if (exact) return exact.image;
+            const relaxed = category.items.find(source => item.n.startsWith(source.name) || source.name.startsWith(item.n));
+            return relaxed ? relaxed.image : null;
+        }
+
+        function openProductDetail(categoryId, index) {
+            const item = getPublishedItems(categoryId)?.[index];
+            if (!item) return;
+            const image = getProductImage(item, categoryId);
+            const imageEl = document.getElementById('productSheetImage');
+            imageEl.style.backgroundImage = image ? `url("${image}")` : 'none';
+            imageEl.textContent = image ? '' : (IMAGE_FALLBACKS[categoryId] || '🍽️');
+            document.getElementById('productSheetTitle').textContent = item.n;
+            document.getElementById('productSheetDescription').textContent = item.d || 'اختيار مميز من قائمة Lucca.';
+            document.getElementById('productSheetPrice').textContent = Array.isArray(item.p) ? `${item.p.join(' / ')} ج.م` : `${item.p} ج.م`;
+            const originsEl = document.getElementById('productSheetOrigins');
+            originsEl.innerHTML = item.origins?.length ? `<div class="origin-selection"><div class="label">${t('originLabel')}</div><div class="origin-options">${item.origins.map(o => `<span class="origin-tag">${o}</span>`).join('')}</div></div>` : '';
+            document.getElementById('productSheetAdd').onclick = () => { addToCart(item.n, Array.isArray(item.p) ? item.p[0] : item.p, ''); closeProductDetail(); };
+            document.getElementById('productOverlay').classList.add('show');
+            document.getElementById('productSheet').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeProductDetail() {
+            document.getElementById('productOverlay').classList.remove('show');
+            document.getElementById('productSheet').classList.remove('show');
+            if (!document.getElementById('cartPanel').classList.contains('show')) document.body.style.overflow = '';
+        }
+
         // Cart
         let cart = [];
-        function addToCart(nameAr, price, origin, nameEn) {
+        function addToCart(name, price, origin) {
             price = parseInt(price) || 0;
-            const name = nameAr;
-            const en = nameEn || nameAr;
-            const key = origin ? `${nameAr}||${origin}` : nameAr;
+            const key = origin ? `${name}||${origin}` : name;
             const existing = cart.find(i => i.key === key);
             if (existing) { existing.qty++; }
-            else { cart.push({ key, nameAr, en, name: nameAr, price, qty: 1, origin }); }
+            else { cart.push({ key, name, price, qty: 1, origin }); }
             updateCartUI();
-            const displayName = lang === 'en' ? (en || nameAr) : nameAr;
-            showCartToast(`${t('toastAdd')} ${displayName}${origin ? ` (${origin})` : ''}`);
+            showCartToast(`${t('toastAdd')} ${name}${origin ? ` (${origin})` : ''}`);
         }
         function removeFromCart(key) {
             const idx = cart.findIndex(i => i.key === key);
@@ -1316,26 +1554,15 @@
                 return;
             }
             container.innerHTML = cart.map(i => `
-                <div class="cart-item" data-key="${i.key.replace(/"/g, '&quot;')}" data-price="${i.price}" data-name="${(i.nameAr||i.name).replace(/"/g, '&quot;')}" data-en="${(i.en||'').replace(/"/g, '&quot;')}" data-origin="${(i.origin||'').replace(/"/g, '&quot;')}">
-                    <span class="cart-item-name">${lang === 'en' ? (i.en || i.nameAr || i.name) : (i.nameAr || i.name)}${i.origin ? `<br><small style="color:var(--coffee-500);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
+                <div class="cart-item">
+                    <span class="cart-item-name">${i.name}${i.origin ? `<br><small style="color:var(--coffee-500);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
                     <span class="cart-item-price">${(i.price * i.qty).toFixed(0)} ج.م</span>
-                    <button class="cart-qty-btn" data-action="dec">−</button>
+                    <button class="cart-qty-btn" onclick="removeFromCart('${i.key.replace(/'/g, "\\'")}')">−</button>
                     <span class="cart-item-qty">${i.qty}</span>
-                    <button class="cart-qty-btn" data-action="inc">+</button>
-                    <button class="cart-qty-btn" data-action="del" style="border-color:#e74c3c;color:#e74c3c;">✕</button>
-                </div>`
-            ).join('');
-            container.onclick = function(e) {
-                const btn = e.target.closest('.cart-qty-btn');
-                if (!btn) return;
-                const row = btn.closest('.cart-item');
-                if (!row) return;
-                const key = row.dataset.key;
-                const action = btn.dataset.action;
-                if (action === 'dec') removeFromCart(key);
-                else if (action === 'inc') addToCart(row.dataset.name, parseInt(row.dataset.price), row.dataset.origin, row.dataset.en);
-                else if (action === 'del') deleteFromCart(key);
-            };
+                    <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price}, '${(i.origin||'').replace(/'/g, "\\'")}')">+</button>
+                    <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.key.replace(/'/g, "\\'")}')">✕</button>
+                </div>
+            `).join('');
         }
         function toggleCart() {
             const panel = document.getElementById('cartPanel');
@@ -1346,23 +1573,19 @@
             if (isOpen) document.body.style.overflow = '';
             else document.body.style.overflow = 'hidden';
         }
-        async function sendCartWhatsApp() {
+        function sendCartWhatsApp() {
             if (cart.length === 0) return;
-            const tableId = document.getElementById('tableNum').value.trim() || null;
-            const notes = document.getElementById('orderNotes').value.trim();
             const lines = [t('waTitle'), '━━━━━━━━━━━━', ''];
-            if (tableId) {
-                lines.push(`${t('waTable')} ${tableId}*`);
+            const table = document.getElementById('tableNum').value.trim();
+            if (table) {
+                lines.push(`${t('waTable')} ${table}*`);
                 lines.push('');
             }
+            const notes = document.getElementById('orderNotes').value.trim();
             cart.forEach(i => {
-                const wName = lang === 'en' ? (i.en || i.nameAr || i.name) : (i.nameAr || i.name);
-                const detail = `${wName}${i.origin ? ` (${i.origin})` : ''}`;
+                const detail = `${i.name}${i.origin ? ` (${i.origin})` : ''}`;
                 lines.push(`• ${detail} x${i.qty} = ${(i.price * i.qty).toFixed(0)} ج.م`);
             });
-            if (lang === 'en') {
-                lines[0] = '☕ *Order from Lucca Café*';
-            }
             if (notes) {
                 lines.push('', `📝 *ملاحظات: ${notes}*`);
             }
@@ -1371,9 +1594,8 @@
             lines.push(`${t('waTotal')} ${total.toFixed(0)} ج.م*`);
             lines.push('', t('waFooter'));
             const msg = lines.join('\n');
-            const phone = localStorage.getItem('luccaWhatsApp') || '201010058989';
+            const phone = '201010058989';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-            showCartToast('✅ تم إرسال الطلب');
             toggleCart();
             document.getElementById('tableNum').value = '';
             document.getElementById('orderNotes').value = '';
@@ -1387,624 +1609,201 @@
             clearTimeout(el._hide);
             el._hide = setTimeout(() => el.classList.remove('show'), 1200);
         }
+        // ==================== Staff / Accounting Integration ====================
+        let _staffUser = null;
 
-        // ─── AI Chat Bot ───
-        let chatOpen = false;
-        function toggleChat() {
-            chatOpen = !chatOpen;
-            document.getElementById('chatPanel').classList.toggle('show');
-            document.getElementById('chatOverlay').classList.toggle('show');
-            if (chatOpen) {
-                document.body.style.overflow = 'hidden';
-                document.getElementById('chatInput').focus();
-                const welcomeMsg = document.getElementById('chatWelcomeMsg');
-                if (welcomeMsg && !welcomeMsg.dataset.suggestionsShown) {
-                    welcomeMsg.dataset.suggestionsShown = '1';
-                    const tg = getTimeGreeting();
-                    welcomeMsg.innerHTML = renderMD(tg.greeting);
-                    const sug = tg.suggestions;
-                    setTimeout(() => {
-                        const sDiv = document.createElement('div');
-                        sDiv.className = 'chat-suggestions';
-                        sug.forEach(s => {
-                            const btn = document.createElement('button');
-                            btn.textContent = s;
-                            btn.onclick = function() { chatInput.value = s; sendChatMsg(); };
-                            sDiv.appendChild(btn);
-                        });
-                        const container = document.getElementById('chatMessages');
-                        container.appendChild(sDiv);
-                        container.scrollTop = container.scrollHeight;
-                    }, 400);
-                }
+        async function openStaffLogin() {
+            document.getElementById('staffLoginOverlay').style.display = 'block';
+            document.getElementById('staffLoginModal').style.display = 'flex';
+            document.getElementById('staffPassInput').value = '';
+            document.getElementById('staffLoginError').style.display = 'none';
+            setTimeout(() => document.getElementById('staffPassInput').focus(), 200);
+        }
+
+        function closeStaffLogin() {
+            document.getElementById('staffLoginOverlay').style.display = 'none';
+            document.getElementById('staffLoginModal').style.display = 'none';
+        }
+
+        async function staffLogin() {
+            const pass = document.getElementById('staffPassInput').value;
+            if (!pass) return;
+            const errEl = document.getElementById('staffLoginError');
+            try {
+                await LuccaDB.initSystem();
+                _staffUser = await LuccaDB.Users.login('admin', pass);
+                closeStaffLogin();
+                document.getElementById('adminFloat').classList.add('logged-in');
+                document.getElementById('staffToggleBtn').classList.add('show');
+                openStaffPanel();
+            } catch (e) {
+                errEl.style.display = 'block';
+            }
+        }
+
+        function staffLogout() {
+            _staffUser = null;
+            LuccaDB.Users.logout();
+            document.getElementById('adminFloat').classList.remove('logged-in');
+            document.getElementById('staffToggleBtn').classList.remove('show');
+            closeStaffPanel();
+            if (typeof closeAdminPanel === 'function') closeAdminPanel();
+            showStaffToast('🚪 تم تسجيل الخروج');
+        }
+
+        function toggleStaffPanel() {
+            const panel = document.getElementById('staffPanel');
+            if (panel.classList.contains('hidden')) {
+                openStaffPanel();
             } else {
-                document.body.style.overflow = '';
+                closeStaffPanel();
             }
         }
 
-        function renderMD(text) {
-            return text
-                .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
-                .replace(/\n/g, '<br>')
-                .replace(/•/g, '<span style="color:var(--gold);margin-left:4px">•</span>');
+        function openStaffPanel() {
+            document.getElementById('staffPanel').classList.remove('hidden');
+            document.getElementById('staffToggleBtn').style.display = 'none';
+            switchStaffTab('summary');
         }
-        function chatMsg(text, isUser, suggestions, items) {
-            const container = document.getElementById('chatMessages');
-            const div = document.createElement('div');
-            div.className = 'chat-msg ' + (isUser ? 'user' : 'bot');
-            if (isUser) {
-                div.textContent = text;
-            } else {
-                div.innerHTML = renderMD(text);
-            }
-            container.appendChild(div);
-            if (items && items.length) {
-                const itemsDiv = document.createElement('div');
-                itemsDiv.className = 'chat-items';
-                items.forEach(item => {
-                    const btn = document.createElement('button');
-                    btn.className = 'chat-add-btn';
-                    const label = tn(item) + ' — ' + formatPrice(item.p);
-                    btn.innerHTML = '<span>' + label + '</span><span class="chat-add-icon">+</span>';
-                    btn.onclick = function(e) {
-                        e.stopPropagation();
-                        const price = Array.isArray(item.p) ? item.p[0] : item.p;
-                        addToCart(item.n, price, '', item.en || item.n);
-                        showCartToast('✅ ' + tn(item) + ' أضيف للسلة');
-                    };
-                    itemsDiv.appendChild(btn);
+
+        function closeStaffPanel() {
+            document.getElementById('staffPanel').classList.add('hidden');
+            document.getElementById('staffToggleBtn').style.display = '';
+        }
+
+        function showStaffToast(msg) {
+            const el = document.getElementById('staffToast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._hide);
+            el._hide = setTimeout(() => el.classList.remove('show'), 2000);
+        }
+
+        function switchStaffTab(tab) {
+            document.querySelectorAll('.staff-tab').forEach(t => t.classList.remove('active'));
+            const btn = document.querySelector(`.staff-tab[onclick*="'${tab}'"]`);
+            if (btn) btn.classList.add('active');
+            renderStaffTab(tab);
+        }
+
+        function renderStaffTab(tab) {
+            const el = document.getElementById('staffContent');
+            if (tab === 'summary') renderStaffSummary(el);
+            else if (tab === 'purchase') renderStaffPurchaseForm(el);
+            else if (tab === 'expense') renderStaffExpenseForm(el);
+        }
+
+        function renderStaffSummary(el) {
+            el.innerHTML = '<div style="text-align:center;color:var(--coffee-300);padding:20px;">جاري التحميل...</div>';
+            (async () => {
+                try {
+                    const orders = await LuccaDB.Orders.getDailySales() || [];
+                    const today = new Date().toISOString().split('T')[0];
+                    const allPurchases = await LuccaDB.Purchases.getAll() || [];
+                    const purchases = allPurchases.filter(p => p.date === today);
+                    const expenses = await LuccaDB.Expenses.getByDate(today) || [];
+                    const totalSales = orders.reduce((s, o) => s + (o.total || 0), 0);
+                    const totalPurchases = purchases.reduce((s, p) => s + (p.total || p.price || 0), 0);
+                    const totalExpenses = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+                    const net = totalSales - totalPurchases - totalExpenses;
+                    el.innerHTML = `
+                        <div class="stat-row">
+                            <div class="stat-card"><div class="num">${orders.length}</div><div class="lbl">طلبات اليوم</div></div>
+                            <div class="stat-card"><div class="num">${totalSales.toFixed(0)} ج.م</div><div class="lbl">مبيعات</div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-card"><div class="num">${totalPurchases.toFixed(0)} ج.م</div><div class="lbl">مشتريات</div></div>
+                            <div class="stat-card"><div class="num">${totalExpenses.toFixed(0)} ج.م</div><div class="lbl">مصروفات</div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-card" style="background:rgba(212,168,90,0.15);border:1px solid var(--gold);">
+                                <div class="num" style="color:${net>=0?'var(--gold)':'#e74c3c'}">${net.toFixed(0)} ج.م</div>
+                                <div class="lbl">صافي الربح</div>
+                            </div>
+                        </div>
+                        <button class="staff-submit" onclick="switchStaffTab('purchase')" style="margin-top:8px;">➕ إضافة مشتريات</button>
+                        <button class="staff-submit" onclick="switchStaffTab('expense')" style="margin-top:6px;background:var(--coffee-300);">💰 إضافة مصروف</button>
+                    `;
+                } catch(e) {
+                    el.innerHTML = '<div style="text-align:center;color:#e74c3c;padding:20px;">❌ خطأ في تحميل البيانات</div>';
+                }
+            })();
+        }
+
+        function renderStaffPurchaseForm(el) {
+            el.innerHTML = `
+                <div class="form-group">
+                    <label>اسم الصنف</label>
+                    <input type="text" id="pName" placeholder="مثال: سكر">
+                </div>
+                <div class="form-group">
+                    <label>الكمية</label>
+                    <input type="number" id="pQty" placeholder="1" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label>السعر (ج.م)</label>
+                    <input type="number" id="pPrice" placeholder="مثال: 150" min="0" step="0.5">
+                </div>
+                <button class="staff-submit" onclick="submitPurchase()">💾 حفظ المشتريات</button>
+            `;
+        }
+
+        async function submitPurchase() {
+            const name = document.getElementById('pName').value.trim();
+            const qty = parseFloat(document.getElementById('pQty').value) || 1;
+            const price = parseFloat(document.getElementById('pPrice').value);
+            if (!name || !price) { showStaffToast('❌ أكمل البيانات'); return; }
+            try {
+                await LuccaDB.Purchases.add({
+                    name, quantity: qty, total: price,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: new Date().toISOString(),
+                    createdBy: _staffUser?.name || 'admin'
                 });
-                container.appendChild(itemsDiv);
+                showStaffToast('✅ تم حفظ المشتريات');
+                switchStaffTab('summary');
+            } catch(e) {
+                showStaffToast('❌ فشل الحفظ');
             }
-            if (suggestions) {
-                const sDiv = document.createElement('div');
-                sDiv.className = 'chat-suggestions';
-                suggestions.forEach(s => {
-                    const btn = document.createElement('button');
-                    btn.textContent = s;
-                    btn.onclick = function() { chatInput.value = s; sendChatMsg(); };
-                    sDiv.appendChild(btn);
+        }
+
+        function renderStaffExpenseForm(el) {
+            const cats = ['إيجار','رواتب','مشتريات','صيانة','كهرباء','مياه','إنترنت','تسويق','نقل','أخرى'];
+            el.innerHTML = `
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="eCat">${cats.map(c => `<option value="${c}">${c}</option>`).join('')}</select>
+                </div>
+                <div class="form-group">
+                    <label>المبلغ (ج.م)</label>
+                    <input type="number" id="eAmt" placeholder="مثال: 500" min="0" step="0.5">
+                </div>
+                <div class="form-group">
+                    <label>ملاحظات</label>
+                    <input type="text" id="eNote" placeholder="اختياري">
+                </div>
+                <button class="staff-submit" onclick="submitExpense()">💾 حفظ المصروف</button>
+            `;
+        }
+
+        async function submitExpense() {
+            const cat = document.getElementById('eCat').value;
+            const amt = parseFloat(document.getElementById('eAmt').value);
+            const note = document.getElementById('eNote').value.trim();
+            if (!amt) { showStaffToast('❌ أدخل المبلغ'); return; }
+            try {
+                await LuccaDB.Expenses.add({
+                    category: cat, amount: amt, notes: note,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: new Date().toISOString(),
+                    createdBy: _staffUser?.name || 'admin'
                 });
-                container.appendChild(sDiv);
+                showStaffToast('✅ تم حفظ المصروف');
+                switchStaffTab('summary');
+            } catch(e) {
+                showStaffToast('❌ فشل الحفظ');
             }
-            container.scrollTop = container.scrollHeight;
         }
-
-        function chatTyping(show) {
-            const container = document.getElementById('chatMessages');
-            let el = document.getElementById('chatTypingEl');
-            if (!show) { if (el) el.remove(); return; }
-            if (el) return;
-            el = document.createElement('div');
-            el.className = 'chat-typing';
-            el.id = 'chatTypingEl';
-            el.innerHTML = '<span></span><span></span><span></span>';
-            container.appendChild(el);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        let CALORIES = {
-            'specialty||V60': 8, 'specialty||Iced Drip': 8, 'specialty||Coffee of the Day': 8,
-            'coffee||Espresso': 5, 'coffee||Double Espresso': 10, 'coffee||Turkish Coffee': 15,
-            'coffee||Piccolo': 35, 'coffee||Double Piccolo': 55, 'coffee||Mocha': 250,
-            'coffee||White Mocha': 280, 'coffee||Flat White': 130, 'coffee||Cortado': 85,
-            'coffee||Cappuccino': 130, 'coffee||Latte': 180, 'coffee||Hazelnut Coffee': 160,
-            'coffee||French Press': 10, 'coffee||Nescafe': 80,
-            'hot-drinks||Hot Chocolate': 210, 'hot-drinks||Nutella Hot Chocolate': 360,
-            'hot-drinks||Ahmed Tea': 5, 'hot-drinks||Ahmed Karak Tea': 85, 'hot-drinks||Ahmed Green Tea': 5,
-            'hot-drinks||Herbal Mix': 5, 'hot-drinks||Ahmed Milk Tea': 65, 'hot-drinks||Hot Cider': 100,
-            'hot-drinks||Herbal Tea': 5,
-            'iced-coffee||Iced Coffee': 85, 'iced-coffee||Iced Latte': 160, 'iced-coffee||Iced Mocha': 260,
-            'iced-coffee||Iced White Mocha': 290, 'iced-coffee||Frappuccino': 360, 'iced-coffee||Frappe': 300,
-            'milkshake||Chocolate': 410, 'milkshake||Vanilla': 390, 'milkshake||Strawberry': 380,
-            'milkshake||Mango': 370, 'milkshake||Nutella': 510, 'milkshake||Caramel': 430,
-            'milkshake||Oreo': 490, 'milkshake||Chocolate Mix': 530,
-            'juice||Mango': 130, 'juice||Strawberry': 100, 'juice||Guava': 100,
-            'juice||Kiwi': 110, 'juice||Orange': 110, 'juice||Lemon': 60, 'juice||Mint Lemon': 60,
-            'desserts||Classic Waffle': [320, 640], 'desserts||Chocolate Waffle': 720,
-            'desserts||Four Seasons Waffle': 660, 'desserts||Bubble Waffle': 410,
-            'desserts||Fruit Waffle': 520, 'desserts||San Sebastian': 360,
-            'desserts||Molten Cake': 460, 'desserts||Brownie': 360, 'desserts||Cookies': 210,
-            'desserts||Om Ali with Nuts': 410, 'desserts||Cheesecake': 360,             'desserts||Galaxy Mousse': 420, 'desserts||Pancake': 350, 'desserts||Crepe Roll': 380, 'desserts||Crepe Fettuccine': 420, 'desserts||Red Velvet': 480,
-            'smoothie||Your Choice': 160,
-            'soda||Jelly Cola': 130, 'soda||Sunshine': 130, 'soda||Sunrise': 130,
-            'soda||Mojito': 100, 'soda||Mojito Flavor': 120, 'soda||Cherry Cola': 130,
-            'soda||Mixed Berry': 100, 'soda||Blueberry Strawberry': 100,
-            'soda||Pina Colada': 150, 'soda||Passion Pineapple': 120,
-            'soda||Redbull Flavor': 110, 'soda||Lucca Mix': 130,
-            'winter||Roasted Chickpeas': 210, 'winter||Balila': 260,
-            'winter||Sahlab': 260, 'winter||Nutella Sahlab': 360,
-            'breakfast||Mixed Cheese Toast': [260, 520], 'breakfast||Pastrami Toast': [310, 620],
-            'breakfast||Roast Beef Toast': [310, 620], 'breakfast||Smoked Turkey Toast': [290, 580],
-            'breakfast||Caviar Toast': [210, 420], 'breakfast||Mixed Cheese Sandwich': 360,
-            'breakfast||Pastrami Sandwich': 410, 'breakfast||Plain Croissant': 280,
-            'breakfast||Turkish Croissant': 420, 'breakfast||Roast Beef Croissant': 430,
-            'breakfast||Halloumi Pesto Croissant': 480, 'breakfast||Turkish Ciabatta': 460,
-            'breakfast||Roast Beef Ciabatta': 470, 'breakfast||Halloumi Pesto Ciabatta': 520,
-            'breakfast||Turkish Baguette': 440, 'breakfast||Roast Beef Baguette': 450,
-            'breakfast||Halloumi Pesto Baguette': 500,
-            'pizza||Seafood Pizza': 820, 'pizza||Salami Pizza': 720, 'pizza||Ranch Pizza': 770,
-            'pizza||Chicken Pizza': 670, 'pizza||Margherita Pizza': 620,
-            'pizza||BBQ Chicken Pizza': 720, 'pizza||Spicy Ranch Pizza': 740,
-            'pizza||Super Supreme Pizza': 820,
-            'soft-drinks||Pepsi': 150, 'soft-drinks||Twist': 150, 'soft-drinks||Firoz': 100,
-            'soft-drinks||Red Bull': 110, 'soft-drinks||Birell': 50, 'soft-drinks||Water': 0,
-            'addons||Cheese': 50, 'addons||Chocolate': 70, 'addons||Nuts': 100,
-            'addons||Nutella': 150, 'addons||Card': 0, 'addons||Table': 0
-        };
-
-        function cal(item) {
-            const k = item.catId + '||' + item.en;
-            const c = CALORIES[k];
-            if (c === undefined) return '';
-            if (Array.isArray(c)) return c.map(v => v + ' سعرة').join(' / ');
-            return c + ' سعرة';
-        }
-
-        function buildMenuIndex() {
-            const idx = [];
-            for (const cat of CATEGORIES) {
-                const items = DATA[cat.id];
-                if (!items) continue;
-                const catNameAr = _LANG.catNames.ar[cat.id] || cat.id;
-                const catNameEn = _LANG.catNames.en[cat.id] || cat.id;
-                for (const item of items) {
-                    const en = item.en || item.n;
-                    idx.push({
-                        catId: cat.id,
-                        catAr: catNameAr,
-                        catEn: catNameEn,
-                        n: item.n,
-                        en: en,
-                        p: item.p,
-                        c: CALORIES[cat.id + '||' + en],
-                        d: item.d || '',
-                        de: item.de || '',
-                        b: item.b || '',
-                        origins: item.origins || []
-                    });
-                }
-            }
-            return idx;
-        }
-        let menuIndex = buildMenuIndex();
-        function rebuildMenuIndex() { menuIndex = buildMenuIndex(); }
-        const chatInput = document.getElementById('chatInput');
-
-        function searchMenu(q) {
-            q = q.toLowerCase().trim();
-            if (!q) return [];
-            return menuIndex.filter(item =>
-                item.n.toLowerCase().includes(q) ||
-                item.en.toLowerCase().includes(q) ||
-                item.catAr.includes(q) ||
-                item.catEn.toLowerCase().includes(q) ||
-                item.d.includes(q) ||
-                item.de.toLowerCase().includes(q)
-            );
-        }
-
-        function formatPrice(p) {
-            if (Array.isArray(p)) return p.join(' / ') + ' ج.م';
-            return p + ' ج.م';
-        }
-
-        function upsellPair(catId) {
-            const pairs = {
-                coffee: { ar: '🔥 جرب معاها حاجة من الحلويات — الكنافة بالنوتيلا جامدة جداً!', en: '🔥 Pair it with a dessert — the Nutella Kunafa is fire!' },
-                'hot-drinks': { ar: '🔥 عايز حاجة جنبها؟ جرب الكنافة أو البان كيك!', en: '🔥 Want something on the side? Try Kunafa or Pancakes!' },
-                desserts: { ar: '☕ الكوباي دي محتاجة قهوة — جرب الكورتادو أو سينجل أوريجن!', en: '☕ This needs coffee — try Cortado or Single Origin!' },
-                'iced-coffee': { ar: '🍰 لو عايز حاجة تسكري معاها، الكنافة اختيار ممتاز!', en: '🍰 Want something sweet with it? Kunafa is a perfect match!' },
-                milkshake: { ar: '🧇 الميلك شيك مع وافل أو بان كيك = أقوى كومبو!', en: '🧇 Milkshake + Waffle or Pancake = the ultimate combo!' },
-                breakfast: { ar: '☕ الفطار الكامل محتاج قهوة سادة — جرب الإسبريسو!', en: '☕ Full breakfast needs a black coffee — try Espresso!' },
-                specialty: { ar: '🍫 القهوة المختصة مع الكنافة = تجربة مش هتنساها!', en: '🍫 Specialty coffee + Nutella Kunafa = unforgettable!' }
-            };
-            return pairs[catId] || null;
-        }
-
-        let chatCtx = null;
-
-        function coffeeGuide(item) {
-            const guides = {
-                'إسبريسو': { ar: 'جرعة قهوة مركزة، قوية جداً (٥ سعرات فقط)، تناسب عشاق القهوة الحقيقيين', en: 'Concentrated espresso shot, very strong (5 cal), for true coffee lovers' },
-                'Double Espresso': { ar: 'جرعة دبل قوية — صاحية الصبح بجد', en: 'Double shot — a real morning kick' },
-                'كابتشينو': { ar: 'إسبريسو مع رغوة حليب كثيفة — ناعم ومتوازن، ممتاز للمبتدئين', en: 'Espresso with thick milk foam — smooth & balanced, great for beginners' },
-                'لاتيه': { ar: 'إسبريسو مع حليب مخملي — أخف من الكابتشينو، طعمه كريمي', en: 'Espresso with velvety milk — lighter than cappuccino, creamy taste' },
-                'Cappuccino': { ar: 'إسبريسو مع رغوة حليب كثيفة — ناعم ومتوازن، ممتاز للمبتدئين', en: 'Espresso with thick milk foam — smooth & balanced, great for beginners' },
-                'Latte': { ar: 'إسبريسو مع حليب مخملي — أخف من الكابتشينو، طعمه كريمي', en: 'Espresso with velvety milk — lighter than cappuccino, creamy taste' },
-                'Flat White': { ar: 'إسبريسو دبل مع طبقة حليب رقيقة ناعمة — طعم قوي مع قوام مخملي', en: 'Double espresso with thin velvety milk — strong flavor, silky texture' },
-                'Mocha': { ar: 'إسبريسو مع شوكولاتة وحليب — طعم غني، حلو ومناسب لمحبي الشوكولاتة', en: 'Espresso with chocolate & milk — rich, sweet, for chocolate lovers' },
-                'Cortado': { ar: 'نسبة متوازنة بين الإسبريسو والحليب الدافئ — طعم قوي مش طاغي', en: 'Perfect balance of espresso & warm milk — strong but smooth' },
-                'Piccolo': { ar: 'جرعة إسبريسو مع قطرة حليب — صغيرة لكن قوية', en: 'Small espresso with a drop of milk — tiny but mighty' },
-                'V60': { ar: 'قهوة مفلترة يدوي — نقية، عطرية، بتظهر نكهات البن الأصيلة', en: 'Hand-poured filter coffee — clean, aromatic, pure origin flavors' },
-                'Iced Drip': { ar: 'قهوة مفلترة مثلجة — بنقطر V60 على ثلج، منعشة وخفيفة', en: 'Iced filtered coffee — V60 dripped over ice, refreshing & light' }
-            };
-            const g = guides[item.en] || guides[item.n];
-            if (g) return g;
-            if (item.catId === 'coffee') return { ar: 'من قسم القهوة — طعم غني وممتاز', en: 'From our coffee section — rich and excellent' };
-            if (item.catId === 'specialty') return { ar: 'القهوة المختصة — أفضل ٣٪ بن في العالم بنكهة أصلية لا تُقاوم', en: 'Specialty coffee — top 3% beans, authentic irresistible flavor' };
-            return null;
-        }
-
-        const storeInfo = {
-            phone: '0100 000 0000',
-            location: { ar: 'مصر الجديدة، القاهرة', en: 'Heliopolis, Cairo' },
-            hours: { ar: 'من ٨ صباحاً لـ ١٢ منتصف الليل', en: '8 AM to 12 AM' },
-            social: { ar: 'إنستجرام: @lucca.cafe', en: 'Instagram: @lucca.cafe' }
-        };
-        function getTimeGreeting() {
-            const h = new Date().getHours();
-            let p;
-            if (h >= 5 && h < 12) p = 'm';
-            else if (h >= 12 && h < 17) p = 'a';
-            else if (h >= 17 && h < 21) p = 'e';
-            else p = 'n';
-            const g = {
-                m: { ar: 'صباح النور ☀️ أهلاً وسهلاً بيك في Lucca! — النهاردة عندنا كابتشينو فريش وطازة، وكرواسون سخن لو تحب حاجة خفيفة مع القهوة. تحت أمرك 😊', en: 'Good morning ☀️ Welcome to Lucca! — We have fresh cappuccino and warm croissants if you\'d like something light with your coffee. At your service 😊' },
-                a: { ar: 'مساء الخير ☕ أهلاً بيك — بنفسك تغديت ولا نجيبلك حاجة خفيفة مع القهوة؟ تحت أمرك في أي حاجة 😊', en: 'Good afternoon ☕ Welcome! — Did you have lunch or shall we get you something light with your coffee? At your service 😊' },
-                e: { ar: 'مساء الخير 🌆 أهلاً بيك في Lucca — يومك كان طويل؟ إحنا هنا عشان نريحك: كابتشينو، لاتيه، أو قطعة حلويات تسعد قلبك. تفضل تحت أمرك 😊', en: 'Good evening 🌆 Welcome to Lucca — Long day? We\'re here to help you unwind: cappuccino, latte, or a dessert to sweeten your evening. At your service 😊' },
-                n: { ar: 'مساء النور 🌙 أهلاً بيك في Lucca — لسه صاحي؟ إحنا موجودين. لو عايز حاجة دافية قبل النوم: سحلب ولا هوت شوكليت؟ تحت أمرك 😊', en: 'Good evening 🌙 Welcome to Lucca — Still up? We\'re here. Want something warm before bed: Sahlab or Hot Chocolate? At your service 😊' }
-            };
-            const sug = {
-                m: { ar: ['☕ كابتشينو', '🥐 كرواسون', '🔥 الأكثر طلباً'], en: ['☕ Cappuccino', '🥐 Croissant', '🔥 Best sellers'] },
-                a: { ar: ['🧊 آيس لاتيه', '☕ إسبريسو', '🍰 تشيز كيك'], en: ['🧊 Iced Latte', '☕ Espresso', '🍰 Cheesecake'] },
-                e: { ar: ['☕ لاتيه', '🍪 كوكيز', '🔥 الأكثر طلباً'], en: ['☕ Latte', '🍪 Cookies', '🔥 Best sellers'] },
-                n: { ar: ['☕ سحلب', '🍫 هوت شوكليت', '🔥 الأكثر طلباً'], en: ['☕ Sahlab', '🍫 Hot Chocolate', '🔥 Best sellers'] }
-            };
-            return { greeting: g[p][lang], suggestions: sug[p][lang] };
-        }
-        let chatHistory = [];
-
-        function botKnows(msg) {
-            const m = msg.toLowerCase().trim();
-
-            // ── Context: follow-up question ──
-            const followUp = /^(سعره|كام|كام سعره|price|how much|ايه ده|ده ايه|tell me|what'?s this|عايز|اديني|جيب|دوس|هات)/i.test(m);
-            if (followUp && chatHistory.length) {
-                for (let i = chatHistory.length - 1; i >= 0; i--) {
-                    if (!chatHistory[i].isUser && chatHistory[i].items && chatHistory[i].items.length) {
-                        const item = chatHistory[i].items[0];
-                        const displayPrice = Array.isArray(item.p) ? item.p.join(' / ') : item.p;
-                        if (/عايز|اديني|جيب|دوس|هات/i.test(m)) {
-                            const price = Array.isArray(item.p) ? item.p[0] : item.p;
-                            addToCart(item.n, price, '', item.en || item.n);
-                            const t = lang === 'ar' ? '✅ **' + tn(item) + '** أضيف للسلة يا باشا! عايز حاجة تاني ولا كده خلاص؟ 😊' : '✅ **' + tn(item) + '** added! Want anything else or that\'s all? 😊';
-                            return { text: t, sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '🧧 خلصت كده'] : ['🔥 Best sellers', '🧧 That\'s all'] };
-                        }
-                        const t = lang === 'ar' ? `**${tn(item)}** — ${displayPrice} ج.م - عايز أضيفهالك؟` : `**${tn(item)}** — ${displayPrice} EGP - Shall I add it for you?`;
-                        return { text: t, sug: [lang === 'ar' ? '➕ ضيفه' : '➕ Add it', lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers'] };
-                    }
-                }
-            }
-
-            // ── Service: done ordering ──
-            if (/^(خلاص|كده\s*خلاص|تمام\s*كده|هو\s*ده|that'?s\s*all|done|خلصت|كفاية|no\s*thanks|لا\s*شكراً)\b/i.test(m)) {
-                const btn = document.getElementById('cartFab');
-                if (btn && btn.classList.contains('show')) {
-                    return { text: lang === 'ar' ? 'تمام باشا 😊 تقدر تراجع طلبك وتأكده من السلة 🛒' : 'Alright 😊 You can review and confirm your order from the cart 🛒', sug: lang === 'ar' ? ['🛒 شوف السلة', '🔥 الأكثر طلباً'] : ['🛒 View cart', '🔥 Best sellers'] };
-                }
-                const t = lang === 'ar'
-                    ? 'تشرفنا بيك 🤝 لو عايز حاجة كمان إحنا موجودين. تحت أمرك في أي وقت! 😊'
-                    : 'It was a pleasure 🤝 If you need anything else, we\'re here. At your service anytime! 😊';
-                return { text: t, sug: lang === 'ar' ? ['☕ حاجة سخنة', '🍪 حلويات'] : ['☕ Something hot', '🍪 Desserts'] };
-            }
-
-            // ── Service: thanks / acknowledgment ──
-            if (/^(شكراً|thanks|thank\s*you|تسلم|ميرسي|متشكر)\b/i.test(m)) {
-                const t = lang === 'ar'
-                    ? 'العفو على إيه يا باشا 🤝 دا واجبنا — تحت أمرك في أي وقت وعايز حاجة تاني إحنا موجودين 😊'
-                    : 'You\'re very welcome 🤝 It\'s our pleasure — at your service anytime, just let us know! 😊';
-                return { text: t, sug: lang === 'ar' ? ['☕ حاجة سخنة', '🔥 الأكثر طلباً'] : ['☕ Something hot', '🔥 Best sellers'] };
-            }
-
-            // ── Store info ──
-            if (/(العنوان|location|مواعيد|ساعات|hours|رقم|تليفون|phone|address|فروع|عنوان|موقع|place|أين|فين)/i.test(m)) {
-                const t = lang === 'ar'
-                    ? `📍 **العنوان:** ${storeInfo.location.ar}\n🕐 **ساعات العمل:** ${storeInfo.hours.ar}\n📞 **تليفون:** ${storeInfo.phone}\n📷 ${storeInfo.social.ar}\n\nتحت أمرك في أي استفسار تاني 😊`
-                    : `📍 **Address:** ${storeInfo.location.en}\n🕐 **Hours:** ${storeInfo.hours.en}\n📞 **Phone:** ${storeInfo.phone}\n📷 ${storeInfo.social.en}\n\nAt your service for any other questions 😊`;
-                return { text: t, sug: lang === 'ar' ? ['🔥 الأكثر طلباً', '☕ حاجة سخنة'] : ['🔥 Best sellers', '☕ Something hot'] };
-            }
-
-            // ── Calorie query ──
-            const calMatch = m.match(/^(سعرات|سعرة|calories|calorie|kcal)\s+(.+)/i) || m.match(/calories\s+in\s+(.+)/i) || m.match(/(.+)\s+(calories|calorie|kcal|سعرات|سعرة)\s*$/i);
-            if (calMatch) {
-                const q = (calMatch[2] || calMatch[1] || '').trim().replace(/\s+in$/, '');
-                if (q && q.length > 1) {
-                    const found = menuIndex.filter(i => i.n.includes(q) || i.en.toLowerCase().includes(q));
-                    if (found.length) {
-                        const lines = found.map(i => {
-                            const cStr = i.c !== undefined ? cal(i) : (lang === 'ar' ? 'السعرات غير متوفرة' : 'Calories N/A');
-                            return `• ${lang === 'ar' ? i.n : i.en}: ${cStr} — ${formatPrice(i.p)}`;
-                        });
-                        return { text: lines.join('\n'), sug: found.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en) };
-                    }
-                }
-            }
-
-            // ── Symptom queries ──
-            if (/(بطني|وجع\s*بطن|stomach|معدة|هضم|digest|انتفاخ|قولون)/i.test(m)) {
-                const items = menuIndex.filter(i => /(ميكس أعشاب|شاي أخضر|ليمون نعناع|أعشاب|Herbal|Green Tea|Mint Lemon)/i.test(i.n) || /(herbal|green tea|mint)/i.test(i.en)).slice(0, 3);
-                const t = lang === 'ar'
-                    ? 'ربنا يقومك بالسلامة 🙏 أنصحك بحاجة دافية وخفيفة على معدتك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• شاي أعشاب — ٣٥ ج.م\n• شاي أحمد أخضر — ٣٥ ج.م\n• ليمون نعناع — ٧٥ ج.م') + '\n\nتحت أمرك في أي حاجة تاني 😊'
-                    : 'Feel better! 🙏 Try something soothing for your stomach:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Herbal Tea — 35 EGP\n• Ahmed Green Tea — 35 EGP\n• Mint Lemon — 75 EGP') + '\n\nAt your service for anything else 😊';
-                return { text: t, sug: lang === 'ar' ? ['شاي أعشاب', 'ليمون نعناع'] : ['Herbal Tea', 'Mint Lemon'], items };
-            }
-            if (/(برد|زكام|cold|سخونية|كحة|cough)/i.test(m)) {
-                const items = menuIndex.filter(i => /(سحلب|هوت شوكليت|شاي كرك|Hot Cider|Sahlab|Karak|Hot Chocolate)/i.test(i.n) || /(sahlab|karak|hot chocolate|cider)/i.test(i.en)).slice(0, 3);
-                const t = lang === 'ar'
-                    ? 'الله يعافيك 🤧 مشروبات سخنة هتدفيك وتريحك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• سحلب — ٨٥ ج.م\n• هوت شوكليت — ٧٠ ج.م\n• شاي أحمد كرك — ٥٠ ج.م') + '\n\nعايز حاجة تاني ولا كده تمام؟ 😊'
-                    : 'Get well! 🤧 Hot drinks to warm you up:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Sahlab — 85 EGP\n• Hot Chocolate — 70 EGP\n• Ahmed Karak Tea — 50 EGP') + '\n\nAnything else or that\'s all? 😊';
-                return { text: t, sug: lang === 'ar' ? ['سحلب', 'هوت شوكليت'] : ['Sahlab', 'Hot Chocolate'], items };
-            }
-            if (/(عطشان|thirsty|ظمآن)/i.test(m)) {
-                const items = menuIndex.filter(i => i.catId === 'juice' || i.catId === 'soda' || i.catId === 'soft-drinks').slice(0, 3);
-                const t = lang === 'ar'
-                    ? 'عندك أحلى المشروبات المنعشة 🥤:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• مانجو — ٩٠ ج.م\n• برتقال — ٧٥ ج.م\n• موهيتو — ٧٥ ج.م')
-                    : 'Refreshing drinks for you 🥤:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mango — 90 EGP\n• Orange — 75 EGP\n• Mojito — 75 EGP');
-                return { text: t, sug: lang === 'ar' ? ['عصير مانجو', 'موهيتو'] : ['Mango Juice', 'Mojito'], items };
-            }
-            if (/(جوعان|hungry|عايز\s*أكل)/i.test(m)) {
-                const items = menuIndex.filter(i => i.catId === 'breakfast' || i.catId === 'pizza').slice(0, 4);
-                const t = lang === 'ar'
-                    ? 'جوعان؟ 😋 عندنا أقسم اختيارات هتشبعك:\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• توست ميكس جبن — ٣٠ ج.م\n• ساندويتش بسطرمة — ٣٠ ج.م\n• بيتزا سلامي — ١٧٠ ج.م') + '\n\nعايز حاجة تاني ولا كده تمام؟'
-                    : 'Hungry? 😋 We\'ve got some great picks to fill you up:\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Mixed Cheese Toast — 30 EGP\n• Pastrami Sandwich — 30 EGP\n• Salami Pizza — 170 EGP') + '\n\nAnything else or that\'s all?';
-                const sug = items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
-                sug.push(lang === 'ar' ? '🔥 الأكثر طلباً' : '🔥 Best sellers');
-                return { text: t, sug, items };
-            }
-            if (/(تعبان|tired|طاقة|energy|نعسان|sleepy)/i.test(m)) {
-                const t = lang === 'ar'
-                    ? '⚡ عايز تنشط؟ الكافيين جاهز يخدمك — الإسبريسو دبل (٧٠ ج.م) هيجيلك طاقة بسرعة والطعم جامد. عايز جرب حاجة تانيه؟ 😊'
-                    : '⚡ Need a boost? Caffeine to the rescue — Double Espresso (70 EGP) hits fast and tastes great. Want something else? 😊';
-                return { text: t, sug: lang === 'ar' ? ['إسبريسو دبل', 'كابتشينو'] : ['Double Espresso', 'Cappuccino'] };
-            }
-            if (/(صداع|headache)/i.test(m)) {
-                const t = lang === 'ar'
-                    ? 'الله يشفيك 🤕 الكافيين بيساعد في الصداع — جرب إسبريسو (٤٥ ج.م) أو شاي أحمد (٣٥ ج.م). تحت أمرك في أي حاجة'
-                    : 'Hope you feel better 🤕 Caffeine helps with headaches — try Espresso (45 EGP) or Ahmed Tea (35 EGP). At your service';
-                return { text: t, sug: lang === 'ar' ? ['إسبريسو', 'شاي أحمد'] : ['Espresso', 'Ahmed Tea'] };
-            }
-            if (/(منعش|refresh|حاجة\s*باردة|خفيف|light)/i.test(m) && !/(specialty|مختصة)/i.test(m)) {
-                const items = menuIndex.filter(i => i.catId === 'juice' || i.catId === 'iced-coffee' || i.catId === 'soda').slice(0, 3);
-                const t = lang === 'ar'
-                    ? 'حاجة منعشة وخفيفة 🍃\n' + (items.length ? items.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• برتقال — ٧٥ ج.م\n• آيس كوفي — ٨٠ ج.م\n• موهيتو — ٧٥ ج.م')
-                    : 'Light & refreshing 🍃\n' + (items.length ? items.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Orange Juice — 75 EGP\n• Iced Coffee — 80 EGP\n• Mojito — 75 EGP');
-                return { text: t, sug: items.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en), items };
-            }
-
-            // ── Diet query ──
-            if (/(دايت|diet|ريجيم|low.cal|keto|صحي|healthy)/i.test(m)) {
-                const lowCal = menuIndex.filter(i => { const c = i.c; if (c === undefined || c === 0) return false; if (Array.isArray(c)) return parseInt(c[0]) <= 100; return parseInt(c) <= 100; }).slice(0, 5);
-                const t = lang === 'ar'
-                    ? '🥗 عايز حاجة صحية وخفيفة؟ تمام:\n' + (lowCal.length ? lowCal.map(i => `• ${i.n} — ${formatPrice(i.p)} (${cal(i)})`).join('\n') : '• شاي أحمد أخضر — ٣٥ ج.م (٥ سعرات)\n• إسبريسو — ٤٥ ج.م (٥ سعرات)')
-                    : '🥗 Healthy picks:\n' + (lowCal.length ? lowCal.map(i => `• ${i.en} — ${formatPrice(i.p)} (${cal(i)})`).join('\n') : '• Ahmed Green Tea — 35 EGP (5 cal)\n• Espresso — 45 EGP (5 cal)');
-                return { text: t, sug: lang === 'ar' ? ['كم سعرة في اللاتيه؟', '🔥 الأكثر طلباً'] : ['Calories in latte?', '🔥 Best sellers'] };
-            }
-
-            // ── Specialty Coffee ──
-            if (/(specialty|مختصة|v60|cold drip|ice drip|iced drip|speciality)/i.test(m)) {
-                const specs = menuIndex.filter(i => i.catId === 'specialty');
-                if (specs.length) {
-                    const t = lang === 'ar'
-                        ? '💎 **القهوة المختصة في Lucca**\n\nأفضل ٣٪ من بن العالم، بنمحمصه خفيف عشان نكهته الأصلية تظهر. بنستورد محاصيل من أثيوبيا وبرازيل وكولومبيا والهند، كل محصول له طعم مختلف.\n\nطريقة التحضير:\n• V60 — بنقطرها يدوي، قهوة نقية وعطرية.\n• آيس دريب — قهوة مفلترة مثلجة، بنقطر V60 على ثلج، منعشة.\n\nالفرق بينها وبين القهوة العادية؟ البن المختصة مش بتتحمص زيادة عشان تحتفظ بنكهتها الحقيقية. الطعم أنقى، الحموضة لطيفة، والريحة غير.\n\nمتوفر عندنا:\n' + specs.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
-                        : '💎 **Specialty Coffee at Lucca**\n\nTop 3% of global coffee, light roasted for authentic flavor. Sourced from Ethiopia, Brazil, Colombia & India.\n\nBrew methods:\n• V60 — hand-poured, clean & aromatic.\n• Iced Drip — filtered iced coffee, V60 dripped over ice, refreshing.\n\nThe difference from regular coffee? Specialty is never over-roasted, preserving real flavor.\n\nAvailable:\n' + specs.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
-                    const sug = specs.slice(0, 2).concat(lang === 'ar' ? ['ايه الفرق بينهم؟', '🔥 عايز حلويات معاها؟'] : ['What\'s the difference?', '🔥 Want dessert?']).map(i => typeof i === 'string' ? i : (lang === 'ar' ? i.n : i.en));
-                    return { text: t, sug, items: specs };
-                }
-            }
-
-            // ── Coffee education: beginner asks about coffee types ──
-            if (/(فرق|difference|between|بين|ايه.*فرق|مقارنة|compare|comparison|شرح)\s*(.*)(espresso|cappuccino|latte|flat.white|americano|قهوة|إسبريسو|كابتشينو|لاتيه)/i.test(m) ||
-                /(espresso|cappuccino|latte|flat.white) (vs|ولا) (espresso|cappuccino|latte|flat.white)/i.test(m)) {
-                const t = lang === 'ar'
-                    ? 'الفرق بينهم ببساطة:\n\n☕ **إسبريسو** — قهوة مركزة وقوية.\n☕ **كابتشينو** — إسبريسو + رغوة حليب كثيفة.\n☕ **لاتيه** — إسبريسو + حليب مخملي (أخف من الكابتشينو).\n☕ **فلات وايت** — إسبريسو دبل + طبقة حليب رقيقة (طعم قوي وقوام حريري).\n☕ **موكا** — إسبريسو + شوكولاتة + حليب.\n\nأي واحد عايز تجرب؟'
-                    : 'Simple breakdown:\n\n☕ **Espresso** — concentrated & strong.\n☕ **Cappuccino** — espresso + thick milk foam.\n☕ **Latte** — espresso + velvety milk (lighter).\n☕ **Flat White** — double espresso + thin milk layer (strong, silky).\n☕ **Mocha** — espresso + chocolate + milk.\n\nWhich one sounds good?';
-                const sug = lang === 'ar'
-                    ? ['كابتشينو', 'لاتيه', 'إسبريسو']
-                    : ['Cappuccino', 'Latte', 'Espresso'];
-                return { text: t, sug };
-            }
-
-            // ── Greetings (service etiquette) ──
-            if (/^(مرحبا|اهل|hello|hi|hey|صباح|مساء)\b/.test(m)) {
-                const tg = getTimeGreeting();
-                const texts = lang === 'ar'
-                    ? [
-                        tg.greeting,
-                        'يا هلا والله 😊 نورتنا — تفضل، عايز تشوف القائمة ولا عندك سؤال معين؟ تحت أمرك',
-                        'أهلاً بيك في Lucca 🌟 أول مرة تشرفنا ولا من زبائننا الغاليين؟ على كل حال إحنا هنا في خدمتك 🤝',
-                        'تشرفنا بيك 😊 — تصدق إني حاسس إنك عايز حاجة جامدة النهاردة؟ جرب اللاتيه أو V60'
-                      ]
-                    : [
-                        tg.greeting,
-                        'Hey hey! 😊 Welcome — would you like to browse the menu or do you have a specific question? At your service!',
-                        'Welcome to Lucca 🌟 First time or are you one of our lovely regulars? Either way, we\'re here for you 🤝',
-                        'Pleasure having you! 😊 — I have a feeling you want something amazing today. Try the Latte or V60!'
-                      ];
-                const sug = lang === 'ar'
-                    ? [...tg.suggestions, '📍 العنوان']
-                    : [...tg.suggestions, '📍 Address'];
-                return { text: texts[Math.floor(Math.random()*texts.length)], sug };
-            }
-
-            // ── Hot / cold preference ──
-            if (/(ساخن|سخن|hot|ساقعة|ساقع|بارد|cold|iced|مثلج|ice)/i.test(m)) {
-                const isHot = /ساخن|سخن|hot/i.test(m);
-                const sug = isHot
-                    ? (lang === 'ar' ? ['كافيه لاتيه ☕', 'كابتشينو', 'قهوة مختصة'] : ['Latte ☕', 'Cappuccino', 'Specialty coffee'])
-                    : (lang === 'ar' ? ['آيس لاتيه 🧊', 'آيس كوفي', 'موهيتو'] : ['Iced Latte 🧊', 'Iced Coffee', 'Mojito']);
-                const t = lang === 'ar'
-                    ? (isHot ? 'ممتاز! ☕ أنصحك ب:\n• **لاتيه** (٨٥ ج.م) — ناعم ومخملي، لو بتحب الحليب.\n• **كابتشينو** (٨٥ ج.م) — رغوة كثيفة وطعم متوازن.\n• **قهوة مختصة V60** (٨٠ ج.م) — قهوة نقية وعطرية، التجربة الحقيقية.\n\nأو عايز حاجة تسكري معاهم؟ 🍰'
-                        : 'منعش! 🧊 أنصحك ب:\n• **آيس لاتيه** (٨٥ ج.م) — نفس طعم اللاتيه الكلاسيك بس مثلج.\n• **آيس كوفي** (٨٠ ج.م) — قهوة مثلجة منعشة.\n• **موهيتو** (٧٥ ج.م) — لو عايز حاجة فواكه.\n\nعايز حاجة حلوة جمبها؟')
-                    : (isHot ? 'Great choice! ☕ I recommend:\n• **Latte** (85 EGP) — smooth & velvety.\n• **Cappuccino** (85 EGP) — thick foam, balanced.\n• **Specialty V60** (80 EGP) — pure & aromatic, the real deal.\n\nSomething sweet with that? 🍰'
-                        : 'Refreshing! 🧊 I recommend:\n• **Iced Latte** (85 EGP) — classic latte, iced.\n• **Iced Coffee** (80 EGP) — refreshing cold brew.\n• **Mojito** (75 EGP) — fruity & fresh.\n\nWant something sweet with it?');
-                return { text: t, sug };
-            }
-
-            // ── First time visitor ──
-            if (/أول\s*مرة|first.time|new\s*here|جديد/i.test(m)) {
-                const t = lang === 'ar'
-                    ? 'نورت Lucca أول مرة! ☕🎉\n\nعندك ٣ اختيارات ممتازة للمبتدئين:\n1️⃣ **كابتشينو** (٨٥ ج.م) — الأكثر طلباً، طعم متوازن.\n2️⃣ **لاتيه** (٨٥ ج.م) — ناعم وحليبي، لو مش متعود على القهوة.\n3️⃣ **قهوة مختصة V60** (٨٠ ج.م) — لو عايز تجرب القهوة الحقيقية.\n\nبتحب القهوة قوية ولا خفيفة؟'
-                    : 'Welcome to Lucca for the first time! ☕🎉\n\n3 great choices for beginners:\n1️⃣ **Cappuccino** (85 EGP) — most popular, balanced.\n2️⃣ **Latte** (85 EGP) — smooth & milky.\n3️⃣ **Specialty V60** (80 EGP) — taste real coffee.\n\nDo you like strong or mild coffee?';
-                const sug = lang === 'ar' ? ['كابتشينو', 'لاتيه', 'القهوة المختصة'] : ['Cappuccino', 'Latte', 'Specialty coffee'];
-                return { text: t, sug };
-            }
-
-            // ── Strong / mild preference ──
-            if (/(قوي|قوية|strong|خفيف|خفيفة|mild|مر|حامض|sour|bitter)/i.test(m)) {
-                const isStrong = /قوي|قوية|strong/i.test(m);
-                const t = lang === 'ar'
-                    ? (isStrong
-                        ? 'عاش الريّال! 💪 أنصحك:\n• **إسبريسو** (٤٥ ج.م) — أقوى حاجة.\n• **فلات وايت** (٨٠ ج.م) — إسبريسو دبل مع حليب.\n• **كورتادو** (٧٥ ج.م) — إسبريسو متوازن مع لمسة حليب.'
-                        : 'ممتاز! 😊 لو عايز حاجة خفيفة:\n• **لاتيه** (٨٥ ج.م) — ناعم ومخملي.\n• **كابتشينو** (٨٥ ج.م) — متوازن.\n• **قهوة بندق** (٧٠ ج.م) — بنكهة البندق المحمص.')
-                    : (isStrong
-                        ? '💪 Go big! Try:\n• **Espresso** (45 EGP) — strongest shot.\n• **Flat White** (80 EGP) — double espresso with milk.\n• **Cortado** (75 EGP) — balanced espresso with milk.'
-                        : '😊 Going mild:\n• **Latte** (85 EGP) — smooth & velvety.\n• **Cappuccino** (85 EGP) — balanced.\n• **Hazelnut Coffee** (70 EGP) — roasted hazelnut flavor.');
-                const sug = t.match(/•\s*([^—\n]+)/g).slice(0, 2).map(s => s.replace(/[•\s]/g, ''));
-                return { text: t + '\n\n🔥 عايز حاجة حلوة معاها؟', sug: lang === 'ar' ? ['كرواسون', 'تشيز كيك', 'لا شكراً'] : ['Croissant', 'Cheesecake', 'No thanks'] };
-            }
-
-            // ── Best Sellers ──
-            if (/(popular|best|الأكثر|الطلب|توصية|recommend|suggest|best seller|مميز|مشهور|الأفضل)/i.test(m)) {
-                const popular = menuIndex.filter(i => i.b === 'popular').slice(0, 4);
-                const t = lang === 'ar'
-                    ? '⭐ **الأكثر طلباً في Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.ar || i.d || ''}`).join('\n') : '') + '\n\nأي واحد تحس إنه لك؟'
-                    : '⭐ **Most Popular at Lucca:**\n' + (popular.length ? popular.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}\n   ${coffeeGuide(i)?.en || i.de || ''}`).join('\n') : '') + '\n\nWhich one feels right for you?';
-                const sug = popular.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug, items: popular };
-            }
-
-            // ── New arrivals ──
-            if (/(جديد|new|جدید)\b/i.test(m) && !/(specialty|مختصة)/i.test(m)) {
-                const newItems = menuIndex.filter(i => i.b === 'new').slice(0, 4);
-                const t = lang === 'ar'
-                    ? '🆕 **جديدنا — أول واحد يجرب!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.n}** — ${formatPrice(i.p)}${i.d ? '\n   ' + i.d : ''}`).join('\n') : '') + '\n\n🔥 عايز تجرب واحد؟'
-                    : '🆕 **New Arrivals — Be first to try!**\n' + (newItems.length ? newItems.map((i, idx) => `${idx+1}. **${i.en}** — ${formatPrice(i.p)}${i.de ? '\n   ' + i.de : ''}`).join('\n') : '') + '\n\n🔥 Want to try one?';
-                const sug = newItems.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug, items: newItems };
-            }
-
-            // ── Category search (with upsell, max 4 items) ──
-            for (const cat of CATEGORIES) {
-                const cAr = _LANG.catNames.ar[cat.id];
-                const cEn = _LANG.catNames.en[cat.id];
-                if (m.includes(cAr) || m.includes(cEn.toLowerCase()) ||
-                    (cat.id === 'hot-drinks' && /(hot|ساخن|drink|مشروب|شاي|tea)/i.test(m)) ||
-                    (cat.id === 'iced-coffee' && /(iced|مثلج|ice)/i.test(m))) {
-                    const items = menuIndex.filter(i => i.catId === cat.id).slice(0, 4);
-                    if (items.length) {
-                        const pair = upsellPair(cat.id);
-                        const t = `${cat.icon} **${lang === 'ar' ? cAr : cEn}**\n` +
-                            items.map((i, idx) => `${idx+1}. **${lang === 'ar' ? i.n : i.en}** — ${formatPrice(i.p)}`).join('\n') +
-                            (pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '');
-                        const sug = items.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                        return { text: t, sug, items };
-                    }
-                }
-            }
-
-            // ── Price query ──
-            const priceMatch = m.match(/(كم\s*سعر|price|سعر|how much|كم\b)\s*(.+)/i);
-            if (priceMatch) {
-                const q = priceMatch[2].trim();
-                const found = menuIndex.filter(i => i.n.includes(q) || i.en.toLowerCase().includes(q));
-                if (found.length) {
-                    const lines = found.map(i => `• ${lang === 'ar' ? i.n : i.en}: ${formatPrice(i.p)}`);
-                    const pair = found.length === 1 ? upsellPair(found[0].catId) : null;
-                    const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
-                    return { text: lines.join('\n') + ups, items: found };
-                }
-            }
-
-            // ── Item search ──
-            const results = searchMenu(m);
-            if (results.length > 0 && results.length < 8) {
-                const lines = results.slice(0, 4).map(i =>
-                    `• **${lang === 'ar' ? i.n : i.en}** — ${formatPrice(i.p)}` +
-                    (i.c !== undefined ? ` (${cal(i)})` : '') +
-                    (i.d && lang === 'ar' ? `\n  ${i.d}` : '') +
-                    (i.de && lang === 'en' ? `\n  ${i.de}` : '')
-                );
-                const pair = results.length === 1 ? upsellPair(results[0].catId) : null;
-                const ups = pair ? '\n\n🔥 ' + (lang === 'ar' ? pair.ar : pair.en) : '';
-                const sug = results.slice(0, 3).map(i => lang === 'ar' ? i.n : i.en);
-                return { text: lines.join('\n') + ups, sug, items: results };
-            }
-            if (results.length >= 8) {
-                const cats = [...new Set(results.map(i => i.catId))];
-                const catNames = cats.map(c => _LANG.catNames[lang === 'ar' ? 'ar' : 'en'][c] || c);
-                const t = lang === 'ar'
-                    ? `لقيت ${results.length} حاجة في الأقسام: ${catNames.join('، ')}\n\nعايز تشوف قسم معين؟`
-                    : `Found ${results.length} items in: ${catNames.join(', ')}\n\nWant to see a specific category?`;
-                const sug = catNames.slice(0, 3).concat(lang === 'ar' ? ['🔥 الأكثر طلباً'] : ['🔥 Best sellers']);
-                return { text: t, sug };
-            }
-
-            // ── Combo / deal ──
-            if (/(combo|deal|عرض|كومبو)/i.test(m)) {
-                const popular = menuIndex.filter(i => i.b === 'popular').slice(0, 2);
-                const t = lang === 'ar'
-                    ? '🎯 **عرض خاص:** خد واحد من الأكثر طلباً مع قطعة حلو — الطعم هيجننك!\n' + popular.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
-                    : '🎯 **Special deal:** Grab a best-seller with a dessert — mind-blowing!\n' + popular.map(i => `• ${i.en || i.n} — ${formatPrice(i.p)}`).join('\n');
-                const sug = popular.map(i => lang === 'ar' ? i.n : (i.en || i.n));
-                sug.push(lang === 'ar' ? '🔥 عايز حلويات' : '🔥 Desserts');
-                return { text: t, sug, items: popular };
-            }
-
-            // ── Budget ──
-            if (/(رخيص|budget|cheap|اقل|ارخص|cheapest|lowest)/i.test(m)) {
-                const sorted = [...menuIndex].sort((a, b) => a.p - b.p).slice(0, 3);
-                const t = lang === 'ar'
-                    ? '💰 أحسن حاجة بأسعار مناسبة:\n' + sorted.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n')
-                    : '💰 Best value picks:\n' + sorted.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n');
-                const sug = sorted.map(i => lang === 'ar' ? i.n : i.en);
-                return { text: t, sug, items: sorted };
-            }
-
-            // ── Dessert / sweet with coffee upsell ──
-            if (/(حلو|حلويات|dessert|croissant|كرواسون|كوكيز|cookie|تشيز|cheesecake)/i.test(m)) {
-                const desserts = menuIndex.filter(i => i.catId === 'desserts').slice(0, 3);
-                const t = lang === 'ar'
-                    ? '🍰 عندك حلويات جامدة:\n' + (desserts.length ? desserts.map(i => `• ${i.n} — ${formatPrice(i.p)}`).join('\n') : '• تشيز كيك — ٩٠ ج.م\n• مولتن كيك — ٨٠ ج.م\n• كوكيز — ٤٠ ج.م') + '\n\n🔥 عايز قهوة معاها؟'
-                    : '🍰 Great desserts:\n' + (desserts.length ? desserts.map(i => `• ${i.en} — ${formatPrice(i.p)}`).join('\n') : '• Cheesecake — 90 EGP\n• Molten Cake — 80 EGP\n• Cookies — 40 EGP') + '\n\n🔥 Want coffee with that?';
-                const sug = desserts.slice(0, 2).map(i => lang === 'ar' ? i.n : i.en);
-                sug.push(lang === 'ar' ? 'لاتيه ☕' : 'Latte ☕');
-                return { text: t, sug, items: desserts };
-            }
-
-            // ── Default: time-aware fallback ──
-            const tg = getTimeGreeting();
-            const sug = tg.suggestions;
-            const extra = lang === 'ar' ? ['📍 العنوان'] : ['📍 Address'];
-            sug.push(...extra);
-            const t = tg.greeting + '\n\n' + (lang === 'ar'
-                ? 'عشان أساعدك أحسن:\n- بتحب القهوة قوية ولا خفيفة؟\n- عايز حاجة سخنة ولا ساقعة؟\n- ولا أول مرة وجرب حاجة جديدة؟\n\nقولي وإني تحت أمرك 😊'
-                : 'To help you better:\n- Do you like strong or mild coffee?\n- Hot or iced?\n- First time trying something new?\n\nLet me know! 😊');
-            return { text: t, sug };
-        }
-
-        function sendChatMsg() {
-            const input = chatInput;
-            const msg = input.value.trim();
-            if (!msg) return;
-            input.value = '';
-            chatHistory.push({ text: msg, isUser: true });
-            if (chatHistory.length > 10) chatHistory.shift();
-            chatMsg(msg, true);
-            chatTyping(true);
-            setTimeout(() => {
-                chatTyping(false);
-                const reply = botKnows(msg);
-                chatHistory.push({ text: reply.text, isUser: false, items: reply.items || null });
-                if (chatHistory.length > 10) chatHistory.shift();
-                if (reply.sug) {
-                    chatMsg(reply.text, false, reply.sug, reply.items);
-                } else {
-                    chatMsg(reply.text, false, null, reply.items);
-                }
-            }, 600 + Math.random() * 400);
-        }
-
         function shareMenu() {
             const url = window.location.href;
             if (navigator.share) {
@@ -2030,59 +1829,51 @@
             return `<span class="item-price">${p} <span class="price-unit">ج.م</span></span>`;
         }
 
-        function renderItem(item, idx, catId, catIcon) {
-            const imgUrl = getImg(catId, item);
-            const itemName = tn(item);
-            const itemDesc = td(item);
-            const safeName = item.n.replace(/'/g, "\\'");
-            const safeEn = item.en ? item.en.replace(/'/g, "\\'") : safeName;
-            const fallbackIcon = catIcon || '☕';
+        function renderItem(item, idx, categoryId) {
             let origins = '';
             if (item.origins) {
                 origins = `
                     <div class="origin-selection">
                         <div class="label">${t('originLabel')}</div>
                         <div class="origin-options">
-                            ${item.origins.map(o => `<button class="origin-tag" onclick="addToCart('${safeName}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}', '${safeEn}')">${o}</button>`).join('')}
+                            ${item.origins.map(o => `<button class="origin-tag" onclick="event.stopPropagation();addToCart('${item.n.replace(/'/g, "\\'")}', '${Array.isArray(item.p) ? item.p[0] : item.p}', '${o.replace(/'/g, "\\'")}')" aria-label="إضافة ${item.n} ${o}">${o}</button>`).join('')}
                         </div>
                     </div>`;
             }
-            const badge = item.b ? `<span class="badge badge-${item.b}">${badgeLabel(item.b)}</span>` : '';
-            const desc = itemDesc ? `<div class="item-description">${itemDesc}</div>` : '';
+            const desc = item.d ? `<div class="item-description">${item.d}</div>` : '';
             const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
             const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
             const hasOrigins = item.origins && item.origins.length > 0;
-            const hasOrigClass = hasOrigins ? 'has-origins' : '';
-            const imgTag = imgUrl
-                ? `<div class="item-img-wrap"><img class="item-img" src="${imgUrl}" alt="${itemName}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="item-img-placeholder" style="display:none">${fallbackIcon}</div></div>`
-                : `<div class="item-img-wrap"><div class="item-img-placeholder">${fallbackIcon}</div></div>`;
+            const image = getProductImage(item, categoryId);
+            const imageMarkup = image
+                ? `<div class="item-image"><img src="${image}" alt="${item.n}" loading="lazy" onerror="var p=this.parentElement;p.classList.add('is-fallback');this.remove();p.innerHTML='<span>${IMAGE_FALLBACKS[categoryId] || '🍽️'}</span><small>${item.n}</small>';"></div>`
+                : `<div class="item-image is-fallback" aria-label="لا توجد صورة مؤكدة لهذا الصنف"><span>${IMAGE_FALLBACKS[categoryId] || '🍽️'}</span><small>${item.n}</small></div>`;
             return `
-                <div class="menu-item ${hasOrigClass}" style="animation-delay:${(idx||0)*0.035}s">
-                    ${imgTag}
+                <div class="menu-item" role="button" tabindex="0" onclick="openProductDetail('${categoryId}', ${idx})" onkeydown="if(event.key==='Enter'||event.key===' ')openProductDetail('${categoryId}', ${idx})" style="animation-delay:${(idx||0)*0.035}s">
+                    ${imageMarkup}
                     <div class="item-info">
-                        <div class="item-name">${itemName} ${badge}</div>
+                        <div class="item-name">${item.n}</div>
                         ${desc}
                         ${origins}
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="addToCart('${safeName}', '${itemPrice}', '', '${safeEn}')" aria-label="${lang === 'ar' ? 'إضافة' : 'Add'} ${itemName}">+</button>`}
+                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="event.stopPropagation();addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')" aria-label="إضافة ${item.n}">+</button>`}
                     </div>
                 </div>`;
         }
 
-        function renderCategory(cat, idx) {
-            const items = DATA[cat.id];
+        function renderCategory(cat) {
+            const items = getPublishedItems(cat.id);
             if (!items) return '';
-            const expanded = idx === 0 ? ' expanded' : '';
             return `
-                <div class="category${expanded}" id="cat-${cat.id}" data-cat-id="${cat.id}">
+                <div class="category" id="cat-${cat.id}" data-cat-id="${cat.id}">
                     <div class="category-header" onclick="toggleCategory(this)">
                         <h2><span class="category-icon">${cat.icon}</span> ${cat.name()}</h2>
                         <span class="toggle-icon">▼</span>
                     </div>
                     <div class="category-items">
-                        ${items.map((item, idx) => renderItem(item, idx, cat.id, cat.icon)).join('')}
+                        ${items.map((item, idx) => renderItem(item, idx, cat.id)).join('')}
                     </div>
                 </div>`;
         }
@@ -2098,7 +1889,7 @@
 
         function renderMenu() {
             const menuEl = document.getElementById('menuContent');
-            menuEl.innerHTML = CATEGORIES.map((c, i) => renderCategory(c, i)).join('');
+            menuEl.innerHTML = CATEGORIES.map(renderCategory).join('');
         }
 
         function toggleCategory(header) {
@@ -2121,6 +1912,7 @@
         searchInput.addEventListener('input', function() {
             document.getElementById('searchClear').classList.toggle('show', this.value.length > 0);
             const term = this.value.toLowerCase().trim();
+            let total = 0;
             document.querySelectorAll('.category').forEach(cat => {
                 let visible = 0;
                 cat.querySelectorAll('.menu-item').forEach(item => {
@@ -2131,7 +1923,21 @@
                 });
                 cat.style.display = visible ? 'block' : 'none';
                 if (term && visible) cat.classList.add('expanded');
+                total += visible;
             });
+            const menu = document.getElementById('menuContent');
+            let empty = document.getElementById('lgNoResults');
+            if (term && !total) {
+                if (!empty) {
+                    empty = document.createElement('div');
+                    empty.id = 'lgNoResults';
+                    empty.className = 'lg-no-results';
+                    empty.textContent = 'لا توجد نتائج مطابقة';
+                    menu.appendChild(empty);
+                }
+            } else if (empty) {
+                empty.remove();
+            }
         });
 
         window.addEventListener('scroll', function() {
@@ -2164,15 +1970,6 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
             }
-            // Load fresh data from server if available
-            fetch('/api/menu').then(r => r.json()).then(data => {
-                if (data && data.items) {
-                    DATA = data.items;
-                    CALORIES = data.calories || {};
-                    rebuildMenuIndex();
-                    applyLang();
-                }
-            }).catch(() => {});
         });
 
         if ('serviceWorker' in navigator) {

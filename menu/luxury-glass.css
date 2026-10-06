@@ -1,0 +1,1839 @@
+/* ==========================================================================
+   LUCCA — SPECIALTY COFFEE
+   Luxury Glass design layer (v3)
+   --------------------------------------------------------------------------
+   Loaded AFTER the inline <style> block, so these rules win on equal
+   specificity. This file contains presentation only.
+
+   Constraints honoured:
+     * No Arabic literals, no content: text -> no new copy, no mojibake risk.
+     * No changes to data, cart, search, WhatsApp, auth or admin logic.
+     * Never claims a product photo: fallback surfaces are visibly abstract.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- tokens */
+:root {
+    /* espresso / charcoal / bronze */
+    --lg-espresso:   #14100D;
+    --lg-charcoal:   #1C1714;
+    --lg-roast:      #241D18;
+    --lg-brown:      #3B2C22;
+    --lg-cream:      #F3EAE0;
+    --lg-bronze:     #C69A6D;
+    --lg-gold:       #E0BA84;
+    --lg-gold-soft:  #F0D6AE;
+
+    /* glass */
+    --lg-glass-1:    rgba(255, 247, 236, 0.055);
+    --lg-glass-2:    rgba(255, 247, 236, 0.085);
+    --lg-glass-edge: rgba(255, 238, 214, 0.13);
+    --lg-glass-edge-soft: rgba(255, 238, 214, 0.07);
+    --lg-blur:       26px;
+    --lg-blur-sm:    16px;
+
+    /* ink */
+    --lg-ink:       #F7F1E9;
+    --lg-ink-soft:  rgba(247, 241, 233, 0.72);
+    --lg-ink-faint: rgba(247, 241, 233, 0.48);
+
+    /* depth */
+    --lg-e1: 0 2px 10px rgba(0, 0, 0, 0.22);
+    --lg-e2: 0 10px 30px rgba(0, 0, 0, 0.26);
+    --lg-e3: 0 22px 56px rgba(0, 0, 0, 0.34);
+    --lg-e4: 0 32px 84px rgba(0, 0, 0, 0.42);
+
+    /* geometry */
+    --lg-r-sm: 14px;
+    --lg-r-md: 20px;
+    --lg-r-lg: 28px;
+    --lg-r-xl: 34px;
+
+    /* rhythm */
+    --lg-gutter: 18px;
+    --lg-shell: 1180px;
+
+    /* motion */
+    --lg-t-fast: 160ms cubic-bezier(0.32, 0.72, 0, 1);
+    --lg-t-mid:  280ms cubic-bezier(0.32, 0.72, 0, 1);
+
+    /* Persistent floating header geometry.
+       --lg-topbar-h is the MEASURED height of .app-topbar at each breakpoint
+       (93px @360, 104px @390, 113px @430, 134px @768, 142px @1024+), so the
+       search/tabs bar can pin directly beneath it instead of guessing.
+       --lg-bar-pin = topbar offset + topbar height + 10px gap. */
+    --lg-topbar-h: 104px;
+    --lg-topbar-top: max(10px, env(safe-area-inset-top));
+    --lg-bar-pin: calc(var(--lg-topbar-top) + var(--lg-topbar-h) + 10px);
+
+    /* pinned search/tabs bar is 130px tall at every breakpoint */
+    --lg-sticky-h: calc(var(--lg-bar-pin) + 130px);
+
+    /* keep the legacy variable names coherent with this layer */
+    --glass-bg:   rgba(28, 23, 20, 0.78);
+    --glass-line: var(--lg-glass-edge);
+    --glass-soft: var(--lg-glass-1);
+    --accent:     var(--lg-bronze);
+    --ink:        var(--lg-ink);
+    --muted-ink:  var(--lg-ink-soft);
+}
+
+/* ------------------------------------------------------------------ reset */
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Tajawal', 'Segoe UI', sans-serif;
+    color: var(--lg-ink);
+    background-color: var(--lg-espresso);
+    background-image:
+        radial-gradient(ellipse 90% 55% at 82% -8%,  rgba(198, 154, 109, 0.16) 0%, transparent 62%),
+        radial-gradient(ellipse 70% 45% at 6% 12%,    rgba(92, 62, 44, 0.30) 0%,  transparent 60%),
+        radial-gradient(ellipse 120% 70% at 50% 108%, rgba(28, 20, 16, 0.90) 0%, transparent 58%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Arabic display type: Cairo reads well for headings, Tajawal for body */
+h1, h2, h3,
+.brand-footer,
+.hero-kicker,
+.category-header h2 {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+}
+
+::selection {
+    background: rgba(198, 154, 109, 0.30);
+    color: var(--lg-cream);
+}
+
+/* uniform keyboard focus across the whole public menu */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[role="button"]:focus-visible {
+    outline: 2px solid var(--lg-gold);
+    outline-offset: 3px;
+    border-radius: 6px;
+}
+
+/* ============================================================ app shell */
+.container {
+    max-width: var(--lg-shell);
+    margin: 0 auto;
+    background: transparent;
+    box-shadow: none;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: clip;
+}
+
+/* ================================================================ HEADER */
+/* The floating topbar is the persistent glass header (logo / search / cart) */
+.header {
+    position: relative;
+    min-height: 0;
+    padding: calc(var(--lg-gutter) + 4px) var(--lg-gutter) 30px;
+    text-align: start;
+    background: transparent;
+    overflow: visible;
+    isolation: isolate;
+}
+
+/* hero canvas: image + espresso veil, drawn behind the glass topbar */
+.header::before {
+    content: '';
+    position: absolute;
+    inset: -10px calc(var(--lg-gutter) * -1) 0;
+    z-index: -2;
+    background:
+        linear-gradient(180deg, rgba(20, 16, 13, 0.90) 0%, rgba(20, 16, 13, 0.58) 34%, rgba(20, 16, 13, 0.92) 100%),
+        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1600&q=80') center 22% / cover;
+}
+
+/* warm bronze bloom, bottom-left, adds depth without neon */
+.header::after {
+    content: '';
+    position: absolute;
+    inset: auto -30% -55% -30%;
+    height: 62%;
+    z-index: -2;
+    background: radial-gradient(ellipse at 50% 0%, rgba(198, 154, 109, 0.20) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    /* .app-topbar is out of flow now (fixed), so re-create the exact space it
+       used to occupy: its own height plus the 26px flex gap below it. This
+       keeps the hero and the pinned bar at their measured pre-fix positions. */
+    padding-top: calc(var(--lg-topbar-h) + 26px);
+}
+
+.header-content::after { display: none; }
+
+/* ---- the floating glass bar itself ---- */
+.app-topbar {
+    /* `sticky` could never work here: .app-topbar lives inside .header-content,
+       so the sticky containing block was only ~230px tall and the bar scrolled
+       away with the hero. Fixed positioning makes it a genuinely persistent
+       floating header, and the insets below reproduce the .container box so the
+       glass still lines up with the page shell at every width. */
+    position: fixed;
+    top: var(--lg-topbar-top);
+    left: max(var(--lg-gutter), calc((100vw - var(--lg-shell)) / 2 + var(--lg-gutter)));
+    right: max(var(--lg-gutter), calc((100vw - var(--lg-shell)) / 2 + var(--lg-gutter)));
+    width: auto;
+    margin: 0;
+    z-index: 120;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 10px 9px 16px;
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: var(--lg-r-md);
+    background: linear-gradient(135deg, rgba(36, 29, 24, 0.82), rgba(20, 16, 13, 0.72));
+    -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(150%);
+    backdrop-filter: blur(var(--lg-blur)) saturate(150%);
+    box-shadow: var(--lg-e2), inset 0 1px 0 rgba(255, 244, 228, 0.10);
+}
+
+.app-topbar-logo {
+    width: 96px;
+    height: auto;
+    flex-shrink: 0;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.app-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    direction: ltr;
+}
+
+/* 44px minimum touch target */
+.app-topbar-actions button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 1.18rem;
+    line-height: 1;
+    color: var(--lg-ink);
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: 50%;
+    background: var(--lg-glass-2);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: transform var(--lg-t-fast), background var(--lg-t-fast), border-color var(--lg-t-fast);
+}
+
+.app-topbar-actions button:hover {
+    background: rgba(255, 247, 236, 0.15);
+    border-color: rgba(198, 154, 109, 0.45);
+}
+
+.app-topbar-actions button:active {
+    transform: scale(0.93);
+    background: rgba(198, 154, 109, 0.26);
+}
+
+/* ------------------------------------------------------------ hero copy */
+.hero-copy {
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+    padding-block: 30px 6px;
+    max-width: 34ch;
+}
+
+.hero-kicker {
+    display: block;
+    direction: ltr;
+    text-align: start;
+    color: var(--lg-bronze);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    line-height: 1;
+    margin-bottom: 14px;
+}
+
+.hero-copy h1 {
+    margin: 0 0 12px;
+    direction: ltr;
+    text-align: start;
+    color: var(--lg-cream);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(2.6rem, 12.5vw, 5.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    text-shadow: 0 6px 26px rgba(0, 0, 0, 0.55);
+}
+
+.hero-copy p {
+    margin: 0;
+    max-width: 32ch;
+    color: var(--lg-ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.85;
+}
+
+.header .location,
+.header .contact-phone {
+    position: relative;
+    z-index: 1;
+    direction: ltr;
+    text-align: start;
+    margin-top: 0;
+    color: var(--lg-ink-faint);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+}
+
+.header .location {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    direction: rtl;
+    justify-content: flex-start;
+    font-size: 0.75rem;
+    color: var(--lg-ink-soft);
+}
+
+.header .contact-phone {
+    margin-top: 4px;
+}
+
+/* =================================================== SPECIALTY INTRO CARD */
+.specialty-intro {
+    position: relative;
+    z-index: 3;
+    margin: -22px var(--lg-gutter) 0;
+    padding: 24px 24px 26px;
+    text-align: start;
+    border: 1px solid rgba(198, 154, 109, 0.24);
+    border-radius: var(--lg-r-lg);
+    background:
+        linear-gradient(145deg, rgba(59, 44, 34, 0.58), rgba(20, 16, 13, 0.62)),
+        var(--lg-glass-1);
+    -webkit-backdrop-filter: blur(var(--lg-blur));
+    backdrop-filter: blur(var(--lg-blur));
+    box-shadow: var(--lg-e3), inset 0 1px 0 rgba(255, 240, 220, 0.09);
+    overflow: hidden;
+}
+
+.specialty-intro::before,
+.specialty-intro::after {
+    content: '';
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    color: var(--lg-bronze);
+    pointer-events: none;
+    opacity: 0.07;
+}
+
+.specialty-intro::before {
+    top: -26px;
+    inset-inline-end: 10px;
+    font-size: 8rem;
+    line-height: 1;
+}
+
+.specialty-intro::after {
+    bottom: -34px;
+    inset-inline-start: 12px;
+    font-size: 6rem;
+    line-height: 1;
+}
+
+.specialty-intro h2 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 10px;
+    color: var(--lg-gold);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.specialty-intro p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: 56ch;
+    color: var(--lg-ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.9;
+}
+
+/* ================================================== STICKY SEARCH + TABS */
+.sticky-bar {
+    position: sticky;
+    /* pin directly under the persistent topbar instead of the old guessed 62px */
+    top: var(--lg-bar-pin);
+    z-index: 90;
+    margin: 16px var(--lg-gutter) 0;
+    padding: 0;
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: var(--lg-r-lg);
+    background: linear-gradient(160deg, rgba(36, 29, 24, 0.80), rgba(20, 16, 13, 0.72));
+    -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(150%);
+    backdrop-filter: blur(var(--lg-blur)) saturate(150%);
+    box-shadow: var(--lg-e2), inset 0 1px 0 rgba(255, 244, 228, 0.08);
+    overflow: hidden;
+}
+
+/* ---- search ---- */
+.search-container { padding: 12px 12px 10px; }
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-radius: 999px;
+    border: 1px solid var(--lg-glass-edge-soft);
+    background: var(--lg-glass-1);
+    transition: border-color var(--lg-t-fast), background var(--lg-t-fast), box-shadow var(--lg-t-fast);
+}
+
+.search-box:focus-within {
+    border-color: rgba(198, 154, 109, 0.50);
+    background: var(--lg-glass-2);
+    box-shadow: 0 0 0 4px rgba(198, 154, 109, 0.10);
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 46px;
+    padding: 0 46px 0 46px;
+    margin: 0;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.92rem;
+    color: var(--lg-ink);
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: none;
+}
+
+.search-box input::placeholder {
+    color: var(--lg-ink-faint);
+}
+
+.search-box input:focus {
+    outline: none;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.search-icon {
+    position: absolute;
+    inset-inline-end: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.95rem;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.search-clear {
+    position: absolute;
+    inset-inline-start: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: none;
+    place-items: center;
+    padding: 0;
+    font-size: 0.8rem;
+    color: var(--lg-ink-soft);
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 50%;
+    background: rgba(255, 247, 236, 0.08);
+    cursor: pointer;
+    transition: background var(--lg-t-fast), color var(--lg-t-fast);
+}
+
+.search-clear.show { display: grid; }
+
+.search-clear:hover {
+    background: rgba(198, 154, 109, 0.24);
+    color: var(--lg-cream);
+}
+
+/* ---- category pills: horizontal scroll only ---- */
+.tabs-container {
+    padding: 0 12px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+}
+
+.tabs-container::-webkit-scrollbar { display: none; }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    white-space: nowrap;
+    padding-top: 2px;
+}
+
+.tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-shrink: 0;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 999px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--lg-ink-soft);
+    background: var(--lg-glass-1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    scroll-snap-align: start;
+    touch-action: manipulation;
+    transition: transform var(--lg-t-fast), background var(--lg-t-fast),
+                color var(--lg-t-fast), border-color var(--lg-t-fast);
+}
+
+.tab-icon {
+    font-size: 0.92rem;
+    line-height: 1;
+    opacity: 0.9;
+}
+
+.tab:hover {
+    background: var(--lg-glass-2);
+    border-color: rgba(198, 154, 109, 0.34);
+}
+
+.tab:active { transform: scale(0.95); }
+
+.tab.active {
+    color: #22160F;
+    background: linear-gradient(135deg, var(--lg-gold) 0%, var(--lg-bronze) 100%);
+    border-color: transparent;
+    box-shadow: 0 8px 22px rgba(198, 154, 109, 0.26);
+    font-weight: 700;
+}
+
+/* ============================================================ MENU GRID */
+.menu-content {
+    padding: 24px var(--lg-gutter) 120px;
+}
+
+/* No-results state (fix #1). Only rendered by the search handler when a
+   term matches nothing, so it never needs to reserve space. */
+.lg-no-results {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--lg-ink-soft);
+    border: 1px dashed var(--lg-glass-edge);
+    border-radius: var(--lg-r-lg);
+    margin: 8px var(--lg-gutter) 0;
+}
+
+.category {
+    margin: 0 0 30px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+    scroll-margin-top: var(--lg-sticky-h);
+}
+
+.category:target { box-shadow: none; }
+
+/* ---- section header ---- */
+.category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 0 2px 14px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--lg-glass-edge-soft);
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+    min-height: 44px;
+    transition: opacity var(--lg-t-fast);
+}
+
+.category-header::before { content: none; }
+
+.category-header:active { opacity: 0.7; }
+
+.category-header h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--lg-ink);
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.15rem;
+    line-height: 1;
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 13px;
+    background: var(--lg-glass-1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    transition: background var(--lg-t-mid), border-color var(--lg-t-mid), transform var(--lg-t-mid);
+}
+
+.category-header:hover .category-icon {
+    color: var(--lg-ink);
+    background: rgba(198, 154, 109, 0.20);
+    border-color: rgba(198, 154, 109, 0.40);
+    transform: translateY(-1px);
+}
+
+.toggle-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    font-size: 0.7rem;
+    color: var(--lg-bronze);
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 50%;
+    background: var(--lg-glass-1);
+    transition: transform var(--lg-t-mid), color var(--lg-t-mid);
+}
+
+.category.expanded .toggle-icon {
+    transform: rotate(180deg);
+    color: var(--lg-gold);
+}
+
+/* ---- collapsible grid ---- */
+.category-items {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    max-height: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.44s cubic-bezier(0.32, 0.72, 0, 1),
+                opacity 0.3s ease,
+                padding 0.44s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.category.expanded .category-items {
+    max-height: 4200px;
+    padding: 16px 0 0;
+    opacity: 1;
+}
+
+/* ========================================================== PRODUCT CARD */
+/* Vertical hierarchy: image / name / desc / price / add  */
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    min-height: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: var(--lg-r-lg);
+    background: linear-gradient(158deg, var(--lg-glass-2) 0%, rgba(255, 247, 236, 0.022) 62%, rgba(0, 0, 0, 0.10) 100%);
+    -webkit-backdrop-filter: blur(var(--lg-blur-sm));
+    backdrop-filter: blur(var(--lg-blur-sm));
+    box-shadow: var(--lg-e2), inset 0 1px 0 rgba(255, 244, 228, 0.07);
+    animation: lgCardIn 0.42s cubic-bezier(0.32, 0.72, 0, 1) both;
+    transition: transform var(--lg-t-mid), box-shadow var(--lg-t-mid),
+                border-color var(--lg-t-mid), background var(--lg-t-mid);
+}
+
+.menu-item:last-child { border-bottom: 1px solid var(--lg-glass-edge); }
+
+.menu-item:hover {
+    padding: 0;
+    transform: translateY(-4px);
+    border-color: rgba(198, 154, 109, 0.42);
+    background: linear-gradient(158deg, rgba(255, 247, 236, 0.115) 0%, rgba(255, 247, 236, 0.035) 62%, rgba(0, 0, 0, 0.08) 100%);
+    box-shadow: var(--lg-e3), inset 0 1px 0 rgba(255, 244, 228, 0.10);
+}
+
+.menu-item:active {
+    transform: translateY(-1px) scale(0.994);
+}
+
+@keyframes lgCardIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---- image frame ---- */
+.item-image {
+    position: relative;
+    width: 100%;
+    height: 172px;
+    flex: none;
+    margin: 0;
+    border: 0;
+    border-bottom: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 0;
+    object-fit: cover;
+    background: linear-gradient(150deg, #3A2A21, #1C1512);
+    box-shadow: none;
+    overflow: hidden;
+}
+
+/* soft top highlight so the frame reads as glass, not a flat box */
+.item-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 244, 228, 0.10) 0%, transparent 34%, transparent 62%, rgba(20, 16, 13, 0.34) 100%);
+}
+
+.item-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0;
+    transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.menu-item:hover .item-image img { transform: scale(1.05); }
+
+/* ---- abstract fallback: deliberately not a photograph ---- */
+.item-image.is-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 16px;
+    text-align: center;
+    background:
+        radial-gradient(circle at 28% 22%, rgba(198, 154, 109, 0.20) 0%, transparent 46%),
+        radial-gradient(circle at 76% 78%, rgba(92, 62, 44, 0.42) 0%, transparent 52%),
+        repeating-linear-gradient(135deg, rgba(255, 244, 228, 0.022) 0px, rgba(255, 244, 228, 0.022) 1px, transparent 1px, transparent 9px),
+        linear-gradient(150deg, #3A2A21, #1C1512);
+}
+
+.item-image.is-fallback span {
+    font-size: 2rem;
+    line-height: 1;
+    opacity: 0.92;
+    filter: saturate(0.85);
+}
+
+.item-image.is-fallback small {
+    max-width: 90%;
+    color: var(--lg-ink-faint);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    word-break: break-word;
+}
+
+/* ---- text block ---- */
+.item-info {
+    flex: 1;
+    min-width: 0;
+    padding: 15px 17px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    margin: 0;
+    color: var(--lg-cream);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.42;
+}
+
+.item-name-ar { font-weight: 700; }
+
+.item-description {
+    margin-top: 6px;
+    /* Contrast fix #3: --lg-ink-faint (0.48) only reached ~3.6-4.0:1 on the
+       cream glass. --lg-ink-soft (0.72) is the SAME step already used by the
+       price-unit / origin-label in prefers-contrast:more, so it lifts this
+       line to >=4.5:1 while keeping the soft cream hierarchy (not harsh
+       white) and the identical glass backdrop. */
+    color: var(--lg-ink-soft);
+    font-size: 0.79rem;
+    font-style: normal;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---- origins (only when data actually has them) ---- */
+.origin-selection {
+    margin-top: 12px;
+    padding: 11px 12px 12px;
+    background: rgba(198, 154, 109, 0.075);
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-inline-start: 2px solid rgba(198, 154, 109, 0.55);
+    border-radius: var(--lg-r-sm);
+}
+
+.origin-selection .label {
+    margin-bottom: 7px;
+    color: var(--lg-ink-faint);
+    font-size: 0.74rem;
+    font-weight: 600;
+}
+
+.origin-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0;
+}
+
+.origin-tag {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    border: 1px solid rgba(198, 154, 109, 0.42);
+    border-radius: 999px;
+    background: rgba(198, 154, 109, 0.10);
+    color: var(--lg-gold-soft);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--lg-t-fast), color var(--lg-t-fast), border-color var(--lg-t-fast);
+}
+
+.origin-tag:hover {
+    background: rgba(198, 154, 109, 0.30);
+    border-color: rgba(198, 154, 109, 0.70);
+    color: var(--lg-cream);
+}
+
+.origin-tag:active { transform: scale(0.95); }
+
+/* ---- price + add ---- */
+.item-price-wrap {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 17px 17px;
+    margin-top: auto;
+}
+
+.item-price-wrap .item-price {
+    display: block;
+    color: var(--lg-gold);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.16rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.price-unit {
+    color: var(--lg-ink-faint);
+    font-size: 0.68rem;
+    font-weight: 400;
+}
+
+.dual-price .item-price { font-size: 1rem; }
+
+.add-cart-btn {
+    width: 100%;
+    min-width: 44px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #22160F;
+    border: 0;
+    border-radius: 15px;
+    background: linear-gradient(135deg, var(--lg-gold) 0%, var(--lg-bronze) 100%);
+    box-shadow: 0 8px 22px rgba(198, 154, 109, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition: transform var(--lg-t-fast), box-shadow var(--lg-t-fast), filter var(--lg-t-fast);
+}
+
+.add-cart-btn:hover {
+    transform: none;
+    filter: brightness(1.06);
+    box-shadow: 0 12px 28px rgba(198, 154, 109, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.add-cart-btn:active {
+    transform: scale(0.975);
+    box-shadow: 0 4px 12px rgba(198, 154, 109, 0.24);
+}
+
+/* ---- specialty section emphasis ---- */
+#cat-specialty .category-header {
+    border-bottom-color: rgba(198, 154, 109, 0.40);
+}
+
+#cat-specialty .category-header h2 { color: var(--lg-gold); }
+
+#cat-specialty .category-icon {
+    border-color: rgba(198, 154, 109, 0.40);
+    background: rgba(198, 154, 109, 0.14);
+}
+
+#cat-specialty .menu-item {
+    background: linear-gradient(158deg, rgba(198, 154, 109, 0.13) 0%, rgba(255, 247, 236, 0.025) 64%, rgba(0, 0, 0, 0.10) 100%);
+    border-color: rgba(198, 154, 109, 0.28);
+}
+
+#cat-specialty .menu-item:hover {
+    background: linear-gradient(158deg, rgba(198, 154, 109, 0.19) 0%, rgba(255, 247, 236, 0.035) 64%, rgba(0, 0, 0, 0.08) 100%);
+    border-color: rgba(198, 154, 109, 0.48);
+}
+
+/* ============================================================== OVERLAYS */
+.cart-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(12, 9, 7, 0.62);
+    -webkit-backdrop-filter: blur(10px) saturate(120%);
+    backdrop-filter: blur(10px) saturate(120%);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--lg-t-mid), visibility var(--lg-t-mid);
+}
+
+.cart-overlay.show {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+}
+
+#productOverlay { z-index: 300; }
+
+/* ========================================================= PRODUCT SHEET */
+.product-sheet {
+    position: fixed;
+    z-index: 310;
+    left: 50%;
+    bottom: 0;
+    width: min(100%, 580px);
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 18px calc(22px + env(safe-area-inset-bottom));
+    color: var(--lg-ink);
+    border: 1px solid var(--lg-glass-edge);
+    border-bottom: 0;
+    border-radius: var(--lg-r-xl) var(--lg-r-xl) 0 0;
+    background: linear-gradient(170deg, rgba(42, 33, 27, 0.95), rgba(18, 14, 12, 0.96));
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    backdrop-filter: blur(30px) saturate(150%);
+    box-shadow: var(--lg-e4);
+    transform: translate(-50%, 108%);
+    transition: transform 0.40s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.product-sheet.show { transform: translate(-50%, 0); }
+
+/* drag affordance */
+.product-sheet::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--lg-glass-edge);
+}
+
+.product-sheet-close {
+    position: absolute;
+    top: 18px;
+    inset-inline-end: 16px;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 0.95rem;
+    color: var(--lg-ink);
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: 50%;
+    background: rgba(12, 9, 7, 0.55);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: background var(--lg-t-fast), transform var(--lg-t-fast);
+}
+
+.product-sheet-close:hover { background: rgba(198, 154, 109, 0.26); }
+.product-sheet-close:active { transform: scale(0.93); }
+
+.product-sheet-image {
+    height: 210px;
+    margin-top: 8px;
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: var(--lg-r-lg);
+    background: linear-gradient(150deg, #3A2A21, #1C1512) center / cover no-repeat;
+    display: grid;
+    place-items: center;
+    font-size: 2.6rem;
+    box-shadow: inset 0 1px 0 rgba(255, 244, 228, 0.08);
+}
+
+.product-sheet-content { padding: 18px 2px 0; }
+
+.product-sheet-kicker {
+    color: var(--lg-bronze);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    direction: ltr;
+}
+
+.product-sheet h2 {
+    margin: 9px 0 0;
+    color: var(--lg-cream);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.34rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.product-sheet p {
+    margin: 9px 0 0;
+    color: var(--lg-ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.85;
+}
+
+.product-sheet-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--lg-glass-edge-soft);
+}
+
+.product-sheet-footer strong {
+    color: var(--lg-gold);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#productSheetAdd {
+    width: auto;
+    min-width: 148px;
+    height: 50px;
+    padding: 0 22px;
+    border-radius: 16px;
+    font-size: 1.25rem;
+}
+
+/* ============================================================== CART PANEL */
+.cart-panel {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 210;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 620px);
+    margin-inline: auto;
+    max-height: 88vh;
+    color: var(--lg-ink);
+    border: 1px solid var(--lg-glass-edge);
+    border-bottom: 0;
+    border-radius: var(--lg-r-xl) var(--lg-r-xl) 0 0;
+    background: linear-gradient(170deg, rgba(42, 33, 27, 0.95), rgba(18, 14, 12, 0.96));
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    backdrop-filter: blur(30px) saturate(150%);
+    box-shadow: var(--lg-e4);
+    transform: translateY(108%);
+    transition: transform 0.40s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.cart-panel.show { transform: translateY(0); }
+
+.cart-drag-handle {
+    width: 42px;
+    height: 4px;
+    margin: 10px auto 0;
+    flex-shrink: 0;
+    border-radius: 2px;
+    background: var(--lg-glass-edge);
+    cursor: grab;
+}
+
+.cart-header {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 20px;
+    background: transparent;
+    border-bottom: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 0;
+}
+
+.cart-header h3 {
+    flex: 1;
+    margin: 0;
+    color: var(--lg-cream);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+#cartCount {
+    padding: 3px 11px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #22160F;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--lg-gold), var(--lg-bronze));
+}
+
+.cart-close {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 1.05rem;
+    color: var(--lg-ink-soft);
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 50%;
+    background: var(--lg-glass-1);
+    cursor: pointer;
+    transition: background var(--lg-t-fast), color var(--lg-t-fast), transform var(--lg-t-fast);
+}
+
+.cart-close:hover { background: rgba(198, 154, 109, 0.24); color: var(--lg-cream); }
+.cart-close:active { transform: scale(0.93); }
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 20px;
+    overscroll-behavior: contain;
+}
+
+.cart-empty {
+    padding: 44px 12px;
+    text-align: center;
+    color: var(--lg-ink-faint);
+    font-size: 0.9rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--lg-glass-edge-soft);
+}
+
+.cart-item:last-child { border-bottom: 0; }
+
+.cart-item-name {
+    flex: 1;
+    min-width: 0;
+    color: var(--lg-cream);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.cart-item-price {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--lg-gold);
+    white-space: nowrap;
+}
+
+.cart-qty-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    font-size: 1rem;
+    color: var(--lg-ink-soft);
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 50%;
+    background: var(--lg-glass-1);
+    cursor: pointer;
+    transition: background var(--lg-t-fast), color var(--lg-t-fast), border-color var(--lg-t-fast);
+}
+
+.cart-qty-btn:hover {
+    background: rgba(198, 154, 109, 0.22);
+    border-color: rgba(198, 154, 109, 0.45);
+    color: var(--lg-cream);
+}
+
+.cart-qty-btn:active { transform: scale(0.92); }
+
+.cart-item-qty {
+    min-width: 26px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--lg-cream);
+}
+
+.cart-footer {
+    padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--lg-glass-edge-soft);
+    background: rgba(12, 9, 7, 0.28);
+}
+
+.cart-table-input { margin-bottom: 11px; }
+
+.cart-table-input label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--lg-ink-faint);
+    font-size: 0.82rem;
+}
+
+.cart-table-input input {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    color: var(--lg-ink);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.94rem;
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: 13px;
+    background: var(--lg-glass-1);
+    outline: none;
+    transition: border-color var(--lg-t-fast), background var(--lg-t-fast);
+}
+
+.cart-table-input input::placeholder { color: var(--lg-ink-faint); }
+
+.cart-table-input input:focus {
+    border-color: rgba(198, 154, 109, 0.55);
+    background: var(--lg-glass-2);
+}
+
+.cart-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px 0 14px;
+    color: var(--lg-cream);
+    font-size: 1.06rem;
+    font-weight: 700;
+}
+
+#cartTotal {
+    color: var(--lg-gold);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.22rem;
+}
+
+.cart-send-btn {
+    width: 100%;
+    min-height: 52px;
+    padding: 14px;
+    color: #22160F;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    border: 0;
+    border-radius: 17px;
+    background: linear-gradient(135deg, var(--lg-gold) 0%, var(--lg-bronze) 100%);
+    box-shadow: 0 12px 30px rgba(198, 154, 109, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition: transform var(--lg-t-fast), filter var(--lg-t-fast), box-shadow var(--lg-t-fast);
+}
+
+.cart-send-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 16px 38px rgba(198, 154, 109, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.cart-send-btn:active { transform: translateY(0) scale(0.99); }
+
+/* ================================================================== FAB */
+.cart-fab {
+    position: fixed;
+    inset-inline-start: 16px;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    z-index: 110;
+    width: 58px;
+    height: 58px;
+    display: none;
+    place-items: center;
+    padding: 0;
+    font-size: 1.4rem;
+    color: #22160F;
+    border: 1px solid rgba(255, 240, 220, 0.20);
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--lg-gold) 0%, var(--lg-bronze) 100%);
+    box-shadow: var(--lg-e3), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    cursor: pointer;
+    transition: transform var(--lg-t-fast), box-shadow var(--lg-t-fast);
+}
+
+.cart-fab.show { display: grid; }
+
+.cart-fab:hover {
+    box-shadow: 0 20px 48px rgba(198, 154, 109, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+.cart-fab:active { transform: scale(0.92); }
+
+#cartFabBadge {
+    position: absolute;
+    top: -3px;
+    inset-inline-end: -3px;
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--lg-cream);
+    border: 2px solid var(--lg-espresso);
+    border-radius: 50%;
+    background: linear-gradient(140deg, #7A4A2C, #4A2A19);
+}
+
+/* ================================================================ TOAST */
+.cart-toast {
+    position: fixed;
+    bottom: calc(150px + env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 400;
+    max-width: calc(100vw - 32px);
+    padding: 12px 22px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--lg-cream);
+    border: 1px solid var(--lg-glass-edge);
+    border-radius: 999px;
+    background: rgba(20, 16, 13, 0.94);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: var(--lg-e3);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 8px);
+    transition: opacity var(--lg-t-mid), transform var(--lg-t-mid);
+}
+
+.cart-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+/* ==================================================== FLOATING SIDE BUTTONS */
+.back-to-top,
+.lang-toggle,
+.share-btn {
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    transition: transform var(--lg-t-fast), background var(--lg-t-fast), box-shadow var(--lg-t-fast);
+}
+
+.back-to-top {
+    inset-inline-start: 16px;
+    bottom: calc(150px + env(safe-area-inset-bottom));
+    width: 46px;
+    height: 46px;
+    color: var(--lg-gold);
+    border: 1px solid var(--lg-glass-edge);
+    background: rgba(20, 16, 13, 0.86);
+    box-shadow: var(--lg-e2);
+}
+
+.lang-toggle {
+    inset-inline-end: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    color: #22160F;
+    border: 0;
+    background: linear-gradient(140deg, var(--lg-gold), var(--lg-bronze));
+    box-shadow: var(--lg-e2), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.share-btn {
+    inset-inline-end: 70px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    color: var(--lg-ink);
+    border: 1px solid var(--lg-glass-edge);
+    background: rgba(20, 16, 13, 0.86);
+    box-shadow: var(--lg-e2);
+}
+
+.admin-float,
+.staff-toggle-btn {
+    border: 1px solid var(--lg-glass-edge);
+    background: rgba(20, 16, 13, 0.88);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    box-shadow: var(--lg-e2);
+    color: var(--lg-ink-soft);
+}
+
+.staff-toggle-btn {
+    inset-inline-start: 16px;
+    bottom: calc(200px + env(safe-area-inset-bottom));
+    border-radius: 50%;
+}
+
+.admin-float {
+    inset-inline-start: 16px;
+    bottom: calc(252px + env(safe-area-inset-bottom));
+}
+
+.back-to-top:active,
+.lang-toggle:active,
+.share-btn:active,
+.admin-float:active,
+.staff-toggle-btn:active { transform: scale(0.92); }
+
+/* ============================================================ QR / FOOTER */
+.qr-section,
+.footer {
+    background: transparent;
+    border-color: var(--lg-glass-edge-soft);
+    color: var(--lg-ink-soft);
+}
+
+.qr-section {
+    margin: 8px var(--lg-gutter) 0;
+    padding: 34px 22px;
+    text-align: center;
+    border: 1px solid var(--lg-glass-edge-soft);
+    border-radius: var(--lg-r-lg);
+    background: var(--lg-glass-1);
+    -webkit-backdrop-filter: blur(var(--lg-blur-sm));
+    backdrop-filter: blur(var(--lg-blur-sm));
+}
+
+.qr-section h3 {
+    margin: 0 0 18px;
+    color: var(--lg-cream);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.qr-code-container {
+    display: inline-grid;
+    place-items: center;
+    padding: 18px;
+    border-radius: var(--lg-r-md);
+    background: var(--lg-cream);
+    box-shadow: var(--lg-e2);
+}
+
+#qrcode canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.qr-instructions {
+    max-width: 42ch;
+    margin: 16px auto 0;
+    color: var(--lg-ink-faint);
+    font-size: 0.88rem;
+    line-height: 1.75;
+}
+
+.footer {
+    margin-top: 26px;
+    padding: 34px 22px calc(112px + env(safe-area-inset-bottom));
+    text-align: center;
+    border-top: 1px solid var(--lg-glass-edge-soft);
+    background: linear-gradient(180deg, transparent, rgba(12, 9, 7, 0.55));
+}
+
+.footer p {
+    margin: 4px 0;
+    color: var(--lg-ink-faint);
+    font-size: 0.86rem;
+}
+
+.footer .brand-footer {
+    color: var(--lg-gold);
+    font-family: 'Cairo', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    opacity: 1;
+}
+
+.footer .contact { color: var(--lg-bronze); font-size: 0.98rem; }
+
+/* ==========================================================================
+   RESPONSIVE
+   Mobile first. Breakpoints: 360 / 390 / 430 / 768 / 1024 / 1440
+   ========================================================================== */
+
+/* ---- small phones (360): tighten gutters, never overflow ---- */
+@media (max-width: 374px) {
+    :root {
+        --lg-gutter: 13px;
+        --lg-topbar-h: 93px;
+    }
+
+    .app-topbar-logo { width: 84px; }
+    .hero-copy h1 { font-size: clamp(2.25rem, 11.5vw, 3rem); }
+    .item-image { height: 152px; }
+    .item-info { padding: 13px 14px 0; }
+    .item-price-wrap { padding: 12px 14px 15px; }
+    .item-name { font-size: 0.97rem; }
+    .item-description { font-size: 0.76rem; }
+    .tab { padding: 0 13px; font-size: 0.8rem; }
+    .search-box input { padding: 0 42px; font-size: 0.88rem; }
+    .specialty-intro { padding: 20px 18px 22px; }
+    .cart-items, .cart-header, .cart-footer { padding-inline: 15px; }
+    .product-sheet { padding-inline: 15px; }
+}
+
+/* ---- large phones (430): a little more breathing room ---- */
+@media (min-width: 412px) {
+    :root {
+        --lg-gutter: 20px;
+        --lg-topbar-h: 113px;
+    }
+
+    .app-topbar-logo { width: 106px; }
+    .item-image { height: 186px; }
+    .hero-copy p { font-size: 0.95rem; }
+}
+
+/* ---- tablet (768): two-up cards, wider rails ---- */
+@media (min-width: 768px) {
+    :root {
+        --lg-gutter: 26px;
+        --lg-topbar-top: max(14px, env(safe-area-inset-top));
+        --lg-topbar-h: 134px;
+    }
+
+    .header { padding: 26px var(--lg-gutter) 40px; }
+
+    .app-topbar {
+        top: var(--lg-topbar-top);
+        padding: 10px 12px 10px 22px;
+        border-radius: var(--lg-r-lg);
+    }
+
+    .app-topbar-logo { width: 128px; }
+
+    .sticky-bar { top: var(--lg-bar-pin); }
+
+    .hero-copy {
+        margin-top: 8px;
+        padding-block: 46px 10px;
+        max-width: 40ch;
+    }
+
+    .hero-copy h1 { font-size: clamp(3.4rem, 8.4vw, 6rem); }
+    .hero-copy p { font-size: 1rem; max-width: 40ch; }
+
+    .specialty-intro { padding: 28px 32px 30px; }
+    .specialty-intro p { font-size: 0.94rem; }
+
+    .menu-content { padding: 34px var(--lg-gutter) 130px; }
+
+    .category { margin-bottom: 40px; }
+    .category-header h2 { font-size: 1.34rem; }
+
+    /* two-up only when there is genuinely room for name + desc + price */
+    .category-items {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .item-image { height: 190px; }
+
+    /* Fixed furniture moves out of the mobile corners.
+       The original inline <style> gave these buttons physical `right`, which
+       over-constrained the logical insets below and dropped several of them into
+       the same physical corner: .share-btn and .cart-fab landed on top of each
+       other at every width >= 768, and .admin-float / .back-to-top sat on the
+       search + tabs bar at 768x1024 (where the bar is already docked low on
+       the fold). So the positions are now explicit and physical:
+         right column -> share (26) + lang (78)
+         left column  -> cart FAB (26) + back-to-top (96) + admin (280) + staff (336)
+       280/336 keep admin and staff clear of the bar's 749..879 band on a
+       1024-tall tablet. */
+    .back-to-top {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: 26px;
+        right: auto;
+        bottom: 96px;
+    }
+
+    .lang-toggle {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: auto;
+        right: 26px;
+        bottom: 78px;
+    }
+
+    .share-btn {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: auto;
+        right: 26px;
+        bottom: 26px;
+    }
+
+    .admin-float {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: 26px;
+        right: auto;
+        bottom: 280px;
+    }
+
+    .staff-toggle-btn {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: 26px;
+        right: auto;
+        bottom: 336px;
+    }
+
+    .cart-fab {
+        inset-inline-start: auto;
+        inset-inline-end: auto;
+        left: 26px;
+        right: auto;
+        bottom: 26px;
+    }
+
+    .cart-toast { bottom: 34px; }
+
+    .qr-section { padding: 44px 24px; }
+    .footer { padding-bottom: 96px; }
+}
+
+/* ---- laptop (1024) ---- */
+@media (min-width: 1024px) {
+    :root {
+        --lg-gutter: 32px;
+        --lg-topbar-h: 142px;
+    }
+
+    .app-topbar-logo { width: 138px; }
+
+    .menu-content { max-width: 1080px; margin-inline: auto; }
+
+.category-items { gap: 18px; }
+    .item-image { height: 268px; }
+    .hero-copy h1 { font-size: clamp(4rem, 6.6vw, 6.4rem); }
+}
+
+/* ---- desktop (1440): three-up, max shell ---- */
+@media (min-width: 1280px) {
+    :root {
+        --lg-gutter: 36px;
+        --lg-shell: 1220px;
+    }
+
+    .menu-content { max-width: 1140px; }
+
+    .category-items {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .item-image { height: 224px; }
+    .item-name { font-size: 1.06rem; }
+}
+
+/* ==========================================================================
+   MOTION / CONTRAST PREFERENCES
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-contrast: more) {
+    .tab,
+    .search-box,
+    .menu-item,
+    .cart-panel,
+    .product-sheet,
+    .sticky-bar,
+    .app-topbar {
+        border-color: rgba(255, 238, 214, 0.32);
+    }
+
+    .item-description,
+    .price-unit,
+    .origin-selection .label { color: var(--lg-ink-soft); }
+}
+
+/* ==========================================================================
+   SAFETY
+   Guarantee the document can never scroll sideways.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+    .product-sheet,
+    .cart-panel {
+        inset-inline: 0;
+        max-width: 100vw;
+        transform: translateY(108%);
+    }
+
+    .product-sheet.show,
+    .cart-panel.show { transform: translateY(0); }
+
+    .tabs-container,
+    .sticky-bar { overflow-x: hidden; }
+
+    .tabs { overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .category-header h2 { font-size: 1.1rem; }
+}
+
+/* ==========================================================================
+   FIX 1 — floating buttons no longer sit on top of the sticky bar
+   On phones the search/tabs bar is bottom-docked at scroll 0 (the hero is
+   short), which put .share-btn / .lang-toggle on top of the category pills and
+   .cart-fab on top of the search field. Rather than move the buttons (there is
+   no free corner on a 360px screen) the bar reserves their footprint, so every
+   control stays tappable. Physical right because Arabic is the default
+   direction and that is where the buttons measurably render.
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* the FAB clips the input edge, so reserve enough to fully clear it */
+    .search-container { padding-right: 68px; }
+    .tabs-container { padding-right: 112px; }
+}
+
+/* ==========================================================================
+   FIX 2 — the open cart no longer leaves duplicated chrome behind it
+   On phones the cart panel is a bottom sheet that covers the search bar, the
+   category strip and the floating buttons, so the user saw two search fields
+   and two tab strips at once. :has() reacts to the .show class the existing
+   toggleCart() already toggles, so no JS change is needed.
+   ========================================================================== */
+.sticky-bar,
+.share-btn,
+.lang-toggle,
+.admin-float,
+.staff-toggle-btn,
+.cart-fab {
+    transition: opacity var(--lg-t-mid), visibility var(--lg-t-mid);
+}
+
+body:has(#cartPanel.show) .sticky-bar,
+body:has(#cartPanel.show) .share-btn,
+body:has(#cartPanel.show) .lang-toggle,
+body:has(#cartPanel.show) .admin-float,
+body:has(#cartPanel.show) .staff-toggle-btn,
+body:has(#cartPanel.show) .cart-fab {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* on wider screens the cart is a side drawer and covers nothing, so the bar
+   stays visible behind the dimmed scrim */
+@media (min-width: 768px) {
+    body:has(#cartPanel.show) .sticky-bar {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+}
