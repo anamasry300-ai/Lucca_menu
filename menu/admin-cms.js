@@ -152,15 +152,20 @@ function renderCategoryCms() {
     if (!root) return;
     const rows = categoryCmsRows();
     const customId = '_cat_new';
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const counts = {};
+    getAccessibleCategories(true).forEach(c => {
+        counts[c.id] = getPublishedItems(c.id, { includeHidden: true }).length;
+    });
     root.innerHTML = `
         <div class="cms-sec-head">
             <div>
-                <h3>▤ إدارة الفئات</h3>
+                <h3>${ic('folder', 'cms-ic-lg')} إدارة الفئات</h3>
                 <p>إظهار، إخفاء، إعادة ترتيب، وتعديل الأسماء (عربي/إنجليزي). الفئات الأساسية تُختبأ ولا تُحذف؛ الفئات المضافة يمكن حذفها.</p>
             </div>
             <div style="display:flex;gap:6px;">
                 <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="categoryCmsReset()">↺ استعادة الأصل</button>
-                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="categoryCmsSave()">💾 حفظ الفئات</button>
+                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="categoryCmsSave()">${ic('save', 'cms-ic-sm')} حفظ الفئات</button>
             </div>
         </div>
         <div class="section-card">
@@ -182,6 +187,7 @@ function renderCategoryCms() {
                     : `<span class="cat-icon">${r.icon}</span>`}
                 <input class="admin-input md" data-f="ar" data-i="${idx}" value="${escapeCms(r.ar)}" placeholder="العربية" style="flex:1;min-width:110px;">
                 <input class="admin-input md" data-f="en" data-i="${idx}" value="${escapeCms(r.en)}" placeholder="English" style="flex:1;min-width:110px;" dir="ltr">
+                <span class="cat-count-chip">${ic('cube')} ${counts[r.id] || 0} صنف</span>
                 <label class="menu-editor-check" style="min-width:92px;"><input type="checkbox" data-f="hidden" data-i="${idx}" ${r.hidden ? 'checked' : ''}> مخفية</label>
                 <div class="cat-actions">
                     <button class="admin-btn admin-btn-icon" title="تحريك لأعلى" onclick="categoryCmsMove(${idx}, -1)">▲</button>
@@ -316,10 +322,41 @@ function renderImagesCms() {
     if (!root) return;
     const inv = computeImageInventory();
     const usedCount = inv.strong.length + inv.verified.length + inv.link.length;
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const usedItems = inv.strong.map(r => ['STRONG', 'img-strong', r])
+        .concat(inv.verified.map(r => ['VERIFIED', 'img-verified', r]))
+        .concat(inv.link.map(r => ['LINK', 'img-link', r]));
+    const gridTiles = usedItems.map(([label, cls, r]) => `
+        <div class="image-tile">
+            <div class="tile-thumb"><img src="${escapeCms(r.item.image)}" alt="" loading="lazy"></div>
+            <div class="tile-meta">
+                <div class="tile-name">${escapeCms(r.item.n)}</div>
+                <div class="tile-file">${escapeCms(r.category.id)}</div>
+                <div class="tile-status"><span class="img-badge ${cls}">${label}</span></div>
+            </div>
+        </div>`).join('');
+    const fbTiles = inv.fallback.slice(0, 8).map(r => `
+        <div class="image-tile">
+            <div class="tile-thumb tile-fb"><span>${r.category.icon || '☕'}</span></div>
+            <div class="tile-meta">
+                <div class="tile-name">${escapeCms(r.item.n)}</div>
+                <div class="tile-file">—</div>
+                <div class="tile-status"><span class="img-badge img-fb">FALLBACK</span></div>
+            </div>
+        </div>`).join('');
+    const unvTiles = inv.unverified.map(f => `
+        <div class="image-tile">
+            <div class="tile-thumb tile-fb"><span>?</span></div>
+            <div class="tile-meta">
+                <div class="tile-name">غير موصولة</div>
+                <div class="tile-file">${escapeCms(f)}</div>
+                <div class="tile-status"><span class="img-badge img-unverified">UNVERIFIED</span></div>
+            </div>
+        </div>`).join('');
     root.innerHTML = `
         <div class="cms-sec-head">
             <div>
-                <h3>🖼 جرد الصور</h3>
+                <h3>${ic('image', 'cms-ic-lg')} جرد الصور</h3>
                 <p>قائمة اشتقاقية لحالة صور الأصناف. لا يُربط أي شيء تلقائيًا — الصور الحقيقية غير المؤكدة تنتظر ربطًا يدويًّا لاحقًا.</p>
             </div>
         </div>
@@ -332,6 +369,8 @@ function renderImagesCms() {
             <div class="stat-card"><div class="val">${inv.unverified.length}</div><div class="lbl"><span class="img-badge img-unverified">UNVERIFIED</span></div></div>
             <div class="stat-card"><div class="val">${inv.misleading}</div><div class="lbl">مضللة</div></div>
         </div>
+        <div class="cms-sec-head" style="margin-top:6px;"><div><h3 style="font-size:.95rem;">${ic('phone', 'cms-ic-sm')} معرض الصور</h3></div></div>
+        <div class="images-grid">${gridTiles}${fbTiles}${unvTiles}</div>
         <div class="section-card">
             <h4>مستخدمة (${usedCount})</h4>
             <div class="admin-table-wrap"><table class="admin-table">
@@ -352,8 +391,7 @@ function renderImagesCms() {
             </table></div>
         </div>`;
     const usedBody = document.getElementById('imagesUsedBody');
-    const used = inv.strong.map(r => ['STRONG', 'img-strong', r]).concat(inv.verified.map(r => ['VERIFIED', 'img-verified', r])).concat(inv.link.map(r => ['LINK', 'img-link', r]));
-    usedBody.innerHTML = used.length ? used.map(([label, cls, r]) => `
+    usedBody.innerHTML = usedItems.length ? usedItems.map(([label, cls, r]) => `
         <tr>
             <td><div class="menu-prod-thumb" style="width:44px;height:44px;"><img src="${escapeCms(r.item.image)}" alt="" loading="lazy"></div></td>
             <td>${escapeCms(r.item.n)}</td>
@@ -373,21 +411,31 @@ function renderLocationCms() {
     const root = document.getElementById('cms-location-root');
     if (!root) return;
     const loc = readLocation();
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const hoursRows = CMS_DAY_KEYS.map((k, i) => {
+        const h = (loc.hours || {})[k] || {};
+        return `<div class="hours-row">
+            <span class="day-label">${CMS_DAY_NAMES_AR[i]}</span>
+            <label class="menu-editor-check" style="min-width:74px;"><input type="checkbox" data-day="${k}" ${h.open ? 'checked' : ''}> مفتوح</label>
+            <input type="time" data-day="${k}" data-f="from" class="admin-input sm" value="${escapeCms(h.from || '')}">
+            <span style="color:var(--coffee-300);">—</span>
+            <input type="time" data-day="${k}" data-f="to" class="admin-input sm" value="${escapeCms(h.to || '')}">
+        </div>`; }).join('');
     root.innerHTML = `
         <div class="cms-sec-head">
             <div>
-                <h3>📍 الموقع والتواصل</h3>
+                <h3>${ic('map', 'cms-ic-lg')} الموقع والتواصل</h3>
                 <p>تُحفظ محليًّا وتُعرض للزوار إن وُجدت. بلا Google Maps API — نستعمل الرابط والإحداثيات فقط.</p>
             </div>
             <div style="display:flex;gap:6px;">
                 <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="locationMapsTest()">🗺 افتح في Google Maps</button>
-                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="saveLocationCms()">💾 حفظ</button>
+                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="saveLocationCms()">${ic('save', 'cms-ic-sm')} حفظ</button>
             </div>
         </div>
         <div class="section-card" id="locPreviewCard" style="display:${Object.keys(loc).length ? 'block' : 'none'};"></div>
-        <div class="cms-form-grid">
+        <div class="loc-cards">
             <div class="section-card">
-                <h4>بيانات الفرع</h4>
+                <h4>${ic('file', 'cms-ic-sm')} بيانات الفرع</h4>
                 <label>اسم الفرع</label>
                 <input id="loc_branch" class="admin-input full" value="${escapeCms(loc.branch || '')}" placeholder="Lucca — Hub Cafe">
                 <label>العنوان (عربي)</label>
@@ -397,30 +445,26 @@ function renderLocationCms() {
                 <label>رابط Google Maps</label>
                 <input id="loc_maps_url" class="admin-input full" dir="ltr" value="${escapeCms(loc.mapsUrl || '')}" placeholder="https://maps.app.goo.gl/...">
                 <div class="cms-hint">اختياري؛ إن تُرك فارغًا نستعمل البحث عن العنوان.</div>
-                <label>خط العرض / خط الطول</label>
-                <div class="row">
-                    <input id="loc_lat" class="admin-input sm" dir="ltr" value="${escapeCms(loc.lat ?? '')}" placeholder="31.25">
-                    <input id="loc_lng" class="admin-input sm" dir="ltr" value="${escapeCms(loc.lng ?? '')}" placeholder="32.28">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div><label>خط العرض</label>
+                    <input id="loc_lat" class="admin-input full" dir="ltr" value="${escapeCms(loc.lat ?? '')}" placeholder="31.25"></div>
+                    <div><label>خط الطول</label>
+                    <input id="loc_lng" class="admin-input full" dir="ltr" value="${escapeCms(loc.lng ?? '')}" placeholder="32.28"></div>
                 </div>
             </div>
             <div class="section-card">
-                <h4>التواصل</h4>
+                <h4>${ic('phone', 'cms-ic-sm')} التواصل</h4>
                 <label>الهاتف (اختياري)</label>
                 <input id="loc_phone" class="admin-input full" dir="ltr" value="${escapeCms(loc.phone || '')}" placeholder="+20 10 10058989">
                 <label>واتساب (رقم دولي بدون +)</label>
                 <input id="loc_wa" class="admin-input full" dir="ltr" value="${escapeCms(loc.whatsapp || '')}" placeholder="201010058989">
                 <label>إنستجرام (اختياري)</label>
                 <input id="loc_ig" class="admin-input full" dir="ltr" value="${escapeCms(loc.instagram || '')}" placeholder="@lucca.cafe أو https://...">
-                <h4 style="margin-top:18px;">ساعات العمل (السبت → الجمعة)</h4>
-                ${CMS_DAY_KEYS.map((k, i) => {
-                    const h = (loc.hours || {})[k] || {};
-                    return `<div class="hours-row">
-                        <span class="day-label">${CMS_DAY_NAMES_AR[i]}</span>
-                        <label class="menu-editor-check" style="min-width:74px;"><input type="checkbox" data-day="${k}" ${h.open ? 'checked' : ''}> مفتوح</label>
-                        <input type="time" data-day="${k}" data-f="from" class="admin-input sm" value="${escapeCms(h.from || '')}">
-                        <span style="color:var(--coffee-300);">—</span>
-                        <input type="time" data-day="${k}" data-f="to" class="admin-input sm" value="${escapeCms(h.to || '')}">
-                    </div>`; }).join('')}
+                <div class="cms-hint">تُعرض هذه البيانات للزوار في شريط التواصل أعلى المنيو.</div>
+            </div>
+            <div class="section-card" style="grid-column:1/-1;">
+                <h4>${ic('clock', 'cms-ic-sm')} ساعات العمل (السبت → الجمعة)</h4>
+                <div class="hours-wrap">${hoursRows}</div>
                 <div class="cms-hint">اترك «مفتوح» غير مفعّل وأوقات فارغة للأيام المغلقة.</div>
             </div>
         </div>`;
@@ -574,10 +618,13 @@ function renderSettingsCms() {
     const root = document.getElementById('cms-settings-root');
     if (!root) return;
     const s = readSettings();
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const inv = computeImageInventory();
+    const usedCount = inv.strong.length + inv.verified.length + inv.link.length;
     root.innerHTML = `
         <div class="cms-sec-head">
             <div>
-                <h3>⚙️ الإعدادات</h3>
+                <h3>${ic('sliders', 'cms-ic-lg')} الإعدادات</h3>
                 <p>إعدادات المنيو المحلية (Draft) — جزء من بيانات النشر على هذا المتصفح.</p>
             </div>
             <div style="display:flex;gap:6px;">
@@ -585,29 +632,40 @@ function renderSettingsCms() {
                 <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="document.getElementById('cms-import-file').click()">📥 استيراد</button>
                 <input type="file" id="cms-import-file" style="display:none;" accept=".json" onchange="cmsImportBackup(this)">
                 <button class="admin-btn admin-btn-danger admin-btn-sm" onclick="cmsResetAll()">↺ مسح التعديلات المحلية</button>
-                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="saveSettingsCms()">💾 حفظ</button>
+                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="saveSettingsCms()">${ic('save', 'cms-ic-sm')} حفظ</button>
             </div>
         </div>
-        <div class="section-card">
-            <h4>عام</h4>
-            <div class="row">
-                <label>رقم واتساب الافتراضي للطلبات</label>
-                <input id="set_wa" class="admin-input md" dir="ltr" value="${escapeCms(s.whatsapp || '')}" placeholder="201010058989">
+        <div class="settings-cards">
+            <div class="section-card">
+                <h4>${ic('cube', 'cms-ic-sm')} عام</h4>
+                <div class="row">
+                    <label>رقم واتساب الافتراضي للطلبات</label>
+                    <input id="set_wa" class="admin-input md" dir="ltr" value="${escapeCms(s.whatsapp || '')}" placeholder="201010058989">
+                </div>
+                <div class="row">
+                    <label>فتح المنيو العام</label>
+                    <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="openPublicPreview()">👁 فتح في تبويب</button>
+                </div>
+                <div class="cms-hint">رقم واتساب الإعدادات يُستخدم كبديل إذا لم يُحدَّد رقم داخل «الموقع والتواصل».</div>
             </div>
-            <div class="row">
-                <label>فتح المنيو العام</label>
-                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="openPublicPreview()">👁 فتح في تبويب</button>
+            <div class="section-card">
+                <h4>${ic('image', 'cms-ic-sm')} الصور</h4>
+                <div class="app-meta">
+                    <div class="app-meta-row">${ic('check')} ${usedCount} صورة مستخدمة</div>
+                    <div class="app-meta-row">${ic('off')} ${inv.fallback.length} بدون صورة — fallback</div>
+                    <div class="app-meta-row">${ic('clock')} ${inv.unverified.length} صورة حقيقية غير مؤكدة — بلا ربط تلقائي</div>
+                </div>
+                <div class="cms-hint">صُوِّرت الحالة من «جرد الصور»؛ لا يوجد ربط تلقائي للصور الحقيقية دون موافقتك.</div>
             </div>
-            <div class="cms-hint">رقم واتساب الإعدادات يُستخدم كبديل إذا لم يُحدَّد رقم داخل «الموقع والتواصل».</div>
-        </div>
-        <div class="section-card">
-            <h4>النشر</h4>
-            <div class="row">
-                <span style="color:var(--coffee-300);font-size:.86rem;">كل التعديلات Draft محلية على هذا المتصفح وتُشارك مع الزوار فقط عبر النسخة النهائية من الجهاز المستضيف. انقر للعرض:</span>
-            </div>
-            <div class="row">
-                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsReviewOpen()">📋 مراجعة قبل النشر</button>
-                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsPublishLocal()">📤 «نشر» (اختبار محلي)</button>
+            <div class="section-card">
+                <h4>${ic('file', 'cms-ic-sm')} النشر</h4>
+                <div class="row">
+                    <span style="color:var(--coffee-300);font-size:.86rem;">كل التعديلات Draft محلية على هذا المتصفح وتُشارك مع الزوار فقط عبر النسخة النهائية من الجهاز المستضيف. انقر للعرض:</span>
+                </div>
+                <div class="row">
+                    <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsReviewOpen()">📋 مراجعة قبل النشر</button>
+                    <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsPublishLocal()">📤 «نشر» (اختبار محلي)</button>
+                </div>
             </div>
         </div>`;
 }
@@ -695,11 +753,11 @@ function updateAdminStatus() {
     const n = cmsEditCount();
     let txt, cls = '';
     if (pm.status === 'published' && pm.lastPublishedAt) {
-        txt = `📦 Published · محلي ${pm.lastPublishedAt}`; cls = 'cms-badge-published';
+        txt = `Published · محلي ${pm.lastPublishedAt}`; cls = 'cms-badge-published';
     } else if (n > 0) {
-        txt = `✍ Review · ${n} تعديل محلي`; cls = 'cms-badge-review';
+        txt = `Review · ${n} تعديل محلي`; cls = 'cms-badge-review';
     } else {
-        txt = '📝 Draft / Local';
+        txt = 'Draft / Local';
     }
     badge.textContent = txt;
     badge.className = 'admin-status-badge ' + cls;
@@ -772,10 +830,11 @@ function cmsPublishLocal() {
 function renderPreviewCms() {
     const root = document.getElementById('cms-preview-root');
     if (!root) return;
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
     root.innerHTML = `
         <div class="cms-sec-head">
             <div>
-                <h3>👁 المعاينة</h3>
+                <h3>${ic('eye', 'cms-ic-lg')} المعاينة</h3>
                 <p>معاينة تقريبية للمنيو العام بالبيانات الحية (عربي/إنجليزي حسب لغة المتصفح). المعاينة غير قابلة للنقر.</p>
             </div>
             <div style="display:flex;gap:6px;">

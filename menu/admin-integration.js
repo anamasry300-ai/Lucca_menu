@@ -47,6 +47,11 @@ function showAdminToast(msg) {
     el._hide = setTimeout(() => el.classList.remove('show'), 2000);
 }
 
+// ==================== Icon helper (stroke SVGs 18-22px) ====================
+function cmsIconStr(id, cls) {
+    return `<svg class="cms-ic ${cls || ''}" aria-hidden="true"><use href="#ic-${id}"></use></svg>`;
+}
+
 // ==================== Menu-only Dashboard ====================
 function openMenuDashboard() {
     document.body.classList.add('menu-admin');
@@ -57,15 +62,21 @@ function openMenuDashboard() {
 function loadDashboardStats() {
     const cats = (typeof getAccessibleCategories === 'function') ? getAccessibleCategories() : CATEGORIES;
     const published = cats.flatMap(category => getPublishedItems(category.id));
-    const state = readMenuEditorState();
     const withImage = published.filter(item => item.image).length;
-    document.getElementById('dash-orders').textContent = cats.length;
-    document.getElementById('dash-sales').textContent = published.length;
-    document.getElementById('dash-cash').textContent = withImage;
-    document.getElementById('dash-fallback').textContent = published.length - withImage;
-    document.getElementById('dash-card').textContent = Object.keys(state.overrides || {}).length + Object.values(state.custom || {}).flat().length;
+    const visible = published.filter(item => item.visible !== false).length;
+    const state = readMenuEditorState();
+    const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setTxt('dash-orders', cats.length);
+    setTxt('dash-sales', published.length);
+    setTxt('dash-visible', visible);
+    setTxt('dash-hidden', published.length - visible);
+    setTxt('dash-images', withImage);
+    setTxt('dash-cash', withImage);
+    setTxt('dash-fallback', published.length - withImage);
+    setTxt('dash-card', Object.keys(state.overrides || {}).length + Object.values(state.custom || {}).flat().length);
     const url = (window.location.href || '').split('?')[0];
-    document.getElementById('dash-menu-url').textContent = url;
+    const mu = document.getElementById('dash-menu-url');
+    if (mu) mu.value = url;
 }
 
 // ==================== CASH REGISTER ====================

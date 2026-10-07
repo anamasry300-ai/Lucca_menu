@@ -142,45 +142,52 @@ function renderMenuEditor() {
     _menuFormCtx = null;
     const all = menuEditorAllItems(true);
     const withImage = all.filter(i => i.image).length;
+    const visible = all.filter(i => i.visible !== false).length;
     const cats = (typeof getAccessibleCategories === 'function') ? getAccessibleCategories(true) : CATEGORIES;
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const edits = Object.keys(readMenuEditorState().overrides || {}).length + Object.values(readMenuEditorState().custom || {}).flat().length;
     root.innerHTML = `
         <div class="menu-editor-head">
             <div>
-                <h3>✎ لوحة إدارة المنتجات</h3>
+                <h3>${ic('cube', 'cms-ic-lg')} إدارة المنتجات</h3>
                 <p>إضافة وتعديل الأصناف والمقاسات والصور والمظهر. الحالة: <strong style="color:var(--gold);">${MENU_REPOSITORY_MODE}</strong></p>
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsReviewOpen()">📋 مراجعة قبل النشر</button>
+                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="cmsReviewOpen()">${ic('file', 'cms-ic-sm')} مراجعة قبل النشر</button>
                 <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="resetMenuEditor()">↺ استعادة الأساس</button>
             </div>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card"><div class="val">${cats.length}</div><div class="lbl">الفئات</div></div>
-            <div class="stat-card"><div class="val">${all.length}</div><div class="lbl">الأصناف</div></div>
-            <div class="stat-card"><div class="val">${withImage}</div><div class="lbl">صور مؤكدة</div></div>
-            <div class="stat-card"><div class="val">${all.length - withImage}</div><div class="lbl">بدون صورة</div></div>
-            <div class="stat-card"><div class="val">${Object.keys(readMenuEditorState().overrides || {}).length + Object.values(readMenuEditorState().custom || {}).flat().length}</div><div class="lbl">تعديلات محفوظة</div></div>
+        <div class="dash-grid">
+            <div class="dash-ov-card"><div class="dash-ov-ic">${ic('folder')}</div><div class="dash-ov-body"><div class="val">${cats.length}</div><div class="lbl">الفئات</div></div></div>
+            <div class="dash-ov-card"><div class="dash-ov-ic">${ic('cube')}</div><div class="dash-ov-body"><div class="val">${all.length}</div><div class="lbl">الأصناف</div></div></div>
+            <div class="dash-ov-card"><div class="dash-ov-ic">${ic('eye')}</div><div class="dash-ov-body"><div class="val">${visible}</div><div class="lbl">ظاهر</div></div></div>
+            <div class="dash-ov-card"><div class="dash-ov-ic">${ic('image')}</div><div class="dash-ov-body"><div class="val">${withImage}</div><div class="lbl">بصور</div></div></div>
+            <div class="dash-ov-card"><div class="dash-ov-ic">${ic('save')}</div><div class="dash-ov-body"><div class="val">${edits}</div><div class="lbl">تعديلات</div></div></div>
         </div>
         <div class="section-card menu-editor-toolbar">
+            <input id="menuProdSearch" class="admin-input md" placeholder="بحث بالاسم..." oninput="renderMenuEditorRows()">
             <select id="menuProdCat" class="admin-select sm" onchange="renderMenuEditorRows()">
                 <option value="">كل الفئات</option>
                 ${cats.map(c => `<option value="${c.id}">${escapeMenuEditor(menuEditorCategoryLabel(c.id))}${c.hidden ? ' (مخفية)' : ''}</option>`).join('')}
             </select>
-            <input id="menuProdSearch" class="admin-input md" placeholder="بحث بالاسم..." oninput="renderMenuEditorRows()">
             <select id="menuProdVis" class="admin-select sm" onchange="renderMenuEditorRows()">
                 <option value="">كل الظهور</option>
                 <option value="visible">ظاهر فقط</option>
                 <option value="hidden">مخفي فقط</option>
             </select>
-            <label class="menu-editor-check" title="الأصناف بدون صورة موثوقة"><input type="checkbox" id="menuProdNoImg" onchange="renderMenuEditorRows()"> بدون صورة</label>
+            <select id="menuProdImg" class="admin-select sm" onchange="renderMenuEditorRows()">
+                <option value="">كل الصور</option>
+                <option value="noimg">بدون صورة</option>
+                <option value="img">بصورة</option>
+            </select>
             <select id="menuProdSort" class="admin-select sm" onchange="renderMenuEditorRows()">
                 <option value="">الترتيب الافتراضي</option>
                 <option value="name">الاسم</option>
                 <option value="price-asc">السعر ↑</option>
                 <option value="price-desc">السعر ↓</option>
             </select>
-            <button class="admin-btn admin-btn-primary" onclick="menuEditorNewItem()">＋ إضافة صنف جديد</button>
-            <button class="admin-btn admin-btn-secondary" onclick="LocalMenuRepository.publish().then(r => showMenuEditorMessage(r.note))">📤 اختبار النشر (تشخيص)</button>
+            <button class="admin-btn admin-btn-primary" onclick="menuEditorNewItem()">${ic('plus', 'cms-ic-sm')} إضافة صنف</button>
+            <button class="admin-btn admin-btn-secondary" onclick="LocalMenuRepository.publish().then(r => showMenuEditorMessage(r.note))">📤 اختبار النشر</button>
         </div>
         <div class="section-card">
             <div class="admin-table-wrap">
@@ -190,7 +197,15 @@ function renderMenuEditor() {
                 </table>
             </div>
         </div>
-        <div id="menuEditorFormWrap"></div>
+        <div class="menu-editor-overlay" id="menuEditorOverlay" onclick="closeMenuEditorDrawer()"></div>
+        <div class="menu-editor-drawer" id="menuEditorDrawer" aria-hidden="true">
+            <div class="mef-head">
+                <div class="mef-title" id="menuEditorDrawerTitle">تعديل الصنف</div>
+                <button class="mef-close" onclick="closeMenuEditorDrawer()" title="إغلاق">✕</button>
+            </div>
+            <div class="mef-body"><div id="menuEditorFormWrap"></div></div>
+            <div class="mef-foot" id="menuEditorFormFoot"></div>
+        </div>
         <div id="menuEditorMessage" class="menu-editor-message"></div>`;
     renderMenuEditorRows();
 }
@@ -201,13 +216,14 @@ function renderMenuEditorRows() {
     const catFilter = document.getElementById('menuProdCat')?.value || '';
     const term = (document.getElementById('menuProdSearch')?.value || '').toLowerCase().trim();
     const vis = document.getElementById('menuProdVis')?.value || '';
-    const noImg = !!(document.getElementById('menuProdNoImg')?.checked);
+    const imgFilter = document.getElementById('menuProdImg')?.value || '';
     const sort = document.getElementById('menuProdSort')?.value || '';
     let rows = menuEditorAllItems(true);
     if (catFilter) rows = rows.filter(r => r.categoryId === catFilter);
     if (vis === 'visible') rows = rows.filter(r => r.visible !== false);
     if (vis === 'hidden') rows = rows.filter(r => r.visible === false);
-    if (noImg) rows = rows.filter(r => !r.image);
+    if (imgFilter === 'noimg') rows = rows.filter(r => !r.image);
+    if (imgFilter === 'img') rows = rows.filter(r => !!r.image);
     if (term) rows = rows.filter(r => {
         const hay = [r.n || '', r.en || '', ...(Array.isArray(r.aliases) ? r.aliases.map(a => a || '') : [])].join(' ').toLowerCase();
         return hay.includes(term);
@@ -222,10 +238,11 @@ function renderMenuEditorRows() {
         tbody.innerHTML = '<tr class="empty"><td colspan="7">لا توجد أصناف مطابقة</td></tr>';
         return;
     }
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
     tbody.innerHTML = rows.map(r => {
         const thumb = r.image
-            ? `<div class="menu-prod-thumb img-${menuEditorImageStatus(r).cls}"><img src="${r.image}" alt=""></div>`
-            : `<div class="menu-prod-thumb is-fallback img-fb"><span>${IMAGE_FALLBACKS[r.categoryId] || '🍽️'}</span></div>`;
+            ? `<div class="menu-prod-thumb thumb-sm img-${menuEditorImageStatus(r).cls}"><img src="${r.image}" alt=""></div>`
+            : `<div class="menu-prod-thumb thumb-sm is-fallback img-fb"><span>${IMAGE_FALLBACKS[r.categoryId] || '🍽️'}</span></div>`;
         const st = menuEditorImageStatus(r);
         const hidden = r.visible === false;
         const nameLine = `${escapeMenuEditor(r.n)}${r.en ? ' <small style="color:var(--coffee-300);">' + escapeMenuEditor(r.en) + '</small>' : ''}`;
@@ -240,14 +257,30 @@ function renderMenuEditorRows() {
                 <td><span class="img-badge ${st.cls}">${st.label}</span></td>
                 <td>${hidden ? 'مخفي' : 'ظاهر'}</td>
                 <td class="menu-prod-actions">
-                    <button class="admin-btn admin-btn-sm ${hidden ? 'admin-btn-secondary' : 'admin-btn'}" onclick="toggleMenuItemVisibility('${r.categoryId}', ${r.index})" title="${hidden ? 'إظهار' : 'إخفاء'}">${hidden ? '👁 إظهار' : '🙈 إخفاء'}</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-primary" onclick="duplicateMenuEditorItem('${r.categoryId}', ${r.index})" title="تكرار الصنف">⧉ تكرار</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openMenuEditorItem('${r.categoryId}', ${r.index})">✎ تعديل</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openMenuEditorItem('${r.categoryId}', ${r.index}, 'image')">🖼 صورة</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="removeMenuItemImage('${r.categoryId}', ${r.index})">🗑 إزالة صورة</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openMenuEditorItem('${r.categoryId}', ${r.index})" title="تعديل">${ic('pencil')} تعديل</button>
+                    <button class="admin-btn admin-btn-sm ${hidden ? 'admin-btn-secondary' : 'admin-btn'}" onclick="toggleMenuItemVisibility('${r.categoryId}', ${r.index})" title="${hidden ? 'إظهار' : 'إخفاء'}">${hidden ? ic('eye') : ic('off')} ${hidden ? 'إظهار' : 'إخفاء'}</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openMenuEditorItem('${r.categoryId}', ${r.index}, 'image')" title="تغيير صورة الصنف">${ic('image')} صورة</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="duplicateMenuEditorItem('${r.categoryId}', ${r.index})" title="تكرار الصنف">⧉</button>
+                    ${r.image ? `<button class="admin-btn admin-btn-sm admin-btn-danger" onclick="removeMenuItemImage('${r.categoryId}', ${r.index})" title="إزالة صورة الصنف">${ic('trash')}</button>` : ''}
                 </td>
             </tr>`;
     }).join('');
+}
+
+function openMenuEditorDrawer(title) {
+    const drawer = document.getElementById('menuEditorDrawer');
+    const overlay = document.getElementById('menuEditorOverlay');
+    const titleEl = document.getElementById('menuEditorDrawerTitle');
+    if (titleEl) titleEl.innerHTML = (typeof cmsIconStr === 'function' ? cmsIconStr('pencil') : '') + ' ' + title;
+    if (drawer) drawer.classList.add('open');
+    if (overlay) overlay.classList.add('show');
+}
+
+function closeMenuEditorDrawer() {
+    const drawer = document.getElementById('menuEditorDrawer');
+    const overlay = document.getElementById('menuEditorOverlay');
+    if (drawer) drawer.classList.remove('open');
+    if (overlay) overlay.classList.remove('show');
 }
 
 function openMenuEditorItem(cat, index, focus = '') {
@@ -255,16 +288,20 @@ function openMenuEditorItem(cat, index, focus = '') {
     if (!item) return;
     _menuFormCtx = { mode: 'edit', cat, index };
     const st = menuEditorImageStatus(item);
+    const foot = document.getElementById('menuEditorFormFoot');
+    if (foot) foot.innerHTML = '';
     document.getElementById('menuEditorFormWrap').innerHTML = menuEditorForm(item, st, focus);
-    document.getElementById('menuEditorFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    openMenuEditorDrawer('تعديل الصنف');
     if (focus === 'image') document.getElementById('menuEditorImageInput')?.click();
 }
 
 function menuEditorNewItem() {
     _menuFormCtx = { mode: 'new', cat: 'specialty', index: -1 };
     const placeholder = { n: '', en: '', p: '', d: '', de: '', origin: '', variant: '', image: null, visible: true, options: [], order: '', calories: '', aliases: [] };
+    const foot = document.getElementById('menuEditorFormFoot');
+    if (foot) foot.innerHTML = '';
     document.getElementById('menuEditorFormWrap').innerHTML = menuEditorForm(placeholder, { label: 'FALLBACK', cls: 'img-fb' }, '');
-    document.getElementById('menuEditorFormWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    openMenuEditorDrawer('إضافة صنف جديد');
 }
 
 function menuEditorAddOption() {
@@ -323,66 +360,68 @@ function menuEditorForm(item, st, focus) {
     const preview = item.image
         ? `<img src="${item.image}" alt="معاينة" style="max-width:160px;max-height:120px;border-radius:10px;border:1px solid rgba(212,168,90,0.4);display:block;">`
         : `<div class="menu-prod-thumb is-fallback img-fb" style="width:160px;height:120px;border-radius:10px;"><span>${IMAGE_FALLBACKS[_menuFormCtx ? _menuFormCtx.cat : 'specialty'] || '🍽️'}</span></div>`;
+    const ic = (typeof cmsIconStr === 'function') ? cmsIconStr : () => '';
+    const footBtns = `
+        <button class="admin-btn admin-btn-secondary" onclick="closeMenuEditorDrawer()">إلغاء</button>
+        <button class="admin-btn admin-btn-primary" onclick="saveMenuEditorItem()">${ic('save')} حفظ مسودة</button>
+        ${_menuFormCtx?.mode === 'edit' && item.__isCustom ? '<button class="admin-btn admin-btn-danger admin-btn-sm" onclick="deleteMenuEditorItem()">حذف الصنف المضاف</button>' : ''}
+        ${_menuFormCtx?.mode === 'edit' && !item.__isCustom ? '<button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="resetMenuEditorItem()">↺ استعادة الأصل</button>' : ''}`;
+    document.getElementById('menuEditorFormFoot').innerHTML = footBtns;
     return `
-        <div class="section-card menu-editor-form">
-            <h4>${_menuFormCtx?.mode === 'new' ? '＋ إضافة صنف جديد' : '✎ تعديل الصنف'}</h4>
-            <input type="hidden" id="menuEditorMode" value="${_menuFormCtx?.mode || 'new'}">
-            <div class="menu-editor-grid">
-                <div>
-                    <label>اسم الصنف (عربي) *</label>
-                    <input id="menuEditorName" class="admin-input full" value="${escapeMenuEditor(item.n || '')}" placeholder="مثال: لاتيه" oninput="if(window.cmsSetFieldError)cmsSetFieldError(this,'')">
-                    <label>الاسم بالإنجليزية (اختياري)</label>
-                    <input id="menuEditorEnName" class="admin-input full" dir="ltr" value="${escapeMenuEditor(item.en || '')}" placeholder="Latte">
-                    <label>الفئة *</label>
-                    <select id="menuEditorCategory" class="admin-select full" ${_menuFormCtx?.mode === 'edit' ? 'disabled' : ''}>${catOpts}</select>
-                    <label>السعر (ج.م — اكتب "85 / 95" لسعرين)</label>
-                    <input id="menuEditorPrice" class="admin-input full" value="${escapeMenuEditor(priceStr)}" placeholder="85 أو 80 / 95">
-                    <label>المقاسات / الخيارات (اختياري — تُقَدَّم للزائر بزرّ لكل مقاس)</label>
-                    <div id="menuEditorOptionsWrap">
-                        ${options.map((op, oi) => `<div class="cms-opt-row">
-                            <input class="admin-input sm" data-op="ar" placeholder="العربية" value="${escapeMenuEditor(op.ar || '')}" style="width:110px;">
-                            <input class="admin-input sm" data-op="en" placeholder="English" dir="ltr" value="${escapeMenuEditor(op.en || '')}" style="width:100px;">
-                            <input class="admin-input money" data-op="p" placeholder="85" dir="ltr" value="${escapeMenuEditor(op.p != null ? op.p : '')}" style="width:70px;"> ج.م
-                            <button type="button" class="cms-opt-del" onclick="menuEditorRemoveOption(${oi})" title="حذف المقاس">✕</button>
-                        </div>`).join('')}
-                    </div>
-                    <div class="menu-editor-actions" style="margin-top:6px;"><button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorAddOption()">＋ إضافة مقاس</button></div>
-                    <label>الترتيب (اختياري — رقم صغير = أول)</label>
-                    <input id="menuEditorOrder" class="admin-input full" type="number" min="0" value="${escapeMenuEditor(item.order ?? '')}" placeholder="0">
-                    <label>السعرات (اختياري)</label>
-                    <input id="menuEditorCalories" class="admin-input full" dir="ltr" value="${escapeMenuEditor(item.calories || '')}" placeholder="220">
-                    <label>أسماء بديلة للبحث (اختياري — مفصولة بفاصلة)</label>
-                    <input id="menuEditorAliases" class="admin-input full" dir="ltr" value="${escapeMenuEditor(aliasesStr)}" placeholder="latte, لاتيه">
-                    <label>الأصل (اختياري)</label>
-                    <input id="menuEditorOrigin" class="admin-input full" value="${escapeMenuEditor(item.origin || '')}" placeholder="مثال: 🇪🇹 إثيوبي">
-                    <label>النوع / الخيار (اختياري)</label>
-                    <input id="menuEditorVariant" class="admin-input full" value="${escapeMenuEditor(item.variant || '')}" placeholder="مثال: نص / كامل">
-                    <label>الوصف (عربي)</label>
-                    <textarea id="menuEditorDescription" class="admin-input full" rows="2" placeholder="وصف واضح ومختصر للمنتج">${escapeMenuEditor(item.d || '')}</textarea>
-                    <label>الوصف بالإنجليزية (اختياري)</label>
-                    <textarea id="menuEditorEnDesc" class="admin-input full" rows="2" dir="ltr" placeholder="Short description">${escapeMenuEditor(item.de || '')}</textarea>
-                </div>
-                <div>
-                    <label>معاينة الصورة</label>
-                    <div id="menuEditorPreview">${preview}</div>
-                    <div><span class="img-badge ${st.cls}">${st.label}</span></div>
-                    <label class="menu-editor-check"><input id="menuEditorNoImage" type="checkbox" ${!item.image ? 'checked' : ''}> لا صورة موثوقة — استخدم fallback</label>
-                    <div class="menu-editor-actions">
-                        <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorChooseImage()">📥 اختيار صورة من الجهاز</button>
-                        <input type="file" id="menuEditorImageInput" accept="image/*" style="display:none;" onchange="menuEditorUploadImage(this)">
-                        <input id="menuEditorImageUrl" class="admin-input full" dir="ltr" placeholder="أو رابط صورة https://..." value="${escapeMenuEditor(typeof item.image === 'string' && !item.image.startsWith('data:') ? item.image : '')}">
-                        <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorApplyImageUrl()">تطبيق الرابط</button>
-                        <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="menuEditorClearImageField()">🗑 إزالة الصورة من الصنف</button>
-                    </div>
-                    <label class="menu-editor-check"><input id="menuEditorVisible" type="checkbox" ${item.visible !== false ? 'checked' : ''}> مرئي في المنيو العام</label>
-                    <div class="menu-editor-actions">
-                        <button class="admin-btn admin-btn-primary" onclick="saveMenuEditorItem()">💾 حفظ</button>
-                        ${_menuFormCtx?.mode === 'edit' && item.__isCustom ? '<button class="admin-btn admin-btn-danger" onclick="deleteMenuEditorItem()">حذف الصنف المضاف</button>' : ''}
-                        ${_menuFormCtx?.mode === 'edit' && !item.__isCustom ? '<button class="admin-btn admin-btn-secondary" onclick="resetMenuEditorItem()">↺ استعادة الأصل</button>' : ''}
-                    </div>
-                </div>
-            </div>
-        </div>`;
+        <input type="hidden" id="menuEditorMode" value="${_menuFormCtx?.mode || 'new'}">
+        <div class="mef-section-label">${ic('cube')} البيانات الأساسية</div>
+        <label>اسم الصنف (عربي) *</label>
+        <input id="menuEditorName" class="admin-input full" value="${escapeMenuEditor(item.n || '')}" placeholder="مثال: لاتيه" oninput="if(window.cmsSetFieldError)cmsSetFieldError(this,'')">
+        <label>الاسم بالإنجليزية (اختياري)</label>
+        <input id="menuEditorEnName" class="admin-input full" dir="ltr" value="${escapeMenuEditor(item.en || '')}" placeholder="Latte">
+        <label>الفئة *</label>
+        <select id="menuEditorCategory" class="admin-select full" ${_menuFormCtx?.mode === 'edit' ? 'disabled' : ''}>${catOpts}</select>
+        <label>الوصف (عربي)</label>
+        <textarea id="menuEditorDescription" class="admin-input full" rows="2" placeholder="وصف واضح ومختصر للمنتج">${escapeMenuEditor(item.d || '')}</textarea>
+        <label>الوصف بالإنجليزية (اختياري)</label>
+        <textarea id="menuEditorEnDesc" class="admin-input full" rows="2" dir="ltr" placeholder="Short description">${escapeMenuEditor(item.de || '')}</textarea>
+
+        <div class="mef-section-label">${ic('sliders')} السعر والمقاسات</div>
+        <label>السعر (ج.م — اكتب "85 / 95" لسعرين)</label>
+        <input id="menuEditorPrice" class="admin-input full" value="${escapeMenuEditor(priceStr)}" placeholder="85 أو 80 / 95">
+        <label>المقاسات / الخيارات (اختياري — تُقَدَّم للزائر بزرّ لكل مقاس)</label>
+        <div id="menuEditorOptionsWrap">
+            ${options.map((op, oi) => `<div class="cms-opt-row">
+                <input class="admin-input sm" data-op="ar" placeholder="العربية" value="${escapeMenuEditor(op.ar || '')}" style="width:110px;">
+                <input class="admin-input sm" data-op="en" placeholder="English" dir="ltr" value="${escapeMenuEditor(op.en || '')}" style="width:100px;">
+                <input class="admin-input money" data-op="p" placeholder="85" dir="ltr" value="${escapeMenuEditor(op.p != null ? op.p : '')}" style="width:70px;"> ج.م
+                <button type="button" class="cms-opt-del" onclick="menuEditorRemoveOption(${oi})" title="حذف المقاس">✕</button>
+            </div>`).join('')}
+        </div>
+        <div class="menu-editor-actions" style="margin-top:6px;"><button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorAddOption()">＋ إضافة مقاس</button></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+            <div><label>الترتيب (صغير = أول)</label>
+            <input id="menuEditorOrder" class="admin-input full" type="number" min="0" value="${escapeMenuEditor(item.order ?? '')}" placeholder="0"></div>
+            <div><label>السعرات</label>
+            <input id="menuEditorCalories" class="admin-input full" dir="ltr" value="${escapeMenuEditor(item.calories || '')}" placeholder="220"></div>
+        </div>
+        <label>أسماء بديلة للبحث (مفصولة بفاصلة)</label>
+        <input id="menuEditorAliases" class="admin-input full" dir="ltr" value="${escapeMenuEditor(aliasesStr)}" placeholder="latte, لاتيه">
+        <label>الأصل (اختياري)</label>
+        <input id="menuEditorOrigin" class="admin-input full" value="${escapeMenuEditor(item.origin || '')}" placeholder="مثال: 🇪🇹 إثيوبي">
+        <label>النوع / الخيار (اختياري)</label>
+        <input id="menuEditorVariant" class="admin-input full" value="${escapeMenuEditor(item.variant || '')}" placeholder="مثال: نص / كامل">
+
+        <div class="mef-section-label">${ic('image')} الصور والوسائط</div>
+        <label>معاينة الصورة</label>
+        <div id="menuEditorPreview">${preview}</div>
+        <div><span class="img-badge ${st.cls}">${st.label}</span></div>
+        <label class="menu-editor-check"><input id="menuEditorNoImage" type="checkbox" ${!item.image ? 'checked' : ''}> لا صورة موثوقة — استخدم fallback</label>
+        <div class="menu-editor-actions">
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorChooseImage()">📥 اختيار صورة من الجهاز</button>
+            <input type="file" id="menuEditorImageInput" accept="image/*" style="display:none;" onchange="menuEditorUploadImage(this)">
+            <input id="menuEditorImageUrl" class="admin-input full" dir="ltr" placeholder="أو رابط صورة https://..." value="${escapeMenuEditor(typeof item.image === 'string' && !item.image.startsWith('data:') ? item.image : '')}">
+            <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="menuEditorApplyImageUrl()">تطبيق الرابط</button>
+        </div>
+
+        <div class="mef-section-label">${ic('check')} النشر والظهور</div>
+        <label class="menu-editor-check"><input id="menuEditorVisible" type="checkbox" ${item.visible !== false ? 'checked' : ''}> مرئي في المنيو العام</label>
+        <div class="cms-hint" style="margin-top:8px;">التعديلات تُحفظ كمسودة محلية (Draft) وتُطبق على الزوار من الجهاز المستضيف.</div>`;
 }
 
 function menuEditorChooseImage() { document.getElementById('menuEditorImageInput').click(); }

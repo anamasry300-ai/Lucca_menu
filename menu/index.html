@@ -7,9 +7,25 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1A0F0A">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lucca Menu">
     <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lucca Café">
+    <meta property="og:title" content="Lucca Café — قائمة الطعام | Specialty Coffee">
+    <meta property="og:description" content="قائمة طعام لوكا كافيه — قهوة مختصة ومشروبات ساخنة وباردة. امسح QR أو افتح الرابط للاطلاع على المنيو الكامل.">
+    <meta property="og:url" content="https://anamasry300-ai.github.io/Lucca_menu/menu/index.html">
+    <meta property="og:image" content="https://anamasry300-ai.github.io/Lucca_menu/menu/assets/share-card.png">
+    <meta property="og:image:width" content="1080">
+    <meta property="og:image:height" content="1080">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@LuccaCaffe">
+    <meta name="twitter:title" content="Lucca Café — قائمة الطعام">
+    <meta name="twitter:description" content="امسح QR للانتقال إلى قائمة لوكا كافيه والتعرف على مشروباتنا المختصة.">
+    <meta name="twitter:image" content="https://anamasry300-ai.github.io/Lucca_menu/menu/assets/share-card.png">
+    <link rel="image_src" href="https://anamasry300-ai.github.io/Lucca_menu/menu/assets/share-card.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Tajawal:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -955,58 +971,106 @@
     <!-- ========== Full Admin Panel ========== -->
     <div id="adminWrapper" class="admin-wrapper">
         <div style="position:fixed;inset:0;background:var(--coffee-900);z-index:9996;display:flex;flex-direction:column;overflow:hidden;">
-            <!-- Header -->
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--coffee-900);border-bottom:1px solid rgba(212,168,90,0.3);z-index:2;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="assets/lucca-logo.png" alt="Lucca" style="height:36px;width:36px;border-radius:50%;object-fit:cover;">
-                    <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;">Lucca</span>
-                    <span style="color:var(--coffee-300);font-size:0.8rem;">MENU MANAGEMENT</span>
+<!-- SVG icon sprite (stroke icons — no emoji in dashboard chrome) -->
+            <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden;" aria-hidden="true">
+                <defs>
+                    <symbol id="ic-eye" viewBox="0 0 24 24"><path d="M1.5 12s3.5-6 10.5-6 10.5 6 10.5 6-3.5 6-10.5 6S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+                    <symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+                    <symbol id="ic-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></symbol>
+                    <symbol id="ic-cube" viewBox="0 0 24 24"><path d="M12 2.6 21 7.3v9.4l-9 4.7-9-4.7V7.3l9-4.7z"/><path d="M3.3 7.6 12 12.2l8.7-4.6M12 12.2v9.2"/></symbol>
+                    <symbol id="ic-folder" viewBox="0 0 24 24"><path d="M3 5.5h6l2 2.5h10a1.5 1.5 0 0 1 1.5 1.5v9A1.5 1.5 0 0 1 21 20H3a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 3 5.5z"/></symbol>
+                    <symbol id="ic-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m4 18 5-5 3 3 3-4 5 6"/></symbol>
+                    <symbol id="ic-map" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></symbol>
+                    <symbol id="ic-sliders" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/><circle cx="9" cy="6.5" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="7" cy="17.5" r="2"/></symbol>
+                    <symbol id="ic-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v4h4"/></symbol>
+                    <symbol id="ic-pencil" viewBox="0 0 24 24"><path d="m4 20 4.5-1L19.5 8a2.1 2.1 0 0 0-3-3L5.5 15.5 4 20z"/><path d="m13.8 6.6 3.6 3.6"/></symbol>
+                    <symbol id="ic-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></symbol>
+                    <symbol id="ic-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+                    <symbol id="ic-off" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12h6"/></symbol>
+                    <symbol id="ic-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+                    <symbol id="ic-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.5-4.5"/></symbol>
+                    <symbol id="ic-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
+                    <symbol id="ic-save" viewBox="0 0 24 24"><path d="M5 3h11l5 5v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></symbol>
+                    <symbol id="ic-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.5 6.2M20 4v7h-7"/></symbol>
+                    <symbol id="ic-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+                    <symbol id="ic-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+                    <symbol id="ic-phone" viewBox="0 0 24 24"><path d="M6 3h4l1.5 4.5-2 1.5c1 2 2.5 3.5 4.5 4.5l1.5-2L20 13v4a1 1 0 0 1-1 1A15 15 0 0 1 5 5a1 1 0 0 1 1-1z"/></symbol>
+                    <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></symbol>
+                    <symbol id="ic-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7.5-.5l-2 2a5 5 0 0 0 7 7l1-1"/></symbol>
+                    <symbol id="ic-wa" viewBox="0 0 24 24"><path d="M12 2.5c-5.2 0-9.5 4.3-9.5 9.5 0 1.7.4 3.3 1.2 4.7L2.5 21.5l4.9-1.2c1.4.8 3 1.2 4.6 1.2 5.2 0 9.5-4.3 9.5-9.5S17.2 2.5 12 2.5z"/><path d="M8.7 8.2c.2 2.4 1.6 4.6 4.1 5.9l.3.2-1.3-2.6.6-1-.2-.1c-1.1-.6-2-1.1-2.9-1.3l-.4-.1-.1.5-.1.5z"/></symbol>
+                </defs>
+            </svg>
+            <!-- Header / Top bar -->
+            <header class="admin-topbar">
+                <div class="admin-topbar-brand">
+                    <img src="assets/lucca-logo.png" alt="Lucca">
+                    <div>
+                        <div class="brand-name">Lucca Café</div>
+                        <div class="brand-sub">Menu Management</div>
+                    </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-                    <span class="admin-status-badge" id="adminStatusBadge" title="حالة النشر">📝 Draft / Local</span>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openPublicPreview()" title="فتح المنيو العام في تبويب جديد">👁 معاينة عامة</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="closeAdminPanel()">✕ إغلاق</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="closeAdminPanel()">خروج</button>
+                <div class="admin-topbar-actions">
+                    <span class="admin-status-badge" id="adminStatusBadge" title="حالة النشر">Draft / Local</span>
+                    <button class="admin-btn admin-btn-sm btn-ghost" onclick="openPublicPreview()" title="فتح المنيو العام في تبويب جديد"><svg class="cms-ic cms-ic-sm"><use href="#ic-eye"></use></svg> معاينة عامة</button>
+                    <button class="admin-btn admin-btn-sm btn-ghost" onclick="closeAdminPanel()" title="إغلاق اللوحة"><svg class="cms-ic cms-ic-sm"><use href="#ic-x"></use></svg> إغلاق</button>
                 </div>
-            </div>
+            </header>
             <!-- Body: Sidebar + Content -->
-            <div style="display:flex;flex:1;overflow:hidden;">
-<!-- Sidebar -->
-                <div class="admin-sidebar" style="border-left:1px solid rgba(255,255,255,0.06);padding:12px 8px;overflow-y:auto;">
-                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">✦</span> نظرة عامة</button>
-                    <button class="admin-sidebar-btn" data-tab="products" onclick="showAdminTab('products')"><span class="icon">✎</span> المنتجات</button>
-                    <button class="admin-sidebar-btn" data-tab="categories" onclick="showAdminTab('categories')"><span class="icon">▤</span> الفئات</button>
-                    <button class="admin-sidebar-btn" data-tab="images" onclick="showAdminTab('images')"><span class="icon">🖼</span> الصور</button>
-                    <button class="admin-sidebar-btn" data-tab="location" onclick="showAdminTab('location')"><span class="icon">📍</span> الموقع والتواصل</button>
-                    <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><span class="icon">⚙️</span> الإعدادات</button>
-                    <button class="admin-sidebar-btn" data-tab="preview" onclick="showAdminTab('preview')"><span class="icon">👁</span> المعاينة</button>
-                </div>
+            <div class="admin-layout admin-grid">
+                <!-- Sidebar -->
+                <nav class="admin-sidebar slim">
+                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><svg class="cms-ic"><use href="#ic-grid"></use></svg> نظرة عامة</button>
+                    <button class="admin-sidebar-btn" data-tab="products" onclick="showAdminTab('products')"><svg class="cms-ic"><use href="#ic-cube"></use></svg> المنتجات</button>
+                    <button class="admin-sidebar-btn" data-tab="categories" onclick="showAdminTab('categories')"><svg class="cms-ic"><use href="#ic-folder"></use></svg> الفئات</button>
+                    <button class="admin-sidebar-btn" data-tab="images" onclick="showAdminTab('images')"><svg class="cms-ic"><use href="#ic-image"></use></svg> الصور</button>
+                    <button class="admin-sidebar-btn" data-tab="location" onclick="showAdminTab('location')"><svg class="cms-ic"><use href="#ic-map"></use></svg> الموقع والتواصل</button>
+                    <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><svg class="cms-ic"><use href="#ic-sliders"></use></svg> الإعدادات</button>
+                    <button class="admin-sidebar-btn" data-tab="preview" onclick="showAdminTab('preview')"><svg class="cms-ic"><use href="#ic-eye"></use></svg> المعاينة</button>
+                    <div class="admin-sidebar-foot"><div class="side-note">Draft / Local — تغييراتك على هذا المتصفح فقط.</div></div>
+                </nav>
                 <!-- Main Content -->
-                <div class="admin-main" style="overflow-y:auto;padding:16px 20px;">
+                <main class="admin-main main-grid">
 
-                    <!-- Dashboard Tab -->
+<!-- Dashboard Tab -->
                     <div class="admin-tab active" id="at-dashboard">
-                        <h3>📊 لوحة التحكم</h3>
-<div class="stats-grid">
-                            <div class="stat-card"><div class="icon-big">⌘</div><div class="val" id="dash-orders">0</div><div class="lbl">الفئات</div></div>
-                            <div class="stat-card"><div class="icon-big">☷</div><div class="val" id="dash-sales">0</div><div class="lbl">الأصناف</div></div>
-                            <div class="stat-card"><div class="icon-big">▣</div><div class="val" id="dash-cash">0</div><div class="lbl">صور مؤكدة</div></div>
-                            <div class="stat-card"><div class="icon-big">◇</div><div class="val" id="dash-fallback">0</div><div class="lbl">بدون صورة (fallback)</div></div>
-                            <div class="stat-card"><div class="icon-big">✎</div><div class="val" id="dash-card">0</div><div class="lbl">تعديلات محفوظة</div></div>
-                        </div>
-                        <div class="section-card" style="font-size:0.85rem;color:var(--coffee-300);">
-                            <span>الحالة: <strong style="color:var(--gold);">Draft / Local</strong> — التعديلات تُحفظ على هذا المتصفح فقط ولا تُنشر للزوار إلا بعد تطبيقها من الجهاز المستضيف.</span>
-                        </div>
-                        <div class="section-card">
-                            <h4>إدارة المحتوى</h4>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary" onclick="showAdminTab('products')">✎ فتح محرر المنتجات</button>
+                        <div class="dash-page-head">
+                            <div>
+                                <h3><svg class="cms-ic"><use href="#ic-grid"></use></svg> لوحة التحكم</h3>
+                                <p>نظرة عامة على المحتوى والحالة. التعديلات تُحفظ محليًّا (Draft) وتُطبق على الزوار من الجهاز المستضيف.</p>
                             </div>
+                            <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="renderMenu();renderTabs();loadDashboardStats();"><svg class="cms-ic cms-ic-sm"><use href="#ic-refresh"></use></svg> تحديث</button>
                         </div>
-                        <div class="section-card">
-                            <h4>📱 رابط المنيو</h4>
-                            <div class="row">
-                                <input type="text" class="admin-input full" id="dash-menu-url" readonly style="font-size:0.8rem;" onclick="this.select()">
+                        <div class="dash-grid">
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-cube"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-sales">0</div><div class="lbl">إجمالي الأصناف</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-eye"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-visible">0</div><div class="lbl">ظاهر في المنيو</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-off"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-hidden">0</div><div class="lbl">مخفي</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-folder"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-orders">0</div><div class="lbl">الفئات</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-image"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-images">0</div><div class="lbl">أصناف بصور</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-check"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-cash">0</div><div class="lbl">صور مؤكدة</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-save"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-fallback">0</div><div class="lbl">بدون صورة fallback</div></div></div>
+                            <div class="dash-ov-card"><div class="dash-ov-ic"><svg class="cms-ic"><use href="#ic-pencil"></use></svg></div><div class="dash-ov-body"><div class="val" id="dash-card">0</div><div class="lbl">تعديلات محفوظة</div></div></div>
+                        </div>
+                        <div class="dash-cols">
+                            <div class="dash-cell">
+                                <h5><svg class="cms-ic"><use href="#ic-grid"></use></svg> إدارة المحتوى</h5>
+                                <div class="dash-quick">
+                                    <button class="dash-quicklink" onclick="showAdminTab('products')"><svg class="cms-ic"><use href="#ic-cube"></use></svg> المنتجات</button>
+                                    <button class="dash-quicklink" onclick="showAdminTab('categories')"><svg class="cms-ic"><use href="#ic-folder"></use></svg> الفئات</button>
+                                    <button class="dash-quicklink" onclick="showAdminTab('images')"><svg class="cms-ic"><use href="#ic-image"></use></svg> الصور</button>
+                                    <button class="dash-quicklink" onclick="showAdminTab('location')"><svg class="cms-ic"><use href="#ic-map"></use></svg> الموقع والتواصل</button>
+                                    <button class="dash-quicklink" onclick="showAdminTab('settings')"><svg class="cms-ic"><use href="#ic-sliders"></use></svg> الإعدادات</button>
+                                    <button class="dash-quicklink" onclick="showAdminTab('preview')"><svg class="cms-ic"><use href="#ic-eye"></use></svg> المعاينة</button>
+                                </div>
+                            </div>
+                            <div class="dash-cell">
+                                <h5><svg class="cms-ic"><use href="#ic-link"></use></svg> رابط المنيو والمشاركة</h5>
+                                <div class="row">
+                                    <input type="text" class="admin-input full" id="dash-menu-url" readonly style="font-size:0.8rem;" onclick="this.select()">
+                                </div>
+                                <div class="app-meta">
+                                    <div class="app-meta-row"><svg class="cms-ic"><use href="#ic-wa"></use></svg> مشاركة QR مع الصورة — Web Share / Open Graph</div>
+                                    <div class="app-meta-row"><svg class="cms-ic"><use href="#ic-save"></use></svg> كل التعديلات في وضع Draft / Local على هذا المتصفح</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1218,7 +1282,7 @@
                         </div>
                     </div>
 
-                </div><!-- /admin-main -->
+                </main><!-- /admin-main -->
             </div><!-- /flex body -->
         </div><!-- /fixed overlay -->
     </div><!-- /adminWrapper -->
@@ -1869,14 +1933,110 @@
                 showStaffToast('❌ فشل الحفظ');
             }
         }
+        function menuShareUrl() {
+            return (window.location.href || '').split('?')[0] || window.location.href;
+        }
+        function buildMenuShareImage(url) {
+            return new Promise((resolve) => {
+                try {
+                    const W = 1080, H = 1080;
+                    const canvas = document.createElement('canvas');
+                    canvas.width = W; canvas.height = H;
+                    const ctx = canvas.getContext('2d');
+                    const g = ctx.createLinearGradient(0, 0, W, H);
+                    g.addColorStop(0, '#2A1610');
+                    g.addColorStop(0.55, '#1A0F0A');
+                    g.addColorStop(1, '#3E2312');
+                    ctx.fillStyle = g;
+                    ctx.fillRect(0, 0, W, H);
+                    const rg = ctx.createRadialGradient(W / 2, H * 0.3, 60, W / 2, H * 0.3, 560);
+                    rg.addColorStop(0, 'rgba(212,168,90,0.22)');
+                    rg.addColorStop(1, 'rgba(212,168,90,0)');
+                    ctx.fillStyle = rg;
+                    ctx.fillRect(0, 0, W, H);
+                    ctx.strokeStyle = 'rgba(212,168,90,0.35)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(36, 36, W - 72, H - 72);
+                    const img = new Image();
+                    const logoEl = img;
+                    const draw = () => {
+                        const logoSize = 168;
+                        const lx = (W - logoSize) / 2, ly = 96;
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(lx + logoSize / 2, ly + logoSize / 2, logoSize / 2 + 6, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(212,168,90,0.16)';
+                        ctx.fill();
+                        ctx.restore();
+                        try { ctx.drawImage(logoEl, lx, ly, logoSize, logoSize); } catch(e) {}
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#E8CC8A';
+                        ctx.font = '700 84px "Playfair Display", serif';
+                        ctx.fillText('LUCCA', W / 2, 356);
+                        ctx.fillStyle = 'rgba(247,242,235,0.75)';
+                        ctx.font = '500 30px "Tajawal", sans-serif';
+                        ctx.fillText('SPECIALTY  COFFEE', W / 2, 410);
+                        const qz = 400, qx = (W - qz) / 2, qy = 478;
+                        ctx.fillStyle = '#FFFDF8';
+                        ctx.beginPath();
+                        ctx.moveTo(qx + 24, qy);
+                        ctx.arcTo(qx + qz, qy, qx + qz, qy + qz, 24);
+                        ctx.arcTo(qx + qz, qy + qz, qx, qy + qz, 24);
+                        ctx.arcTo(qx, qy + qz, qx, qy, 24);
+                        ctx.arcTo(qx, qy, qx + qz, qy, 24);
+                        ctx.closePath();
+                        ctx.fill();
+                        getMenuQrCanvas(url).then(qc => {
+                            try { ctx.drawImage(qc, qx + 24, qy + 24, qz - 48, qz - 48); } catch(e) {}
+                            ctx.fillStyle = '#F7F2EB';
+                            ctx.font = '600 38px "Tajawal", sans-serif';
+                            ctx.fillText((typeof lang !== 'undefined' && lang === 'ar') ? 'امسح QR لمشاهدة القائمة' : 'Scan to view our menu', W / 2, qy + qz + 66);
+                            canvas.toBlob((blob) => {
+                                if (!blob) return resolve(null);
+                                try { resolve(new File([blob], 'lucca-menu-share.png', { type: 'image/png' })); }
+                                catch(e) { resolve(null); }
+                            }, 'image/png');
+                        }).catch(() => resolve(null));
+                    };
+                    img.onload = draw;
+                    img.onerror = () => resolve(null);
+                    img.src = 'assets/lucca-logo.png';
+                } catch(e) { resolve(null); }
+            });
+        }
+        function getMenuQrCanvas(text) {
+            return new Promise((res, rej) => {
+                if (typeof QRCode === 'undefined') return rej(new Error('no qr lib'));
+                const host = document.createElement('div');
+                host.style.cssText = 'position:absolute;left:-9999px;top:0;';
+                document.body.appendChild(host);
+                try {
+                    new QRCode(host, { text, width: 560, height: 560, colorDark: '#2A1610', colorLight: '#FFFDF8', correctLevel: QRCode.CorrectLevel.H });
+                    setTimeout(() => {
+                        const c = host.querySelector('canvas') || host.querySelector('img');
+                        host.remove();
+                        if (c) res(c); else rej(new Error('no qr canvas'));
+                    }, 80);
+                } catch(e) { host.remove(); rej(e); }
+            });
+        }
         function shareMenu() {
-            const url = window.location.href;
+            const url = menuShareUrl();
+            const title = 'Lucca Café — قائمة الطعام';
+            const text = (typeof lang !== 'undefined' && lang === 'ar') ? '☕ قائمة طعام لوكا كافيه' : '☕ Lucca Café menu';
+            const clipboard = () => {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url).then(() => showCartToast('✅ تم نسخ رابط المنيو')).catch(() => {});
+                }
+            };
             if (navigator.share) {
-                navigator.share({ title: 'Lucca Café Menu', text: '☕ قائمة طعام لوكا', url }).catch(() => {});
+                buildMenuShareImage(url).then(file => {
+                    const shareData = { title, text, url };
+                    if (file && navigator.canShare && navigator.canShare({ files: [file] })) shareData.files = [file];
+                    navigator.share(shareData).catch((e) => { if (!e || e.name !== 'AbortError') clipboard(); });
+                });
             } else {
-                navigator.clipboard.writeText(url).then(() => {
-                    showCartToast('✅ تم نسخ الرابط');
-                }).catch(() => {});
+                clipboard();
             }
         }
         function clearSearch() {
