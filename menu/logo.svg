@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 400" width="460" height="400">
+  <defs>
+    <linearGradient id="creamGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFCF5"/>
+      <stop offset="100%" stop-color="#F7F2EB"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#B8923E"/>
+      <stop offset="50%" stop-color="#D4A85A"/>
+      <stop offset="100%" stop-color="#E8CC8A"/>
+    </linearGradient>
+    <linearGradient id="steamGrad" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#E8CC8A" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#D4A85A" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#C4A050" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded square crest border -->
+  <rect x="25" y="20" width="410" height="360" rx="50" ry="50" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.35"/>
+
+  <!-- Inner subtle ring -->
+  <rect x="33" y="28" width="394" height="344" rx="44" ry="44" fill="none" stroke="url(#goldGrad)" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- Steam wisps above 'u' at x=230 -->
+  <g opacity="0.7">
+    <path d="M230,170 Q224,150 232,132 Q238,114 230,98" fill="none" stroke="url(#steamGrad)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M214,164 Q204,144 216,126 Q224,108 212,94" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M246,166 Q256,148 244,130 Q236,112 248,96" fill="none" stroke="url(#steamGrad)" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M200,160 Q192,144 202,128 Q210,112 198,100" fill="none" stroke="url(#steamGrad)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M260,162 Q270,146 258,128 Q250,112 262,98" fill="none" stroke="url(#steamGrad)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- Saucer under 'u' -->
+  <ellipse cx="230" cy="245" rx="28" ry="5" fill="url(#goldGrad)" opacity="0.12"/>
+
+  <!-- === "Lucca" wordmark — thin serif === -->
+  <g font-family="Georgia, 'Times New Roman', serif" font-weight="400" fill="url(#creamGrad)">
+    <text x="120" y="258" font-size="115" text-anchor="middle">L</text>
+    <text x="200" y="258" font-size="115" text-anchor="middle">u</text>
+    <text x="268" y="258" font-size="115" text-anchor="middle">c</text>
+    <text x="328" y="258" font-size="115" text-anchor="middle">c</text>
+    <text x="380" y="258" font-size="115" text-anchor="middle">a</text>
+  </g>
+
+  <!-- Gold underline bar -->
+  <line x1="175" y1="295" x2="285" y2="295" stroke="url(#goldGrad)" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+
+  <!-- Decorative dots -->
+  <circle cx="175" cy="295" r="2.5" fill="url(#goldGrad)" opacity="0.5"/>
+  <circle cx="285" cy="295" r="2.5" fill="url(#goldGrad)" opacity="0.5"/>
+
+  <!-- === SUBTITLE === -->
+  <text x="230" y="332" font-family="'Trebuchet MS', Arial, sans-serif" font-weight="700" font-size="13" fill="#D4A85A" text-anchor="middle" letter-spacing="7" opacity="0.75">SPECIALTY COFFEE</text>
+</svg>

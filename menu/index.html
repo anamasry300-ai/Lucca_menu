@@ -570,12 +570,14 @@
             width: 48px; height: 48px; border-radius: 50%;
             background: var(--coffee-700); color: var(--foam);
             border: 2px solid var(--gold); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            display: none; align-items: center; justify-content: center;
             font-size: 1.3rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
             transition: transform 0.2s;
         }
+        body.menu-admin .admin-float { display: flex; }
         .admin-float:active { transform: scale(0.9); }
         .admin-float.logged-in { background: var(--gold); color: var(--coffee-900); }
+        #staffLoginModal, #staffPanel, #staffToggleBtn, .staff-toggle-btn { display: none !important; }
 
         /* Staff Login Modal */
         .staff-overlay {
@@ -624,7 +626,8 @@
             transition:transform 0.3s ease; max-height:65vh;
             display:flex; flex-direction:column;
         }
-        .staff-panel.hidden { transform:translateY(100%); }
+        .staff-panel.hidden { transform:translateY(100%); opacity:0; pointer-events:none; }
+        .staff-panel { transition:transform 0.3s ease, opacity 0.3s ease; }
         .staff-bar {
             display:flex; justify-content:space-between; align-items:center;
             padding:10px 16px;
@@ -795,6 +798,7 @@
         .cart-overlay.show { opacity: 1; visibility: visible; }
         /* Final mobile-first composition pass */
         .header { min-height: 340px; align-items: stretch; padding: 18px 18px 32px; }
+        .header { background-image: linear-gradient(90deg,rgba(18,11,9,.88) 0%,rgba(18,11,9,.52) 54%,rgba(18,11,9,.72) 100%), url('assets/lucca-hero-cafe.jpg'); background-position:center; background-size:cover; }
         .header-content { display:flex; flex-direction:column; justify-content:space-between; max-width:none; }
         .header-content::after { display:none; }
         .app-topbar { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:2; }
@@ -818,22 +822,28 @@
         #cat-specialty .menu-item { background:linear-gradient(145deg,rgba(217,173,112,.13),rgba(255,255,255,.035)); }
         @media (min-width:768px) { .header { min-height:390px; padding:24px clamp(28px,6vw,80px) 42px; } .hero-copy h1 { max-width:560px; } .menu-content { max-width:1120px; margin:auto; } }
     </style>
+    <link rel="stylesheet" href="luxury-glass.css?v=4">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="header-content">
                 <div class="app-topbar">
-                    <img src="logo.svg?v=6" alt="Lucca" class="app-topbar-logo" width="106" height="48">
+                    <img src="assets/lucca-logo.png" alt="Lucca" class="app-topbar-logo" width="44" height="44">
                     <div class="app-topbar-actions">
                         <button type="button" onclick="document.getElementById('searchInput').focus()" aria-label="فتح البحث">⌕</button>
                         <button type="button" onclick="toggleCart()" aria-label="فتح السلة">🛒</button>
                     </div>
                 </div>
                 <div class="hero-copy">
-                    <span class="hero-kicker">LUCCA / SPECIALTY COFFEE</span>
-                    <h1>Made with intention.</h1>
-                    <p>قهوة مختصة، لحظات هادئة، وتفاصيل تُحضّر بعناية.</p>
+                    <span class="hero-kicker">EST. 2024 · SPECIALTY COFFEE · PORT SAID</span>
+                    <h1 class="hero-lockup">
+                        <img src="assets/lucca-logo.png" class="hero-logo" alt="Lucca — Hub Cafe" loading="eager">
+                    </h1>
+                    <p class="hero-tagline" id="heroTagline">قهوة مختصة تُحضَّر بعناية، لحظات هادئة، وتفاصيل تليق بذوقك.</p>
+                    <div class="hero-cta">
+                        <button type="button" class="hero-cta-primary" id="heroBrowse" onclick="scrollToMenu()">تصفح القائمة</button>
+                    </div>
                 </div>
                 <div class="location">📍 شارع محمد علي - بجوار كلية التربية - بورسعيد</div>
                 <div class="contact-phone">📞 +20 10 10058989</div>
@@ -863,6 +873,8 @@
 
         <div class="menu-content" id="menuContent"></div>
 
+        <div id="infoStrip" class="info-strip" style="display:none;"></div>
+
         <div class="qr-section">
             <h3 id="qrTitleEl">📱 امسح QR للوصول للمنيو</h3>
             <div class="qr-code-container">
@@ -884,16 +896,15 @@
 
     <button class="share-btn" id="shareBtn" onclick="shareMenu()" aria-label="مشاركة المنيو" title="مشاركة">📤</button>
     <button class="lang-toggle" id="langToggle" onclick="toggleLang()" aria-label="تغيير اللغة">🌐</button>
-    <button class="admin-float" id="adminFloat" onclick="openStaffLogin()" aria-label="الإدارة" title="الإدارة والمحاسبة">⚙️</button>
-    <button class="staff-toggle-btn" id="staffToggleBtn" onclick="toggleStaffPanel()" aria-label="لوحة المحاسبة">📊</button>
+    <button class="admin-float" id="adminFloat" onclick="openMenuDashboard()" aria-label="لوحة إدارة المنيو" title="لوحة إدارة المنيو">⚙️</button>
 
     <!-- Staff Login Modal -->
     <div id="staffLoginOverlay" class="staff-overlay" style="display:none;" onclick="closeStaffLogin()"></div>
     <div id="staffLoginModal" class="staff-modal" style="display:none;">
         <div class="staff-modal-inner" onclick="event.stopPropagation()">
-            <img src="logo.svg?v=6" alt="Lucca" style="height:50px;margin-bottom:4px;">
-            <h3>لوحة المحاسبة</h3>
-            <p class="sub">تسجيل الدخول لإدارة المشتريات والمصروفات</p>
+            <img src="assets/lucca-logo.png" alt="Lucca" style="height:50px;width:50px;border-radius:50%;object-fit:cover;margin-bottom:4px;">
+            <h3>إدارة منيو Lucca</h3>
+            <p class="sub">تسجيل الدخول لتعديل الأصناف والصور والأوصاف والأسعار</p>
             <input type="password" id="staffPassInput" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')staffLogin()">
             <div id="staffLoginError" class="staff-error" style="display:none;">❌ كلمة المرور خطأ</div>
             <button class="staff-btn" onclick="staffLogin()">تسجيل الدخول</button>
@@ -947,28 +958,28 @@
             <!-- Header -->
             <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:var(--coffee-900);border-bottom:1px solid rgba(212,168,90,0.3);z-index:2;">
                 <div style="display:flex;align-items:center;gap:12px;">
-                    <img src="logo.svg?v=6" alt="Lucca" style="height:36px;">
+                    <img src="assets/lucca-logo.png" alt="Lucca" style="height:36px;width:36px;border-radius:50%;object-fit:cover;">
                     <span style="font-family:'Playfair Display',serif;color:var(--gold);font-size:1.2rem;">Lucca</span>
-                    <span style="color:var(--coffee-300);font-size:0.8rem;">SPECIALTY COFFEE</span>
+                    <span style="color:var(--coffee-300);font-size:0.8rem;">MENU MANAGEMENT</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="color:var(--coffee-300);font-size:0.85rem;" id="adminUserName">مدير النظام</span>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <span class="admin-status-badge" id="adminStatusBadge" title="حالة النشر">📝 Draft / Local</span>
+                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="openPublicPreview()" title="فتح المنيو العام في تبويب جديد">👁 معاينة عامة</button>
                     <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="closeAdminPanel()">✕ إغلاق</button>
-                    <button class="admin-btn admin-btn-sm admin-btn-secondary" onclick="staffLogout()">تسجيل خروج</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-danger" onclick="closeAdminPanel()">خروج</button>
                 </div>
             </div>
             <!-- Body: Sidebar + Content -->
             <div style="display:flex;flex:1;overflow:hidden;">
-                <!-- Sidebar -->
+<!-- Sidebar -->
                 <div class="admin-sidebar" style="border-left:1px solid rgba(255,255,255,0.06);padding:12px 8px;overflow-y:auto;">
-                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">📊</span> لوحة التحكم</button>
-                    <button class="admin-sidebar-btn" data-tab="menu-editor" onclick="showAdminTab('menu-editor')"><span class="icon">✦</span> محرر المنيو</button>
-                    <button class="admin-sidebar-btn" data-tab="cashier" onclick="showAdminTab('cashier')"><span class="icon">💰</span> صندوق اليومية</button>
-                    <button class="admin-sidebar-btn" data-tab="purchases" onclick="showAdminTab('purchases')"><span class="icon">🛒</span> المشتريات</button>
-                    <button class="admin-sidebar-btn" data-tab="employees" onclick="showAdminTab('employees')"><span class="icon">👨‍💼</span> الموظفين</button>
-                    <button class="admin-sidebar-btn" data-tab="reports" onclick="showAdminTab('reports')"><span class="icon">📋</span> التقارير</button>
-                    <button class="admin-sidebar-btn" data-tab="kitchen" onclick="showAdminTab('kitchen')"><span class="icon">🍳</span> المطبخ</button>
+                    <button class="admin-sidebar-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')"><span class="icon">✦</span> نظرة عامة</button>
+                    <button class="admin-sidebar-btn" data-tab="products" onclick="showAdminTab('products')"><span class="icon">✎</span> المنتجات</button>
+                    <button class="admin-sidebar-btn" data-tab="categories" onclick="showAdminTab('categories')"><span class="icon">▤</span> الفئات</button>
+                    <button class="admin-sidebar-btn" data-tab="images" onclick="showAdminTab('images')"><span class="icon">🖼</span> الصور</button>
+                    <button class="admin-sidebar-btn" data-tab="location" onclick="showAdminTab('location')"><span class="icon">📍</span> الموقع والتواصل</button>
                     <button class="admin-sidebar-btn" data-tab="settings" onclick="showAdminTab('settings')"><span class="icon">⚙️</span> الإعدادات</button>
+                    <button class="admin-sidebar-btn" data-tab="preview" onclick="showAdminTab('preview')"><span class="icon">👁</span> المعاينة</button>
                 </div>
                 <!-- Main Content -->
                 <div class="admin-main" style="overflow-y:auto;padding:16px 20px;">
@@ -976,19 +987,20 @@
                     <!-- Dashboard Tab -->
                     <div class="admin-tab active" id="at-dashboard">
                         <h3>📊 لوحة التحكم</h3>
-                        <div class="stats-grid">
-                            <div class="stat-card"><div class="icon-big">🧾</div><div class="val" id="dash-orders">0</div><div class="lbl">طلبات اليوم</div></div>
-                            <div class="stat-card"><div class="icon-big">💰</div><div class="val" id="dash-sales">0</div><div class="lbl">مبيعات (ج.م)</div></div>
-                            <div class="stat-card"><div class="icon-big">💵</div><div class="val" id="dash-cash">0</div><div class="lbl">نقدي</div></div>
-                            <div class="stat-card"><div class="icon-big">💳</div><div class="val" id="dash-card">0</div><div class="lbl">فيزا</div></div>
+<div class="stats-grid">
+                            <div class="stat-card"><div class="icon-big">⌘</div><div class="val" id="dash-orders">0</div><div class="lbl">الفئات</div></div>
+                            <div class="stat-card"><div class="icon-big">☷</div><div class="val" id="dash-sales">0</div><div class="lbl">الأصناف</div></div>
+                            <div class="stat-card"><div class="icon-big">▣</div><div class="val" id="dash-cash">0</div><div class="lbl">صور مؤكدة</div></div>
+                            <div class="stat-card"><div class="icon-big">◇</div><div class="val" id="dash-fallback">0</div><div class="lbl">بدون صورة (fallback)</div></div>
+                            <div class="stat-card"><div class="icon-big">✎</div><div class="val" id="dash-card">0</div><div class="lbl">تعديلات محفوظة</div></div>
+                        </div>
+                        <div class="section-card" style="font-size:0.85rem;color:var(--coffee-300);">
+                            <span>الحالة: <strong style="color:var(--gold);">Draft / Local</strong> — التعديلات تُحفظ على هذا المتصفح فقط ولا تُنشر للزوار إلا بعد تطبيقها من الجهاز المستضيف.</span>
                         </div>
                         <div class="section-card">
-                            <h4>🔗 روابط سريعة</h4>
+                            <h4>إدارة المحتوى</h4>
                             <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('cashier')">💰 صندوق اليومية</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('purchases')">🛒 إضافة مشتريات</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('employees')">👨‍💼 تسجيل حضور</button>
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="showAdminTab('reports')">📋 التقارير</button>
+                                <button class="admin-btn admin-btn-primary" onclick="showAdminTab('products')">✎ فتح محرر المنتجات</button>
                             </div>
                         </div>
                         <div class="section-card">
@@ -999,8 +1011,33 @@
                         </div>
                     </div>
 
-                    <div class="admin-tab" id="at-menu-editor">
+                    <div class="admin-tab" id="at-products">
                         <div id="menu-editor-root"></div>
+                    </div>
+
+                    <!-- Categories CMS -->
+                    <div class="admin-tab" id="at-categories">
+                        <div id="cms-categories-root"></div>
+                    </div>
+
+                    <!-- Images CMS -->
+                    <div class="admin-tab" id="at-images">
+                        <div id="cms-images-root"></div>
+                    </div>
+
+                    <!-- Location & Contact CMS -->
+                    <div class="admin-tab" id="at-location">
+                        <div id="cms-location-root"></div>
+                    </div>
+
+                    <!-- Settings CMS -->
+                    <div class="admin-tab" id="at-settings">
+                        <div id="cms-settings-root"></div>
+                    </div>
+
+                    <!-- Preview CMS -->
+                    <div class="admin-tab" id="at-preview">
+                        <div id="cms-preview-root"></div>
                     </div>
 
                     <!-- Cashier Tab -->
@@ -1181,33 +1218,6 @@
                         </div>
                     </div>
 
-                    <!-- Settings Tab -->
-                    <div class="admin-tab" id="at-settings">
-                        <h3>⚙️ الإعدادات</h3>
-                        <div class="section-card">
-                            <h4>إعدادات النظام</h4>
-                            <div class="row">
-                                <label>رقم واتساب</label>
-                                <input type="text" id="set-whatsapp" class="admin-input md" placeholder="مثال: 201010058989">
-                            </div>
-                            <div class="row">
-                                <label>بداية الدوام</label>
-                                <input type="time" id="set-workstart" class="admin-input sm" value="09:00">
-                            </div>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-                            </div>
-                        </div>
-                        <div class="section-card">
-                            <h4>💾 إدارة البيانات</h4>
-                            <div class="row">
-                                <button class="admin-btn admin-btn-primary admin-btn-sm" onclick="exportAllData()">📤 تصدير البيانات</button>
-                                <button class="admin-btn admin-btn-secondary admin-btn-sm" onclick="triggerImport()">📥 استيراد البيانات</button>
-                                <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(this)">
-                            </div>
-                        </div>
-                    </div>
-
                 </div><!-- /admin-main -->
             </div><!-- /flex body -->
         </div><!-- /fixed overlay -->
@@ -1226,6 +1236,7 @@
             <h2 id="productSheetTitle"></h2>
             <p id="productSheetDescription"></p>
             <div id="productSheetOrigins"></div>
+            <div id="productSheetOptions" class="product-sheet-options hidden"></div>
             <div class="product-sheet-footer"><strong id="productSheetPrice"></strong><button id="productSheetAdd" class="add-cart-btn">+</button></div>
         </div>
     </section>
@@ -1266,6 +1277,7 @@
 
     <script src="admin-integration.js"></script>
     <script src="menu-editor.js"></script>
+    <script src="admin-cms.js"></script>
     <script>
         const _LANG = {
             search: { ar: 'ابحث في القائمة...', en: 'Search menu...' },
@@ -1292,6 +1304,9 @@
             waTotal: { ar: '💵 *الإجمالي:', en: '💵 *Total:' },
             waFooter: { ar: '🙏 من فضلكم جهزوا الطلب', en: '🙏 Please prepare the order' },
             originLabel: { ar: 'اختر المحصول:', en: 'Choose origin:' },
+            noResults: { ar: 'لا توجد نتائج مطابقة', en: 'No matching products' },
+            heroTagline: { ar: 'قهوة مختصة تُحضَّر بعناية، لحظات هادئة، وتفاصيل تليق بذوقك.', en: 'Specialty coffee crafted with care — quiet moments, fine details, made for you.' },
+            heroBrowse: { ar: 'تصفح القائمة', en: 'Browse menu' },
             catNames: {
                 ar: { specialty: 'القهوة المختصة', coffee: 'قسم القهوة', 'hot-drinks': 'مشروبات ساخنة', 'iced-coffee': 'قهوة مثلجة', milkshake: 'ميلك شيك', juice: 'عصائر فريش', desserts: 'حلويات', smoothie: 'سموزي', soda: 'صودا', winter: 'أصناف شتوية', breakfast: 'فطار', pizza: 'بيتزا', 'soft-drinks': 'مشروبات غازية', addons: 'إضافات' },
                 en: { specialty: 'Specialty Coffee', coffee: 'Coffee', 'hot-drinks': 'Hot Drinks', 'iced-coffee': 'Iced Coffee', milkshake: 'Milkshake', juice: 'Fresh Juice', desserts: 'Desserts', smoothie: 'Smoothie', soda: 'Soda', winter: 'Winter Specials', breakfast: 'Breakfast', pizza: 'Pizza', 'soft-drinks': 'Soft Drinks', addons: 'Add-ons' }
@@ -1324,7 +1339,9 @@
                 qrTitleEl: 'qrTitle',
                 qrDescEl: 'qrDesc',
                 footerAppEl: 'footerApp',
-                backToTop: 'backTop'
+                backToTop: 'backTop',
+                heroBrowse: 'heroBrowse',
+                heroTagline: 'heroTagline'
             };
             for (const [id, key] of Object.entries(byId)) {
                 const el = document.getElementById(id);
@@ -1334,10 +1351,11 @@
                 else if (id === 'shareBtn') el.setAttribute('aria-label', t(key));
                 else el.textContent = t(key);
             }
-            // re-render dynamic parts
+            if (typeof renderCategoryCms === 'function') { /* keep admin caches fresh */ }
             renderTabs();
             renderMenu();
             updateCartUI();
+            if (typeof renderInfoStrip === 'function') renderInfoStrip();
         }
         const CATEGORIES = [
             { icon: '<svg viewBox="0 0 24 24" style="width:1em;height:1em;display:block;" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 21 12 3 20 21"/><path d="M20 10q3.5 0 3.5 4q0 4-3.5 4"/><path d="M7 15q2.5-2 5 0q2.5 2 5 0" stroke-width="1" opacity=".5"/><path d="M6.5 18q2.5-2 5.5 0q3 2 5.5 0" stroke-width="1" opacity=".5"/><ellipse cx="12" cy="22.2" rx="1.2" ry=".7" fill="currentColor" stroke="none"/></svg>', name: () => t('catNames').specialty, id: 'specialty' },
@@ -1476,13 +1494,9 @@
         };
         function getProductImage(item, categoryId) {
             if (Object.prototype.hasOwnProperty.call(item, 'image')) return item.image;
-            const sourceData = typeof menuData !== 'undefined' ? menuData : [];
-            const category = sourceData.find(c => c.title === IMAGE_CATEGORY_MAP[categoryId]);
-            if (!category) return null;
-            const exact = category.items.find(source => source.name === item.n);
-            if (exact) return exact.image;
-            const relaxed = category.items.find(source => item.n.startsWith(source.name) || source.name.startsWith(item.n));
-            return relaxed ? relaxed.image : null;
+            // Do not infer a product photo from a category or a partial name.
+            // Only explicit adapter overrides are allowed to appear on a product card.
+            return null;
         }
 
         function openProductDetail(categoryId, index) {
@@ -1490,14 +1504,49 @@
             if (!item) return;
             const image = getProductImage(item, categoryId);
             const imageEl = document.getElementById('productSheetImage');
-            imageEl.style.backgroundImage = image ? `url("${image}")` : 'none';
-            imageEl.textContent = image ? '' : (IMAGE_FALLBACKS[categoryId] || '🍽️');
+            imageEl.classList.toggle('is-fallback', !image);
+            if (image) {
+                imageEl.style.backgroundImage = `url("${image}")`;
+                imageEl.textContent = '';
+                imageEl.dataset.fb = '';
+            } else {
+                imageEl.style.backgroundImage = 'none';
+                imageEl.dataset.fb = (item.n || 'L').trim().charAt(0);
+                imageEl.innerHTML = `<em>${IMAGE_FALLBACKS[categoryId] || '🍽️'}</em><strong>${item.n}</strong>`;
+            }
             document.getElementById('productSheetTitle').textContent = item.n;
             document.getElementById('productSheetDescription').textContent = item.d || 'اختيار مميز من قائمة Lucca.';
             document.getElementById('productSheetPrice').textContent = Array.isArray(item.p) ? `${item.p.join(' / ')} ج.م` : `${item.p} ج.م`;
             const originsEl = document.getElementById('productSheetOrigins');
+            const optionsEl = document.getElementById('productSheetOptions');
+            let optionsMarkup = '';
+            const basePrice = Array.isArray(item.p) ? item.p[0] : item.p;
+            let addPrice = basePrice;
+            if (item.options && item.options.length) {
+                optionsMarkup = `
+                    <div class="origin-selection">
+                        <div class="label">${t('originLabel')}</div>
+                        <div class="origin-options">
+                            ${item.options.map((op, oi) => {
+                                const opName = `${op.ar || op.en || ''}`.trim();
+                                const opPrice = op.p != null ? op.p : basePrice;
+                                return `<button class="origin-tag" onclick="event.stopPropagation();document.querySelectorAll('#productSheetOptions .origin-tag').forEach(b=>b.classList.remove('selected'));this.classList.add('selected');document.getElementById('productSheetPrice').textContent='${opPrice} ج.م';document.getElementById('productSheetAdd').dataset.p='${opPrice}';document.getElementById('productSheetAdd').dataset.o='${opName.replace(/'/g, "\\'")}';" aria-label="${opName || '—'} ${opPrice}">${opName || '—'} · ${opPrice} ج.م</button>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+                optionsEl.classList.remove('is-fallback');
+            } else {
+                optionsEl.innerHTML = '';
+                optionsEl.classList.add('is-fallback');
+            }
+            optionsMarkup = optionsMarkup || '';
+            if (optionsMarkup) { optionsEl.innerHTML = optionsMarkup; optionsEl.classList.remove('hidden'); }
+            else { optionsEl.innerHTML = ''; optionsEl.classList.add('hidden'); }
             originsEl.innerHTML = item.origins?.length ? `<div class="origin-selection"><div class="label">${t('originLabel')}</div><div class="origin-options">${item.origins.map(o => `<span class="origin-tag">${o}</span>`).join('')}</div></div>` : '';
-            document.getElementById('productSheetAdd').onclick = () => { addToCart(item.n, Array.isArray(item.p) ? item.p[0] : item.p, ''); closeProductDetail(); };
+            const addBtn = document.getElementById('productSheetAdd');
+            addBtn.dataset.p = addPrice;
+            addBtn.dataset.o = '';
+            addBtn.onclick = () => { addToCart(item.n, addBtn.dataset.p || basePrice, addBtn.dataset.o || ''); closeProductDetail(); };
             document.getElementById('productOverlay').classList.add('show');
             document.getElementById('productSheet').classList.add('show');
             document.body.style.overflow = 'hidden';
@@ -1531,6 +1580,16 @@
             cart = cart.filter(i => i.key !== key);
             updateCartUI();
         }
+        function cartImageFor(name) {
+            if (!name) return null;
+            for (const c of CATEGORIES) {
+                const items = getPublishedItems(c.id);
+                if (!items) continue;
+                const hit = items.find(it => it.n === name);
+                if (hit) return getProductImage(hit, c.id);
+            }
+            return null;
+        }
         function updateCartUI() {
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             const count = cart.reduce((s, i) => s + i.qty, 0);
@@ -1551,16 +1610,22 @@
                 container.innerHTML = `<div class="cart-empty">${t('cartEmpty')}</div>`;
                 return;
             }
-            container.innerHTML = cart.map(i => `
+            container.innerHTML = cart.map(i => {
+                const img = cartImageFor(i.key.split('||')[0]);
+                const thumb = img
+                    ? `<span class="cart-thumb"><img src="${img}" alt="" loading="lazy" decoding="async"></span>`
+                    : `<span class="cart-thumb is-fallback"></span>`;
+                return `
                 <div class="cart-item">
+                    ${thumb}
                     <span class="cart-item-name">${i.name}${i.origin ? `<br><small style="color:var(--coffee-500);font-size:0.8rem;">${i.origin}</small>` : ''}</span>
                     <span class="cart-item-price">${(i.price * i.qty).toFixed(0)} ج.م</span>
                     <button class="cart-qty-btn" onclick="removeFromCart('${i.key.replace(/'/g, "\\'")}')">−</button>
                     <span class="cart-item-qty">${i.qty}</span>
                     <button class="cart-qty-btn" onclick="addToCart('${i.name.replace(/'/g, "\\'")}', ${i.price}, '${(i.origin||'').replace(/'/g, "\\'")}')">+</button>
                     <button class="cart-qty-btn" style="border-color:#e74c3c;color:#e74c3c;" onclick="deleteFromCart('${i.key.replace(/'/g, "\\'")}')">✕</button>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
         function toggleCart() {
             const panel = document.getElementById('cartPanel');
@@ -1592,7 +1657,7 @@
             lines.push(`${t('waTotal')} ${total.toFixed(0)} ج.م*`);
             lines.push('', t('waFooter'));
             const msg = lines.join('\n');
-            const phone = '201010058989';
+            const phone = (typeof getContactWhatsapp === 'function' && getContactWhatsapp()) || '201010058989';
             window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
             toggleCart();
             document.getElementById('tableNum').value = '';
@@ -1632,7 +1697,7 @@
                 _staffUser = await LuccaDB.Users.login('admin', pass);
                 closeStaffLogin();
                 document.getElementById('adminFloat').classList.add('logged-in');
-                document.getElementById('staffToggleBtn').classList.add('show');
+                document.getElementById('staffToggleBtn')?.classList.add('show');
                 openStaffPanel();
             } catch (e) {
                 errEl.style.display = 'block';
@@ -1643,7 +1708,7 @@
             _staffUser = null;
             LuccaDB.Users.logout();
             document.getElementById('adminFloat').classList.remove('logged-in');
-            document.getElementById('staffToggleBtn').classList.remove('show');
+            document.getElementById('staffToggleBtn')?.classList.remove('show');
             closeStaffPanel();
             if (typeof closeAdminPanel === 'function') closeAdminPanel();
             showStaffToast('🚪 تم تسجيل الخروج');
@@ -1660,13 +1725,15 @@
 
         function openStaffPanel() {
             document.getElementById('staffPanel').classList.remove('hidden');
-            document.getElementById('staffToggleBtn').style.display = 'none';
+            const stb = document.getElementById('staffToggleBtn');
+            if (stb) stb.style.display = 'none';
             switchStaffTab('summary');
         }
 
         function closeStaffPanel() {
             document.getElementById('staffPanel').classList.add('hidden');
-            document.getElementById('staffToggleBtn').style.display = '';
+            const stb = document.getElementById('staffToggleBtn');
+            if (stb) stb.style.display = '';
         }
 
         function showStaffToast(msg) {
@@ -1838,14 +1905,31 @@
                         </div>
                     </div>`;
             }
+            let optionsMarkup = '';
+            if (item.options && item.options.length) {
+                const optLabel = lang === 'en' ? 'Choose size:' : 'اختر المقاس:';
+                optionsMarkup = `
+                    <div class="origin-selection">
+                        <div class="label">${optLabel}</div>
+                        <div class="origin-options">
+                            ${item.options.map(op => {
+                                const opName = `${op.ar || op.en || ''}`.trim();
+                                const opPrice = op.p != null ? op.p : (Array.isArray(item.p) ? item.p[0] : item.p);
+                                return `<button class="origin-tag" onclick="event.stopPropagation();addToCart('${item.n.replace(/'/g, "\\'")}', '${opPrice}', '${opName.replace(/'/g, "\\'")}')" aria-label="إضافة ${item.n} ${opName}">${opName || '—'} · ${opPrice} ج.م</button>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
             const desc = item.d ? `<div class="item-description">${item.d}</div>` : '';
-            const priceClass = Array.isArray(item.p) ? 'dual-price' : '';
+            const priceClass = (Array.isArray(item.p) && (!item.options || !item.options.length)) ? 'dual-price' : '';
             const itemPrice = Array.isArray(item.p) ? item.p[0] : item.p;
             const hasOrigins = item.origins && item.origins.length > 0;
             const image = getProductImage(item, categoryId);
+            const fbGlyph = IMAGE_FALLBACKS[categoryId] || '🍽️';
+            const fbInitial = (item.n || 'L').trim().charAt(0);
             const imageMarkup = image
-                ? `<div class="item-image"><img src="${image}" alt="${item.n}" loading="lazy" onerror="this.parentElement.classList.add('is-fallback');this.remove();this.parentElement.innerHTML='<span>${IMAGE_FALLBACKS[categoryId] || '🍽️'}</span><small>${item.n}</small>';"></div>`
-                : `<div class="item-image is-fallback" aria-label="لا توجد صورة مؤكدة لهذا الصنف"><span>${IMAGE_FALLBACKS[categoryId] || '🍽️'}</span><small>${item.n}</small></div>`;
+                ? `<div class="item-image" data-fb="${fbInitial}"><img src="${image}" alt="${item.n}" loading="lazy" decoding="async" onerror="var p=this.parentElement;p.classList.add('is-fallback');this.remove();p.innerHTML='<em>${fbGlyph}</em><strong>${item.n}</strong>';"></div>`
+                : `<div class="item-image is-fallback" data-fb="${fbInitial}" aria-label="لا توجد صورة مؤكدة لهذا الصنف"><em>${fbGlyph}</em><strong>${item.n}</strong></div>`;
             return `
                 <div class="menu-item" role="button" tabindex="0" onclick="openProductDetail('${categoryId}', ${idx})" onkeydown="if(event.key==='Enter'||event.key===' ')openProductDetail('${categoryId}', ${idx})" style="animation-delay:${(idx||0)*0.035}s">
                     ${imageMarkup}
@@ -1853,10 +1937,11 @@
                         <div class="item-name">${item.n}</div>
                         ${desc}
                         ${origins}
+                        ${optionsMarkup}
                     </div>
                     <div class="item-price-wrap ${priceClass}">
                         ${renderPrice(item.p)}
-                        ${hasOrigins ? '' : `<button class="add-cart-btn" onclick="event.stopPropagation();addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')" aria-label="إضافة ${item.n}">+</button>`}
+                        ${(hasOrigins || (item.options && item.options.length)) ? '' : `<button class="add-cart-btn" onclick="event.stopPropagation();addToCart('${item.n.replace(/'/g, "\\'")}', '${itemPrice}', '')" aria-label="إضافة ${item.n}">+</button>`}
                     </div>
                 </div>`;
         }
@@ -1878,7 +1963,8 @@
 
         function renderTabs() {
             const tabsEl = document.getElementById('tabsList');
-            tabsEl.innerHTML = CATEGORIES.map(c =>
+            const cats = (typeof getAccessibleCategories === 'function') ? getAccessibleCategories() : CATEGORIES;
+            tabsEl.innerHTML = cats.map(c =>
                 `<button class="tab" data-target="${c.id}" onclick="scrollToCategory('${c.id}')" role="tab" aria-selected="false" aria-label="${c.name()}">
                     <span class="tab-icon" aria-hidden="true">${c.icon}</span> ${c.name()}
                 </button>`
@@ -1887,7 +1973,8 @@
 
         function renderMenu() {
             const menuEl = document.getElementById('menuContent');
-            menuEl.innerHTML = CATEGORIES.map(renderCategory).join('');
+            const cats = (typeof getAccessibleCategories === 'function') ? getAccessibleCategories() : CATEGORIES;
+            menuEl.innerHTML = cats.map(renderCategory).join('');
         }
 
         function toggleCategory(header) {
@@ -1906,10 +1993,16 @@
             }, 50);
         }
 
+        function scrollToMenu() {
+            const bar = document.getElementById('stickyBar');
+            if (bar) bar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', function() {
             document.getElementById('searchClear').classList.toggle('show', this.value.length > 0);
             const term = this.value.toLowerCase().trim();
+            let total = 0;
             document.querySelectorAll('.category').forEach(cat => {
                 let visible = 0;
                 cat.querySelectorAll('.menu-item').forEach(item => {
@@ -1920,14 +2013,28 @@
                 });
                 cat.style.display = visible ? 'block' : 'none';
                 if (term && visible) cat.classList.add('expanded');
+                total += visible;
             });
+            const menu = document.getElementById('menuContent');
+            let empty = document.getElementById('lgNoResults');
+            if (term && !total) {
+                if (!empty) {
+                    empty = document.createElement('div');
+                    empty.id = 'lgNoResults';
+                    empty.className = 'lg-no-results';
+                    empty.textContent = t('noResults');
+                    menu.appendChild(empty);
+                }
+            } else if (empty) {
+                empty.remove();
+            }
         });
 
         window.addEventListener('scroll', function() {
             const btn = document.getElementById('backToTop');
             btn.classList.toggle('show', window.scrollY > 300);
             const cats = document.querySelectorAll('.category');
-            let activeId = CATEGORIES[0].id;
+            let activeId = cats[0].id;
             cats.forEach(c => {
                 const rect = c.getBoundingClientRect();
                 if (rect.top <= 200) {
@@ -1952,6 +2059,14 @@
                     colorDark: '#3E2723', colorLight: '#ffffff',
                     correctLevel: QRCode.CorrectLevel.H
                 });
+            }
+            if (typeof renderInfoStrip === 'function') renderInfoStrip();
+            if (typeof updateAdminStatus === 'function') updateAdminStatus();
+            // Menu-admin route: hidden admin UI, reachable only via ?menu-admin
+            const params = new URLSearchParams(location.search);
+            if (params.get('menu-admin') !== null) {
+                document.body.classList.add('menu-admin');
+                if (typeof openMenuDashboard === 'function') openMenuDashboard();
             }
         });
 

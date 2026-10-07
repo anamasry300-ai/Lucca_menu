@@ -1,0 +1,14 @@
+# Tooling scratch
+.manus/
+
+# Node
+node_modules/
+*.log
+
+# Env / secrets
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
