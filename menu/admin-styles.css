@@ -481,3 +481,27 @@ html[lang="ar"] .menu-editor-drawer, .menu-editor-drawer.rtl { left:auto; right:
 .cms-sec-head h3, .menu-editor-head h3, .dash-cell h5, .mef-section-label, .mef-title { display:flex; align-items:center; gap:8px; }
 .mef-section-label .cms-ic { color:var(--gold); }
 .cms-sec-head h3 .cms-ic { color:var(--gold); }
+
+/* ---- Mobile: calmer, smaller CMS icons ---- */
+@media (max-width:768px) {
+    .cms-ic { width:17px; height:17px; }
+    .cms-ic-sm { width:14px; height:14px; }
+    .cms-ic-lg { width:18px; height:18px; }
+    .admin-sidebar.slim .admin-sidebar-btn .cms-ic { width:13px; height:13px; }
+    .admin-topbar-brand img { height:28px; width:28px; }
+    .dash-ov-ic { width:32px; height:32px; border-radius:9px; }
+    .dash-ov-card .cms-ic { width:16px; height:16px; }
+    .dash-page-head h3 .cms-ic, .dash-cell h5 .cms-ic, .dash-quicklink .cms-ic { width:15px; height:15px; }
+    .mef-section-label .cms-ic { width:14px; height:14px; }
+    .menu-prod-actions .cms-ic { width:12px; height:12px; }
+    .cat-count-chip .cms-ic { width:11px; height:11px; }
+    .app-meta-row .cms-ic { width:14px; height:14px; }
+}
+
+@media (max-width:480px) {
+    .admin-sidebar.slim .admin-sidebar-btn .cms-ic { width:12px; height:12px; }
+    .dash-ov-ic { width:28px; height:28px; }
+    .dash-ov-card .cms-ic { width:14px; height:14px; }
+    .cms-sec-head h3 .cms-ic, .menu-editor-head h3 .cms-ic, .dash-page-head h3 .cms-ic { width:16px; height:16px; }
+    .admin-topbar-brand img { height:26px; width:26px; }
+}
