@@ -1,4 +1,4 @@
-const CACHE = 'lucca-menu-v3';
+const CACHE = 'lucca-menu-v4';
 const urlsToCache = [
   '.',
   'index.html',
