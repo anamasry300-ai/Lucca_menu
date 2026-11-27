@@ -1690,7 +1690,7 @@
             'pizza|بيتزا سوبر سوبريم': 'assets/products/pizza-meat.jpg',
         };
         function getProductImage(item, categoryId) {
-            if (Object.prototype.hasOwnProperty.call(item, 'image')) return item.image;
+            if (item.image) return item.image;
             const mapped = PRODUCT_IMAGES[categoryId + '|' + item.n];
             if (mapped) return mapped;
             // Do not infer a product photo from a category or a partial name.
