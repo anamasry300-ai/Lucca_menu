@@ -1,4 +1,4 @@
-const CACHE = 'lucca-menu-v5';
+const CACHE = 'lucca-menu-v6';
 const urlsToCache = [
   '.',
   'index.html',
@@ -10,7 +10,7 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE).then(cache => {
-      return cache.addAll(urlsToCache);
+      return Promise.all(urlsToCache.map(u => cache.add(new Request(u, { cache: 'reload' }))));
     })
   );
   self.skipWaiting();
@@ -57,6 +57,17 @@ self.addEventListener('fetch', event => {
           return new Response('', { status: 200, statusText: 'OK' });
         }
       })
+    );
+    return;
+  }
+
+  if (request.mode === 'navigate' || (url.origin === location.origin && /\.(html|js|css)$/.test(url.pathname))) {
+    event.respondWith(
+      fetch(request, { cache: 'no-cache' }).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(request, copy));
+        return res;
+      }).catch(() => caches.match(request).then(r => r || caches.match('.')))
     );
     return;
   }
